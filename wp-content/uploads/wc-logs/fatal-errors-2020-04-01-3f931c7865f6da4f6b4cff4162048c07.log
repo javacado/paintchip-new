@@ -1,0 +1,2 @@
+2020-04-01T17:41:28+00:00 CRITICAL Out of memory (allocated 4456448) (tried to allocate 4718592 bytes) in /var/www/html/paintchip/wp-content/plugins/facebook-for-woocommerce/includes/test/facebook-integration-test.php on line 212
+

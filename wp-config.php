@@ -1,4 +1,7 @@
 <?php
+/** Enable W3 Total Cache */
+define('WP_CACHE', true); // Added by W3 Total Cache
+
 /**
  * The base configuration for WordPress
  *
@@ -26,7 +29,7 @@ define('DB_NAME', 'paintchip');
 define('DB_USER', 'root');
 
 /** MySQL database password */
-define('DB_PASSWORD', '');
+define('DB_PASSWORD', '!pa1ntch1p');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
@@ -77,7 +80,9 @@ $table_prefix = 'wp_';
  *
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
-define('WP_DEBUG', false);
+define('WP_DEBUG', true);
+define('WP_DEBUG_LOG', true);
+define('WP_DEBUG_DISPLAY', false);
 
 /* That's all, stop editing! Happy publishing. */
 
@@ -88,3 +93,7 @@ if (!defined('ABSPATH')) {
 
 /** Sets up WordPress vars and included files. */
 require_once ABSPATH . 'wp-settings.php';
+
+/* SES STMP plugin */
+define( 'WPOSES_AWS_ACCESS_KEY_ID',     'AKIATKK5FWDTUZ5L4NE5' );
+define( 'WPOSES_AWS_SECRET_ACCESS_KEY', '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' );

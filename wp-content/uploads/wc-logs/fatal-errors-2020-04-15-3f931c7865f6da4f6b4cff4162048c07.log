@@ -1,0 +1,4 @@
+2020-04-15T23:38:21+00:00 CRITICAL Out of memory (allocated 21233664) (tried to allocate 20480 bytes) in /var/www/html/paintchip/wp-content/plugins/jetpack/vendor/automattic/jetpack-sync/src/modules/class-full-sync-immediately.php on line 26
+
+2020-04-15T23:39:06+00:00 CRITICAL Out of memory (allocated 10747904) (tried to allocate 4718592 bytes) in /var/www/html/paintchip/wp-content/plugins/jetpack/modules/sharedaddy/sharedaddy.php on line 217
+
