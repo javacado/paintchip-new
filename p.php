@@ -1,0 +1,4 @@
+<?php
+die('test');
+phpinfo();
+?>
