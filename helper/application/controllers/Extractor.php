@@ -1,0 +1,981 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Extractor extends CI_Controller {
+
+	/**
+	 * Index Page for this controller.
+	 *
+	 * Maps to the following URL
+	 *      http://example.com/index.php/welcome
+	 *  - or -
+	 *      http://example.com/index.php/welcome/index
+	 *  - or -
+	 * Since this controller is set as the default controller in
+	 * config/routes.php, it's displayed at http://example.com/
+	 *
+	 * So any other public methods not prefixed with an underscore will
+	 * map to /index.php/welcome/<method_name>
+	 * @see https://codeigniter.com/user_guide/general/urls.html
+	 */
+	public function index() {
+
+		/*$a = "SYS302164S,SYS30216S7,1BS6621,SYS302164S,SYS30216S7,WN3222991,reg45,GP1K1T,GP1O,DE0700836,WFWM2,WFWM4,RC8212142,SO221175,SO221194,SO221195,Fixed,S0665417,RYLP13P,RYLP14P,RYLP15P,RYLP2P,RYLP3P,RYLP4P,RYLP6P,RYLP7P,RYLP8P,S0667012,Location,SM10S902,SM10S903,SM10S901,SM10S904,SM10S905,SM10S907,SM10S908,SM10S909,TE1110,TEi11i,TE1114,TE1124,TE1127,TE1134,TE1145,TE1I46TT,SS021654TE1147,SS021656TE1149,TE1ISITT,TE1167,SS026395LQ5004,SS026476,SM105146,SM105147,SM105148,SM105149,WFCH1,WN2301931,AP70877,Y04103,disc,LQ1045720,SA20072,BSS23008,Y04303,Y04304,WN3240956,Y04251,VA1O1O1,Y04301,W2000,1B56633,1B56574,Y06MMK,VA1O111,1B56526,1B56568,1B56637,1B56620,1B56502,M16044,M16066,ABAT60T,CN95863115,WN32092,M16304,M16046,SA227S,M16088,M16302,M16033,M16202,M16099,M16049,WN32093,M16303,OD14032,3M859NG,ADDE,FC167399,FC167100,FC167199,FC167499,CN741127,CN741157,OD14502,L15501505,JA1A127,Fised,SM400011,SM40009,SA35595,SA37219,SA37221,SA37222,SA35569,SA37218,SA35577,SA37220,Note,BRONZE,Supp1ier2,SM105l20,A1ternate1D,QCom,GX1AB1624,B8S88166,SA32989,SA32084,SA32082,Location,SA32982,SA32984,SA32986,Y06H,WFK16,ELE315,LQ1045151,Fixed,L027010,CN95866165,CN95862055,CN95864095,CN95862275,CN95866755,CN95862025,CN100516063,CN100516039,CN95865355,CN95867177,CN95861005,CN95862355,CN95867005,CN95865705,CN95866545,CN95865085,CN95862015,CN95862439,CN95863349,3M859,Y04403,AV1OO,NBL1OOOC2,L1L5331015,WN34202,reg3,A076630K,1B56613,1B56516,1B56528,1B56636,1B56600,BS080303,D00486273350,0D14072,0D31955,0D30175,0D10202,0D35705,0D13302,0D40122,0D40202,0D12752,0D11502,0D13802,0D11472,0D12552,0D12202,0D3030S,0D12502,0D35507,0D3013S,0D13052,0D35505,0D30205,0D11402,0D11702,0D15542,0D13402,0D11302,0D402S2,0D11002,0D13502,0D13702,0D12602,0D10402,0D13902,0D3S60S,0D10702,0D12402,0D12772,0D15102,L15330030,Y04311,Y04310,Y04320,AB8512MB,PMJR400208,CN95863475,CN95866145,CN95867185,CN95862005,CN100516043,CN95868035,CN95863398,CN95864035,CN95861205,CN95862435,AB8627AB,M14022,M14306,M14066,Location,M14046,M14026,M14055,M14302,M14304,M16306,BS080202,WN7006210,L14020050,L1870887,L1870888,L19871001,Y04422,Y04306,WN2120100,WFHT26,WFHT268,WFHT264,Y04307,GP14BJ,3M771075,AB681,AB681,AB689,AE150,AP1795,AP1795,AP1795,AP1795,AZL5B,BF9001,BS0803,Location,CB120,CB120,CC048,CC049,CC055,CD666,CD740,CHFA3,CMFT1,CMFTl,CMSB4,CNOOO,CN200,CN200,CN200,CN200,CN200,CN200,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA2S5,DA255,DA255,DA255,DA255,Fixed,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA2SS,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA25S,DA25S,DA255,DA481,Loudon,DA481,DA481,DA481,DA481,DA481,DA481,DA481,DASOO,DASO,DA502,DA503,DA504,DA505,DAS06,Y04312,CLAY,1LLUSTRATION,A1ternate1D,S833215,A1ternate1D,QCom,DA4811008ll,Supp1ier2,CC049,CC049,QCom,A1ternate1D,CM1B24,CN00041382,CN200041394,CPCVB34G,CPCVB34P,CPCVB46G,CPCVB46P,CPCVB68G,CPCVB68P,CPCVB8511G,A1ternate1D,QCom,DAl60,A1ternate1D,QCom,A1ternate1D,DA255,DA255,DA48ll508ll,DEDASll,DEDA53I,DEDA548,DEDA549,DADAG78,DE0700456,DE0700835,DE0700837,DE0700838,DE0700927,DE34213,DE34214,DE39009,DEDAl 11,DEDAl 12,DEDAl3l,DEDAl66,DEDAI 70,DEDAI 72,DEDAl73,DEDAI 74,DEDAI 79,DEDAl80,DEDAl90,DEDA19l,Location,DEDA26l,DEDA306,DEDA0l0,DEDA0l1,SSDEDAO36 DEDA036,SSDEDA04 DEDA04,SSDEDA042 DEDA042,SSDEDA047 DEDA047,SSDEDA048 DEDA048,SSDEDAO52 DEDA052,SSDEDAO55 DEDA055,SSDEDA061 DEDA061,SSDEDA063 DEDA063,SSDEDA064 DEDA064,SSDEDA065 DEDA065,SSDEDA067 DEDA067,SSDEDA068 DEDA068,SSDEDAO71 DEDA071,SSDEDAO72 DEDA072,DEDGPM0l,DEDGPMl0,DEDGPMl l,DEDASll,DEDA53I,DEDA548,DEDA549,DADAG78,DE0700456,DE0700835,DE0700837,DE0700838,DE0700927,DE34213,DE34214,DE39009,DEDAl 11,DEDAl 12,DEDAl3l,DEDAl66,DEDAI 70,DEDAI 72,DEDAl73,DEDAI 74,DEDAI 79,DEDAl80,DEDAl90,DEDA19l,Location,DEDA26l,DEDA306,DEDA0l0,DEDA0l1,DEDASll,DEDASll,DEDA53I,DEDA548,DEDA549,DADAG78,DE0700456,DE0700835,DE0700837,DE0700838,DE0700927,DE34213,DE34214,DE39009,DEDAl 11,DEDAl 12,DEDAl3l,DEDAl66,DEDAI 70,DEDAI 72,DEDAl73,DEDAI 74,DEDAI 79,DEDAl80,DEDAl90,DEDA19l,Location,DEDA26l,DEDA306,DEDA0l0,DEDA0l1,SSDEDAO36 DEDA036,SSDEDA04 DEDA04,SSDEDA042 DEDA042,SSDEDA047 DEDA047,SSDEDA048 DEDA048,SSDEDAO52 DEDA052,SSDEDAO55 DEDA055,SSDEDA061 DEDA061,SSDEDA063 DEDA063,SSDEDA064 DEDA064,SSDEDA065 DEDA065,SSDEDA067 DEDA067,SSDEDA068 DEDA068,SSDEDAO71 DEDA071,SSDEDAO72 DEDA072,DEDGPM0l,DEDGPMl0,DEDGPMl l,DEDAl11,DEDAl12,DEDAI70,DEDAI72,DEDAI74,DEDAI79,SSDEDAO36DEDA036,SSDEDA04DEDA04,SSDEDA042DEDA042,SSDEDA047DEDA047,SSDEDA048DEDA048,SSDEDAO52DEDA052,SSDEDAO55DEDA055,SSDEDA061DEDA061,SSDEDA063DEDA063,SSDEDA064DEDA064,SSDEDA065DEDA065,SSDEDA067DEDA067,SSDEDA068DEDA068,SSDEDAO71DEDA071,SSDEDAO72DEDA072,DEDGPMll,reg2,D00486480011,D00486480127,D00486480194,D00486480208,D00486498638,D00486797953,D00486798291,D00486798313,DEDPM04,DEDPM05,DEDPM07,DEDPM08,DEDPM09,DEDPM12,DEDPM15,DEDPM16,DEDMP17,DEDPM18,DR800815168,DR800815208,OS284600023,Y04501,Y04505,Y04504,SM10Sl50,SP941Sl,OS284600188,VA40506,VA40508,VA40501,YOFU2R,WN6656568,SAl4425,HU0010999,LQ102050,LQ1046ll5,Y04305,DS28460006I,D8284600088,D8284600089,D8284600090,D,Fixe,DUSClIS,E,FC167299,FLFPC0117,SSGB1050GB1050,SSGB1060GB1060,GBI125,OB1150,GBll65,OB1190,OB1200,OB1215,SSG81220081220,0B131S,0B1330,0B1350,GBl410,SSGB14900B1490,SSGB15300B1530,SSGB15350B1535,GBJ620,GBl700,GBl710,OB1720,OB1730,OB1740,GBl780,OB1810,OB1830,SSGB1850081850,OB1875,OB1880,OB2360,OB6810,OB7020,OB7260,OB7300,SSGB7590,SSGB7595,SSGB7610,SSGB7620,SSGB7661,SSGB7678,SSG87679,SSGB7685,OB7710,OB7810,OBF1810,OD10082,GDJ0512,SSGD10902OD10902,SSGD11102OD11102,SSGD11202OD11202,OD11442,GDl4012,OD14482,GDl4602,SSGD157320D15732,SSGD15742GD15742,SSGD15762GD15762,SSGD157720D15772,SSGD353710D35371,SSGD400520D40052,SSGD400620D40062,SSGD401020D40102,SSGD401520D40152,SSGD403020D40302,SSGD852110D85211,SSGD852210D85221,SSGD852310D85231,SSGD852340D85234,SSGD852410D85241,SSGD852440D85244,SSGD852610D85261,SSGD852710D85271,OD85291,OD85301,OD85304,OD85321,OD85324,OD85341,OD85351,OD85361,OD85371,OD85374,OD85381,OD85391,OD85401,OD85404,OD85411,OD85431,OD85434,OD85461,OD85464,OD85471,OD85481,D00486480682,D00486480771,0S284600093,D8284600094,D8284600095,D82846,DS28460042,DT160,FCll4000,FLFAP01311,GBl030,GB107,GB108,SOB1210,0B152,GB168,SO87220,SO87240,G8749,GB750,OB753,G8754,OB755,GB756,GB758,0B7590,OB7595,OB7610,OB7661,OB7678,OB7679,OB7685,GB770,GB772,OD853,OD854,SSGD85644GD85644,OD85661,OD85701,GL664068,GL8800888,GL880618,GP440,GP570PC,GP699B6,S05,HB1570001,HB1570020,HB1570037,HB1570042,HB1570045,HB1570057,HB1570063,HB1570067,HB1570072,HB1570079,HB1570080,HB1570085,HB1570093,HB1570096,SSHB1570099HB1570099,SSHB1570100,SSHB1570121HB1570121,SSHB1570127,SSHB1570128HB1570128,SSHB1570129HB1570129,SSHB1570141HB1570141,IANVL219BK,JAVP12303,REG6,SSJR400157JR400157,SSJR400159,JR40020112,JR40020312,JR40020412,JR496003,JR496004,JR496006,JR710108,JR710228,JR710243,SPECIA,LC414260992,LD283005,SSLQ101076,SSLQ1041017,SSLQ1045890,SSLQ1045892,SSLQ1045893,SSLQ1045894,SSLQ126804,SSLQ3699313,SSLQ3699328,MGII038,MGII040,MGII050,MGII060,MGII080,MGLLL40,MGLLL56,MGLLL60,NG36174,ML400035317,MP2P20CR,MA94872124,MTEX0140L03M,MTEX014010JM,MTEX0140LL8M,MTEX014020IM,MTEX014601M,MTEX0L40604M,MTEX0L41013M,MTEX0L42004M,MTEX014001M,MU66PRO2005,RYZ73TCL4,RYZ73WL,RYZ73WOI,RYZ73WOL2,RYZ83AL4,RYZ83O12,RYZ83GL4,RYZ83LL,RYZ83WL,SA1735795,SAI773L03,SAL7731S6,SA1773L57,SA177316L,SAL773162,SA177316S,SAI773175,SAL773196,SAL773197,SAI773202,SA177322L,SAL77323S,SAI773237,SAI773257,SAL773261,SAL773264,SAL773267,SAL773276,SAL773278,SAL773279,SAI773280,SAL773283,SAI773295,SAI785393,SAI785394,SAI785396,SA1785400,SA1785421,SA1801039B,SA1815006,SAL815007,SA1815008,SA1815009,SAL815010,SA1815012,SAL863389,SA1863413,SA1863414,SA1927296,SA3003S,SA3005L,SA36713,SA371L4,GD856,QUT1ROJOURNALU,L35529,HB157,R210531,JR4960,SPEC1A,L13283,L13283009,LP197,LQ104,LQ101024,ML185,RYZ8314,RYZ83P034,RYZ83P01,RYZ83RP,SA1815011,A1863389,SA1898305,D00486201805,CN7022050,LQ103200,A041821C,BSS23016,SSS96892,SS600970M16402,PP54501,BSS74401,CN95865485,PP54521,LQ104616l,CADORA,Order,GP40012A,LQ1045163,LQ104084,MW70,MW71,MW83,NWOOl,NW002,NW003,P209,PB37S0,PB3950,PB39S0,PB6SOO,PKDPO,PKER2,PKMLO,PKRDP,PL509,PLBG2,PLFPl0,PLFP5,PLFRH,PLPPB,PLPPR,PLS520,PLSD9,PLST15,PLTRJ5,QT1OS,RC117,RC118,RC859,RC869,RS2550,RS25S0,RS2S50,CN31823108,LQ1046I60,ULTRAM,MW6ll000,B3750LO,B3750ML200,B3750MLBO0,B3750MM025,PB37500M025,PB37500M075,PB3750Rl,PB3750Rl0,PB3750Rl2,B3950R2,B3950R4,B3950R6,B3950R8";
+			$newa = array();
+			$a = explode(",", $a);
+			foreach ($a as $aa) {
+				$newa[] = '"' . $aa . '"';
+			}
+
+		*/
+
+		$data = array();
+		$this->load->helper('file');
+
+		$this->load->view('extractor-index', $data);
+	}
+
+	function getCSV($file) {
+
+		ini_set("memory_limit", "500M");
+		$file = $_SERVER['DOCUMENT_ROOT'] . "/helper/assets/{$file}.csv";
+
+		$this->load->helper('file');
+
+		$f = read_file($file);
+		$f = str_replace("\r", "\n", $f);
+		$lines = explode("\n", $f);
+		$allitems = array();
+		$noids = array();
+		$replaces = array(
+			'"' => '',
+			"GPIKIT" => "GP1KIT",
+			"SLSF" => "SLST",
+			"5Y5" => "SYS",
+		);
+		$line_type = "";
+		$itema = null;
+		$lctr = 0;
+
+		// first repair
+		$nlines = array();
+		$lctr = 0;
+		//die("<h3>Output</h3><pre>" . print_r($lines, 1) . "</pre>");
+		foreach ($lines as $line) {
+			if (strpos($line, "$") === 0) {
+				$nlines[$lctr - 1] .= "," . $line;
+			} else {
+				$nlines[] = $line;
+
+				$lctr++;
+			}
+		}
+
+		$lines = $nlines;
+
+		foreach ($lines as $line) {
+
+			foreach ($replaces as $find => $replace) {
+				$line = str_replace($find, $replace, $line);
+			}
+
+			$line = preg_replace('/  +/', ',', $line);
+			$strline = $line;
+
+			$line = explode(",", $line);
+
+			$line = array_values(array_filter($line));
+			// $val = $this->decipher($item)
+
+			$idd = false;
+			if (!$line || count($line) == 0) {
+				continue;
+			}
+
+			$firstline = $this->isFirstLine($line);
+
+			if ($firstline) {
+				$line_type = 'first';
+				$dta = $this->getTitleAndCategory($line);
+
+				//echo "\n - got title " . print_r($dta, 1);
+				//die("<h3>Output</h3><pre>" . print_r($strline, 1) . "</pre>");
+				$itema = array(
+					"id" => "",
+					"title" => $dta['title'],
+					"price" => '0.00',
+					"supplier" => "SS",
+					"stock" => "0",
+					"category" => $dta['cat'],
+
+				);
+
+				if (!$strline) {
+					$strline = "";
+				}
+
+				$itema['odata'] = "LINE 1: " . json_encode($line);
+				$itema['odata1'] = json_encode($line);
+
+				if ($dta['title'] == '' && $dta['cat'] == '') {
+					//echo ("<h3>Processing</h3><pre>" . print_r($line, 1) . print_r($dta, 1) . "</pre>");
+					$noids[] = $itema;
+
+					continue;
+				}
+
+			} else {
+				$line_type = 'second';
+
+				if (!$itema) {
+					//echo "\n - NO arr started for second line ";
+					$searchlines[] = $line;
+					//echo "\n adding to search...  " . print_r($line, 1);
+
+					continue;
+				} else {
+
+					//die("<h3>Outsssssput</h3><pre>" . print_r($line, 1) . print_r($itema, 1) . "</pre>");
+				}
+
+				$dta = $this->getIDAndPrice($line);
+				//echo "\n dta " . print_r($dta, 1);
+
+				$itema['theprice'] = $dta['theprice'];
+				$itema['price'] = $dta['price'];
+				$itema['id'] = $dta['id'];
+				$itema['odata'] .= " // LINE 2: " . json_encode($line);
+				$itema['odata2'] = json_encode($line);
+
+				if ($dta['id']) {
+					$allitems[] = $itema;
+					//echo "\n ---- WRITTEN " . print_r($itema, 1);
+
+				} else {
+					//echo "\n ---- NOT " . print_r($itema, 1);
+
+					$noids[] = $itema;
+					//$searchlines[] = $line;
+				}
+				$itema = null;
+
+			}
+			$lctr++;
+		}
+		//die("<h3>Output</h3><pre>" . print_r($searchlines, 1) . "</pre>");
+		/*foreach ($searchlines as $line) {
+			$dta = $this->getIDAndPrice($line);
+			//	echo ("<h3>Output</h3><pre>" . print_r($line, 1) . print_r($dta, 1) . "</pre>");
+			$dta['odata'] = json_encode($line);
+
+			$other[] = $dta;
+		}*/
+		$new_noids = array();
+		foreach ($noids as $line) {
+			//echo ("<h3>IN </h3><pre>" . print_r($line['odata1'], 1) . print_r($line['odata2'], 1) . "</pre>");
+			if (isset($line['odata1'])) {
+				$dta = $this->getIDAndPrice(json_decode($line['odata1']), 1);
+				//echo ("<h3>-- Output 1</h3><pre>" . print_r($dta, 1) . "</pre>");
+			}
+			if ($dta['id'] == '' && isset($line['odata2'])) {
+				$dta = $this->getIDAndPrice(json_decode($line['odata2']), 1);
+				//	echo ("<h3>-- Output 2</h3><pre>" . print_r($dta, 1) . "</pre>");
+			}
+
+			if ($dta['id']) {
+				$allitems[] = $dta;
+			} else {
+				$new_noids[] = $line;
+			}
+
+		}
+
+		//die("<h3>Output</h3><pre>" . print_r($searchlines, 1) . "</pre>");
+		$out = array("not" => $new_noids, "found" => $allitems);
+		//	die("<h3>Output</h3><pre>" . print_r($out, 1) . "</pre>");
+		echo json_encode($out);
+		//echo ("<h3>Output- found: " . count($allitems) . " / not found: " . count($noids) . "</h3><pre>" . print_r($allitems, 1) . "</pre>");
+
+	}
+
+	function removeItem($sku) {
+		$q = 'delete from jt_supplier_data where sku="' . $sku . '" and data=""';
+		//die("<h3>Output</h3><pre>" . print_r($q, 1) . "</pre>");
+		$this->db->query($q);
+		echo "OK";
+	}
+
+	function isFirstLine($line = array()) {
+
+		if (strtolower(trim($line[0])) == 'ss') {
+			return true;
+		}
+		$test = preg_replace('/[0-9]+/', '', implode("", $line));
+		if (strpos($test, "$") !== false) {
+			return false;
+		}
+
+		$test = str_replace("Yes", "", $test);
+		$test = str_replace("EA", "", $test);
+		$test = str_replace("cleared", "", $test);
+
+		if (strlen($test) > 8) {
+			return true;
+		}
+		//	echo "\n Not first line  " . print_r($line, 1);
+		return false;
+	}
+	function str_replace_first($from, $to, $content) {
+		$from = '/' . preg_quote($from, '/') . '/';
+
+		return preg_replace($from, $to, $content, 1);
+	}
+	function getIDAndPrice($lineitem = array(), $secondtimearound = false) {
+		$id = "";
+		$price = array();
+		if (!$lineitem || !is_array($lineitem)) {
+			return array("price" => 0, "theprice" => 0, "id" => "");
+
+		}
+		if (count($lineitem) > 2) {
+
+			$lineitem[1] = str_replace(" ", "", $lineitem[1]);
+			$lineitem[1] = str_replace("l", "1", $lineitem[1]);
+			$lineitem[1] = preg_replace("/[^A-Za-z0-9 ]/", '', $lineitem[1]);
+			if ($lineitem[1] . substr(0, 2) == '18') {
+				$lineitem[1] = "TB" . $lineitem[1] . substr(2);
+			}
+		}
+		$ctr = 0;
+		foreach ($lineitem as $l) {
+			$el = $this->decipher($l);
+			//$num = preg_replace('/\d/', '', $el);
+
+			$num = filter_var($el, FILTER_SANITIZE_NUMBER_INT);
+
+			$str = preg_replace('/[0-9]+/', '', $el);
+			$l = trim($l);
+			$isID = (
+				strpos($l, "Supplier") === false && // not a price
+				strpos($l, " ") === false && // not a price
+				strpos($l, "$") === false && // not a price
+				$str != '' && // string part not empty
+				strlen($str) > 0 && // string part longer than 1 letter
+				strlen($el) > 3 && // original length > 4
+				//(intval($num) > 0 || strpos($l, "I") !== false || strpos($l, "I") !== false) &&
+				substr($el, 0, 2) != "00" &&
+				intval(substr($el, 0, 2)) == 0// first 2 characters are not numbers
+			);
+
+			if (!$isID) {
+				$isID = strpos($l, "3M") === 0;
+			}
+
+			if ($isID && $secondtimearound) {
+				$isID = strpos($l, "SS") !== 0;
+			}
+
+			if ($isID && !$id) {
+
+				$id = preg_replace("/[^A-Za-z0-9 ]/", '', $el);
+				$id = $this->str_replace_first("I", "1", $id);
+
+				//echo "<p>\n SET $id -- $l -- $el =  $word -- first: " . $firstchar;
+
+//                echo "\npassing on $el";
+
+				//continue;
+			} else {
+				if (strpos($el, "$") !== false) {
+					$price[] = $el;
+				} else {
+					//echo "<p>passing on $el";
+				}
+
+			}
+
+			$ctr++;
+
+		}
+
+		$theprice = 0.0;
+		if ($price && is_array($price)) {
+			//echo ("<h3>Output</h3><pre>" . print_r($price, 1) . "</pre>");
+			foreach ($price as $p) {
+				$p = preg_replace("/!\d!/", '', $p);
+				$p = str_replace("$", "", $p);
+				$p = floatval($p);
+				//die("<h3>Output</h3><pre>" . print_r($p, 1) . "</pre>");
+				$theprice = max($p, $theprice);
+			}
+
+			$theprice = number_format($theprice, 2);
+
+		}
+
+		return array("price" => $price, "theprice" => $theprice, "id" => $id);
+	}
+
+	function getTitleAndCategory($lineitem = array()) {
+		//echo ("<h3>Outp33333ut</h3><pre>" . print_r($lineitem, 1) . "</pre>");
+		$title = "";
+		$cat = "";
+		$trigger = 0;
+		if (!$lineitem || !is_array($lineitem)) {
+			return array("cat" => "", "title" => "");
+		}
+
+		foreach ($lineitem as $l) {
+			$el = $this->decipher($l);
+			$word = preg_replace('/\d/', '', $el);
+			if ($l == "SM4001") {
+				$trigger = 1;
+			}
+
+			if (strlen($word) > 4) {
+				if ($title == '') {
+					$title = ucwords(strtolower($el));
+				} else if ($cat == '') {
+					$cat = ucwords(strtolower($word));
+				}
+
+			}
+
+		}
+		$arr = array("cat" => $cat, "title" => $title);
+
+		return $arr;
+	}
+
+	function decipher($str) {
+
+		$str = preg_replace("/[^A-Za-z0-9 .$,]/", '', $str);
+		$str = str_ireplace("�", "", $str);
+		$str = str_ireplace("....", "", $str);
+		$str = str_ireplace("b    ", "", $str);
+		$str = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', $str);
+		$str = trim($str);
+		if (trim($str) == "") {
+			return false;
+		}
+
+		$ignores = array("Prop65");
+
+		if ($this->strposa($str, $ignores) !== false) {
+			return false;
+		}
+		return $str;
+
+	}
+
+	function strposa($haystack, $needles = array(), $offset = 0) {
+		$chr = array();
+		foreach ($needles as $needle) {
+			$res = strpos($haystack, $needle, $offset);
+			if ($res !== false) {
+				$chr[$needle] = $res;
+			}
+
+		}
+		if (empty($chr)) {
+			return false;
+		}
+
+		return min($chr);
+	}
+
+	function getHTMLDataFrom($supplier, $id) {
+		if ($supplier == "SS") {
+			$url = "https://www.slsarts.com/viewitem.asp?slssku=${id}";
+			$imgbase = "https://www.slsarts.com/";
+		} else {
+			die("<h3>Output</h3><pre>" . print_r("NO SUPPLIER", 1) . "</pre>");
+		}
+
+		$html = file_get_html($url);
+		$test = $html->find('table', 0);
+		if (!$test) {
+			return null;
+		}
+
+		return $html;
+
+	}
+
+	function getfix() {
+
+		$q = "select * from jt_supplier_data where data=''";
+		$r = $this->db->query($q);
+		$re = $r->result();
+		$r->free_result();
+
+		$out = array();
+		foreach ($re as $row) {
+			$row->tmp_data = json_decode($row->tmp_data);
+			$out[] = $row;
+		}
+
+		die(json_encode($out));
+	}
+
+	function deletextra($sku) {
+		$this->db->query('delete from jt_supplier_data where sku="' . $sku . '" and data=""');
+		die("<h3>Output</h3><pre>" . print_r("ok", 1) . "</pre>");
+	}
+
+	function getSupplierData($supplier, $id) {
+		//phpinfo();
+
+		$tries = 1;
+		$this->load->library('AdvancedHtmlBase');
+
+		$q = "select * from jt_supplier_data where sku='$id' order by data desc";
+		$result = $this->db->query($q)->result();
+		$exists = count($result) > 0;
+
+		if ($exists) {
+			$out = array();
+			$out['id'] = $id;
+			$out['exists'] = 1;
+			if ($result[0]->data != '') {
+				$out['origid'] = $this->input->post('origid');
+			}
+
+			if ($this->input->post('oneoff') == 1) {
+				$this->db->query('delete from jt_supplier_data where sku="' . $this->input->post('origid') . '" and data=""');
+			}
+
+			die(json_encode($out));
+		}
+
+		$html = $this->getHTMLDataFrom($supplier, $id);
+
+		if (!$html) {
+
+			$out = array();
+			$out['id'] = $id;
+			$out['nodata'] = 1;
+
+			if ($this->input->post('oneoff') == 1) {
+				$this->db->query('delete from jt_supplier_data where sku="' . $this->input->post('origid') . '" and data=""');
+			}
+
+			/*$in = array(
+					"sku" => $id,
+					"data" => "",
+					"created" => date("Y-m-d H:i:s"),
+					"supplier" => $supplier,
+				);
+
+			*/
+			die(json_encode($out));
+		}
+
+		//$this->db->query("delete from jt_supplier_data where sku='$id'");
+
+		if ($supplier == "SS") {
+			$url = "https://www.slsarts.com/viewitem.asp?slssku=${id}";
+			$imgbase = "https://www.slsarts.com/";
+		}
+		/*die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
+		$html = file_get_html($url);*/
+
+		$out = array();
+		$out['id'] = $id;
+		$t = $html->find('h3', 0);
+		if ($t) {
+			$t = $t->innertext;
+		} else {
+			$t = $html->find('td.gridbtns', 0);
+			if (!$t) {
+				$t = "";
+			} else {
+				$t = $t->innertext;
+				$t = explode("<br>", $t);
+				$t = ucwords($t[count($t) - 1]);
+			}
+		}
+		$out['title'] = preg_replace('/[\x00-\x1F\x7F]/u', '', $t);
+
+		$desc = $html->find('td.gridleft', 0)->innertext;
+		$desc = str_replace("\r", "", $desc);
+		$desc = str_replace("\n", "", $desc);
+		$desc = preg_replace('#<h3>(.*?)</h3>#', '', $desc, 1);
+		$desc = preg_replace('/(<font[^>]*>)|(<\/font>)/', '', $desc);
+		$out['description'] = $desc;
+
+		$img = $html->find('.gridcenter img')->src;
+		@$imge = $html->find('.gridcenter img')->onerror;
+		if ($imge && strpos($imge, "rimgsku(this") !== false) {
+			//holy crap we gotta deal with this shit
+			$imge = str_replace("rimgsku(this,'", "", $imge);
+			$imge = str_replace("');", "", $imge);
+
+			$imge = str_replace("rimgsku(this,'", "", $imge);
+			$imge = str_replace("');", "", $imge);
+
+			$img = "/images/" . $imge;
+			$img = str_replace("/images/images/", "/images/", $img);
+		}
+
+		$img = str_replace("\\", "/", $img);
+		$img = str_replace("./", "", $img);
+		//$img = str_replace("/images/", "", $img);
+		$img = str_replace("Regular Images", "Large Images", $img);
+
+		$oimg = $img;
+		if (strpos($oimg, "/") === 0) {
+			$oimg = substr($img, 1);
+		}
+
+		$oimg = str_replace(" ", "", strtolower($oimg));
+		$oimg = str_replace("/", "-", strtolower($oimg));
+		$oimg = str_replace("productimages-", "", $oimg);
+		$oimg = str_replace("largeimages-", "", $oimg);
+
+		$img = $imgbase . $img;
+
+		// test and save image
+
+		$hasimg = $this->getImage($img, $oimg);
+
+		if (!$hasimg) {
+			$oimg = "";
+		}
+
+		$out['img'] = $oimg;
+		$out['orig_img'] = $img;
+		$out['linedata'] = $this->input->post('linedata');
+
+		$d = $this->input->post('data_batch');
+		if (!$d) {
+			$d = 'retry';
+		}
+
+		$out = json_encode($out);
+		$in = array(
+			"sku" => $id,
+			"data" => $out,
+			"data_batch" => $d,
+			"created" => date("Y-m-d H:i:s"),
+			"supplier" => $supplier,
+		);
+
+		if ($this->db->insert("jt_supplier_data", $in)) {
+			if ($this->input->post('oneoff') == 1) {
+				$this->db->query('delete from jt_supplier_data where sku="' . $this->input->post('origid') . '" and data=""');
+			}
+		}
+
+		die($out);
+
+	}
+
+	function getdupes() {
+		$q = "SELECT title, COUNT(title) FROM jt_supplier_data where data !=''  GROUP BY title HAVING COUNT(title) > 1";
+		$r = $this->db->query($q)->result();
+		foreach ($r as $row) {
+			$ttl = addslashes($row->title);
+			$q = "select title,id,price from jt_supplier_data where title='$ttl' order by price desc";
+			$rr = $this->db->query($q)->result();
+			$theprice = '';
+			foreach ($rr as $srow) {
+				if ($srow->price != "" && $srow->price != 0) {
+					$theprice = $srow->price;
+
+				} else {
+					//die("<h3>Output</h3><pre>" . print_r("T", 1) . "</pre>");
+					$srow->suggestedprice = $theprice;
+					$this->db->query('update jt_supplier_data set suggestedprice="' . $theprice . '" where id=' . $srow->id);
+					$in[] = $srow;
+				}
+			}
+
+			$out[] = $in;
+		}
+
+		die("<h3>Output</h3><pre>done</pre>");
+
+	}
+
+	function saveApprove() {
+		$id = $this->input->post('id');
+		$price = $this->input->post('price');
+		$category = $this->input->post('category');
+		$row = $this->db->query("select * from jt_supplier_data where id=$id")->row();
+		$data = json_decode($row->data);
+		$data->price = $price;
+		$data->category = $category;
+
+		$up = array(
+			"price" => $price,
+			"category" => $category,
+			"approved" => 1,
+		);
+		$this->db->update("jt_supplier_data", $u, array("id" => $id));
+		die(json_encode(array(
+			"ok" => 1)));
+		die("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
+	}
+
+	function getImage($url, $img) {
+		$url = trim($url);
+		$url = str_replace(" ", "%20", $url);
+		$img = str_replace(" ", "-", $img);
+		$saveto = $_SERVER['DOCUMENT_ROOT'] . "/helper/uploads/{$img}";
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+		$raw = curl_exec($ch);
+		curl_close($ch);
+		if ($raw !== false) {
+			if (file_exists($saveto)) {
+				unlink($saveto);
+			}
+			$fp = fopen($saveto, 'x');
+			fwrite($fp, $raw);
+			fclose($fp);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function getGood() {
+		$q = "select count(*) as ttl from jt_supplier_data where data!='' and approved != 1 ";
+		$r = $this->db->query($q);
+		$rr = $r->row();
+		$r->free_result();
+		$data['notapproved'] = $rr->ttl;
+
+		$q = "select count(*) as ttl from jt_supplier_data where data!='' and approved = 1 ";
+		$r = $this->db->query($q);
+		$rr = $r->row();
+		$r->free_result();
+		$data['approved'] = $rr->ttl;
+
+		$q = "select count(*) as ttl from jt_supplier_data where data!='' and category = '' ";
+		$r = $this->db->query($q);
+		$rr = $r->row();
+		$r->free_result();
+		$data['nocat'] = $rr->ttl;
+
+		$q = "select count(*) as ttl from jt_supplier_data where data!='' and price = 0 ";
+		$r = $this->db->query($q);
+		$rr = $r->row();
+		$r->free_result();
+		$data['noprice'] = $rr->ttl;
+
+		$q = "select * from jt_supplier_data where data!='' and approved != 1 order by category asc, suggestedprice desc, price asc limit 100";
+		$r = $this->db->query($q);
+		$rr = $r->result();
+		$r->free_result();
+		$out = array();
+		foreach ($rr as $row) {
+			$row->data = json_decode($row->data);
+			$theline = $row->data->linedata;
+			$theline = explode("LINE 2:", $theline);
+			$thefline = $theline[0];
+			$thefline = str_replace("LINE 1:", "", $thefline);
+			$thefline = trim(str_replace("//", "", $thefline));
+
+			$theline = $theline[count($theline) - 1];
+			$theline = json_decode($theline);
+			$dta = $this->getIDAndPrice($theline);
+			$row->data->price = $dta['theprice'];
+			if ($thefline) {
+				$thefline = json_decode($thefline);
+				$dta = $this->getTitleAndCategory($thefline);
+				if ($dta && is_array($dta) && isset($dta['category'])) {
+					$row->data->category = $dta['category'];
+				}
+
+			}
+
+			if (!isset($row->data->category)) {
+				$row->data->category = "";
+			}
+
+			if (!isset($row->data->price)) {
+				$row->data->price = "";
+			}
+
+			// test for image
+			if ($row->data->img) {
+				$local = $_SERVER['DOCUMENT_ROOT'] . "/helper/uploads/" . $row->data->img;
+				if (!is_file($local)) {
+					//	echo "NOT";
+					$row->data->img = "";
+				} else {
+					//	echo "<P>" . $row->data->img;
+				}
+
+			}
+
+			// guess category
+			if (!$row->data->category) {
+				$row->data->category = $this->guessCategory($row->data);
+
+				/* 	$u = array(
+					"title" => $row->data->title,
+					"category" => $row->data->category,
+					"description" => $row->data->description,
+					"price" => $row->data->price,
+					"image" => $row->data->img,
+				);*/
+				if ($row->data->category != "") {
+					$u = array(
+						"category" => $row->data->category,
+					);
+
+					$this->db->update("jt_supplier_data", $u, array("id" => $row->id));
+				}
+			}
+
+			$out[] = $row;
+		}
+
+		$data['good'] = $out;
+
+		die(json_encode($data));
+	}
+
+	function guessCategory($data = array()) {
+		$title = strtolower($data->title);
+		$painting = array(
+			"acrylic",
+			"liquitex",
+			"brush",
+			"weber",
+			"canvas",
+			"easel",
+			"tray",
+			"linseed",
+			"testor",
+			"linoleum",
+			"plastalina",
+			"gamblin",
+			"emulsion",
+			"gouache",
+			"oil color",
+			"tempera",
+			"tube",
+			"jacquard",
+			"spray paint",
+			"m. graham",
+			"scribbles",
+			"daniel smith",
+			"mask",
+			"retarder",
+			"versatex",
+			"gum arabic",
+			"grumbacher",
+			"golden",
+			"varnish",
+			"decoart",
+			"filler",
+			"gesso",
+
+		);
+
+		$ceramics = array(
+			"sculpey",
+			"carve",
+			"clay",
+			"ceramic",
+			"pottery",
+			"sculpt",
+		);
+
+		$frames = array(
+			"frame",
+			"stretcher",
+
+		);
+
+		$drawing = array(
+			"prismacolor",
+			"pastel",
+			"artyfacts",
+			"nibs",
+			"pens",
+			"pencils",
+			"rubber cement",
+			"pentel",
+			"finish spray",
+			"pencil",
+			"crayola",
+			"ink",
+			"crayon",
+			"wheel",
+			"marker",
+			"pitt",
+			"graphite",
+			"sharpie",
+			"calligraphy",
+			"squeegee",
+			"artbin",
+			"faber-castell",
+			"koh-",
+			"eraser",
+			"pen fine",
+			"gel pen",
+			"pen set",
+			"portfolio",
+			"profolio",
+			"palette",
+			"fixative",
+
+		);
+
+		$paper = array(
+			"sheet",
+			"pads",
+			"board",
+			"tracing",
+			"roll",
+			"paper",
+			"pages",
+			"doodle",
+			"glassine",
+			"arches",
+			"strathmore",
+			"tru ray",
+
+		);
+
+		$books = array(
+			"book",
+			"learn to draw",
+			"journal",
+			"coloring",
+			"drawing:",
+			"moleskin",
+
+		);
+
+		$kids = array(
+			"kids",
+			"silly",
+			"face paint",
+
+		);
+
+		$gifts = array(
+			"trading cards",
+			"greeting cards",
+
+		);
+
+		$print = array(
+			"printing",
+			"hinge",
+			"essential tools",
+			"intermediate kit",
+
+		);
+
+		$drafting = array(
+			"x-acto",
+			"drafting",
+		);
+		$adhesives = array(
+			"spray mount",
+			"adhesive",
+			"glue",
+			"mounting",
+
+		);
+
+		$crafts = array(
+			"stain",
+			"foamboard",
+			"foamcore",
+			"tape",
+			"tattoo",
+			"tie dye",
+			"body art",
+			"yarn",
+			"felt",
+			"balsa",
+			"basswood",
+			"clip",
+			"metal leaf",
+			"carving",
+			"burnish",
+
+		);
+
+		$misc = array(
+			"",
+		);
+
+		$cats = $this->getCats();
+
+		foreach ($cats as $c => $n) {
+			$arr = strtolower($c);
+			foreach ($$arr as $test) {
+				if ($test && strpos($title, $test) !== false) {
+					return "$n";
+				}
+
+			}
+
+		}
+
+		return "";
+	}
+
+	function getCategories() {
+		$cats = $this->getCats();
+		$out = array();
+		foreach ($cats as $c => $n) {
+			$out[] = $n;
+		}
+		$out[] = "Miscellaneous";
+		echo json_encode($out);
+	}
+
+	function getCats() {
+		$cats = array(
+			"Crafts" => "Craft Supplies",
+			"Adhesives" => "Adhesives",
+			"Drafting" => "Drafting Supplies",
+			"Print" => "Printmaking",
+			"Gifts" => "Gifts",
+			"Kids" => "Kids Corner",
+			"Books" => "Books",
+			"Paper" => "Paper Supplies",
+			"Drawing" => "Drawing Supplies",
+			"Frames" => "Frames",
+			"Ceramics" => "Ceramics",
+			"Painting" => "Painting Supplies");
+
+		ksort($cats);
+
+		return $cats;
+	}
+
+	function saveTempSupplierData() {
+		$json = array(
+			"id" => $this->input->post('id'),
+			"title" => $this->input->post('title'),
+			"category" => $this->input->post('category'),
+			"price" => $this->input->post('price'),
+			"linedata" => $this->input->post('linedata'),
+		);
+		$in = array(
+			"sku" => $this->input->post('id'),
+			"tmp_data" => json_encode($json),
+			"data_batch" => $this->input->post('data_batch'),
+			"created" => date("Y-m-d H:i:s"),
+			"supplier" => $this->input->post('supplier'),
+		);
+
+		$this->db->insert("jt_supplier_data", $in);
+		$out = array("status" => "ok");
+		die(json_encode($out));
+	}
+
+}
