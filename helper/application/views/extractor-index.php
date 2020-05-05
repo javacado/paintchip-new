@@ -554,13 +554,30 @@ var stuff="";
             html += "<label class='input-group-addon'>"
              html += "UPC code"
             html += "</label>" ;
-            html+="<input class='form-control input-upc' style=' ' readonly value='" + upc + "'>"
+            html+="<textarea class='form-control input-upc' style='' readonly >" + upc + "</textarea>"
             html += "<label class='input-group-addon'>"
              html += "<button class='btn btn-xs btn-info' onclick='copyThis(this)'><i class='fa fa-clipboard'></i></button> ";
 html+="  "
              html+="  "
             html += "</label>" ;
             html += "<input class='form-control input-sku' style=' '  placeholder='Paste SKU here...' value='' />";
+
+
+
+            html += "<input class='form-control input-price' style=' '  placeholder='Paste Price here...' value='' />";
+
+             html +="<select class='catsel input-cat form-control'>";
+                 html+="<option value=''>-- Choose Category --</option>"
+
+            for(var x=0;x<document.categories.length;x++) {
+                var sel = document.categories[x] == line.category ? "selected='selected'":"";
+                html+="<option "+sel+">"+document.categories[x]+"</option>"
+            }
+            html +="</select>";
+
+
+
+
             html += "<span class='input-group-addon completion'><button class='btn btn-xs btn-success' onclick='tryNewSKU(this)'><i class='fa fa-arrow-right'></i></button></span>"
             html+= "</div></dd>" ;
             html+="<dd style='margin-top:10px;' class='small text-muted'><button class='btn btn-link btn-xs pull-right' onclick='removeItem(this)'><span class='text-danger'><i class='fa fa-trash-o '></i> remove</span></button> "+line.title+"</div>"
@@ -603,8 +620,13 @@ var container = $(el).closest('.ni-csv-data');
 updater.html("<i class='fa fa-spin fa-cog'></i> Searching for: "+sku );
 var res = getSupplierDataBySKU(sku, container)
 
-
-
+    var sku = $(container).find('.input-sku').val()
+    var price = $(container).find('.input-price').val()
+    var category = $(container).find('.input-cat').val()
+if (!sku || ! price || ! category) {
+    alert("Please make sure the SKU, price and category are chosen")
+    return
+}
 
 }
 
@@ -618,8 +640,8 @@ var res = getSupplierDataBySKU(sku, container)
      console.log("container",container);
  var origid = $(container).attr('data-origid')
     var title = $(container).attr('data-title')
-    var price = $(container).attr('data-price')
-    var category = $(container).attr('data-category')
+    var price = $(container).find('.input-price').val()
+    var category = $(container).find('.input-cat').val()
     var linedata = $(container).find('textarea').val()
 
     var supplier = "SS";
@@ -630,6 +652,8 @@ var res = getSupplierDataBySKU(sku, container)
         data:{
              linedata:linedata,
             origid:origid,
+            price:price,
+            category:category,
             data_batch:'',
             oneoff:1
         }
@@ -1002,7 +1026,13 @@ body{
 .dshow{
 
 }
+textarea.input-upc.form-control[readonly]{
+    padding-top:40px;
+    border:0;
+    background:none;
 
+    min-height:100px;
+}
 body .container{
     width:90% !important;
     margin:0 0 0 100px;

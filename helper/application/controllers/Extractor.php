@@ -572,6 +572,14 @@ class Extractor extends CI_Controller {
 			"supplier" => $supplier,
 		);
 
+		if ($this->input->post('price')) {
+			$in['price'] = str_replace("$", "", $this->input->post('price'));
+			$in['category'] = $this->input->post('category');
+
+		}
+
+		die("<h3>Output</h3><pre>" . print_r($in, 1) . "</pre>");
+
 		if ($this->db->insert("jt_supplier_data", $in)) {
 			if ($this->input->post('oneoff') == 1) {
 				$this->db->query('delete from jt_supplier_data where sku="' . $this->input->post('origid') . '" and data=""');
