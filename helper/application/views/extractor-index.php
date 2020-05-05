@@ -55,7 +55,8 @@
 <h2 id='title'></h2>
 <h3 id='ctr'></h3>
 
-<?if (!$ok) {?>
+<?php
+if (!$ok) {?>
 
  <form method="POST" style='width:400px;'>
     <div class='input-group'>
@@ -66,7 +67,9 @@
 </form>
 
 
-<?} else {?>
+<?php
+} else {
+	?>
 
 
 
@@ -80,7 +83,8 @@
     </div>
     <input type="text" class='form-control' id='delete_ids' />
     <div class='' style='margin-bottom:10px;'>
-<?for ($x = 1; $x < 15; $x++) {?>
+<?php
+for ($x = 1; $x < 15; $x++) {?>
 <label class='btn btn-xs btn-default' >
     <input type='radio' name='csv'  class='check-csv' value='data-<?=$x?>' /> data-<?=$x?>
 </label>
