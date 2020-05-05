@@ -248,7 +248,7 @@ function getNI() {
 html ="<button class='btn btn-xs btn-warning' onclick='switchids(this)'><i class='fa fa-reload'></i> Attempt Switch Ids</button> <button class='btn btn-xs btn-success' onclick='gsd(\".retry-csv-data\")'><i class='fa fa-arrow-right'></i> Run it</button> " + html*/
         $('#resultsn').append(html);
 
-        $(".sls").html('<iframe src="http://www.slsarts.com/defaultframe.asp" style="border:0;width:100%;height:1000px" />')
+        $(".sls").html('<iframe src="https://www.slsarts.com/defaultframe.asp" style="border:0;width:100%;height:1000px" />')
     })
 }
 
