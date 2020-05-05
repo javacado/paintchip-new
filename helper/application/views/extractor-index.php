@@ -55,6 +55,19 @@
 <h2 id='title'></h2>
 <h3 id='ctr'></h3>
 
+<?if (!$ok) {?>
+
+ <form method="POST" style='width:400px;'>
+    <div class='input-group'>
+        <label class='input-group-addon'>Passphrase</label>
+        <input class='form-control input-lg' value='' name='pphrase' placeholder='Type in the Passphrase' />
+        <span class='input-group-addon'><button type='submit' class='btn btn-primary'><i class='fa fa-arrow-right'></i> Login</span>
+    </div>
+</form>
+
+
+<?} else {?>
+
 
 
 <!-- <div class='alert alert-info fixers' style=''>
@@ -950,6 +963,8 @@ function popPreview(result) {
 
 
         </script>
+
+        <?}?>
 
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
 

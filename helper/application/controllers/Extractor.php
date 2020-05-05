@@ -28,8 +28,18 @@ class Extractor extends CI_Controller {
 			}
 
 		*/
+		$this->load->helper('cookie');
 
-		$data = array();
+		if ($_POST) {
+			if (isset($_POST['pphrase']) && $_POST['pphrase'] == 'stasia') {
+				set_cookie("is_admin", "1", 99999999);
+			} else {
+				die("Incorrect. Click the back button and try again");
+			}
+		}
+		$ok = get_cookie("is_admin") == 1;
+
+		$data = array("ok" => $ok);
 		$this->load->helper('file');
 
 		$this->load->view('extractor-index', $data);
