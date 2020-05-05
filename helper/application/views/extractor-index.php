@@ -89,7 +89,8 @@ for ($x = 1; $x < 15; $x++) {?>
     <input type='radio' name='csv'  class='check-csv' value='data-<?=$x?>' /> data-<?=$x?>
 </label>
 
-<?}?>
+<?php
+}?>
 </div> <button class='btn btn-info' onclick='extract()'>Load/Display CSV</button>
 <button class='btn btn-default' onclick='getfix()'>Fix/Retry Failed</button>
 <button class='btn btn-primary chks' disabled onclick='get_supplier_data(0)'>Check Supplier</button>
@@ -968,7 +969,8 @@ function popPreview(result) {
 
         </script>
 
-        <?}?>
+        <?php
+}?>
 
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
 
