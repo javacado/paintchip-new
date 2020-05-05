@@ -187,7 +187,7 @@ $(document).ready(function() {
 
 
  $.ajax({
-        url: "/extractor/getCategories",
+        url: "/helper/extractor/getCategories",
         context: document.body,
         method: 'get'
     }).done(function(res) {
@@ -235,7 +235,7 @@ function getNI() {
     $('.nii').show()
     $('.approveprices').hide()
  $.ajax({
-        url: "/extractor/getfix",
+        url: "/helper/extractor/getfix",
         context: document.body,
         method: 'get'
     }).done(function(res) {
@@ -258,7 +258,7 @@ function approvePrices() {
     $('.nii').hide()
 
  $.ajax({
-        url: "/extractor/getGood",
+        url: "/helper/extractor/getGood",
         context: document.body,
         method: 'get'
     }).done(function(res) {
@@ -380,7 +380,7 @@ if (data.price=='' || data.category=='') {
 console.log(data);
 
 $.ajax({
-        url: "/extractor/saveApprove",
+        url: "/helper/extractor/saveApprove",
         context: document.body,
         method: 'post',
         data:data
@@ -399,7 +399,7 @@ function showLargeImg(el) {
 
 function getfix() {
  $.ajax({
-        url: "/extractor/getfix",
+        url: "/helper/extractor/getfix",
         context: document.body,
         method: 'get'
     }).done(function(res) {
@@ -582,7 +582,7 @@ html+="  "
 function removeItem(el){
     var sku = $(el).closest('.ni-csv-data').attr('data-id');
     $.ajax({
-        url: "/extractor/removeItem/"+sku,
+        url: "/helper/extractor/removeItem/"+sku,
         context: document.body,
         method: 'get'
     }).done(function(res) {
@@ -624,7 +624,7 @@ var res = getSupplierDataBySKU(sku, container)
 
     var supplier = "SS";
     $.ajax({
-        url: "/extractor/getSupplierData/"+supplier+"/"+sku,
+        url: "/helper/extractor/getSupplierData/"+supplier+"/"+sku,
         context: document.body,
         method: 'post',
         data:{
@@ -765,7 +765,7 @@ function togit(el){
 var file = $('.check-csv:checked').val()
 
        $.ajax({
-        url: "/extractor/getCSV/"+file,
+        url: "/helper/extractor/getCSV/"+file,
         context: document.body,
         method: 'get'
     }).done(function(res) {
@@ -846,7 +846,7 @@ get_supplier_data(0)
     $(".update").html("<div class='alert alert-info'><i class='fa fa-spin fa-cog'></i> Searching for: "+id+"</div>");
     var supplier = "SS";
     $.ajax({
-        url: "/extractor/getSupplierData/"+supplier+"/"+id,
+        url: "/helper/extractor/getSupplierData/"+supplier+"/"+id,
         context: document.body,
         method: 'post',
         data:{
@@ -873,7 +873,7 @@ if (res.exists==1) {
 
 
         $.ajax({
-        url: "/extractor/saveTempSupplierData/"+supplier+"/"+id,
+        url: "/helper/extractor/saveTempSupplierData/"+supplier+"/"+id,
         context: document.body,
         method: 'post',
         data:{
