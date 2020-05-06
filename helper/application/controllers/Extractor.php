@@ -952,7 +952,7 @@ class Extractor extends CI_Controller {
 			$out[] = $n;
 		}
 
-		asort($out);
+		sort($out);
 		$out[] = "Miscellaneous";
 		echo json_encode($out);
 	}
