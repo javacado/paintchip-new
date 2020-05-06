@@ -955,20 +955,43 @@ class Extractor extends CI_Controller {
 		echo json_encode($out);
 	}
 
+	function fixCats() {
+		$fix = array("Kids Corner" => "Childrens Crafts",
+			"Painting Supplies" => "Paints, Mediums and Finishes",
+			"Paper Supplies" => "Paper and Pads",
+			"Ceramics" => "Clays and Accessories",
+			"Adhesives" => "Tapes and Adhesives",
+			"Craft Supplies" => "Basic Craft Supplies",
+		);
+		foreach ($fix as $old => $new) {
+			$q = "update jt_supplier_data set category='$new' where category='$old'";
+			echo "<P>$q";
+			$this->db->query($q);
+
+		}
+	}
+
 	function getCats() {
+
+		// with '// new' below update db on records before may 6
 		$cats = array(
-			"Crafts" => "Craft Supplies",
-			"Adhesives" => "Adhesives",
+			"Crafts" => "Basic Craft Supplies",
+			"Art Accessories" => "Art Accessories", // new
+			"Airbrush Supplies" => "Airbrush Supplies", // new
+			"Brushes and Brush Care" => "Brushes and Brush Care", // new
+			"Canvas and Surface" => "Canvas and Surface", // new
+			"Adhesives" => "Tapes and Adhesives",
 			"Drafting" => "Drafting Supplies",
 			"Print" => "Printmaking",
 			"Gifts" => "Gifts",
-			"Kids" => "Kids Corner",
+			"Kids" => "Childrens Crafts",
 			"Books" => "Books",
-			"Paper" => "Paper Supplies",
+			"Paper" => "Paper and Pads",
 			"Drawing" => "Drawing Supplies",
+			"Pens and Markers" => "Pens and Markers", // new
 			"Frames" => "Frames",
-			"Ceramics" => "Ceramics",
-			"Painting" => "Painting Supplies");
+			"Ceramics" => "Clays and Accessories",
+			"Painting" => "Paints, Mediums and Finishes");
 
 		ksort($cats);
 
