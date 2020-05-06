@@ -988,6 +988,8 @@ class Extractor extends CI_Controller {
 			"Gifts" => "Gifts",
 			"Kids" => "Childrens Crafts",
 			"Books" => "Books",
+			"Bookmaking" => "Bookmaking",
+			"Pastels" => "Pastels",
 			"Paper" => "Paper and Pads",
 			"Drawing" => "Drawing Supplies",
 			"Pens and Markers" => "Pens and Markers", // new
