@@ -951,6 +951,8 @@ class Extractor extends CI_Controller {
 		foreach ($cats as $c => $n) {
 			$out[] = $n;
 		}
+
+		asort($out);
 		$out[] = "Miscellaneous";
 		echo json_encode($out);
 	}
@@ -993,7 +995,7 @@ class Extractor extends CI_Controller {
 			"Ceramics" => "Clays and Accessories",
 			"Painting" => "Paints, Mediums and Finishes");
 
-		ksort($cats);
+		//ksort($cats);
 
 		return $cats;
 	}
