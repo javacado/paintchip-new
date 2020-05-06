@@ -995,7 +995,7 @@ class Extractor extends CI_Controller {
 			"Ceramics" => "Clays and Accessories",
 			"Painting" => "Paints, Mediums and Finishes");
 
-		//ksort($cats);
+		ksort($cats);
 
 		return $cats;
 	}
