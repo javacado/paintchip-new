@@ -1052,7 +1052,7 @@ class Extractor extends CI_Controller {
 
 				$title = strip_tags($row->title);
 				echo "<P> changing " . $title . " to $cat (from " . $row->category . ")";
-				$q = "update jt_supplier_data set title='$title', category='$cat' where id={$row->id}";
+				$q = "update jt_supplier_data set title='" . addslashes($title) . "', category='$cat' where id={$row->id}";
 				echo "<P>$q";
 				$ids[] = $row->id;
 				if ($go) {
