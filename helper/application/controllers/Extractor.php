@@ -1006,12 +1006,13 @@ class Extractor extends CI_Controller {
 				"gesso",
 			),
 			"Airbrush Supplies" => array(
-				"airbrush",
+				"airbrush ",
 
 			),
 
 			"Brushes and Brush Care" => array(
-				"brush",
+				"brush ",
+				"brushes",
 
 			),
 
@@ -1029,7 +1030,8 @@ class Extractor extends CI_Controller {
 			),
 			"Pens and Markers" => array(
 				"nibs",
-				"pen",
+				"pen ",
+				"pens",
 				"marker",
 			),
 		);
