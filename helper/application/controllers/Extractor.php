@@ -1014,9 +1014,7 @@ class Extractor extends CI_Controller {
 				"brush",
 
 			),
-			"Paper and Pads" => array(
 
-			),
 			"Canvas and Surface" => array(
 				"canvas",
 				"board",
