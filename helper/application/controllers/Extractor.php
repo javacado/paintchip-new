@@ -973,6 +973,104 @@ class Extractor extends CI_Controller {
 		}
 	}
 
+	function fixCatsWithNew($go = 0) {
+		$fix = array(
+			"Paints, Mediums and Finishes" => array(
+				"acrylic",
+				"liquitex",
+				"weber",
+				"linseed",
+				"testor",
+				"linoleum",
+				"plastalina",
+				"gamblin",
+				"emulsion",
+				"gouache",
+				"oil color",
+				"tempera",
+				"tube",
+				"jacquard",
+				"spray paint",
+				"m. graham",
+				"scribbles",
+				"daniel smith",
+				"mask",
+				"retarder",
+				"versatex",
+				"gum arabic",
+				"grumbacher",
+				"golden",
+				"varnish",
+				"decoart",
+				"filler",
+				"gesso",
+			),
+			"Airbrush Supplies" => array(
+				"airbrush",
+
+			),
+
+			"Brushes and Brush Care" => array(
+				"brush",
+
+			),
+			"Paper and Pads" => array(
+
+			),
+			"Canvas and Surface" => array(
+				"canvas",
+				"board",
+			),
+			"Art Accessories" => array(
+				"tray",
+				"easel",
+				"bin",
+			),
+			"Pastels" => array(
+				"pastel",
+			),
+			"Pens and Markers" => array(
+				"nibs",
+				"pen",
+				"marker",
+			),
+		);
+		$ids = array();
+		foreach ($fix as $cat => $keywords) {
+			$key = array();
+			foreach ($keywords as $k) {
+				$key[] = " lower(title) like  '%" . $k . "%' ";
+			}
+
+			$q = "select * from jt_supplier_data where " . implode(" OR ", $key);
+			echo "<P>$q";
+			$r = $this->db->query($q)->result();
+			foreach ($r as $row) {
+				if (in_array($row->id, $ids)) {
+					continue;
+				}
+
+				$title = strip_tags($row->title);
+				echo "<P> changing " . $title . " to $cat";
+				$q = "update jt_supplier_data set title='$title', category='$cat' where id={$row->id}";
+				echo "<P>$q";
+				$ids[] = $row->id;
+				if ($go) {
+					$this->db->query($q);
+				}
+
+			}
+		}
+
+		/*
+
+			"canvas",
+				"easel",
+				"tray",
+
+		*/
+	}
+
 	function getCats() {
 
 		// with '// new' below update db on records before may 6
