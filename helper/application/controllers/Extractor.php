@@ -710,6 +710,11 @@ class Extractor extends CI_Controller {
 
 			if (!$row->image && isset($row->data->img) && $row->data->img != '') {
 				$new['image'] = $row->data->img;
+
+				// test and save image
+
+				$hasimg = $this->getImage($row->data->img, $row->data->orig_img);
+				die("<h3>Output</h3><pre>" . print_r($hasimg, 1) . "</pre>");
 			}
 
 			if (!$row->category && $row->data->category != '') {
