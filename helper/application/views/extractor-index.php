@@ -526,6 +526,11 @@ console.log("input",input);
 
 }
 
+function preflighttitle(title) {
+    title = title.replace("V.g. Oll Pas6","Van Gogh Oil Pastel - ")
+    title = title.replace("V.g. Oil Pas6","Van Gogh Oil Pastel - ")
+    return title;
+}
 
 function getNIHTML(line, theid) {
 
@@ -543,6 +548,8 @@ function getNIHTML(line, theid) {
         var upc = getUPCFromLineData(line.linedata);
         if (!upc) return "" ;
     }
+
+    line.title = preflighttitle(line.title)
 var stuff="";
      stuff = " class='ni-csv-data' data-id='" + line.id + "' data-origid='" + line.id + "' data-title='" + line.title + "' data-price='" + line.theprice + "' data-category='" + line.category + "' " ;
 //https://www.slsarts.com/defaultframe.asp
