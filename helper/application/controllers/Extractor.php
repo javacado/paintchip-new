@@ -687,6 +687,39 @@ class Extractor extends CI_Controller {
 		}
 	}
 
+	function doonce() {
+		$q = "select * from jt_supplier_data where data!='' and approved != 1 and do_later!=1 and (title='' or description='' or image='') order by category asc, suggestedprice desc, price asc ";
+		$r = $this->db->query($q);
+		$rr = $r->result();
+		$r->free_result();
+		$out = array();
+		foreach ($rr as $row) {
+			$new = array();
+			$row->data = json_decode($row->data);
+			if (!$row->title && $row->data->title != '') {
+				$new['title'] = $row->data->title;
+			}
+
+			if (!$row->price && $row->data->price != '') {
+				$new['price'] = $row->data->price;
+			}
+
+			if (!$row->description && $row->data->description != '') {
+				$new['description'] = $row->data->description;
+			}
+
+			if (!$row->image && $row->data->image != '') {
+				$new['image'] = $row->data->image;
+			}
+
+			if (!$row->category && $row->data->category != '') {
+				$new['category'] = $row->data->category;
+			}
+
+			echo "<P>updating item with " . print_r($new, 1);
+		}
+	}
+
 	function getGood() {
 		$q = "select count(*) as ttl from jt_supplier_data where data!='' and approved != 1 ";
 		$r = $this->db->query($q);
@@ -725,6 +758,7 @@ class Extractor extends CI_Controller {
 		$out = array();
 		foreach ($rr as $row) {
 			$row->data = json_decode($row->data);
+
 			$theline = $row->data->linedata;
 			$theline = explode("LINE 2:", $theline);
 			$thefline = $theline[0];
