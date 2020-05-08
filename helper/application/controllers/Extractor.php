@@ -708,8 +708,8 @@ class Extractor extends CI_Controller {
 				$new['description'] = $row->data->description;
 			}
 
-			if (!$row->image && $row->data->image != '') {
-				$new['image'] = $row->data->image;
+			if (!$row->image && isset($row->data->img) && $row->data->img != '') {
+				$new['image'] = $row->data->img;
 			}
 
 			if (!$row->category && $row->data->category != '') {
