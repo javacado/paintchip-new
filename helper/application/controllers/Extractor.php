@@ -719,8 +719,7 @@ class Extractor extends CI_Controller {
 				continue;
 			}
 
-			echo "<P>updating row:" . print_r($row, 1) . " with: ";
-			print_r($new);
+			echo "<P>updating row:" . print_r($row, 1) . " with: <br><pre>" . print_r($new, 1) . "</pre>";
 		}
 	}
 
