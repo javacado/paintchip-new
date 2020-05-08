@@ -630,8 +630,7 @@ function tryNewSKU(el) {
 
 var updater = $(el).closest('.ni-csv-data').find('.completion');
 var container = $(el).closest('.ni-csv-data');
-updater.html("<i class='fa fa-spin fa-cog'></i> Searching for: "+sku );
-var res = getSupplierDataBySKU(sku, container)
+
 
     var sku = $(container).find('.input-sku').val()
     var price = $(container).find('.input-price').val()
@@ -644,7 +643,8 @@ if (!sku || ! price || ! category || ! title) {
     return
 }
 
-
+updater.html("<i class='fa fa-spin fa-cog'></i> Searching for: "+sku );
+var res = getSupplierDataBySKU(sku, container)
 }
 
 
