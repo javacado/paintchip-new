@@ -714,7 +714,7 @@ class Extractor extends CI_Controller {
 				// test and save image
 
 				$hasimg = $this->getImage($row->data->orig_img, $row->data->img);
-				die("<h3>Output</h3><pre>" . print_r($row->data->img . " -" . $row->data->orig_img, 1) . "</pre>");
+				//die("<h3>Output</h3><pre>" . print_r($row->data->img . " -" . $row->data->orig_img, 1) . "</pre>");
 			}
 
 			if (!$row->category && $row->data->category != '') {
@@ -722,9 +722,14 @@ class Extractor extends CI_Controller {
 			}
 			if (count($new) == 0) {
 				continue;
+			} else {
+				$up = $this->db->update("jt_supplier_data", $new, array("id" => $row->id));
+				if (!$up) {
+					die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+				}
+				echo "<P>updated row:" . print_r($row, 1) . " with: <br><pre>" . print_r($new, 1) . "</pre>";
 			}
 
-			echo "<P>updating row:" . print_r($row, 1) . " with: <br><pre>" . print_r($new, 1) . "</pre>";
 		}
 	}
 
