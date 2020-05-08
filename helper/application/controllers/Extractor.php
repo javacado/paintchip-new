@@ -635,6 +635,14 @@ class Extractor extends CI_Controller {
 
 	}
 
+	function saveForLater() {
+		//die("<h3>Output</h3><pre>" . print_r($_POST, 1) . "</pre>");
+		$id = $this->input->post('id');
+		$this->db->query('update jt_supplier_data set do_later=1 where id=$id');
+		echo "OK";
+
+	}
+
 	function saveApprove() {
 		$id = $this->input->post('id');
 		$price = $this->input->post('price');
@@ -692,6 +700,12 @@ class Extractor extends CI_Controller {
 		$r->free_result();
 		$data['approved'] = $rr->ttl;
 
+		$q = "select count(*) as ttl from jt_supplier_data where data!='' and approved != 1 and do_later=1";
+		$r = $this->db->query($q);
+		$rr = $r->row();
+		$r->free_result();
+		$data['do_later'] = $rr->ttl;
+
 		$q = "select count(*) as ttl from jt_supplier_data where data!='' and category = '' ";
 		$r = $this->db->query($q);
 		$rr = $r->row();
@@ -704,7 +718,7 @@ class Extractor extends CI_Controller {
 		$r->free_result();
 		$data['noprice'] = $rr->ttl;
 
-		$q = "select * from jt_supplier_data where data!='' and approved != 1 order by category asc, suggestedprice desc, price asc limit 100";
+		$q = "select * from jt_supplier_data where data!='' and approved != 1 and do_later!=1 order by category asc, suggestedprice desc, price asc limit 100";
 		$r = $this->db->query($q);
 		$rr = $r->result();
 		$r->free_result();

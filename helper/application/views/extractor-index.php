@@ -112,11 +112,11 @@ for ($x = 1; $x < 15; $x++) {?>
     <div class='col-md-6 ' >
 <h3>Approve Prices</h3>
 <div class='alert alert-info' id='apttl'>
-</div>
+</div><div id='lg-img' onclick="$(this).html('')"></div>
+
 <div id='resultsp'></div>
 </div>
-    <div class='col-md-6 ' >
-<div id='lg-img'></div>
+    <div class='col-md-6 sls1 ' >
 </div>
 </div>
 
@@ -271,6 +271,8 @@ function approvePrices() {
 html ="<button class='btn btn-xs btn-warning' onclick='switchids(this)'><i class='fa fa-reload'></i> Attempt Switch Ids</button> <button class='btn btn-xs btn-success' onclick='gsd(\".retry-csv-data\")'><i class='fa fa-arrow-right'></i> Run it</button> " + html*/
         $('#apttl').html("Missing price: <strong>"+ res.noprice + "</strong> / Missing Category: <strong>"+ res.nocat+"</strong> / Approved: <strong>"+res.approved+"</strong> / Not Approved: <strong>"+res.notapproved+"</strong>")
         $('#resultsp').html(html)
+        $(".sls1").html('<iframe src="https://www.slsarts.com/defaultframe.asp" style="border:0;width:100%;height:1000px" />')
+
     })
 }
 
@@ -361,6 +363,23 @@ var container=$(el).closest(".sup-data");
  $("<div class='alert alert-warning'>Save for later</div>").insertAfter(container.find(".ttl-sep"))
     container.remove().appendTo("#resultsp")
      $("#lg-img").html("");
+var data={
+    id: container.attr('data-id'),
+    price: container.find('.input-price').val(),
+    category: container.find('.input-cat').val()
+
+}
+$.ajax({
+        url: "/helper/extractor/saveForLater",
+        context: document.body,
+        method: 'post',
+        data:data
+    }).done(function(res) {
+    container.css('opacity', '.3')
+    container.remove().appendTo("#resultsp")
+     $("#lg-img").html("");
+    })
+
 
 }
 
@@ -393,7 +412,7 @@ $.ajax({
 }
 
 function showLargeImg(el) {
-    $("#lg-img").html("<img src='" + $(el).attr('src') + "' width='100%' />")
+    $("#lg-img").remove().insertAfter($(el)).html("<img src='" + $(el).attr('src') + "' width='100%' />")
 
 }
 
@@ -1057,6 +1076,12 @@ body .container{
     margin:0 0 0 100px;
 }
 
+
+#lg-img{
+    position:absolute;
+    right:0;
+    z-index:10000;
+}
         </style>
 
 
