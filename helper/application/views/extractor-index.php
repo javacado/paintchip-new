@@ -582,7 +582,7 @@ html+="  "
 
             html += "<span class='input-group-addon completion'><button class='btn btn-xs btn-success' onclick='tryNewSKU(this)'><i class='fa fa-arrow-right'></i></button></span>"
             html+= "</div></dd>" ;
-            html+="<dd style='margin-top:10px;' class='small text-muted'><button class='btn btn-link btn-xs pull-right' onclick='removeItem(this)'><span class='text-danger'><i class='fa fa-trash-o '></i> remove</span></button> <span onclick='togdesc(this)'>"+line.title+"</span><div style='display:none;' class='nidesc'> <img src='/helper/uploads/" + line.image + "' height='80px;' class='pull-left'/>"+line.description+"</div></div>"
+            html+="<dd style='margin-top:10px;' class='small text-muted'><button class='btn btn-link btn-xs pull-right' onclick='removeItem(this)'><span class='text-danger'><i class='fa fa-trash-o '></i> remove</span></button> <span onclick='togdesc(this)'>"+line.title+"</span></div>"
           /*  html+=" <dd>Title: " + line.title + "</dd>" ;
             html+=" <dd>Category: " + line.category + "</dd>" ;
             html+=" <dd>Price: $"  + line.theprice + " <i>(" + line.price + ")</i></dd>" ;*/
@@ -628,11 +628,15 @@ var res = getSupplierDataBySKU(sku, container)
 
     var sku = $(container).find('.input-sku').val()
     var price = $(container).find('.input-price').val()
+
+
+    var title = $(container).find('.input-title').val()
     var category = $(container).find('.input-cat').val()
-if (!sku || ! price || ! category) {
-    alert("Please make sure the SKU, price and category are chosen")
+if (!sku || ! price || ! category || ! title) {
+    alert("Please make sure the title, SKU, price and category are chosen")
     return
 }
+
 
 }
 
@@ -645,9 +649,10 @@ if (!sku || ! price || ! category) {
     var updater = container.find('.completion')
      console.log("container",container);
  var origid = $(container).attr('data-origid')
-    var title = $(container).attr('data-title')
+   // var title = $(container).attr('data-title')
     var price = $(container).find('.input-price').val()
     var category = $(container).find('.input-cat').val()
+    var title = $(container).find('.input-title').val()
     var linedata = $(container).find('textarea').val()
 
     var supplier = "SS";
@@ -659,6 +664,7 @@ if (!sku || ! price || ! category) {
              linedata:linedata,
             origid:origid,
             price:price,
+            title:title,
             category:category,
             data_batch:'',
             oneoff:1
