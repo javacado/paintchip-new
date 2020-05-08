@@ -715,7 +715,7 @@ class Extractor extends CI_Controller {
 			if (!$row->category && $row->data->category != '') {
 				$new['category'] = $row->data->category;
 			}
-			if (count($new == 0)) {
+			if (count($new) == 0) {
 				continue;
 			}
 
