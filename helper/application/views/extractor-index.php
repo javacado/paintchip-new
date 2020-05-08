@@ -560,6 +560,8 @@ var stuff="";
 html+="  "
              html+="  "
             html += "</label>" ;
+            html += "<input class='form-control input-title' style=' '  placeholder='Paste Title here...' value='"+line.title+"' />";
+
             html += "<input class='form-control input-sku' style=' '  placeholder='Paste SKU here...' value='' />";
 
 
@@ -580,7 +582,7 @@ html+="  "
 
             html += "<span class='input-group-addon completion'><button class='btn btn-xs btn-success' onclick='tryNewSKU(this)'><i class='fa fa-arrow-right'></i></button></span>"
             html+= "</div></dd>" ;
-            html+="<dd style='margin-top:10px;' class='small text-muted'><button class='btn btn-link btn-xs pull-right' onclick='removeItem(this)'><span class='text-danger'><i class='fa fa-trash-o '></i> remove</span></button> "+line.title+"</div>"
+            html+="<dd style='margin-top:10px;' class='small text-muted'><button class='btn btn-link btn-xs pull-right' onclick='removeItem(this)'><span class='text-danger'><i class='fa fa-trash-o '></i> remove</span></button> <span onclick='togdesc(this)'>"+line.title+"</span><div style='display:none;' class='nidesc'> <img src='/helper/uploads/" + line.image + "' height='80px;' class='pull-left'/>"+line.description+"</div></div>"
           /*  html+=" <dd>Title: " + line.title + "</dd>" ;
             html+=" <dd>Category: " + line.category + "</dd>" ;
             html+=" <dd>Price: $"  + line.theprice + " <i>(" + line.price + ")</i></dd>" ;*/
@@ -594,6 +596,10 @@ html+="  "
             return html
 
 
+}
+
+function togdesc(el) {
+    $(el).parent().find('.nidesc').toggle()
 }
 
 function removeItem(el){

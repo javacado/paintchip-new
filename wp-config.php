@@ -58,7 +58,6 @@ define('SECURE_AUTH_SALT', 'put your unique phrase here');
 define('LOGGED_IN_SALT', 'put your unique phrase here');
 define('NONCE_SALT', 'put your unique phrase here');
 
-
 /**#@-*/
 
 /**
@@ -97,5 +96,5 @@ if (!defined('ABSPATH')) {
 require_once ABSPATH . 'wp-settings.php';
 
 /* SES STMP plugin */
-define( 'WPOSES_AWS_ACCESS_KEY_ID',     'AKIATKK5FWDTUZ5L4NE5' );
-define( 'WPOSES_AWS_SECRET_ACCESS_KEY', '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' );
+define('WPOSES_AWS_ACCESS_KEY_ID', 'AKIATKK5FWDTUZ5L4NE5');
+define('WPOSES_AWS_SECRET_ACCESS_KEY', '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');

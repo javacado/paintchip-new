@@ -2,6 +2,19 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Extractor extends CI_Controller {
+	function __construct() {
+
+		parent::__construct();
+		$this->base_url = "http://paintchip.local/";
+		$this->local_image_path = "2020/05/";
+		$this->img_dir = "wp-content/uploads/" . $this->local_image_path;
+		$this->temp_img_dir = $_SERVER['DOCUMENT_ROOT'] . "/helper/uploads/";
+		$this->prod_img_dir = $_SERVER['DOCUMENT_ROOT'] . "/" . $this->img_dir;
+		if (is_dir("/var/www/html/paintchip")) {
+			$this->base_url = "https://thepaint-chip.com/";
+
+		}
+	}
 
 	/**
 	 * Index Page for this controller.
@@ -18,6 +31,7 @@ class Extractor extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
+
 	public function index() {
 
 		/*$a = "SYS302164S,SYS30216S7,1BS6621,SYS302164S,SYS30216S7,WN3222991,reg45,GP1K1T,GP1O,DE0700836,WFWM2,WFWM4,RC8212142,SO221175,SO221194,SO221195,Fixed,S0665417,RYLP13P,RYLP14P,RYLP15P,RYLP2P,RYLP3P,RYLP4P,RYLP6P,RYLP7P,RYLP8P,S0667012,Location,SM10S902,SM10S903,SM10S901,SM10S904,SM10S905,SM10S907,SM10S908,SM10S909,TE1110,TEi11i,TE1114,TE1124,TE1127,TE1134,TE1145,TE1I46TT,SS021654TE1147,SS021656TE1149,TE1ISITT,TE1167,SS026395LQ5004,SS026476,SM105146,SM105147,SM105148,SM105149,WFCH1,WN2301931,AP70877,Y04103,disc,LQ1045720,SA20072,BSS23008,Y04303,Y04304,WN3240956,Y04251,VA1O1O1,Y04301,W2000,1B56633,1B56574,Y06MMK,VA1O111,1B56526,1B56568,1B56637,1B56620,1B56502,M16044,M16066,ABAT60T,CN95863115,WN32092,M16304,M16046,SA227S,M16088,M16302,M16033,M16202,M16099,M16049,WN32093,M16303,OD14032,3M859NG,ADDE,FC167399,FC167100,FC167199,FC167499,CN741127,CN741157,OD14502,L15501505,JA1A127,Fised,SM400011,SM40009,SA35595,SA37219,SA37221,SA37222,SA35569,SA37218,SA35577,SA37220,Note,BRONZE,Supp1ier2,SM105l20,A1ternate1D,QCom,GX1AB1624,B8S88166,SA32989,SA32084,SA32082,Location,SA32982,SA32984,SA32986,Y06H,WFK16,ELE315,LQ1045151,Fixed,L027010,CN95866165,CN95862055,CN95864095,CN95862275,CN95866755,CN95862025,CN100516063,CN100516039,CN95865355,CN95867177,CN95861005,CN95862355,CN95867005,CN95865705,CN95866545,CN95865085,CN95862015,CN95862439,CN95863349,3M859,Y04403,AV1OO,NBL1OOOC2,L1L5331015,WN34202,reg3,A076630K,1B56613,1B56516,1B56528,1B56636,1B56600,BS080303,D00486273350,0D14072,0D31955,0D30175,0D10202,0D35705,0D13302,0D40122,0D40202,0D12752,0D11502,0D13802,0D11472,0D12552,0D12202,0D3030S,0D12502,0D35507,0D3013S,0D13052,0D35505,0D30205,0D11402,0D11702,0D15542,0D13402,0D11302,0D402S2,0D11002,0D13502,0D13702,0D12602,0D10402,0D13902,0D3S60S,0D10702,0D12402,0D12772,0D15102,L15330030,Y04311,Y04310,Y04320,AB8512MB,PMJR400208,CN95863475,CN95866145,CN95867185,CN95862005,CN100516043,CN95868035,CN95863398,CN95864035,CN95861205,CN95862435,AB8627AB,M14022,M14306,M14066,Location,M14046,M14026,M14055,M14302,M14304,M16306,BS080202,WN7006210,L14020050,L1870887,L1870888,L19871001,Y04422,Y04306,WN2120100,WFHT26,WFHT268,WFHT264,Y04307,GP14BJ,3M771075,AB681,AB681,AB689,AE150,AP1795,AP1795,AP1795,AP1795,AZL5B,BF9001,BS0803,Location,CB120,CB120,CC048,CC049,CC055,CD666,CD740,CHFA3,CMFT1,CMFTl,CMSB4,CNOOO,CN200,CN200,CN200,CN200,CN200,CN200,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA2S5,DA255,DA255,DA255,DA255,Fixed,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA2SS,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA255,DA25S,DA25S,DA255,DA481,Loudon,DA481,DA481,DA481,DA481,DA481,DA481,DA481,DASOO,DASO,DA502,DA503,DA504,DA505,DAS06,Y04312,CLAY,1LLUSTRATION,A1ternate1D,S833215,A1ternate1D,QCom,DA4811008ll,Supp1ier2,CC049,CC049,QCom,A1ternate1D,CM1B24,CN00041382,CN200041394,CPCVB34G,CPCVB34P,CPCVB46G,CPCVB46P,CPCVB68G,CPCVB68P,CPCVB8511G,A1ternate1D,QCom,DAl60,A1ternate1D,QCom,A1ternate1D,DA255,DA255,DA48ll508ll,DEDASll,DEDA53I,DEDA548,DEDA549,DADAG78,DE0700456,DE0700835,DE0700837,DE0700838,DE0700927,DE34213,DE34214,DE39009,DEDAl 11,DEDAl 12,DEDAl3l,DEDAl66,DEDAI 70,DEDAI 72,DEDAl73,DEDAI 74,DEDAI 79,DEDAl80,DEDAl90,DEDA19l,Location,DEDA26l,DEDA306,DEDA0l0,DEDA0l1,SSDEDAO36 DEDA036,SSDEDA04 DEDA04,SSDEDA042 DEDA042,SSDEDA047 DEDA047,SSDEDA048 DEDA048,SSDEDAO52 DEDA052,SSDEDAO55 DEDA055,SSDEDA061 DEDA061,SSDEDA063 DEDA063,SSDEDA064 DEDA064,SSDEDA065 DEDA065,SSDEDA067 DEDA067,SSDEDA068 DEDA068,SSDEDAO71 DEDA071,SSDEDAO72 DEDA072,DEDGPM0l,DEDGPMl0,DEDGPMl l,DEDASll,DEDA53I,DEDA548,DEDA549,DADAG78,DE0700456,DE0700835,DE0700837,DE0700838,DE0700927,DE34213,DE34214,DE39009,DEDAl 11,DEDAl 12,DEDAl3l,DEDAl66,DEDAI 70,DEDAI 72,DEDAl73,DEDAI 74,DEDAI 79,DEDAl80,DEDAl90,DEDA19l,Location,DEDA26l,DEDA306,DEDA0l0,DEDA0l1,DEDASll,DEDASll,DEDA53I,DEDA548,DEDA549,DADAG78,DE0700456,DE0700835,DE0700837,DE0700838,DE0700927,DE34213,DE34214,DE39009,DEDAl 11,DEDAl 12,DEDAl3l,DEDAl66,DEDAI 70,DEDAI 72,DEDAl73,DEDAI 74,DEDAI 79,DEDAl80,DEDAl90,DEDA19l,Location,DEDA26l,DEDA306,DEDA0l0,DEDA0l1,SSDEDAO36 DEDA036,SSDEDA04 DEDA04,SSDEDA042 DEDA042,SSDEDA047 DEDA047,SSDEDA048 DEDA048,SSDEDAO52 DEDA052,SSDEDAO55 DEDA055,SSDEDA061 DEDA061,SSDEDA063 DEDA063,SSDEDA064 DEDA064,SSDEDA065 DEDA065,SSDEDA067 DEDA067,SSDEDA068 DEDA068,SSDEDAO71 DEDA071,SSDEDAO72 DEDA072,DEDGPM0l,DEDGPMl0,DEDGPMl l,DEDAl11,DEDAl12,DEDAI70,DEDAI72,DEDAI74,DEDAI79,SSDEDAO36DEDA036,SSDEDA04DEDA04,SSDEDA042DEDA042,SSDEDA047DEDA047,SSDEDA048DEDA048,SSDEDAO52DEDA052,SSDEDAO55DEDA055,SSDEDA061DEDA061,SSDEDA063DEDA063,SSDEDA064DEDA064,SSDEDA065DEDA065,SSDEDA067DEDA067,SSDEDA068DEDA068,SSDEDAO71DEDA071,SSDEDAO72DEDA072,DEDGPMll,reg2,D00486480011,D00486480127,D00486480194,D00486480208,D00486498638,D00486797953,D00486798291,D00486798313,DEDPM04,DEDPM05,DEDPM07,DEDPM08,DEDPM09,DEDPM12,DEDPM15,DEDPM16,DEDMP17,DEDPM18,DR800815168,DR800815208,OS284600023,Y04501,Y04505,Y04504,SM10Sl50,SP941Sl,OS284600188,VA40506,VA40508,VA40501,YOFU2R,WN6656568,SAl4425,HU0010999,LQ102050,LQ1046ll5,Y04305,DS28460006I,D8284600088,D8284600089,D8284600090,D,Fixe,DUSClIS,E,FC167299,FLFPC0117,SSGB1050GB1050,SSGB1060GB1060,GBI125,OB1150,GBll65,OB1190,OB1200,OB1215,SSG81220081220,0B131S,0B1330,0B1350,GBl410,SSGB14900B1490,SSGB15300B1530,SSGB15350B1535,GBJ620,GBl700,GBl710,OB1720,OB1730,OB1740,GBl780,OB1810,OB1830,SSGB1850081850,OB1875,OB1880,OB2360,OB6810,OB7020,OB7260,OB7300,SSGB7590,SSGB7595,SSGB7610,SSGB7620,SSGB7661,SSGB7678,SSG87679,SSGB7685,OB7710,OB7810,OBF1810,OD10082,GDJ0512,SSGD10902OD10902,SSGD11102OD11102,SSGD11202OD11202,OD11442,GDl4012,OD14482,GDl4602,SSGD157320D15732,SSGD15742GD15742,SSGD15762GD15762,SSGD157720D15772,SSGD353710D35371,SSGD400520D40052,SSGD400620D40062,SSGD401020D40102,SSGD401520D40152,SSGD403020D40302,SSGD852110D85211,SSGD852210D85221,SSGD852310D85231,SSGD852340D85234,SSGD852410D85241,SSGD852440D85244,SSGD852610D85261,SSGD852710D85271,OD85291,OD85301,OD85304,OD85321,OD85324,OD85341,OD85351,OD85361,OD85371,OD85374,OD85381,OD85391,OD85401,OD85404,OD85411,OD85431,OD85434,OD85461,OD85464,OD85471,OD85481,D00486480682,D00486480771,0S284600093,D8284600094,D8284600095,D82846,DS28460042,DT160,FCll4000,FLFAP01311,GBl030,GB107,GB108,SOB1210,0B152,GB168,SO87220,SO87240,G8749,GB750,OB753,G8754,OB755,GB756,GB758,0B7590,OB7595,OB7610,OB7661,OB7678,OB7679,OB7685,GB770,GB772,OD853,OD854,SSGD85644GD85644,OD85661,OD85701,GL664068,GL8800888,GL880618,GP440,GP570PC,GP699B6,S05,HB1570001,HB1570020,HB1570037,HB1570042,HB1570045,HB1570057,HB1570063,HB1570067,HB1570072,HB1570079,HB1570080,HB1570085,HB1570093,HB1570096,SSHB1570099HB1570099,SSHB1570100,SSHB1570121HB1570121,SSHB1570127,SSHB1570128HB1570128,SSHB1570129HB1570129,SSHB1570141HB1570141,IANVL219BK,JAVP12303,REG6,SSJR400157JR400157,SSJR400159,JR40020112,JR40020312,JR40020412,JR496003,JR496004,JR496006,JR710108,JR710228,JR710243,SPECIA,LC414260992,LD283005,SSLQ101076,SSLQ1041017,SSLQ1045890,SSLQ1045892,SSLQ1045893,SSLQ1045894,SSLQ126804,SSLQ3699313,SSLQ3699328,MGII038,MGII040,MGII050,MGII060,MGII080,MGLLL40,MGLLL56,MGLLL60,NG36174,ML400035317,MP2P20CR,MA94872124,MTEX0140L03M,MTEX014010JM,MTEX0140LL8M,MTEX014020IM,MTEX014601M,MTEX0L40604M,MTEX0L41013M,MTEX0L42004M,MTEX014001M,MU66PRO2005,RYZ73TCL4,RYZ73WL,RYZ73WOI,RYZ73WOL2,RYZ83AL4,RYZ83O12,RYZ83GL4,RYZ83LL,RYZ83WL,SA1735795,SAI773L03,SAL7731S6,SA1773L57,SA177316L,SAL773162,SA177316S,SAI773175,SAL773196,SAL773197,SAI773202,SA177322L,SAL77323S,SAI773237,SAI773257,SAL773261,SAL773264,SAL773267,SAL773276,SAL773278,SAL773279,SAI773280,SAL773283,SAI773295,SAI785393,SAI785394,SAI785396,SA1785400,SA1785421,SA1801039B,SA1815006,SAL815007,SA1815008,SA1815009,SAL815010,SA1815012,SAL863389,SA1863413,SA1863414,SA1927296,SA3003S,SA3005L,SA36713,SA371L4,GD856,QUT1ROJOURNALU,L35529,HB157,R210531,JR4960,SPEC1A,L13283,L13283009,LP197,LQ104,LQ101024,ML185,RYZ8314,RYZ83P034,RYZ83P01,RYZ83RP,SA1815011,A1863389,SA1898305,D00486201805,CN7022050,LQ103200,A041821C,BSS23016,SSS96892,SS600970M16402,PP54501,BSS74401,CN95865485,PP54521,LQ104616l,CADORA,Order,GP40012A,LQ1045163,LQ104084,MW70,MW71,MW83,NWOOl,NW002,NW003,P209,PB37S0,PB3950,PB39S0,PB6SOO,PKDPO,PKER2,PKMLO,PKRDP,PL509,PLBG2,PLFPl0,PLFP5,PLFRH,PLPPB,PLPPR,PLS520,PLSD9,PLST15,PLTRJ5,QT1OS,RC117,RC118,RC859,RC869,RS2550,RS25S0,RS2S50,CN31823108,LQ1046I60,ULTRAM,MW6ll000,B3750LO,B3750ML200,B3750MLBO0,B3750MM025,PB37500M025,PB37500M075,PB3750Rl,PB3750Rl0,PB3750Rl2,B3950R2,B3950R4,B3950R6,B3950R8";
@@ -590,21 +604,24 @@ class Extractor extends CI_Controller {
 	}
 
 	function getdupes() {
-		$q = "SELECT title, COUNT(title) FROM jt_supplier_data where data !=''  GROUP BY title HAVING COUNT(title) > 1";
+		$q = "SELECT id, title, COUNT(title) as ttl FROM jt_supplier_data where data !=''  GROUP BY title HAVING COUNT(title) > 1";
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
+			echo "<p>#" . $row->ttl . " // id: " . $row->id . ": " . $row->title;
+			continue;
 			$ttl = addslashes($row->title);
 			$q = "select title,id,price from jt_supplier_data where title='$ttl' order by price desc";
 			$rr = $this->db->query($q)->result();
 			$theprice = '';
 			foreach ($rr as $srow) {
+				echo "<p>" . $row->title;
 				if ($srow->price != "" && $srow->price != 0) {
 					$theprice = $srow->price;
 
 				} else {
 					//die("<h3>Output</h3><pre>" . print_r("T", 1) . "</pre>");
 					$srow->suggestedprice = $theprice;
-					$this->db->query('update jt_supplier_data set suggestedprice="' . $theprice . '" where id=' . $srow->id);
+					//$this->db->query('update jt_supplier_data set suggestedprice="' . $theprice . '" where id=' . $srow->id);
 					$in[] = $srow;
 				}
 			}
@@ -1070,6 +1087,413 @@ class Extractor extends CI_Controller {
 
 		*/
 	}
+
+	function getLiveCats() {
+		$q = "select * from wp_terms ";
+		$res = $this->db->query($q);
+		$result = $res->result();
+		$res->free_result();
+		return $result;
+	}
+
+	function moveProducts($go = 0) {
+
+		/*$str = 'a:5:{s:5:"width";i:225;s:6:"height";i:225;s:4:"file";s:19:"2020/03/images.jpeg";s:5:"sizes";a:0:{}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}}';
+		die("<h3>Output</h3><pre>" . print_r(unserialize($str), 1) . "</pre>");*/
+
+		// $go = 0;
+		$cats = $this->getLiveCats();
+
+		foreach ($cats as $cat) {
+
+			$q = "select * from jt_supplier_data where category='{$cat->name}' and image!='' and moved=0 limit 1";
+			// echo "<P>$q";
+
+			$rr = $this->db->query($q);
+			$r = $rr->result();
+			$rr->free_result();
+
+			foreach ($r as $row) {
+				echo ("<p> going for it " . print_r($row, 1));
+
+				$in = $this->getPostInsertA($row);
+				echo "<p>" . $this->db->insert_string("wp_posts", $in);
+				if ($go) {
+					$done = $this->db->insert("wp_posts", $in);
+					if (!$done) {
+						die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+					}
+					$post_id = $this->db->insert_id();
+				} else {
+					$post_id = "NEWPOSTID";
+				}
+				$row->post_id = $post_id;
+
+				$ustr = $this->db->update_string("wp_posts", array("guid" => $this->base_url . "?post_type=product&#038;p=" . $post_id), array("id" => $post_id));
+
+				if ($go) {
+					$this->db->query($ustr);
+				} else {
+					echo "<P>$ustr";
+				}
+				$row->image_post_id = null;
+				if ($row->image) {
+					$in = $this->getImgInsertA($row);
+					echo "<p>" . $this->db->insert_string("wp_posts", $in);
+					if ($go) {
+						$done = $this->db->insert("wp_posts", $in);
+						if (!$done) {
+							die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+						}
+						$image_post_id = $this->db->insert_id();
+					} else {
+						$image_post_id = "NEW-IMAGE-POSTID";
+					}
+
+					echo "<P>moving " . $this->temp_img_dir . $row->image . " to " . $this->prod_img_dir . $row->image;
+					copy($this->temp_img_dir . $row->image, $this->prod_img_dir . $row->image);
+					$row->image_post_id = $image_post_id;
+
+					$sz = getimagesize($this->temp_img_dir . $row->image);
+
+					$img_meta = array(
+
+						"width" => $sz[0],
+						"height" => $sz[1],
+						"file" => "2020/05/" . $row->image,
+						"sizes" => Array
+						(
+						),
+
+						"image_meta" => Array
+						(
+							"aperture" => 0,
+							"credit" => "",
+							"camera" => "",
+							"caption" => "",
+							"created_timestamp" => 0,
+							"copyright" => "",
+							"focal_length" => 0,
+							"iso" => 0,
+							"shutter_speed" => 0,
+							"title" => $row->title,
+							"orientation" => 0,
+							"keywords" => Array
+							(
+							),
+
+						),
+					);
+					$img_meta = serialize($img_meta);
+					$i = array();
+					$i[] = array("post_id" => $image_post_id, "meta_key" => "_wp_attached_file", "meta_value" => $this->local_image_path . $row->image);
+					$i[] = array("post_id" => $image_post_id, "meta_key" => "_wp_attachment_metadata", "meta_value" => $img_meta);
+
+					if ($go) {
+						$this->db->insert_batch("wp_postmeta", $i);
+					}
+
+					echo "<p>post meta: " . print_r($i, 1);
+
+				}
+
+				$up = array("object_id" => $post_id, "term_taxonomy_id" => $cat->term_id);
+				if ($go) {
+					$this->db->insert("wp_term_relationships", $up);
+				}
+
+				echo "<P>wp_term_relationships: " . print_r($up, 1);
+
+				// insert meta
+				$in = $this->getPostMetaInsertA($row);
+
+				if ($go) {
+					$done = $this->db->insert_batch("wp_postmeta", $in);
+					if (!$done) {
+						die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+					}
+				} else {
+					echo ("<h3>post meta</h3><pre>" . print_r($in, 1) . "</pre>");
+				}
+
+				die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
+
+			}
+		}
+
+	}
+
+	function getPostInsertA($row) {
+		$safetitle = strtolower($row->title);
+		$safetitle = preg_replace('/[^a-z0-9]+ /i', '_', $safetitle); # or...
+		$safetitle = preg_replace('/[^a-z\d]+ /i', '_', $safetitle);
+		$safetitle = str_replace(" ", "-", $safetitle);
+		$a = array(
+			"post_author" => 1,
+			"post_date" => date("Y-m-d H:i:s"),
+			"post_date_gmt" => date("Y-m-d H:i:s"),
+			"post_modified_gmt" => date("Y-m-d H:i:s"),
+			"post_modified" => date("Y-m-d H:i:s"),
+			"post_content" => $row->description,
+			"post_title" => $row->title,
+			"post_status" => "publish",
+			"comment_status" => "open",
+			"ping_status" => "open",
+			"post_name" => $safetitle,
+			"guid" => $this->base_url . "?post_type=product&#038;p=",
+			"post_type" => "product",
+			"menu_order" => 0,
+		);
+
+		return $a;
+	}
+
+	function getImgInsertA($row) {
+		$safetitle = strtolower($row->image);
+		$safetitle = explode(".", $safetitle);
+		$safetitle = $safetitle[0];
+		$safetitle = preg_replace('/[^a-z0-9]+ /i', '_', $safetitle); # or...
+		$safetitle = preg_replace('/[^a-z\d]+ /i', '_', $safetitle);
+		$safetitle = str_replace(" ", "-", $safetitle);
+		$a = array(
+			"post_author" => 1,
+			"post_date" => date("Y-m-d H:i:s"),
+			"post_date_gmt" => date("Y-m-d H:i:s"),
+			"post_modified_gmt" => date("Y-m-d H:i:s"),
+			"post_modified" => date("Y-m-d H:i:s"),
+			"post_content" => "",
+			"post_title" => $safetitle,
+			"post_status" => "inherit",
+			"comment_status" => "open",
+			"ping_status" => "closed",
+			"post_name" => $safetitle,
+			"guid" => $this->base_url . $this->img_dir . $row->image,
+			"post_type" => "attachment",
+			"post_mime_type" => "image/jpeg",
+			"menu_order" => 0,
+		);
+
+		return $a;
+	}
+
+	function getPostMetaInsertA($row) {
+
+		$in = array();
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_regular_price",
+			"meta_value" => $row->price,
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_edit_last",
+			"meta_value" => "1",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_edit_lock",
+			"meta_value" => "",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "total_sales",
+			"meta_value" => "0",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_tax_status",
+			"meta_value" => "taxable",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_tax_class",
+			"meta_value" => "",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_manage_stock",
+			"meta_value" => "no",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_backorders",
+			"meta_value" => "no",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_sold_individually",
+			"meta_value" => "no",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_virtual",
+			"meta_value" => "no",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_downloadable",
+			"meta_value" => "no",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_download_limit",
+			"meta_value" => "-1",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_download_expiry",
+			"meta_value" => "-1",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_stock",
+			"meta_value" => "NULL",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_stock_status",
+			"meta_value" => "instock",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_wc_average_rating",
+			"meta_value" => "0",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_wc_review_count",
+			"meta_value" => "0",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_product_version",
+			"meta_value" => "4.0.1",
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_price",
+			"meta_value" => $row->price,
+		);
+
+		if ($row->image_post_id) {
+			$in[] = array(
+				"post_id" => $row->post_id,
+				"meta_key" => "_product_image_gallery",
+				"meta_value" => $row->image_post_id,
+			);
+
+			$in[] = array(
+				"post_id" => $row->post_id,
+				"meta_key" => "_thumbnail_id",
+				"meta_value" => $row->image_post_id,
+			);
+		}
+
+		return $in;
+	}
+
+	/*
+		//// PRODUCT-IFYING
+
+		set up categories first (wp_terms)
+		see how it influenced wp_termmeta
+
+		insert main post into wp_posts (like id:17)
+		insert image into wp_posts (like id:18)
+		-- move image to correct location...
+
+		update wp_term_relationships
+		with object_id = post_id, term_taxonomy_id=category_id (from terms)
+
+		insert into post_meta
+
+		meta_id - auto increment
+		post_id - from above
+		meta_key, meta_value
+		-------------------------
+		meta_key: _edit_last
+		meta_value: 1
+
+		meta_key: _edit_lock
+		meta_value: 1585691484:1
+
+		meta_key: _regular_price
+		meta_value: 50  // $VAR
+
+		meta_key: total_sales
+		meta_value: 0
+
+		meta_key: _tax_status
+		meta_value: taxable
+
+		meta_key: _tax_class
+		meta_value:
+		meta_key: _manage_stock
+		meta_value: no
+
+		meta_key: _backorders
+		meta_value: no
+
+		meta_key: _sold_individually
+		meta_value: no
+
+		meta_key: _virtual
+		meta_value: no
+
+		meta_key: _downloadable
+		meta_value: no
+
+		meta_key: _download_limit
+		meta_value: -1
+
+		meta_key: _download_expiry
+		meta_value: -1
+
+		meta_key: _stock
+		meta_value: NULL
+
+		meta_key: _stock_status
+		meta_value: instock
+
+		meta_key: _wc_average_rating
+		meta_value: 0
+
+		meta_key: _wc_review_count
+		meta_value: 0
+
+		meta_key: _product_version
+		meta_value: 4.0.1
+
+		meta_key: _price
+		meta_value: 50   // $VAR
+
+		meta_key: _product_image_gallery
+		meta_value: 20,18  // $VAR
+
+		meta_key: _thumbnail_id
+		meta_value: 19  // $VAR
+		-------------------------
+
+	*/
 
 	function getCats() {
 

@@ -7,8 +7,8 @@ Redirect 301 /craftsandgifts.shtml /crafts-gifts
 Redirect 301 /contactus.shtml /contact-us
 Redirect 301 /frames.shtml /frame-shop
 
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+#RewriteCond %{HTTPS} off
+#RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
