@@ -646,6 +646,7 @@ class Extractor extends CI_Controller {
 	function saveApprove() {
 		$id = $this->input->post('id');
 		$price = $this->input->post('price');
+		$title = $this->input->post('title');
 		$category = $this->input->post('category');
 		$row = $this->db->query("select * from jt_supplier_data where id=$id")->row();
 		$data = json_decode($row->data);
@@ -653,6 +654,7 @@ class Extractor extends CI_Controller {
 		$data->category = $category;
 
 		$up = array(
+			"title" => $title,
 			"price" => $price,
 			"category" => $category,
 			"approved" => 1,
