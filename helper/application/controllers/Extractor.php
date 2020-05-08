@@ -952,6 +952,10 @@ class Extractor extends CI_Controller {
 
 		foreach ($cats as $c => $n) {
 			$arr = strtolower($c);
+			if (!isset($$arr)) {
+				continue;
+			}
+
 			foreach ($$arr as $test) {
 				if ($test && strpos($title, $test) !== false) {
 					return "$n";
