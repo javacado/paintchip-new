@@ -700,7 +700,7 @@ class Extractor extends CI_Controller {
 				$new['title'] = $row->data->title;
 			}
 
-			if (!$row->price && $row->data->price != '') {
+			if (!$row->price && isset($row->data->price)) {
 				$new['price'] = $row->data->price;
 			}
 
@@ -715,8 +715,12 @@ class Extractor extends CI_Controller {
 			if (!$row->category && $row->data->category != '') {
 				$new['category'] = $row->data->category;
 			}
+			if (count($new == 0)) {
+				continue;
+			}
 
-			echo "<P>updating item with " . print_r($new, 1);
+			echo "<P>updating row:" . print_r($row, 1) . " with: ";
+			print_r($new);
 		}
 	}
 
