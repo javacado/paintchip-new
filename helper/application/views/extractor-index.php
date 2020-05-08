@@ -331,6 +331,10 @@ function getPriceHTML(line, id) {
 
             }
               html+=" <dd style='margin:5px 0'><div class='input-group'>";
+              html += "<label class='input-group-addon'>"
+             html += "Title"
+            html += "</label>" ;
+            html +="<input class='form-control input-lg input-title' value='"+line.title+"' placeholder='0.00' />"
             html += "<label class='input-group-addon'>"
              html += "$"
             html += "</label>" ;
@@ -389,6 +393,7 @@ var container=$(el).closest(".sup-data");
 var data={
     id: container.attr('data-id'),
     price: container.find('.input-price').val(),
+    title: container.find('.input-title').val(),
     category: container.find('.input-cat').val()
 
 }
