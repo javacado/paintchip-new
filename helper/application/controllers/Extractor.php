@@ -638,7 +638,7 @@ class Extractor extends CI_Controller {
 	function saveForLater() {
 		//die("<h3>Output</h3><pre>" . print_r($_POST, 1) . "</pre>");
 		$id = $this->input->post('id');
-		$this->db->query('update jt_supplier_data set do_later=1 where id=$id');
+		$this->db->query('update jt_supplier_data set do_later=1 where id=' . $id);
 		echo "OK";
 
 	}
@@ -657,7 +657,7 @@ class Extractor extends CI_Controller {
 			"category" => $category,
 			"approved" => 1,
 		);
-		$this->db->update("jt_supplier_data", $u, array("id" => $id));
+		$this->db->update("jt_supplier_data", $up, array("id" => $id));
 		die(json_encode(array(
 			"ok" => 1)));
 		die("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
