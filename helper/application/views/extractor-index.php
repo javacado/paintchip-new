@@ -352,8 +352,8 @@ function getPriceHTML(line, id) {
             html +="</select>";
 
             html +="</div></dd><hr>"
-html +="<button class='btn btn-default pull-right' onclick='saveForLater(this)'><i class='fa fa-times'></i> Do it Later</button>";
-html +="<button class='btn btn-success ' onclick='saveApprove(this)'><i class='fa fa-floppy-o'></i> Save and Approve</button>";
+html +="<button class='btn btn-success  pull-right' onclick='saveApprove(this)'><i class='fa fa-floppy-o'></i> Save and Approve</button>";
+html +="<button class='btn btn-default' onclick='saveForLater(this)'><i class='fa fa-times'></i> Do it Later</button>";
 
                          html +="</div>"
 
