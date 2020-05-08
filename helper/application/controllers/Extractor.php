@@ -585,7 +585,9 @@ class Extractor extends CI_Controller {
 			"created" => date("Y-m-d H:i:s"),
 			"supplier" => $supplier,
 		);
-
+		if ($this->input->post('title')) {
+			$in['title'] = $this->input->post('title');
+		}
 		if ($this->input->post('price')) {
 			$in['price'] = str_replace("$", "", $this->input->post('price'));
 			$in['category'] = $this->input->post('category');
