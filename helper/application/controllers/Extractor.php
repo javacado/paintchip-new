@@ -1167,6 +1167,10 @@ class Extractor extends CI_Controller {
 
 	function moveProducts($go = 0) {
 
+		ini_set('display_errors', 1);
+		ini_set('display_startup_errors', 1);
+		error_reporting(E_ALL);
+
 		/*$str = 'a:5:{s:5:"width";i:225;s:6:"height";i:225;s:4:"file";s:19:"2020/03/images.jpeg";s:5:"sizes";a:0:{}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}}';
 		die("<h3>Output</h3><pre>" . print_r(unserialize($str), 1) . "</pre>");*/
 
@@ -1175,7 +1179,7 @@ class Extractor extends CI_Controller {
 
 		foreach ($cats as $cat) {
 
-			$q = "select * from jt_supplier_data where category='{$cat->name}' and image!='' and moved=0 and approved=1 ";
+			$q = "select * from jt_supplier_data where category='{$cat->name}' and image!='' and moved=0 and approved=1 limit 100";
 			// echo "<P>$q";
 
 			$rr = $this->db->query($q);
