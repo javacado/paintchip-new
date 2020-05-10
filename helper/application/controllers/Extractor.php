@@ -1175,7 +1175,7 @@ class Extractor extends CI_Controller {
 
 		foreach ($cats as $cat) {
 
-			$q = "select * from jt_supplier_data where category='{$cat->name}' and image!='' and moved=0 and approved=1 limit 3";
+			$q = "select * from jt_supplier_data where category='{$cat->name}' and image!='' and moved=0 and approved=1 limit 100";
 			// echo "<P>$q";
 
 			$rr = $this->db->query($q);
@@ -1296,15 +1296,15 @@ class Extractor extends CI_Controller {
 	}
 
 	function getPostInsertA($row) {
+		$title = $row->title;
+		$title = ucwords($title);
 		$safetitle = strtolower($row->title);
 		$safetitle = preg_replace('/[^a-z0-9]+ /i', '_', $safetitle); # or...
 		$safetitle = preg_replace('/[^a-z\d]+ /i', '_', $safetitle);
 		$safetitle = str_replace(" ", "-", $safetitle);
 
-		$title = $row->title;
-		if (strtoupper($title) == $title) {
-			$title = ucwords($title);
-		}
+		//if (strtoupper($title) == $title) {
+		//}
 		$a = array(
 			"post_author" => 1,
 			"post_date" => date("Y-m-d H:i:s"),
