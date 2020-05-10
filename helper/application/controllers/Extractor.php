@@ -1175,7 +1175,7 @@ class Extractor extends CI_Controller {
 
 		foreach ($cats as $cat) {
 
-			$q = "select * from jt_supplier_data where category='{$cat->name}' and image!='' and moved=0 limit 1";
+			$q = "select * from jt_supplier_data where category='{$cat->name}' and image!='' and moved=0 and approved=1 limit 3";
 			// echo "<P>$q";
 
 			$rr = $this->db->query($q);
@@ -1220,7 +1220,10 @@ class Extractor extends CI_Controller {
 					}
 
 					echo "<P>moving " . $this->temp_img_dir . $row->image . " to " . $this->prod_img_dir . $row->image;
-					copy($this->temp_img_dir . $row->image, $this->prod_img_dir . $row->image);
+					if ($go) {
+						copy($this->temp_img_dir . $row->image, $this->prod_img_dir . $row->image);
+					}
+
 					$row->image_post_id = $image_post_id;
 
 					$sz = getimagesize($this->temp_img_dir . $row->image);
@@ -1285,7 +1288,7 @@ class Extractor extends CI_Controller {
 					echo ("<h3>post meta</h3><pre>" . print_r($in, 1) . "</pre>");
 				}
 
-				die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
+				echo ("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
 
 			}
 		}
@@ -1297,6 +1300,11 @@ class Extractor extends CI_Controller {
 		$safetitle = preg_replace('/[^a-z0-9]+ /i', '_', $safetitle); # or...
 		$safetitle = preg_replace('/[^a-z\d]+ /i', '_', $safetitle);
 		$safetitle = str_replace(" ", "-", $safetitle);
+
+		$title = $row->title;
+		if (strtoupper($title) == $title) {
+			$title = ucwords($title);
+		}
 		$a = array(
 			"post_author" => 1,
 			"post_date" => date("Y-m-d H:i:s"),
@@ -1304,7 +1312,7 @@ class Extractor extends CI_Controller {
 			"post_modified_gmt" => date("Y-m-d H:i:s"),
 			"post_modified" => date("Y-m-d H:i:s"),
 			"post_content" => $row->description,
-			"post_title" => $row->title,
+			"post_title" => $title,
 			"post_status" => "publish",
 			"comment_status" => "open",
 			"ping_status" => "open",
