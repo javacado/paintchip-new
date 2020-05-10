@@ -1175,7 +1175,7 @@ class Extractor extends CI_Controller {
 
 		foreach ($cats as $cat) {
 
-			$q = "select * from jt_supplier_data where category='{$cat->name}' and image!='' and moved=0 and approved=1 limit 100";
+			$q = "select * from jt_supplier_data where category='{$cat->name}' and image!='' and moved=0 and approved=1 ";
 			// echo "<P>$q";
 
 			$rr = $this->db->query($q);
@@ -1284,11 +1284,14 @@ class Extractor extends CI_Controller {
 					if (!$done) {
 						die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
 					}
+
+					$upp = array("moved" => 1);
+					$this->db->update("jt_supplier_data", $upp, array("id" => $row->id));
 				} else {
 					echo ("<h3>post meta</h3><pre>" . print_r($in, 1) . "</pre>");
 				}
 
-				echo ("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
+				//echo ("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
 
 			}
 		}
