@@ -631,12 +631,10 @@ class Extractor extends CI_Controller {
 			$sch = "var tmenuItems = [";
 
 			$n = explode($sch, $hstr);
-			die("<h3>Output</h3><pre>" . print_r($n[1], 1) . "</pre>");
-			$a = strpos($hstr, $src) + strlen($sch) - 1;
-			$b = strpos($hstr, "];", $a);
-			$arr = substr($hstr, $a, ($b - $a));
-			die("<h3>Output $a, $b </h3><pre>" . print_r($arr, 1) . "</pre><p>$hstr");
-			//$items = $html->find()
+			$n = $n[1];
+			$n = explode("];", $n);
+			$n = $n[0];
+			die("<h3>Output</h3><pre>" . print_r($n, 1) . "</pre>");
 
 			die("<h3>Output</h3><pre>" . $html . "</pre>");
 
