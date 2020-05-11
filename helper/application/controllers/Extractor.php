@@ -631,7 +631,7 @@ class Extractor extends CI_Controller {
 				return null;
 			}
 
-			$spans = $html->find('td span', 0)->innertext;
+			$spans = $html->find('td span')->innertext;
 
 			die("<h3>Output</h3><pre>" . print_r($spans, 1) . "</pre>");
 
