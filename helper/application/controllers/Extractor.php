@@ -835,9 +835,7 @@ class Extractor extends CI_Controller {
 
 				$title = preg_replace('/[\x00-\x1F\x7F]/u', '', $t);
 
-				if (strpos(strtolower($title), strtolower($tt)) === FALSE) {
-					$title = $tt . " " . $title;
-				}
+				
 
 				$title = str_replace("CARDED", "", $title );
 				$up = array("title" => $title, "ttlchecked" => 1, "approved"=>0);
