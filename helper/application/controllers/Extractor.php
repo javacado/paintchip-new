@@ -729,7 +729,7 @@ class Extractor extends CI_Controller {
 					if (!$up) {
 						die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
 				*/
-				echo "<hr>updated row:" . print_r($row, 1) . " with: <br><pre>" . print_r($new, 1) . "</pre>";
+				echo "<hr>updated with: <br><pre>" . print_r($new, 1) . "</pre>";
 			}
 
 		}
