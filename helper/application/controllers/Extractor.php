@@ -626,7 +626,7 @@ class Extractor extends CI_Controller {
 			foreach ($cells as $cell) {
 				$data[] = $cell->innertext;
 			}
-
+			die("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
 			die("<h3>Output $u</h3><textarea>" . $data . "</textarea>");
 		}
 
