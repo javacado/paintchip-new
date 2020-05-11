@@ -715,7 +715,7 @@ class Extractor extends CI_Controller {
 
 				// test and save image
 				echo "<P>is file:" . is_file($this->temp_img_dir . $row->data->img);
-				$hasimg = $this->getImage($row->data->orig_img, $row->data->img);
+				//$hasimg = $this->getImage($row->data->orig_img, $row->data->img);
 				//die("<h3>Output</h3><pre>" . print_r($row->data->img . " -" . $row->data->orig_img, 1) . "</pre>");
 			}
 
