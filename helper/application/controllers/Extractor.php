@@ -610,6 +610,7 @@ class Extractor extends CI_Controller {
 	function grail() {
 
 		$js = array();
+		$links = array();
 		$cats = $this->getLiveCats();
 		foreach ($cats as $cat) {
 			if ($cat->name != 'Paints, Mediums and Finishes') {
@@ -630,29 +631,20 @@ class Extractor extends CI_Controller {
 			}
 			$hstr = $html->plaintext;
 			$items = $this->getItemsFromStr($hstr);
-			if (!$items) {
+			if (!$items || (!$items['items'] && !$items['links'])) {
 				continue;
 			}
 
-			foreach ($items as $item) {
-				$item = trim(str_replace('"', "", $item));
+			foreach ($items['items'] as $item) {
 				if (strpos($item, "tm/tm") !== false) {
 					$js[] = $item;
 				}
 			}
-			continue;
 
-			$spans = $html->find('td span');
-			foreach ($spans as $span) {
-				echo "<P>i: " . $span->innertext;
-			}
-
-			die("<h3>Output</h3><pre>" . print_r($spans, 1) . "</pre>");
-
-			die("<hr>DONE");
+			$links = array_merge($links, $items['links']);
 
 		}
-		echo ("<h3>Output</h3><pre>" . print_r($js, 1) . "</pre>");
+		//echo ("<h3>Output</h3><pre>" . print_r($js, 1) . "</pre>");
 		$njs = array();
 		foreach ($js as $file) {
 			$u = "https://www.slsarts.com/$file";
@@ -660,19 +652,44 @@ class Extractor extends CI_Controller {
 			$hstr = file_get_contents($u);
 			//die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
 			$items = $this->getItemsFromStr($hstr);
-			if (!$items) {
+			if (!$items || (!$items['items'] && !$items['links'])) {
+
 				continue;
 			}
 
-			foreach ($items as $item) {
+			foreach ($items['items'] as $item) {
 				if (strpos($item, "tm/tm") !== false) {
 					$njs[] = $item;
 				}
 			}
+			$links = array_merge($links, $items['links']);
 
 		}
 
-		die("<h3>Output</h3><pre>" . print_r($njs, 1) . "</pre>");
+		$nnjs = array();
+
+		foreach ($njs as $file) {
+			$u = "https://www.slsarts.com/$file";
+			echo "<P>U: " . $u;
+			$hstr = file_get_contents($u);
+			//die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
+			$items = $this->getItemsFromStr($hstr);
+			if (!$items || (!$items['items'] && !$items['links'])) {
+
+				continue;
+			}
+
+			foreach ($items['items'] as $item) {
+				if (strpos($item, "tm/tm") !== false) {
+					$nnjs[] = $item;
+				}
+			}
+			$links = array_merge($links, $items['links']);
+
+		}
+
+		echo ("<h3>Output</h3><pre>" . print_r($links, 1) . "</pre>");
+		echo ("<h3>Output</h3><pre>" . print_r($nnjs, 1) . "</pre>");
 
 	}
 
@@ -689,14 +706,17 @@ class Extractor extends CI_Controller {
 		$n = $n[0];
 		$items = explode(",", $n);
 		$ni = array();
+		$links = array();
 		foreach ($items as $item) {
 			$item = trim(str_replace('"', "", $item));
 			if (strpos($item, "level2=") !== false) {
-				die("<h3>Output</h3><pre>" . print_r($items, 1) . "</pre>");
+				$links[] = $item;
+				//die("<h3>Output</h3><pre>" . print_r($items, 1) . "</pre>");
+			} else {
+				$ni[] = $item;
 			}
-			$ni[] = $item;
 		}
-		return $ni;
+		return array("items" => $ni, "links" => $links);
 
 	}
 
