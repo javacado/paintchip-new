@@ -834,6 +834,10 @@ class Extractor extends CI_Controller {
 
 			$title = str_replace("CARDED", "", $title);
 			$up = array("title" => $title, "ttlchecked" => 1, "approved" => 0);
+			if (strpos($title, "CANVAS") !== false) {
+				$up['category'] = "Canvas and Surfaces";
+				echo "<P>?-- changing category...";
+			}
 			if (($rr->price != '' && $rr->price != '0') || $rr->approved == 1) {
 				$up['approved'] = 1;
 			}
