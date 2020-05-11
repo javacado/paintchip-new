@@ -749,7 +749,7 @@ class Extractor extends CI_Controller {
 		$t = array("Gamblin", "Daniel Smith", "GOLDEN");
 
 		foreach ($t as $tt) {
-			$r = $this->db->query("Select * from jt_supplier_data where trim(title) like'$tt%'")->result();
+			$r = $this->db->query("Select * from jt_supplier_data where trim(title) like'$tt%' limit 2")->result();
 			foreach ($r as $rr) {
 
 				$html = $this->getHTMLDataFrom("SS", $rr->sku);
@@ -760,7 +760,7 @@ class Extractor extends CI_Controller {
 				}
 
 				//$this->db->query("delete from jt_supplier_data where sku='$id'");
-
+				$supplier = "SS";
 				if ($supplier == "SS") {
 					$url = "https://www.slsarts.com/viewitem.asp?slssku=${id}";
 					$imgbase = "https://www.slsarts.com/";
@@ -769,22 +769,18 @@ class Extractor extends CI_Controller {
 		$html = file_get_html($url);*/
 
 				$out = array();
-				$out['id'] = $id;
-				$t = $html->find('h3', 0);
-				if ($t) {
-					$t = $t->innertext;
+
+				$t = $html->find('td.gridbtns', 0);
+				if (!$t) {
+					$t = "";
 				} else {
-					$t = $html->find('td.gridbtns', 0);
-					if (!$t) {
-						$t = "";
-					} else {
-						$t = $t->innertext;
-						$t = explode("<br>", $t);
-						$t = ucwords($t[count($t) - 1]);
-					}
+					$t = $t->innertext;
+					$t = explode("<br>", $t);
+					$t = ucwords($t[count($t) - 1]);
 				}
+
 				$title = preg_replace('/[\x00-\x1F\x7F]/u', '', $t);
-				echo "<P>new title: " . $title . "(" . $tt->title . ")";
+				echo "<P>new title: " . $title . "(" . $rr->title . ")";
 			}
 
 		}
