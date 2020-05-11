@@ -621,6 +621,14 @@ class Extractor extends CI_Controller {
 			$u = "https://www.slsarts.com/$file";
 
 			$html = file_get_html($u);
+
+			// get the cat structure
+			$struc = array();
+			$a = $html->find("a");
+			foreach ($a as $alink) {
+				$struc[] = $alink->innertext;
+			}
+			die("<h3>Output</h3><pre>" . print_r($struc, 1) . "</pre>");
 			die("<h3>Output</h3><textarea>" . $html . "</textarea>");
 			$data = array();
 			$cells = $html->find('table td');
