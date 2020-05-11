@@ -646,11 +646,12 @@ class Extractor extends CI_Controller {
 				$this->db->insert("linksys", array("link" => $item));
 			}
 
-			$links = array_merge($links, $items['links']);
-
-			return;
+			//	$links = array_merge($links, $items['links']);
 
 		}
+
+		return;
+
 		//echo ("<h3>Output</h3><pre>" . print_r($js, 1) . "</pre>");
 		$njs = array();
 		foreach ($js as $file) {
