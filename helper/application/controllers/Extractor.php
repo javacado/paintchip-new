@@ -621,7 +621,7 @@ class Extractor extends CI_Controller {
 				echo "<P>$" . $srow->price . " s:" . $srow->sku . ": " . $srow->title;
 			}
 
-			$out[] = $in;
+			//$out[] = $in;
 		}
 
 		die("<h3>Output</h3><pre>done</pre>");
