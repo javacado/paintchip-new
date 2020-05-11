@@ -1213,7 +1213,7 @@ class Extractor extends CI_Controller {
 			echo "<p>Using Cat " . print_r($cat->name, 1);
 
 			$q = "select * from jt_supplier_data where category='{$cat->name}' and moved=0 and approved=1 order by image desc, id asc limit 1";
-			// echo "<P>$q";
+			echo "<P>$q";
 
 			$rr = $this->db->query($q);
 			$r = $rr->result();
