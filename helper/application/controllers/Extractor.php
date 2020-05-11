@@ -650,7 +650,7 @@ class Extractor extends CI_Controller {
 				$nt = str_replace("And ", "and ", $nt);
 				$in = array("name" => $nt, "slug" => $slug);
 
-				echo ("<h3>Output</h3><pre>" . print_r($in, 1) . "</pre>");
+				echo ("<h3>Output- $uid</h3><pre>" . print_r($in, 1) . "</pre>");
 				//$this->db->insert("wp_terms", $in);
 			}
 
