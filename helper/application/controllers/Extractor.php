@@ -618,7 +618,7 @@ class Extractor extends CI_Controller {
 			$rr = $this->db->query($q)->result();
 			$theprice = '';
 			foreach ($rr as $srow) {
-				echo "<P>$" . $row->price . " s:" . $row->sku . ": " . $row->title;
+				echo "<P>$" . $srow->price . " s:" . $srow->sku . ": " . $srow->title;
 			}
 
 			$out[] = $in;
