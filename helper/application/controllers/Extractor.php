@@ -798,9 +798,13 @@ class Extractor extends CI_Controller {
 		}
 	}
 
+	function fixthecats() {
+		$t = array("CHISEL");
+	}
+
 	function titlecheck($go = 0) {
 
-		$r = $this->db->query("Select * from jt_supplier_data where approved=0 and title!='' and ttlchecked=0 limit 100")->result();
+		$r = $this->db->query("Select * from jt_supplier_data where approved=0 and title!='' and ttlchecked=0 limit 200")->result();
 		foreach ($r as $rr) {
 
 			$html = $this->getHTMLDataFrom("SS", $rr->sku);
