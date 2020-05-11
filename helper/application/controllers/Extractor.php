@@ -646,8 +646,7 @@ class Extractor extends CI_Controller {
 
 			$up = array("data" => json_encode(array("struc" => $struc, "data" => $data)), "mined" => 1);
 			$this->db->update("linkys", $up, array("id" => $el->id));
-			die("<h3>Output</h3><pre>" . print_r($struc, 1) . "</pre>");
-			die("<h3>Output</h3><textarea>" . $html . "</textarea>");
+
 		}
 
 		return;
