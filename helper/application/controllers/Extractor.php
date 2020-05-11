@@ -611,6 +611,33 @@ class Extractor extends CI_Controller {
 
 	}
 
+	function mine() {
+		$r = $this->db->query("select * from linkys where mined=0 and links='' and  tm!=''")->result();
+		foreach ($r as $el) {
+			$file = $el->tm;
+			$u = "https://www.slsarts.com/$file";
+			//echo "<P>U: " . $u;
+			$hstr = file_get_contents($u);
+			//die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
+			$items = $this->getItemsFromStr($hstr);
+			if (!$items || (!$items['items'] && !$items['links'])) {
+
+				continue;
+			}
+
+			foreach ($items['items'] as $item) {
+				$this->db->insert("linkys", array("tm" => $item));
+			}
+			foreach ($items['links'] as $item) {
+				$this->db->insert("linksys", array("link" => $item));
+			}
+
+			$this->db->update("linkys", array("mined" => 1), array("id" => $el->id));
+		}
+
+		die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
+	}
+
 	function grail() {
 
 		$js = array();
