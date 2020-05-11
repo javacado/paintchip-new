@@ -665,7 +665,6 @@ class Extractor extends CI_Controller {
 			}
 
 			foreach ($items as $item) {
-				$item = trim(str_replace('"', "", $item));
 				if (strpos($item, "tm/tm") !== false) {
 					$njs[] = $item;
 				}
@@ -689,7 +688,15 @@ class Extractor extends CI_Controller {
 		$n = explode("];", $n);
 		$n = $n[0];
 		$items = explode(",", $n);
-		return $items;
+		$ni = array();
+		foreach ($items as $item) {
+			$item = trim(str_replace('"', "", $item));
+			if (strpos($item, "level1=") !== false) {
+				die("<h3>Output</h3><pre>" . print_r($items, 1) . "</pre>");
+			}
+			$ni[] = $item;
+		}
+		return $ni;
 
 	}
 
