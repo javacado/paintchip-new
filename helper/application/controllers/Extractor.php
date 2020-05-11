@@ -761,10 +761,10 @@ class Extractor extends CI_Controller {
 
 				//$this->db->query("delete from jt_supplier_data where sku='$id'");
 				$supplier = "SS";
-				if ($supplier == "SS") {
+				/*if ($supplier == "SS") {
 					$url = "https://www.slsarts.com/viewitem.asp?slssku=${$rr->sku}";
 					$imgbase = "https://www.slsarts.com/";
-				}
+				}*/
 				/*die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
 		$html = file_get_html($url);*/
 
@@ -781,6 +781,10 @@ class Extractor extends CI_Controller {
 
 				$title = preg_replace('/[\x00-\x1F\x7F]/u', '', $t);
 				echo "<P>new title: " . $title . "(" . $rr->title . ")";
+				$up = array("title" => $title);
+				if ($rr->price != '' && $rr->price != '0') {
+					$up['approved'] = 1;
+				}
 				//$this->db->update("jt_supplier_data", array("title"=> $title), array("id" => $rr->id));
 			}
 
