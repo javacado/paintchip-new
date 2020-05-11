@@ -627,11 +627,6 @@ class Extractor extends CI_Controller {
 				continue;
 
 			}
-			$test = $html->find('table', 0);
-			if (!$test) {
-				echo "NO TEST";
-				return null;
-			}
 
 			$spans = $html->find('td span');
 
