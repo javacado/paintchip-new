@@ -613,7 +613,7 @@ class Extractor extends CI_Controller {
 
 	function mine() {
 
-		$r = $this->db->query("select * from linkys where mined=0 and link!='' and  tm='' limit 100 ")->result();
+		$r = $this->db->query("select * from linkys where mined=0 and link!='' and  tm='' limit 30 ")->result();
 		if (count($r) == 0) {
 			die(json_encode(array("complete" => 1)));
 		}
