@@ -802,6 +802,19 @@ class Extractor extends CI_Controller {
 		$t = array("CHISEL");
 	}
 
+	function fixtheimages($go = 0) {
+		// get array of image names
+
+		$f = get_filenames($this->temp_img_dir);
+		$wh = array();
+		foreach ($f as $ff) {
+			$wh[] = "'" . $ff . "'";
+		}
+
+		$q = "select * from jt_supplier_data where image!='' and image in (" . implode($wh, ",") . ")";
+		echo $q;
+	}
+
 	function titlecheck($go = 0) {
 
 		$r = $this->db->query("Select * from jt_supplier_data where approved=0 and title!='' and ttlchecked=0 limit 200")->result();
