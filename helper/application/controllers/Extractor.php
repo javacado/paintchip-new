@@ -607,6 +607,36 @@ class Extractor extends CI_Controller {
 
 	}
 
+	function grail() {
+
+		$cats = $this->getLiveCats();
+		foreach ($cats as $cat) {
+			// navigate...
+			$ucat = url_encode(strtoupper($cat->name));
+			$turl = "https://www.slsarts.com/fright.asp?level1=$ucat";
+
+			$html = file_get_html($turl);
+
+			if (!$html) {
+				echo "<P>----NO HTML";
+				continue;
+
+			}
+			$test = $html->find('table', 0);
+			if (!$test) {
+				return null;
+			}
+
+			$spans = $html->find('td span', 0)->innertext;
+
+			die("<h3>Output</h3><pre>" . print_r($spans, 1) . "</pre>");
+
+			die("<hr>DONE");
+
+		}
+
+	}
+
 	function getdupes($go = 0) {
 		//$this->db->query("delete from jt_supplier_data where sku='A1ternate1D' or sku='disc' or sku='Fixed' or sku='Location' or sku='Multiplier' or sku='QCom' or sku='Supp1ier2'");
 		$q = "SELECT id, title,  COUNT(title) as ttl FROM jt_supplier_data where approved=1 and title !='' GROUP BY title HAVING COUNT(title) > 1";
@@ -1336,7 +1366,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function getLiveCats() {
-		$q = "select * from wp_terms ";
+		$q = "select * from wp_terms where id>14";
 		$res = $this->db->query($q);
 		$result = $res->result();
 		$res->free_result();
