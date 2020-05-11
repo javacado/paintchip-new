@@ -629,6 +629,10 @@ class Extractor extends CI_Controller {
 				if ($h != "") {
 					$data[] = $h;
 
+					if ($h == "MSRP") {
+						$data = array();
+					}
+
 				}
 			}
 			die("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
