@@ -606,7 +606,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function getdupes() {
-		$q = "SELECT id, sku, COUNT(sku) as ttl FROM jt_supplier_data where data !=''  GROUP BY sku HAVING COUNT(sku) > 1";
+		$q = "SELECT id, sku, COUNT(sku) as ttl FROM jt_supplier_data GROUP BY sku HAVING COUNT(sku) > 1";
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
 			echo "<p>#" . $row->ttl . " // id: " . $row->id . ": " . $row->sku;
