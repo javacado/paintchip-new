@@ -624,7 +624,12 @@ class Extractor extends CI_Controller {
 			$data = array();
 			$cells = $html->find('table td');
 			foreach ($cells as $cell) {
-				$data[] = $cell->innertext;
+				$h = trim($cell->innertext);
+				$h = strip_tags($h);
+				if ($h != "") {
+					$data[] = $h;
+
+				}
 			}
 			die("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
 			die("<h3>Output $u</h3><textarea>" . $data . "</textarea>");
