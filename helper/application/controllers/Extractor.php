@@ -607,8 +607,19 @@ class Extractor extends CI_Controller {
 
 	}
 
-	function getthing() {
+	function updater() {
+		$q = "select * from linskys where data!='' and mined=1 ";
+		$rq = $this->db->query($q);
+		$r = $rq->result();
+		$rq->free_result();
 
+		foreach ($r as $row) {
+			$data = json_decode($row->data);
+			$catdata = $data->struc;
+			$pdata = $data->data;
+
+			die("<h3>Output</h3><pre>" . print_r($catdata, 1) . print_r($pdata, 1) . "</pre>");
+		}
 	}
 
 	function mine() {
