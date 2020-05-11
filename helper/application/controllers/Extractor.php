@@ -14,6 +14,7 @@ class Extractor extends CI_Controller {
 			$this->base_url = "https://thepaint-chip.com/";
 
 		}
+		$this->load->library('AdvancedHtmlBase');
 
 		$this->load->helper('cookie');
 		$this->load->helper('file');
@@ -454,7 +455,6 @@ class Extractor extends CI_Controller {
 		//phpinfo();
 
 		$tries = 1;
-		$this->load->library('AdvancedHtmlBase');
 
 		$q = "select * from jt_supplier_data where sku='$id' order by data desc";
 		$result = $this->db->query($q)->result();
