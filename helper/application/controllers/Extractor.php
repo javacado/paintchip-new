@@ -614,7 +614,7 @@ class Extractor extends CI_Controller {
 		foreach ($r as $row) {
 			echo "<p>#" . $row->ttl . " // id: " . $row->id . ": " . $row->title;
 			$ttl = addslashes($row->title);
-			$q = "select title,id,price,sku from jt_supplier_data where title='$ttl' order by price desc";
+			$q = "select * from jt_supplier_data where title='$ttl' order by price desc";
 			$rr = $this->db->query($q)->result();
 			$theprice = '';
 			foreach ($rr as $srow) {
@@ -664,7 +664,7 @@ class Extractor extends CI_Controller {
 				if (($srow->price != '' && $srow->price != '0')) {
 					$up['approved'] = 1;
 				}
-				echo "<P>new title: " . $title . "(" . $srow->title . ") - $" . $srow->price . " - C:" . $srow->category . " - A:" . $up['approved'];
+				echo "<P>new title: " . $title . " -- (OLD: " . $srow->title . ") - $" . $srow->price . " - C:" . $srow->category . " - A:" . $up['approved'];
 				if ($go) {
 					$this->db->update("jt_supplier_data", $up, array("id" => $srow->id));
 				}
