@@ -643,6 +643,7 @@ class Extractor extends CI_Controller {
 			if (!$uid) {
 				die("<h3>Output</h3><pre>" . print_r("NO UID", 1) . "</pre>");
 			}
+			$order = 0;
 			foreach ($subcats as $sub) {
 				$nt = strtolower($sub);
 				$slug = str_replace(" ", "-", $nt);
@@ -652,8 +653,18 @@ class Extractor extends CI_Controller {
 				$this->db->insert("wp_terms", $in);
 				$term_id = $this->db->insert_id();
 
+				$in = array("term_id" => $term_id, "meta_key" => "order", "meta_value" => $order);
+				$this->db->insert("wp_termmeta", $in);
+
+				$in = array("term_id" => $term_id, "meta_key" => "display_type", "meta_value" => "products");
+				$this->db->insert("wp_termmeta", $in);
+
+				$in = array("term_id" => $term_id, "meta_key" => "thumbnail_id", "meta_value" => "0");
+				$this->db->insert("wp_termmeta", $in);
+
 				$in = array("term_id" => $term_id, "taxonomy" => "product_cat", "parent" => $uid);
 				$this->db->insert("wp_term_taxonomy", $in);
+				$order++;
 			}
 
 		}
