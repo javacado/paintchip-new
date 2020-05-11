@@ -632,6 +632,10 @@ class Extractor extends CI_Controller {
 			$sch = "var tmenuItems = [";
 
 			$n = explode($sch, $hstr);
+			if (count($n) < 2) {
+				continue;
+			}
+
 			$n = $n[1];
 			$n = explode("];", $n);
 			$n = $n[0];
@@ -654,7 +658,23 @@ class Extractor extends CI_Controller {
 			die("<hr>DONE");
 
 		}
-		die("<h3>Output</h3><pre>" . print_r($js, 1) . "</pre>");
+		echo ("<h3>Output</h3><pre>" . print_r($js, 1) . "</pre>");
+
+		foreach ($js as $file) {
+			$u = "https://www.slsarts.com/$file";
+
+			$html = file_get_html($turl);
+			//die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
+
+			if (!$html) {
+				echo "<P>----NO HTML";
+				continue;
+
+			}
+			$hstr = $html->plaintext;
+			die("<h3>Output</h3><pre>" . print_r($hstr, 1) . "</pre>");
+
+		}
 
 	}
 
