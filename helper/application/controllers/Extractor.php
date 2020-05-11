@@ -1187,12 +1187,12 @@ class Extractor extends CI_Controller {
 
 			$this->db->query("delete from wp_posts where post_type='attachment' and id>1014");
 			$this->db->query("delete from wp_posts where ID in (" . implode(",", $postids) . ")");
-			$this->db->query("delete from wp_term_relationships where post_id in (" . implode(",", $postids) . ")");
+			$this->db->query("delete from wp_term_relationships where object_id in (" . implode(",", $postids) . ")");
 		} else {
 
 			echo ("<p>delete from wp_posts where post_type='attachment' and id>1014");
 			echo ("<p>delete from wp_posts where ID in (" . implode(",", $postids) . ")");
-			echo ("<p>delete from wp_term_relationships where post_id in (" . implode(",", $postids) . ")");
+			echo ("<p>delete from wp_term_relationships where object_id in (" . implode(",", $postids) . ")");
 		}
 
 	}
@@ -1210,9 +1210,9 @@ class Extractor extends CI_Controller {
 		$cats = $this->getLiveCats();
 
 		foreach ($cats as $cat) {
-			echo "<p>Using Cat " . print_r($cat, 1);
+			echo "<p>Using Cat " . print_r($cat->name, 1);
 
-			$q = "select * from jt_supplier_data where category='{$cat->name}' and moved=0 and approved=1 limit 100";
+			$q = "select * from jt_supplier_data where category='{$cat->name}' and moved=0 and approved=1 limit 1";
 			// echo "<P>$q";
 
 			$rr = $this->db->query($q);
@@ -1220,7 +1220,7 @@ class Extractor extends CI_Controller {
 			$rr->free_result();
 
 			foreach ($r as $row) {
-				echo ("<p> going for it " . print_r($row, 1));
+				//echo ("<p> going for it " . print_r($row, 1));
 
 				$in = $this->getPostInsertA($row);
 				echo "<p>" . $this->db->insert_string("wp_posts", $in);
@@ -1302,7 +1302,7 @@ class Extractor extends CI_Controller {
 						$this->db->insert_batch("wp_postmeta", $i);
 					}
 
-					echo "<p>post meta: " . print_r($i, 1);
+					//echo "<p>post meta: " . print_r($i, 1);
 
 				}
 
