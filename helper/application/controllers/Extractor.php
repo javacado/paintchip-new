@@ -634,7 +634,15 @@ class Extractor extends CI_Controller {
 			$n = $n[1];
 			$n = explode("];", $n);
 			$n = $n[0];
-			die("<h3>Output</h3><pre>" . print_r($n, 1) . "</pre>");
+			$js = array();
+			$items = explode(",", $n);
+			foreach ($items as $item) {
+				$item = trim(str_replace('"', "", $item));
+				if (strpos($item, "tm/tm") !== false) {
+					$js[] -= $item;
+				}
+			}
+			die("<h3>Output</h3><pre>" . print_r($js, 1) . "</pre>");
 
 			die("<h3>Output</h3><pre>" . $html . "</pre>");
 
