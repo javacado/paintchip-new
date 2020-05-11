@@ -629,17 +629,11 @@ class Extractor extends CI_Controller {
 
 			}
 			$hstr = $html->plaintext;
-			$sch = "var tmenuItems = [";
-
-			$n = explode($sch, $hstr);
-			if (count($n) < 2) {
+			$items = $this->getItemsFromStr($hstr);
+			if (!$items) {
 				continue;
 			}
 
-			$n = $n[1];
-			$n = explode("];", $n);
-			$n = $n[0];
-			$items = explode(",", $n);
 			foreach ($items as $item) {
 				$item = trim(str_replace('"', "", $item));
 				if (strpos($item, "tm/tm") !== false) {
@@ -659,22 +653,43 @@ class Extractor extends CI_Controller {
 
 		}
 		echo ("<h3>Output</h3><pre>" . print_r($js, 1) . "</pre>");
-
+		$njs = array();
 		foreach ($js as $file) {
 			$u = "https://www.slsarts.com/$file";
 			echo "<P>U: " . $u;
 			$hstr = file_get_contents($u);
 			//die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
-
-			if (!$html) {
-				echo "<P>----NO HTML";
+			$items = $this->getItemsFromStr($hstr);
+			if (!$items) {
 				continue;
-
 			}
-			//$hstr = $html->plaintext;
-			die("<h3>Output</h3><pre>" . print_r($hstr, 1) . "</pre>");
+
+			foreach ($items as $item) {
+				$item = trim(str_replace('"', "", $item));
+				if (strpos($item, "tm/tm") !== false) {
+					$njs[] = $item;
+				}
+			}
 
 		}
+
+		die("<h3>Output</h3><pre>" . print_r($njs, 1) . "</pre>");
+
+	}
+
+	function getItemsFromStr($hstr) {
+		$sch = "var tmenuItems = [";
+
+		$n = explode($sch, $hstr);
+		if (count($n) < 2) {
+			return false;
+		}
+
+		$n = $n[1];
+		$n = explode("];", $n);
+		$n = $n[0];
+		$items = explode(",", $n);
+		return $items;
 
 	}
 
