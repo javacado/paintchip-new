@@ -749,7 +749,7 @@ class Extractor extends CI_Controller {
 		$t = array("Gamblin", "Daniel Smith", "GOLDEN");
 
 		foreach ($t as $tt) {
-			$r = $this->db->query("Select * from jt_supplier_data where trim(title) like'$tt%' limit 2")->result();
+			$r = $this->db->query("Select * from jt_supplier_data where trim(title) like'$tt%' limit 100")->result();
 			foreach ($r as $rr) {
 
 				$html = $this->getHTMLDataFrom("SS", $rr->sku);
@@ -762,7 +762,7 @@ class Extractor extends CI_Controller {
 				//$this->db->query("delete from jt_supplier_data where sku='$id'");
 				$supplier = "SS";
 				if ($supplier == "SS") {
-					$url = "https://www.slsarts.com/viewitem.asp?slssku=${id}";
+					$url = "https://www.slsarts.com/viewitem.asp?slssku=${$rr->sku}";
 					$imgbase = "https://www.slsarts.com/";
 				}
 				/*die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
@@ -781,6 +781,7 @@ class Extractor extends CI_Controller {
 
 				$title = preg_replace('/[\x00-\x1F\x7F]/u', '', $t);
 				echo "<P>new title: " . $title . "(" . $rr->title . ")";
+				//$this->db->update("jt_supplier_data", array("title"=> $title), array("id" => $rr->id));
 			}
 
 		}
