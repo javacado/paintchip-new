@@ -624,7 +624,7 @@ class Extractor extends CI_Controller {
 
 			$html = file_get_html($u);
 
-			die("<h3>Output $u</h3><pre>" . print_r($html->plaintext, 1) . "</pre>");
+			die("<h3>Output $u</h3><textarea>" . $html . "</textarea>");
 		}
 
 		return;
