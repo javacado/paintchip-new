@@ -19,6 +19,9 @@ class Extractor extends CI_Controller {
 		$this->load->helper('cookie');
 		$this->load->helper('file');
 
+		$str = "a:1:{i:26;a:2:{i:0;i:313;i:1;i:581;}}";
+/*		die("<h3>Output</h3><pre>" . print_r(unserialize($str), 1) . "</pre>");
+ */
 	}
 
 	/**
@@ -644,6 +647,7 @@ class Extractor extends CI_Controller {
 				die("<h3>Output</h3><pre>" . print_r("NO UID", 1) . "</pre>");
 			}
 			$order = 0;
+			$subids = array();
 			foreach ($subcats as $sub) {
 				$nt = strtolower($sub);
 				$slug = str_replace(" ", "-", $nt);
@@ -652,6 +656,7 @@ class Extractor extends CI_Controller {
 				$in = array("name" => $nt, "slug" => $slug);
 				$this->db->insert("wp_terms", $in);
 				$term_id = $this->db->insert_id();
+				$subids[] = $term_id;
 
 				$in = array("term_id" => $term_id, "meta_key" => "order", "meta_value" => $order);
 				$this->db->insert("wp_termmeta", $in);
@@ -666,6 +671,11 @@ class Extractor extends CI_Controller {
 				$this->db->insert("wp_term_taxonomy", $in);
 				$order++;
 			}
+
+			$a = array($uid => $subids);
+			$a = serialize($a);
+			$in = array("option_name" => "product_cat_children", "option_value" => $a, "autoload" => "yes");
+			$this->db->insert("wp_options", $in);
 
 		}
 
