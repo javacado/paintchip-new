@@ -608,7 +608,8 @@ class Extractor extends CI_Controller {
 	}
 
 	function updater() {
-		$q = "select * from linkys where data!='' and mined=1 and moved=0 order by RAND() limit 100";
+		$titles = array();
+		$q = "select * from linkys where data!='' and mined=1 and moved=0 ";
 		$rq = $this->db->query($q);
 		$r = $rq->result();
 		$rq->free_result();
@@ -616,10 +617,22 @@ class Extractor extends CI_Controller {
 		foreach ($r as $row) {
 			$data = json_decode($row->data);
 			$catdata = $data->struc;
+
+			if (!array_key_exists($cat[0], $titles)) {
+				$titles[$cat[0]] = array($titles[$cat[1]]);
+			} else {
+				if (!array_key_exists($cat[1], $titles[$cat[0]])) {
+					$titles[$cat[0]][] = $titles[$cat[1]];
+				}
+			}
+
+			continue;
 			$pdata = $data->data;
 
 			echo ("<h3>Output</h3><pre>" . print_r($catdata, 1) . print_r($pdata, 1) . "</pre>");
 		}
+
+		die("<h3>Output</h3><pre>" . print_r($titles, 1) . "</pre>");
 	}
 
 	function mine() {
