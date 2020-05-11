@@ -628,8 +628,7 @@ class Extractor extends CI_Controller {
 			foreach ($a as $alink) {
 				$struc[] = $alink->innertext;
 			}
-			die("<h3>Output</h3><pre>" . print_r($struc, 1) . "</pre>");
-			die("<h3>Output</h3><textarea>" . $html . "</textarea>");
+
 			$data = array();
 			$cells = $html->find('table td');
 			foreach ($cells as $cell) {
@@ -645,9 +644,10 @@ class Extractor extends CI_Controller {
 				}
 			}
 
-			$up = array("data" => json_encode($data), "mined" => 1);
+			$up = array("data" => json_encode(array("struc" => $struc, "data" => $data)), "mined" => 1);
 			$this->db->update("linkys", $up, array("id" => $el->id));
-
+			die("<h3>Output</h3><pre>" . print_r($struc, 1) . "</pre>");
+			die("<h3>Output</h3><textarea>" . $html . "</textarea>");
 		}
 
 		return;
