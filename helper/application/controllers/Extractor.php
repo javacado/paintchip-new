@@ -609,6 +609,7 @@ class Extractor extends CI_Controller {
 
 	function grail() {
 
+		$js = array();
 		$cats = $this->getLiveCats();
 		foreach ($cats as $cat) {
 			if ($cat->name != 'Paints, Mediums and Finishes') {
@@ -634,7 +635,6 @@ class Extractor extends CI_Controller {
 			$n = $n[1];
 			$n = explode("];", $n);
 			$n = $n[0];
-			$js = array();
 			$items = explode(",", $n);
 			foreach ($items as $item) {
 				$item = trim(str_replace('"', "", $item));
@@ -642,9 +642,7 @@ class Extractor extends CI_Controller {
 					$js[] = $item;
 				}
 			}
-			die("<h3>Output</h3><pre>" . print_r($js, 1) . "</pre>");
-
-			die("<h3>Output</h3><pre>" . $html . "</pre>");
+			continue;
 
 			$spans = $html->find('td span');
 			foreach ($spans as $span) {
@@ -656,6 +654,7 @@ class Extractor extends CI_Controller {
 			die("<hr>DONE");
 
 		}
+		die("<h3>Output</h3><pre>" . print_r($js, 1) . "</pre>");
 
 	}
 
