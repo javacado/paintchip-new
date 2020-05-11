@@ -608,7 +608,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function updater() {
-		$q = "select * from linkys where data!='' and mined=1 and moved=0 limit 100 order by rand()";
+		$q = "select * from linkys where data!='' and mined=1 and moved=0 order by RAND() limit 100";
 		$rq = $this->db->query($q);
 		$r = $rq->result();
 		$rq->free_result();
