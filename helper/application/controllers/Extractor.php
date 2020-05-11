@@ -1335,6 +1335,34 @@ class Extractor extends CI_Controller {
 
 	}
 
+	function fixlivecats() {
+
+		$target = "Paints, Mediums and Finishes";
+		$subs = array(
+			"brush" => 20,
+			"watercolor" => 25,
+			"oil" => 22,
+			"acrylic" => 41,
+			"gouache" => 43,
+			"tempera" => 42,
+			"enamel" => 44,
+
+		);
+		$category_id = $this->db->query("select * from wp_terms where name='$target'")->row()->term_id;
+//23
+		$r = $this->db->query("select * from wp_posts p left join wp_term_relationships r on r.object_id=p.ID where r.term_taxonomy_id=$category_id")->result();
+
+		foreach ($r as $row) {
+			$title = strtolower($row->title);
+			foreach ($subs as $s => $sid) {
+				if (strpos($title, $s) !== false) {
+					echo "<p>Move into $s: $title";
+					continue 2;
+				}
+			}
+		}
+	}
+
 	function moveProducts($go = 0) {
 
 		ini_set('display_errors', 1);
