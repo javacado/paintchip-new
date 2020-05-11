@@ -609,26 +609,16 @@ class Extractor extends CI_Controller {
 
 	function getdupes() {
 		//$this->db->query("delete from jt_supplier_data where sku='A1ternate1D' or sku='disc' or sku='Fixed' or sku='Location' or sku='Multiplier' or sku='QCom' or sku='Supp1ier2'");
-		$q = "SELECT id, title, COUNT(title) as ttl FROM jt_supplier_data GROUP BY title HAVING COUNT(title) > 1";
+		$q = "SELECT id, title,  COUNT(title) as ttl FROM jt_supplier_data where title !='' GROUP BY title HAVING COUNT(title) > 1";
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
 			echo "<p>#" . $row->ttl . " // id: " . $row->id . ": " . $row->title;
-			continue;
-			$ttl = addslashes($row->sku);
-			$q = "select title,id,price from jt_supplier_data where title='$ttl' order by price desc";
+			$ttl = addslashes($row->title);
+			$q = "select title,id,price,sku from jt_supplier_data where title='$ttl' order by price desc";
 			$rr = $this->db->query($q)->result();
 			$theprice = '';
 			foreach ($rr as $srow) {
-				echo "<p>" . $row->title;
-				if ($srow->price != "" && $srow->price != 0) {
-					$theprice = $srow->price;
-
-				} else {
-					//die("<h3>Output</h3><pre>" . print_r("T", 1) . "</pre>");
-					$srow->suggestedprice = $theprice;
-					//$this->db->query('update jt_supplier_data set suggestedprice="' . $theprice . '" where id=' . $srow->id);
-					$in[] = $srow;
-				}
+				echo "<P>$" . $row->price . " s:" . $row->sku . ": " . $row->title;
 			}
 
 			$out[] = $in;
