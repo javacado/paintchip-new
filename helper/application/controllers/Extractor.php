@@ -1178,7 +1178,7 @@ class Extractor extends CI_Controller {
 		echo "<P>total img:" . $rr->ttl;
 		$postids = array();
 		foreach ($r as $row) {
-			echo "<p>" . $row->title;
+			echo "<p>" . $row->post_title;
 			$postids[] = $row->ID;
 
 		}
