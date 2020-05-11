@@ -749,7 +749,7 @@ class Extractor extends CI_Controller {
 		$t = array("Gamblin", "Daniel Smith", "GOLDEN");
 
 		foreach ($t as $tt) {
-			$r = $this->db->query("Select * from jt_supplier_data where trim(title) like'$tt%' limit 100")->result();
+			$r = $this->db->query("Select * from jt_supplier_data where trim(title) like'$tt%' and ttlchecked=0 limit 100")->result();
 			foreach ($r as $rr) {
 
 				$html = $this->getHTMLDataFrom("SS", $rr->sku);
@@ -785,12 +785,12 @@ class Extractor extends CI_Controller {
 					$title = $tt . " " . $title;
 				}
 				echo "<P>new title: " . $title . "(" . $rr->title . ")";
-				$up = array("title" => $title);
-				if ($rr->price != '' && $rr->price != '0') {
+				$up = array("title" => $title, "ttlchecked" => 1);
+				if (($rr->price != '' && $rr->price != '0') || $rr->approved == 1) {
 					$up['approved'] = 1;
 				}
 				if ($go) {
-					$this->db->update("jt_supplier_data", array("title" => $title), array("id" => $rr->id));
+					$this->db->update("jt_supplier_data", $up, array("id" => $rr->id));
 				}
 
 			}
