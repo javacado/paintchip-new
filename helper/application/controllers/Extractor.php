@@ -784,11 +784,11 @@ class Extractor extends CI_Controller {
 				if (strpos(strtolower($title), strtolower($tt)) === FALSE) {
 					$title = $tt . " " . $title;
 				}
-				echo "<P>new title: " . $title . "(" . $rr->title . ")";
 				$up = array("title" => $title, "ttlchecked" => 1);
 				if (($rr->price != '' && $rr->price != '0') || $rr->approved == 1) {
 					$up['approved'] = 1;
 				}
+				echo "<P>new title: " . $title . " C: " . $rr->category . " -- (" . $rr->title . ") $" . $rr->price . "  A:" . $up['approved'];
 				if ($go) {
 					$this->db->update("jt_supplier_data", $up, array("id" => $rr->id));
 				}
