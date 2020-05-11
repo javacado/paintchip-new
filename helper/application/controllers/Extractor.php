@@ -616,7 +616,7 @@ class Extractor extends CI_Controller {
 			}
 
 			// navigate...
-			$ucat = url_encode(strtoupper($cat->name));
+			$ucat = urlencode(strtoupper($cat->name));
 			$turl = "https://www.slsarts.com/fright.asp?level1=$ucat";
 			echo "<P>$turl";
 			$html = file_get_html($turl);
