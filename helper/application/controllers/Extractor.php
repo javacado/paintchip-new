@@ -649,6 +649,7 @@ class Extractor extends CI_Controller {
 
 		}
 
+		die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
 		return;
 		// to get link...
 		$r = $this->db->query("select * from linkys where mined=0 and link='' and  tm!=''")->result();
