@@ -606,6 +606,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function getdupes() {
+		//$this->db->query("delete from jt_supplier_data where sku='A1ternate1D' or sku='disc' or sku='Fixed' or sku='Location' or sku='Multiplier' or sku='QCom' or sku='Supp1ier2'");
 		$q = "SELECT id, sku, COUNT(sku) as ttl FROM jt_supplier_data GROUP BY sku HAVING COUNT(sku) > 1";
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
@@ -632,6 +633,9 @@ class Extractor extends CI_Controller {
 		}
 
 		die("<h3>Output</h3><pre>done</pre>");
+
+		// DA160
+		// DAl60
 
 	}
 
@@ -770,7 +774,7 @@ class Extractor extends CI_Controller {
 		$r->free_result();
 		$data['noprice'] = $rr->ttl;
 
-		$q = "select * from jt_supplier_data where data!='' and approved != 1 and do_later!=1 order by category asc, suggestedprice desc, price asc limit 100";
+		$q = "select * from jt_supplier_data where data!='' and approved != 1 and do_later!=1 order by sku asc, suggestedprice desc, price asc limit 100";
 		$r = $this->db->query($q);
 		$rr = $r->result();
 		$r->free_result();
