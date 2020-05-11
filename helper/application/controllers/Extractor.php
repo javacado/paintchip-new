@@ -1337,8 +1337,8 @@ class Extractor extends CI_Controller {
 
 	function getPostInsertA($row) {
 		$title = $row->title;
-		$title = ucwords($title);
-		$safetitle = strtolower($row->title);
+		$title = ucwords(strtolower(trim($title));
+		$safetitle = strtolower($title);
 		$safetitle = preg_replace('/[^a-z0-9]+/i', '-', $safetitle); # or...
 		$safetitle = preg_replace('/[^a-z\d]+/i', '-', $safetitle);
 		$safetitle = str_replace(" ", "-", $safetitle);
