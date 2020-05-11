@@ -628,11 +628,11 @@ class Extractor extends CI_Controller {
 
 			}
 			$hstr = $html->plaintext;
-			$sch = "var tmenuItems = ";
+			$sch = "var tmenuItems =";
 			$a = strpos($hstr, $src) + strlen($sch);
 			$b = strpos($hstr, "];", $a);
-			$arr = substr($hstr, $a, $b);
-			die("<h3>Output</h3><pre>" . print_r($arr, 1) . "</pre>");
+			$arr = substr($hstr, $a, ($b - $a));
+			die("<h3>Output $a, $b </h3><pre>" . print_r($arr, 1) . "</pre>");
 			//$items = $html->find()
 
 			die("<h3>Output</h3><pre>" . $html . "</pre>");
