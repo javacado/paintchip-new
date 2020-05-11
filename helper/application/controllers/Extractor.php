@@ -615,7 +615,7 @@ class Extractor extends CI_Controller {
 
 		$r = $this->db->query("select * from linkys where mined=0 and link!='' and  tm=''")->result();
 		foreach ($r as $el) {
-			$file = $el->tm;
+			$file = $el->link;
 			$u = "https://www.slsarts.com/$file";
 
 			$html = file_get_html($u);
