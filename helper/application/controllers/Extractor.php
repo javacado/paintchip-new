@@ -781,7 +781,7 @@ class Extractor extends CI_Controller {
 
 				$title = preg_replace('/[\x00-\x1F\x7F]/u', '', $t);
 
-				if (strpos($title, $tt) === FALSE) {
+				if (strpos(strtolower($title), strtolower($tt)) === FALSE) {
 					$title = $tt . " " . $title;
 				}
 				echo "<P>new title: " . $title . "(" . $rr->title . ")";
