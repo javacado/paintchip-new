@@ -640,7 +640,7 @@ class Extractor extends CI_Controller {
 			}
 
 			foreach ($items['items'] as $item) {
-				$this->db->insert("linksys", array("tm" => $item));
+				$this->db->insert("linkys", array("tm" => $item));
 			}
 			foreach ($items['links'] as $item) {
 				$this->db->insert("linksys", array("link" => $item));
@@ -719,7 +719,8 @@ class Extractor extends CI_Controller {
 			if (strpos($item, "level2=") !== false) {
 				$links[] = $item;
 				//die("<h3>Output</h3><pre>" . print_r($items, 1) . "</pre>");
-			} else {
+
+			} else if (strpos($item, "tm/tm") !== false) {
 				$ni[] = $item;
 			}
 		}
