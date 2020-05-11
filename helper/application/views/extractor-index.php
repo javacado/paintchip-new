@@ -104,6 +104,7 @@ for ($x = 1; $x < 15; $x++) {?>
 
 
 -->
+ <button class='btn btn-danger btn-sm pull-right' onclick='mine()'>Run Mine</button>
  <button class='btn btn-default btn-sm' onclick='approvePrices()'>Approve Category/Prices</button>
  <button class='btn btn-default btn-sm' onclick='getNI()'>Fix/Retry Not Identified</button>
 
@@ -197,6 +198,29 @@ $(document).ready(function() {
         document.categories=JSON.parse(res);
     })
 })
+
+
+
+
+function mine() {
+
+
+ $.ajax({
+        url: "/helper/extractor/mine",
+        context: document.body,
+        method: 'get'
+    }).done(function(res) {
+        res = JSON.parse(res)
+       if (res.complete==1) {
+alert("DONE")
+       } else {
+setTimeout(function() {
+    mine();
+
+}, 500);
+       }
+    })
+}
 
 
 function rep_pattern(n) {

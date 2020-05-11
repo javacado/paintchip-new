@@ -613,7 +613,10 @@ class Extractor extends CI_Controller {
 
 	function mine() {
 
-		$r = $this->db->query("select * from linkys where mined=0 and link!='' and  tm='' limit 500 ")->result();
+		$r = $this->db->query("select * from linkys where mined=0 and link!='' and  tm='' limit 100 ")->result();
+		if (count($r) == 0) {
+			die(json_encode(array("complete" => 1)));
+		}
 		foreach ($r as $el) {
 			$file = $el->link;
 			$file = str_replace(" ", "%20", $file);
@@ -648,7 +651,9 @@ class Extractor extends CI_Controller {
 			$this->db->update("linkys", $up, array("id" => $el->id));
 
 		}
+		die(json_encode(array("done" => 1)));
 
+		die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
 		return;
 		// to get link...
 		$r = $this->db->query("select * from linkys where mined=0 and link='' and  tm!=''")->result();
