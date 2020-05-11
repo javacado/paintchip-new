@@ -619,10 +619,10 @@ class Extractor extends CI_Controller {
 			$cat = $data->struc;
 
 			if (!array_key_exists($cat[0], $titles)) {
-				$titles[$cat[0]] = array($titles[$cat[1]]);
+				$titles[$cat[0]] = array($cat[1]);
 			} else {
-				if (!array_key_exists($cat[1], $titles[$cat[0]])) {
-					$titles[$cat[0]][] = $titles[$cat[1]];
+				if (!in_array($cat[1], $titles[$cat[0]])) {
+					$titles[$cat[0]][] = $cat[1];
 				}
 			}
 
