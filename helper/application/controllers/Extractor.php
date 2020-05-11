@@ -620,6 +620,7 @@ class Extractor extends CI_Controller {
 			$turl = "https://www.slsarts.com/fright.asp?level1=$ucat";
 			echo "<P>$turl";
 			$html = file_get_html($turl);
+			die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
 
 			if (!$html) {
 				echo "<P>----NO HTML";
