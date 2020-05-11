@@ -691,7 +691,7 @@ class Extractor extends CI_Controller {
 		$ni = array();
 		foreach ($items as $item) {
 			$item = trim(str_replace('"', "", $item));
-			if (strpos($item, "level1=") !== false) {
+			if (strpos($item, "level2=") !== false) {
 				die("<h3>Output</h3><pre>" . print_r($items, 1) . "</pre>");
 			}
 			$ni[] = $item;
