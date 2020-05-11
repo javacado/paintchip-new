@@ -743,6 +743,51 @@ class Extractor extends CI_Controller {
 		}
 	}
 
+	function tryit() {
+		$t = array("Gamblin", "Daniel Smith", "GOLDEN");
+
+		foreach ($t as $tt) {
+			$r = $this->db->query("Select * from jt_supplier_data where trim(title) like'$tt%'")->result();
+			foreach ($r as $rr) {
+
+				$html = $this->getHTMLDataFrom("SS", $rr->sku);
+
+				if (!$html) {
+					echo "<P>No HTML";
+					continue;
+				}
+
+				//$this->db->query("delete from jt_supplier_data where sku='$id'");
+
+				if ($supplier == "SS") {
+					$url = "https://www.slsarts.com/viewitem.asp?slssku=${id}";
+					$imgbase = "https://www.slsarts.com/";
+				}
+				/*die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
+		$html = file_get_html($url);*/
+
+				$out = array();
+				$out['id'] = $id;
+				$t = $html->find('h3', 0);
+				if ($t) {
+					$t = $t->innertext;
+				} else {
+					$t = $html->find('td.gridbtns', 0);
+					if (!$t) {
+						$t = "";
+					} else {
+						$t = $t->innertext;
+						$t = explode("<br>", $t);
+						$t = ucwords($t[count($t) - 1]);
+					}
+				}
+				$title = preg_replace('/[\x00-\x1F\x7F]/u', '', $t);
+				echo "<P>new title: " . $title . "(" . $tt->title . ")";
+			}
+
+		}
+	}
+
 	function getGood() {
 		$q = "select count(*) as ttl from jt_supplier_data where data!='' and approved != 1 ";
 		$r = $this->db->query($q);
