@@ -842,7 +842,7 @@ class Extractor extends CI_Controller {
 				if (($rr->price != '' && $rr->price != '0') || $rr->approved == 1) {
 					$up['approved'] = 1;
 				}
-				echo "<P>new title: " . $title . "(" . $rr->title . ") - " . $up['approved'];
+				echo "<P>new title: " . $title . "(" . $rr->title . ") - $" . $rr->price." - A:".$up['approved'];
 				if ($go) {
 					$this->db->update("jt_supplier_data", $up, array("id" => $rr->id));
 				}
