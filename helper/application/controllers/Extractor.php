@@ -811,7 +811,7 @@ class Extractor extends CI_Controller {
 			$wh[] = "'" . $ff . "'";
 		}
 
-		$q = "select * from jt_supplier_data where image!='' and image in (" . implode($wh, ",") . ")";
+		$q = "select * from jt_supplier_data where image!='' and image not in (" . implode($wh, ",") . ")";
 		echo $q;
 	}
 
