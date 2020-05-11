@@ -690,7 +690,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function doonce() {
-		$q = "select * from jt_supplier_data where data!='' and approved != 1 and do_later!=1 and (title='' or description='' or image='') order by category asc, suggestedprice desc, price asc ";
+		$q = "select * from jt_supplier_data where data!='' and approved=1 and (title='' or description='' or image='') order by category asc, suggestedprice desc, price asc ";
 		$r = $this->db->query($q);
 		$rr = $r->result();
 		$r->free_result();
@@ -719,16 +719,16 @@ class Extractor extends CI_Controller {
 				//die("<h3>Output</h3><pre>" . print_r($row->data->img . " -" . $row->data->orig_img, 1) . "</pre>");
 			}
 
-			if (!$row->category && $row->data->category != '') {
+			/*if (!$row->category && $row->data->category != '') {
 				$new['category'] = $row->data->category;
-			}
+			}*/
 			if (count($new) == 0) {
 				continue;
 			} else {
-				$up = $this->db->update("jt_supplier_data", $new, array("id" => $row->id));
-				if (!$up) {
-					die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
-				}
+				/*$up = $this->db->update("jt_supplier_data", $new, array("id" => $row->id));
+					if (!$up) {
+						die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+				*/
 				echo "<P>updated row:" . print_r($row, 1) . " with: <br><pre>" . print_r($new, 1) . "</pre>";
 			}
 
@@ -1512,11 +1512,11 @@ class Extractor extends CI_Controller {
 		);
 
 		if ($row->image_post_id) {
-			$in[] = array(
+			/*$in[] = array(
 				"post_id" => $row->post_id,
 				"meta_key" => "_product_image_gallery",
 				"meta_value" => $row->image_post_id,
-			);
+			);*/
 
 			$in[] = array(
 				"post_id" => $row->post_id,
