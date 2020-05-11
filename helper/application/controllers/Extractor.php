@@ -609,10 +609,10 @@ class Extractor extends CI_Controller {
 
 	function getdupes() {
 		//$this->db->query("delete from jt_supplier_data where sku='A1ternate1D' or sku='disc' or sku='Fixed' or sku='Location' or sku='Multiplier' or sku='QCom' or sku='Supp1ier2'");
-		$q = "SELECT id, sku, COUNT(sku) as ttl FROM jt_supplier_data GROUP BY sku HAVING COUNT(sku) > 1";
+		$q = "SELECT id, title, COUNT(title) as ttl FROM jt_supplier_data GROUP BY title HAVING COUNT(title) > 1";
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
-			echo "<p>#" . $row->ttl . " // id: " . $row->id . ": " . $row->sku;
+			echo "<p>#" . $row->ttl . " // id: " . $row->id . ": " . $row->title;
 			continue;
 			$ttl = addslashes($row->sku);
 			$q = "select title,id,price from jt_supplier_data where title='$ttl' order by price desc";
@@ -1585,6 +1585,12 @@ class Extractor extends CI_Controller {
 			"post_id" => $row->post_id,
 			"meta_key" => "_regular_price",
 			"meta_value" => $row->price,
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
+			"meta_key" => "_sku",
+			"meta_value" => $row->sku,
 		);
 
 		$in[] = array(
