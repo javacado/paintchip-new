@@ -1510,9 +1510,9 @@ class Extractor extends CI_Controller {
 		foreach ($r as $row) {
 			$title = trim(strtolower(addslashes($row->title)));
 			$q = "select * from wp_posts where trim(lower(post_title))='$title'";
-			echo "<hr>$q";
 			$t = $this->db->query($q);
 			if ($t && $t->num_rows() != 1) {
+				echo "<hr>$q";
 				echo "<P>-- found 0 or 2+ title matches for $title --  #rows: " . $t->num_rows();
 			}
 
