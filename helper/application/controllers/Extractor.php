@@ -626,14 +626,14 @@ class Extractor extends CI_Controller {
 			$struc = array();
 			$a = $html->find("a");
 			foreach ($a as $alink) {
-				$struc[] = trim(str_replace("\r\n","",$alink->innertext);
+				$struc[] = trim(str_replace("\r\n", "", $alink->innertext));
 			}
 
 			$data = array();
 			$cells = $html->find('table td');
 			foreach ($cells as $cell) {
 				$h = trim($cell->innertext);
-				$h = trim(str_replace("\r\n","",strip_tags($h)));
+				$h = trim(str_replace("\r\n", "", strip_tags($h)));
 				if ($h != "") {
 					$data[] = $h;
 
