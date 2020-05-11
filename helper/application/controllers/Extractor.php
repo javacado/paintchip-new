@@ -1173,7 +1173,7 @@ class Extractor extends CI_Controller {
 		$r = $this->db->query($q)->result();
 		echo "<P>total product posts:" . count($r);
 
-		$q = "Select count(*) as ttl from wp_posts where post_type='attachment' and post_modified_gmt>='" . $r[0]->post_modified_gmt . "'";
+		$q = "Select count(*) as ttl from wp_posts where post_type='attachment' and id>1014";
 		$rr = $this->db->query($q)->row();
 		echo "<P>total img:" . $rr->ttl;
 		$postids = array();
@@ -1183,8 +1183,17 @@ class Extractor extends CI_Controller {
 
 		}
 
-		$q = "select count(*) as ttl from wp_term_relationships where post_id in (" . implode(",", $postids) . ")";
-		echo "<P>$q";
+		if ($go) {
+
+			$this->db->query("delete from wp_posts where post_type='attachment' and id>1014");
+			$this->db->query("delete from wp_posts where ID in (" . implode(",", $postids) . ")");
+			$this->db->query("delete from wp_term_relationships where post_id in (" . implode(",", $postids) . ")");
+		} else {
+
+			echo ("<p>delete from wp_posts where post_type='attachment' and id>1014");
+			echo ("<p>delete from wp_posts where ID in (" . implode(",", $postids) . ")");
+			echo ("<p>delete from wp_term_relationships where post_id in (" . implode(",", $postids) . ")");
+		}
 
 	}
 
