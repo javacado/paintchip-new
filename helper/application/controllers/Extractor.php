@@ -618,6 +618,7 @@ class Extractor extends CI_Controller {
 			$file = urlencode($el->link);
 			$file = str_replace("%3F", "?", $file);
 			$file = str_replace("%3D", "=", $file);
+
 			//$file = str_replace("fright_itemlist.asp", "defaultFrame.asp", $file);
 			$u = "https://www.slsarts.com/$file";
 
