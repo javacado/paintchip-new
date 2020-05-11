@@ -616,7 +616,7 @@ class Extractor extends CI_Controller {
 
 		foreach ($r as $row) {
 			$data = json_decode($row->data);
-			$catdata = $data->struc;
+			$cat = $data->struc;
 
 			if (!array_key_exists($cat[0], $titles)) {
 				$titles[$cat[0]] = array($titles[$cat[1]]);
