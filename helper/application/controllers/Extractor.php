@@ -1212,7 +1212,7 @@ class Extractor extends CI_Controller {
 		foreach ($cats as $cat) {
 			echo "<p>Using Cat " . print_r($cat->name, 1);
 
-			$q = "select * from jt_supplier_data where category='{$cat->name}' and moved=0 and approved=1 limit 1";
+			$q = "select * from jt_supplier_data where category='{$cat->name}' and moved=0 and approved=1 order by image desc, id asc limit 1";
 			// echo "<P>$q";
 
 			$rr = $this->db->query($q);
@@ -1339,8 +1339,8 @@ class Extractor extends CI_Controller {
 		$title = $row->title;
 		$title = ucwords($title);
 		$safetitle = strtolower($row->title);
-		$safetitle = preg_replace('/[^a-z0-9]+ /i', '_', $safetitle); # or...
-		$safetitle = preg_replace('/[^a-z\d]+ /i', '_', $safetitle);
+		$safetitle = preg_replace('/[^a-z0-9]+/i', '-', $safetitle); # or...
+		$safetitle = preg_replace('/[^a-z\d]+/i', '-', $safetitle);
 		$safetitle = str_replace(" ", "-", $safetitle);
 
 		//if (strtoupper($title) == $title) {
