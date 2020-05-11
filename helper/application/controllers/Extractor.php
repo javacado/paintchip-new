@@ -632,6 +632,30 @@ class Extractor extends CI_Controller {
 			echo ("<h3>Output</h3><pre>" . print_r($catdata, 1) . print_r($pdata, 1) . "</pre>");
 		}
 
+		$cats = $this->getLiveCats();
+		$catref = array();
+		foreach ($cats as $cat) {
+			$catref[strtolower($cat->name)] = $cat->term_id;
+		}
+
+		foreach ($titles as $cat => $subcats) {
+			$uid = $catref[strtolower($cat)];
+			if (!$uid) {
+				die("<h3>Output</h3><pre>" . print_r("NO UID", 1) . "</pre>");
+			}
+			foreach ($subcats as $sub) {
+				$nt = strtolower($sub);
+				$slug = str_replace(" ", "-", $nt);
+				$nt = ucwords($nt);
+				$nt = str_replace("And ", "and ", $nt);
+				$in = array("name" => $nt, "slug" => $slug);
+
+				echo ("<h3>Output</h3><pre>" . print_r($in, 1) . "</pre>");
+				//$this->db->insert("wp_terms", $in);
+			}
+
+		}
+
 		die("<h3>Output</h3><pre>" . print_r($titles, 1) . "</pre>");
 	}
 
