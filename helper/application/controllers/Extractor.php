@@ -611,10 +611,14 @@ class Extractor extends CI_Controller {
 
 		$cats = $this->getLiveCats();
 		foreach ($cats as $cat) {
+			if ($cat->name != 'Paints, Mediums and Finishes') {
+				continue;
+			}
+
 			// navigate...
 			$ucat = url_encode(strtoupper($cat->name));
 			$turl = "https://www.slsarts.com/fright.asp?level1=$ucat";
-
+			echo "<P>$turl";
 			$html = file_get_html($turl);
 
 			if (!$html) {
@@ -1366,7 +1370,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function getLiveCats() {
-		$q = "select * from wp_terms where id>14";
+		$q = "select * from wp_terms where term_id>14";
 		$res = $this->db->query($q);
 		$result = $res->result();
 		$res->free_result();
