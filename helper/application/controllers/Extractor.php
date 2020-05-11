@@ -612,7 +612,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function mine() {
-		$r = $this->db->query("select * from linkys where mined=0 and links='' and  tm!=''")->result();
+		$r = $this->db->query("select * from linkys where mined=0 and link='' and  tm!=''")->result();
 		foreach ($r as $el) {
 			$file = $el->tm;
 			$u = "https://www.slsarts.com/$file";
