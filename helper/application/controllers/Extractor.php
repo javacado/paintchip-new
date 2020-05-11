@@ -14,6 +14,10 @@ class Extractor extends CI_Controller {
 			$this->base_url = "https://thepaint-chip.com/";
 
 		}
+
+		$this->load->helper('cookie');
+		$this->load->helper('file');
+
 	}
 
 	/**
@@ -42,7 +46,6 @@ class Extractor extends CI_Controller {
 			}
 
 		*/
-		$this->load->helper('cookie');
 
 		$ok = get_cookie("is_admin") == 1;
 		if ($_POST) {
@@ -55,7 +58,6 @@ class Extractor extends CI_Controller {
 		}
 
 		$data = array("ok" => $ok);
-		$this->load->helper('file');
 
 		$this->load->view('extractor-index', $data);
 	}
