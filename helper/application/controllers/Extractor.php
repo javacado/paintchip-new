@@ -838,6 +838,12 @@ class Extractor extends CI_Controller {
 				$up['category'] = "Canvas and Surfaces";
 				echo "<P>?-- changing category...";
 			}
+
+			if (strpos($title, "CLAY") !== false) {
+				$up['category'] = "Clay and Accessories";
+				echo "<P>?-- changing category...";
+			}
+
 			if (($rr->price != '' && $rr->price != '0') || $rr->approved == 1) {
 				$up['approved'] = 1;
 			}
