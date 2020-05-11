@@ -632,7 +632,7 @@ class Extractor extends CI_Controller {
 			$a = strpos($hstr, $src) + strlen($sch) - 1;
 			$b = strpos($hstr, "];", $a);
 			$arr = substr($hstr, $a, ($b - $a));
-			die("<h3>Output $a, $b </h3><pre>" . print_r($arr, 1) . "</pre>");
+			die("<h3>Output $a, $b </h3><pre>" . print_r($arr, 1) . "</pre><p>$hstr");
 			//$items = $html->find()
 
 			die("<h3>Output</h3><pre>" . $html . "</pre>");
