@@ -608,7 +608,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function updater() {
-		$q = "select * from linkys where data!='' and mined=1 ";
+		$q = "select * from linkys where data!='' and mined=1 and moved=0 limit 5";
 		$rq = $this->db->query($q);
 		$r = $rq->result();
 		$rq->free_result();
@@ -618,7 +618,7 @@ class Extractor extends CI_Controller {
 			$catdata = $data->struc;
 			$pdata = $data->data;
 
-			die("<h3>Output</h3><pre>" . print_r($catdata, 1) . print_r($pdata, 1) . "</pre>");
+			echo ("<h3>Output</h3><pre>" . print_r($catdata, 1) . print_r($pdata, 1) . "</pre>");
 		}
 	}
 
