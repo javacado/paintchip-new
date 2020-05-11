@@ -745,7 +745,7 @@ class Extractor extends CI_Controller {
 		}
 	}
 
-	function tryit() {
+	function tryit($go = 0) {
 		$t = array("Gamblin", "Daniel Smith", "GOLDEN");
 
 		foreach ($t as $tt) {
@@ -780,12 +780,19 @@ class Extractor extends CI_Controller {
 				}
 
 				$title = preg_replace('/[\x00-\x1F\x7F]/u', '', $t);
+
+				if (strpos($title, $tt) === FALSE) {
+					$title = $tt . " " . $title;
+				}
 				echo "<P>new title: " . $title . "(" . $rr->title . ")";
 				$up = array("title" => $title);
 				if ($rr->price != '' && $rr->price != '0') {
 					$up['approved'] = 1;
 				}
-				//$this->db->update("jt_supplier_data", array("title"=> $title), array("id" => $rr->id));
+				if ($go) {
+					$this->db->update("jt_supplier_data", array("title" => $title), array("id" => $rr->id));
+				}
+
 			}
 
 		}
