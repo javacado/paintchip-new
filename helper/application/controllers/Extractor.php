@@ -1357,6 +1357,8 @@ class Extractor extends CI_Controller {
 			foreach ($subs as $s => $sid) {
 				if (strpos($title, $s) !== false) {
 					echo "<p>Move into $s: $title";
+					$up = array("term_taxonomy_id" => $sid);
+					$this->db->update("wp_term_relationships", $up, array("object_id" => $r->ID));
 					continue 2;
 				}
 			}
