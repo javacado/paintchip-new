@@ -662,8 +662,8 @@ class Extractor extends CI_Controller {
 
 		foreach ($js as $file) {
 			$u = "https://www.slsarts.com/$file";
-
-			$hstr = file_get_contents($turl);
+			echo "<P>U: " . $u;
+			$hstr = file_get_contents($u);
 			//die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
 
 			if (!$html) {
