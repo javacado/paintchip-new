@@ -663,7 +663,7 @@ class Extractor extends CI_Controller {
 		foreach ($js as $file) {
 			$u = "https://www.slsarts.com/$file";
 
-			$html = file_get_html($turl);
+			$hstr = file_get_contents($turl);
 			//die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
 
 			if (!$html) {
@@ -671,7 +671,7 @@ class Extractor extends CI_Controller {
 				continue;
 
 			}
-			$hstr = $html->plaintext;
+			//$hstr = $html->plaintext;
 			die("<h3>Output</h3><pre>" . print_r($hstr, 1) . "</pre>");
 
 		}
