@@ -629,7 +629,7 @@ class Extractor extends CI_Controller {
 				$this->db->insert("linkys", array("tm" => $item));
 			}
 			foreach ($items['links'] as $item) {
-				$this->db->insert("linksys", array("link" => $item));
+				$this->db->insert("linkys", array("link" => $item));
 			}
 
 			$this->db->update("linkys", array("mined" => 1), array("id" => $el->id));
@@ -670,7 +670,7 @@ class Extractor extends CI_Controller {
 				$this->db->insert("linkys", array("tm" => $item));
 			}
 			foreach ($items['links'] as $item) {
-				$this->db->insert("linksys", array("link" => $item));
+				$this->db->insert("linkys", array("link" => $item));
 			}
 
 			//	$links = array_merge($links, $items['links']);
