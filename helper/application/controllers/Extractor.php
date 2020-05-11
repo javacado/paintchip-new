@@ -607,6 +607,10 @@ class Extractor extends CI_Controller {
 
 	}
 
+	function getthing() {
+
+	}
+
 	function grail() {
 
 		$js = array();
@@ -636,19 +640,22 @@ class Extractor extends CI_Controller {
 			}
 
 			foreach ($items['items'] as $item) {
-				if (strpos($item, "tm/tm") !== false) {
-					$js[] = $item;
-				}
+				$this->db->insert("linksys", array("tm" => $item));
+			}
+			foreach ($items['links'] as $item) {
+				$this->db->insert("linksys", array("link" => $item));
 			}
 
 			$links = array_merge($links, $items['links']);
+
+			return;
 
 		}
 		//echo ("<h3>Output</h3><pre>" . print_r($js, 1) . "</pre>");
 		$njs = array();
 		foreach ($js as $file) {
 			$u = "https://www.slsarts.com/$file";
-			echo "<P>U: " . $u;
+			//echo "<P>U: " . $u;
 			$hstr = file_get_contents($u);
 			//die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
 			$items = $this->getItemsFromStr($hstr);
@@ -670,7 +677,7 @@ class Extractor extends CI_Controller {
 
 		foreach ($njs as $file) {
 			$u = "https://www.slsarts.com/$file";
-			echo "<P>U: " . $u;
+			//echo "<P>U: " . $u;
 			$hstr = file_get_contents($u);
 			//die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
 			$items = $this->getItemsFromStr($hstr);
@@ -704,7 +711,7 @@ class Extractor extends CI_Controller {
 		$n = $n[1];
 		$n = explode("];", $n);
 		$n = $n[0];
-		$items = explode(",", $n);
+		$items = explode('",', $n);
 		$ni = array();
 		$links = array();
 		foreach ($items as $item) {
