@@ -613,7 +613,7 @@ class Extractor extends CI_Controller {
 
 	function mine() {
 
-		$r = $this->db->query("select * from linkys where mined=0 and link!='' and  tm=''")->result();
+		$r = $this->db->query("select * from linkys where mined=0 and link!='' and  tm='' limit 500 ")->result();
 		foreach ($r as $el) {
 			$file = $el->link;
 			$file = str_replace(" ", "%20", $file);
@@ -621,6 +621,7 @@ class Extractor extends CI_Controller {
 			$u = "https://www.slsarts.com/$file";
 
 			$html = file_get_html($u);
+			die("<h3>Output</h3><textarea>" . $html . "</textarea>");
 			$data = array();
 			$cells = $html->find('table td');
 			foreach ($cells as $cell) {
@@ -635,8 +636,10 @@ class Extractor extends CI_Controller {
 
 				}
 			}
-			die("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
-			die("<h3>Output $u</h3><textarea>" . $data . "</textarea>");
+
+			$up = array("data" => json_encode($data), "mined" => 1);
+			$this->db->update("linkys", $up, array("id" => $el->id));
+
 		}
 
 		return;
