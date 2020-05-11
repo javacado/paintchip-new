@@ -1168,7 +1168,7 @@ class Extractor extends CI_Controller {
 	function removeProducts($go = 0) {
 
 		$q = "update jt_supplier_data set moved=0 where id>0";
-		//$this->db->query($q);
+		$this->db->query($q);
 		$q = "select * from wp_posts where post_type='product' order by id asc";
 		$r = $this->db->query($q)->result();
 		echo "<P>total product posts:" . count($r);
