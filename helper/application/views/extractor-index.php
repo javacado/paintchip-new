@@ -337,7 +337,7 @@ function getPriceHTML(line, id) {
               html += "<label class='input-group-addon'>"
              html += "Title"
             html += "</label>" ;
-            html +="<input class='form-control input-lg input-title' value='"+line.title+"' placeholder='0.00' />"
+            html +="<input class='form-control input-lg input-title' value=\""+line.title+"\" placeholder='Title' />"
             html += "<label class='input-group-addon'>"
              html += "$"
             html += "</label>" ;
