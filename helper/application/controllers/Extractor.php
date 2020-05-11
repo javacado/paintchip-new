@@ -609,7 +609,7 @@ class Extractor extends CI_Controller {
 
 	function getdupes() {
 		//$this->db->query("delete from jt_supplier_data where sku='A1ternate1D' or sku='disc' or sku='Fixed' or sku='Location' or sku='Multiplier' or sku='QCom' or sku='Supp1ier2'");
-		$q = "SELECT id, title,  COUNT(title) as ttl FROM jt_supplier_data where title !='' GROUP BY title HAVING COUNT(title) > 1";
+		$q = "SELECT id, title,  COUNT(title) as ttl FROM jt_supplier_data where approved=1 and title !='' GROUP BY title HAVING COUNT(title) > 1";
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
 			echo "<p>#" . $row->ttl . " // id: " . $row->id . ": " . $row->title;
@@ -621,7 +621,7 @@ class Extractor extends CI_Controller {
 				echo "<P>$" . $srow->price . " s:" . $srow->sku . ": " . $srow->title;
 			}
 
-			$out[] = $in;
+			//$out[] = $in;
 		}
 
 		die("<h3>Output</h3><pre>done</pre>");
