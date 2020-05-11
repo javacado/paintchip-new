@@ -629,6 +629,7 @@ class Extractor extends CI_Controller {
 			}
 			$test = $html->find('table', 0);
 			if (!$test) {
+				echo "NO TEST";
 				return null;
 			}
 
