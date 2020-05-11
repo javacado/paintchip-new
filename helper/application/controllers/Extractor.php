@@ -635,7 +635,7 @@ class Extractor extends CI_Controller {
 			$this->db->update("linkys", array("mined" => 1), array("id" => $el->id));
 		}
 
-		die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
+		die("<h3>Output</h3><pre>" . print_r("DONE - items: " . count($items['items']) . " LInks:" . count($items['links']), 1) . "</pre>");
 	}
 
 	function grail() {
