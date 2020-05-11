@@ -608,7 +608,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function updater() {
-		$q = "select * from linskys where data!='' and mined=1 ";
+		$q = "select * from linkys where data!='' and mined=1 ";
 		$rq = $this->db->query($q);
 		$r = $rq->result();
 		$rq->free_result();
