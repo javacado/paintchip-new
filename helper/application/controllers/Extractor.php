@@ -746,7 +746,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function tryit($go = 0) {
-		$t = array("Liquitex", "Winsor & Newton");
+		$t = array("Grumbacher");
 
 		foreach ($t as $tt) {
 			$r = $this->db->query("Select * from jt_supplier_data where trim(title) like'$tt%' and ttlchecked=0 limit 100")->result();
