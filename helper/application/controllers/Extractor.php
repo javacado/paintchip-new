@@ -1350,7 +1350,7 @@ class Extractor extends CI_Controller {
 		foreach ($cats as $cat) {
 			echo "<p>Using Cat " . print_r($cat->name, 1);
 
-			$q = "select * from jt_supplier_data where category='{$cat->name}' and moved=0 and approved=1 order by image desc, id asc limit 100";
+			$q = "select * from jt_supplier_data where category='{$cat->name}' and moved=0 and approved=1 order by image desc, id asc limit 500";
 			echo "<P>$q";
 
 			$rr = $this->db->query($q);
