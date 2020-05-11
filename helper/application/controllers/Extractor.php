@@ -1353,7 +1353,7 @@ class Extractor extends CI_Controller {
 		$r = $this->db->query("select * from wp_posts p left join wp_term_relationships r on r.object_id=p.ID where r.term_taxonomy_id=$category_id")->result();
 
 		foreach ($r as $row) {
-			$title = strtolower($row->title);
+			$title = strtolower($row->post_title);
 			foreach ($subs as $s => $sid) {
 				if (strpos($title, $s) !== false) {
 					echo "<p>Move into $s: $title";
