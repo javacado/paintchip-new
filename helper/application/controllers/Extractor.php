@@ -607,7 +607,7 @@ class Extractor extends CI_Controller {
 
 	}
 
-	function getdupes($go=0) {
+	function getdupes($go = 0) {
 		//$this->db->query("delete from jt_supplier_data where sku='A1ternate1D' or sku='disc' or sku='Fixed' or sku='Location' or sku='Multiplier' or sku='QCom' or sku='Supp1ier2'");
 		$q = "SELECT id, title,  COUNT(title) as ttl FROM jt_supplier_data where approved=1 and title !='' GROUP BY title HAVING COUNT(title) > 1";
 		$r = $this->db->query($q)->result();
@@ -620,69 +620,54 @@ class Extractor extends CI_Controller {
 			foreach ($rr as $srow) {
 				echo "<P>$" . $srow->price . " s:" . $srow->sku . ": " . $srow->title;
 
-
-
-
-
-
-
 				$html = $this->getHTMLDataFrom("SS", $srow->sku);
 
-			if (!$html) {
-				echo "<P>No HTML";
-				continue;
-			}
+				if (!$html) {
+					echo "<P>No HTML";
+					continue;
+				}
 
-			//$this->db->query("delete from jt_supplier_data where sku='$id'");
-			$supplier = "SS";
-			/*if ($supplier == "SS") {
+				//$this->db->query("delete from jt_supplier_data where sku='$id'");
+				$supplier = "SS";
+				/*if ($supplier == "SS") {
 					$url = "https://www.slsarts.com/viewitem.asp?slssku=${$rr->sku}";
 					$imgbase = "https://www.slsarts.com/";
 				}*/
-			/*die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
+				/*die("<h3>Output</h3><pre>" . print_r($html, 1) . "</pre>");
 		$html = file_get_html($url);*/
 
-			$out = array();
+				$out = array();
 
-			$t = $html->find('td.gridbtns', 0);
-			if (!$t) {
-				$t = "";
-			} else {
-				$t = $t->innertext;
-				$t = explode("<br>", $t);
-				$t = ucwords($t[count($t) - 1]);
-			}
+				$t = $html->find('td.gridbtns', 0);
+				if (!$t) {
+					$t = "";
+				} else {
+					$t = $t->innertext;
+					$t = explode("<br>", $t);
+					$t = ucwords($t[count($t) - 1]);
+				}
 
-			$title = preg_replace('/[\x00-\x1F\x7F]/u', '', $t);
+				$title = preg_replace('/[\x00-\x1F\x7F]/u', '', $t);
 
-			$title = str_replace("CARDED", "", $title);
-			$up = array("title" => $title, "ttlchecked" => 1, "approved" => 0);
-			if (strpos($title, "CANVAS") !== false) {
-				$up['category'] = "Canvas and Surfaces";
-				echo "<P>?-- changing category...";
-			}
+				$title = str_replace("CARDED", "", $title);
+				$up = array("title" => $title, "ttlchecked" => 1, "approved" => 0);
+				if (strpos($title, "CANVAS") !== false) {
+					$up['category'] = "Canvas and Surfaces";
+					echo "<P>?-- changing category...";
+				}
 
-			if (strpos($title, "CLAY") !== false) {
-				$up['category'] = "Clay and Accessories";
-				echo "<P>?-- changing category...";
-			}
+				if (strpos($title, "CLAY") !== false) {
+					$up['category'] = "Clay and Accessories";
+					echo "<P>?-- changing category...";
+				}
 
-			if (($srow->price != '' && $srow->price != '0')) {
-				$up['approved'] = 1;
-			}
-			echo "<P>new title: " . $title . "(" . $srow->title . ") - $" . $srow->price . " - C:" . $srow->category . " - A:" . $up['approved'];
-			if ($go) {
-				$this->db->update("jt_supplier_data", $up, array("id" => $srow->id));
-			}
-
-		}
-
-
-
-
-
-
-
+				if (($srow->price != '' && $srow->price != '0')) {
+					$up['approved'] = 1;
+				}
+				echo "<P>new title: " . $title . "(" . $srow->title . ") - $" . $srow->price . " - C:" . $srow->category . " - A:" . $up['approved'];
+				if ($go) {
+					$this->db->update("jt_supplier_data", $up, array("id" => $srow->id));
+				}
 
 			}
 
