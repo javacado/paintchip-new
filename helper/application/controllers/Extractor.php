@@ -613,7 +613,7 @@ class Extractor extends CI_Controller {
 		$cats = $this->getLiveCats();
 		foreach ($cats as $cat) {
 			if ($cat->name != 'Paints, Mediums and Finishes') {
-				continue;
+				//continue;
 			}
 
 			// navigate...
