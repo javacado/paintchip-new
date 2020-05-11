@@ -48,8 +48,11 @@
 
 
 
-
 <div class='container main-c'>
+<?if (!is_dir("/var/www/html/paintchip")) {?>
+<h1> LOCAL SITE</h1>
+<hr>
+<?}?>
 
 <h1>Xtractor</h1>
 <h2 id='title'></h2>

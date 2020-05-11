@@ -1165,6 +1165,28 @@ class Extractor extends CI_Controller {
 		return $result;
 	}
 
+	function removeProducts($go = 0) {
+
+		$q = "update jt_supplier_data set moved=0 where id>0";
+		//$this->db->query($q);
+		$q = "select * from wp_posts where post_type='product' order by id asc";
+		$r = $this->db->query($q)->result();
+		echo "<P>total product posts:" . count($r);
+
+		$q = "Select count(*) as ttl from wp_posts where post_type='attachment' and post_modified_gmt>='" . $r[0]->post_modified_gmt . "'";
+		$rr = $this->db->query($q)->row();
+		echo "<P>total img:" . $rr->ttl;
+		$postids = array();
+		foreach ($r as $row) {
+			$postids[] = $row->ID;
+
+		}
+
+		$q = "select count(*) as ttl from wp_term_relationships where post_id in (" . implode(",", $postids) . ")";
+		echo "<P>$q";
+
+	}
+
 	function moveProducts($go = 0) {
 
 		ini_set('display_errors', 1);
