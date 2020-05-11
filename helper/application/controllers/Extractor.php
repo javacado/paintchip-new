@@ -639,7 +639,7 @@ class Extractor extends CI_Controller {
 			foreach ($items as $item) {
 				$item = trim(str_replace('"', "", $item));
 				if (strpos($item, "tm/tm") !== false) {
-					$js[] -= $item;
+					$js[] = $item;
 				}
 			}
 			die("<h3>Output</h3><pre>" . print_r($js, 1) . "</pre>");
