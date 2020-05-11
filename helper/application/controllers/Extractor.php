@@ -606,12 +606,12 @@ class Extractor extends CI_Controller {
 	}
 
 	function getdupes() {
-		$q = "SELECT id, title, COUNT(title) as ttl FROM jt_supplier_data where data !=''  GROUP BY title HAVING COUNT(title) > 1";
+		$q = "SELECT id, sku, COUNT(sku) as ttl FROM jt_supplier_data where data !=''  GROUP BY sku HAVING COUNT(sku) > 1";
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
-			echo "<p>#" . $row->ttl . " // id: " . $row->id . ": " . $row->title;
+			echo "<p>#" . $row->ttl . " // id: " . $row->id . ": " . $row->sku;
 			continue;
-			$ttl = addslashes($row->title);
+			$ttl = addslashes($row->sku);
 			$q = "select title,id,price from jt_supplier_data where title='$ttl' order by price desc";
 			$rr = $this->db->query($q)->result();
 			$theprice = '';
