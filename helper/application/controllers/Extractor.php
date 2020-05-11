@@ -621,8 +621,13 @@ class Extractor extends CI_Controller {
 			$u = "https://www.slsarts.com/$file";
 
 			$html = file_get_html($u);
+			$data = array();
+			$cells = $html->find('table td');
+			foreach ($cells as $cell) {
+				$data[] = $cell->innertext;
+			}
 
-			die("<h3>Output $u</h3><textarea>" . $html . "</textarea>");
+			die("<h3>Output $u</h3><textarea>" . $data . "</textarea>");
 		}
 
 		return;
