@@ -630,7 +630,7 @@ class Extractor extends CI_Controller {
 	}
 	function returnItemsFromLinkData($ldata, $catdata) {
 		$mycat = $catdata['mycat'];
-		$mycatid = $catdata['term_id'];
+		$mycatid = $catdata['mycatid'];
 		$ic = 0;
 		$upp = array();
 		$upps = array();
@@ -650,6 +650,7 @@ class Extractor extends CI_Controller {
 				$upp['price'] = str_replace("$", "", $item);
 				$upp['category'] = $mycat;
 				$upp['cat_id'] = $mycatid;
+				$upp['sku'] = $sku;
 				$upps[] = $upp;
 				/*$this->db->update('jt_supplier_data', $upp, array("sku" => $sku));
 					echo ("<h3>updated</h3><pre>" . print_r($this->db->affected_rows(), 1) . "</pre>");
