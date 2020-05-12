@@ -889,7 +889,7 @@ class Extractor extends CI_Controller {
 			$hstr = $html->plaintext;
 
 			$items = $this->getItemsFromStr($hstr);
-			die("<h3>Output</h3><pre>" . print_r($items, 1) . print_r($hstr, 1) . "</pre>");
+			//die("<h3>Output</h3><pre>" . print_r($items, 1) . print_r($hstr, 1) . "</pre>");
 			if (!$items || (!$items['items'] && !$items['links'])) {
 				continue;
 			}
