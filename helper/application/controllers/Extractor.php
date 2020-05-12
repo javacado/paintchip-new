@@ -628,7 +628,9 @@ class Extractor extends CI_Controller {
 		return array();
 
 	}
-	function returnItemsFromLinkData($ldata) {
+	function returnItemsFromLinkData($ldata, $catdata) {
+		$mycat = $catdata['mycat'];
+		$mycatid = $catdata['term_id'];
 		$ic = 0;
 		$upp = array();
 		$upps = array();
@@ -676,7 +678,7 @@ class Extractor extends CI_Controller {
 
 				//get category
 				$category = $this->getMyCategoryFromLinkData($ldata);
-				$objects = $this->returnItemsFromLinkData($ldata);
+				$objects = $this->returnItemsFromLinkData($ldata, $category);
 
 				foreach ($objects as $item) {
 					echo ("<h3>Output</h3><pre>" . print_r($category, 1) . print_r($item, 1) . "</pre>");
