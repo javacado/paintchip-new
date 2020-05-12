@@ -625,6 +625,7 @@ class Extractor extends CI_Controller {
 
 			}
 		}
+		die("<h3>Output</h3><pre>" . print_r($ldata, 1) . "</pre>");
 		return array();
 
 	}
