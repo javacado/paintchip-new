@@ -694,6 +694,9 @@ class Extractor extends CI_Controller {
 						continue;
 					}
 
+					echo ("<h3>Output</h3><pre>" . print_r($item['upc'] . " == " . $row->upc, 1) . "</pre>");
+					continue;
+
 					$qq = "select * from jt_supplier_data where sku='{$item['sku']}'";
 					$rrr = $this->db->query($qq)->result();
 					if (count($rrr) > 0) {
