@@ -678,6 +678,7 @@ class Extractor extends CI_Controller {
 		}
 		foreach ($r as $row) {
 			$q = "select * from linkys where data like '%" . $row->upc . "%'";
+			echo "<P>$q";
 			$rr = $this->db->query($q)->result();
 
 			if (count($rr) > 0) {
