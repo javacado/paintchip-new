@@ -670,7 +670,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function fixupcs() {
-		$q = "select * from jt_supplier_data where data='' and triedlink=0  and upc!='' limit 1 ";
+		$q = "select * from jt_supplier_data where moved=0 and triedlink=0  and upc!='' limit 1 ";
 
 		$r = $this->db->query($q)->result();
 		if (count($r) == 0) {
@@ -689,7 +689,8 @@ class Extractor extends CI_Controller {
 				$ldata = json_decode($lrow->data);
 
 				//get category
-				$category = $this->getMyCategoryFromLinkData($ldata);
+				// $category = $this->getMyCategoryFromLinkData($ldata);
+				$category = array("mycat" => $row->category, "mycatid" => $row->cat_id);
 				$objects = $this->returnItemsFromLinkData($ldata, $category);
 
 				foreach ($objects as $item) {
