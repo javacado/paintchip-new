@@ -1059,45 +1059,44 @@ $order++;*/
 	}*/
 
 	function mine() {
-		/*$r = $this->db->query("select * from linkys where mined=0 and link!='' and  tm='' limit 30 ")->result();
-			if (count($r) == 0) {
-				die(json_encode(array("complete" => 1)));
+		$r = $this->db->query("select * from linkys where mined=0 and link!='' and  tm='' limit 30 ")->result();
+		if (count($r) == 0) {
+			die(json_encode(array("complete" => 1)));
+		}
+		foreach ($r as $el) {
+			$file = $el->link;
+			$file = str_replace(" ", "%20", $file);
+			//$file = str_replace("fright_itemlist.asp", "defaultFrame.asp", $file);
+			$u = "https://www.slsarts.com/$file";
+
+			$html = file_get_html($u);
+
+			// get the cat structure
+			$struc = array();
+			$a = $html->find("a");
+			foreach ($a as $alink) {
+				$struc[] = trim(str_replace("\r\n", "", $alink->innertext));
 			}
-			foreach ($r as $el) {
-				$file = $el->link;
-				$file = str_replace(" ", "%20", $file);
-				//$file = str_replace("fright_itemlist.asp", "defaultFrame.asp", $file);
-				$u = "https://www.slsarts.com/$file";
 
-				$html = file_get_html($u);
+			$data = array();
+			$cells = $html->find('table td');
+			foreach ($cells as $cell) {
+				$h = trim($cell->innertext);
+				$h = trim(str_replace("\r\n", "", strip_tags($h)));
+				if ($h != "") {
+					$data[] = $h;
 
-				// get the cat structure
-				$struc = array();
-				$a = $html->find("a");
-				foreach ($a as $alink) {
-					$struc[] = trim(str_replace("\r\n", "", $alink->innertext));
-				}
-
-				$data = array();
-				$cells = $html->find('table td');
-				foreach ($cells as $cell) {
-					$h = trim($cell->innertext);
-					$h = trim(str_replace("\r\n", "", strip_tags($h)));
-					if ($h != "") {
-						$data[] = $h;
-
-						if ($h == "MSRP") {
-							$data = array();
-						}
-
+					if ($h == "MSRP") {
+						$data = array();
 					}
+
 				}
-
-				$up = array("data" => json_encode(array("struc" => $struc, "data" => $data)), "mined" => 1);
-				$this->db->update("linkys", $up, array("id" => $el->id));
-
 			}
-		*/
+
+			$up = array("data" => json_encode(array("struc" => $struc, "data" => $data)), "mined" => 1);
+			$this->db->update("linkys", $up, array("id" => $el->id));
+
+		}
 		// to get link...
 		$r = $this->db->query("select * from linkys where mined=0 and link='' and  tm!=''")->result();
 		foreach ($r as $el) {
@@ -1121,6 +1120,7 @@ $order++;*/
 
 			$this->db->update("linkys", array("mined" => 1), array("id" => $el->id));
 		}
+		die(json_encode(array("done" => 1)));
 
 		die("<h3>Output</h3><pre>" . print_r("DONE - items: " . count($items['items']) . " LInks:" . count($items['links']), 1) . "</pre>");
 	}
