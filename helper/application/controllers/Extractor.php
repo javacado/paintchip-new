@@ -1143,7 +1143,7 @@ $order++;*/
 				continue;
 			}
 
-			$cat->name = "W/H BARGAIN BIN";
+			$cat->name = "CLAYS AND Accessories";
 			// navigate...
 			$ucat = urlencode(strtoupper($cat->name));
 			$turl = "https://www.slsarts.com/fright.asp?level1=$ucat";
