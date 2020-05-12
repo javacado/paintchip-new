@@ -702,17 +702,17 @@ class Extractor extends CI_Controller {
 						continue;
 					}
 
-					$qq = "select * from jt_supplier_data where sku='{$item['sku']}'";
-					$rrr = $this->db->query($qq)->result();
-					if (count($rrr) > 0) {
-						$u = array('triedlink' => 1);
-						$this->db->update('jt_supplier_data', $u, array("id" => $row->id));
-						die(json_encode(array("done" => 1, "exists" => 1)));
+					/*$qq = "select * from jt_supplier_data where sku='{$item['sku']}'";
+						$rrr = $this->db->query($qq)->result();
+						if (count($rrr) > 0) {
+							$u = array('triedlink' => 1);
+							$this->db->update('jt_supplier_data', $u, array("id" => $row->id));
+							die(json_encode(array("done" => 1, "exists" => 1)));
 
-						//echo "<P>SKU Exists " . $item['sku'];
-						//echo ("<h3>Output</h3><pre>" . print_r($rrr, 1) . "</pre>");
-						continue;
-					}
+							//echo "<P>SKU Exists " . $item['sku'];
+							//echo ("<h3>Output</h3><pre>" . print_r($rrr, 1) . "</pre>");
+							continue;
+					*/
 					//echo ("<h3>Output</h3><pre>" . print_r($category, 1) . print_r($item, 1) . "</pre>");
 					//$q = $this->db->
 
@@ -792,8 +792,8 @@ class Extractor extends CI_Controller {
 					$item['orig_img'] = $img;
 					$item['data'] = $row->tmp_data;
 					$item['triedlink'] = 1;
-					echo ("<h3>Output</h3><pre>" . print_r($item, 1) . "</pre>");
-					continue;
+					//echo ("<h3>Output</h3><pre>" . print_r($item, 1) . "</pre>");
+					//continue;
 
 					$up = $this->db->update("jt_supplier_data", $item, array("id" => $row->id));
 					if (!$up) {
