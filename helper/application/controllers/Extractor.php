@@ -670,14 +670,14 @@ class Extractor extends CI_Controller {
 	}
 
 	function fixupcs() {
-		$q = "select * from jt_supplier_data where moved=0 and triedlink=0  and upc!='' limit 3 ";
+		$q = "select * from jt_supplier_data where upc='' and triedlink=0 and category!='' limit 3 ";
 
 		$r = $this->db->query($q)->result();
 		if (count($r) == 0) {
 			die(json_encode(array("complete" => 1)));
 		}
 		foreach ($r as $row) {
-			$q = "select * from linkys where data like '%" . $row->upc . "%'";
+			$q = "select * from linkys where data like '%" . $row->sku . "%'";
 			//echo "<P>$q";
 			$u = array('triedlink' => 1);
 			$this->db->update('jt_supplier_data', $u, array("id" => $row->id));
@@ -698,7 +698,7 @@ class Extractor extends CI_Controller {
 					//echo ("<h3>Output</h3><pre>" . print_r($item['upc'] . " == " . $row->upc, 1) . "</pre>");
 					//continue;
 
-					if ($item['upc'] != $row->upc) {
+					if ($item['sku'] != $row->sku) {
 						continue;
 					}
 
