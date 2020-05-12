@@ -773,7 +773,11 @@ class Extractor extends CI_Controller {
 					$item['orig_img'] = $img;
 					$item['data'] = $row->tmp_data;
 
-					die("<h3>Output</h3><pre>" . print_r($item, 1) . print_r($row, 1) . "</pre>");
+					$up = $this->db->update("jt_supplier_data", $item, array("id" => $row->id));
+					if (!$up) {
+						die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+					}
+					//die("<h3>Output</h3><pre>" . print_r($item, 1) . print_r($row, 1) . "</pre>");
 
 				}
 
