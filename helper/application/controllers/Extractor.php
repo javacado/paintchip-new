@@ -633,9 +633,29 @@ class Extractor extends CI_Controller {
 
 			$pdata = $data->data;
 
-			echo ("<h3>Output - $mycatid </h3><pre>" . print_r($pdata, 1) . "</pre>");
-			continue;
+			$ic = 0;
+			$upp = array();
 			foreach ($pdata as $item) {
+				$ic++;
+
+				if ($ic == 1) {
+					$sku = $item;
+				}
+
+				if ($ic == 3) {
+					$upp['upc'] = $item;
+				}
+
+				if ($ic % 7 == 0) {
+
+					$upp['price'] = $item;
+					$q = $this->db->update_string('jt_supplier_data', $upp, array("sku" == $sku));
+					echo ("<h3>Output</h3><pre>" . print_r($q, 1) . "</pre>");
+
+					$upp = array();
+					$sku = '';
+					$ic = 0;
+				}
 
 			}
 
