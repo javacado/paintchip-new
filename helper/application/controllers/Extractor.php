@@ -849,7 +849,7 @@ class Extractor extends CI_Controller {
 		$q = "select * from wp_options where option_name='product_cat_children'";
 		$o = $this->db->query($q)->row();
 		$d = unserialize($o->option_value);
-		$d = array_merge($d, $s);
+		$d['1133'] = $s['1133'];
 		die("<h3>Output</h3><pre>" . print_r($d, 1) . "</pre>");
 		$d = serialize($d);
 		$this->db->update("wp_options", array("option_value" => $d), array('option_name' => 'product_cat_children'));
