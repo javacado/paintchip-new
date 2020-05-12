@@ -688,6 +688,85 @@ class Extractor extends CI_Controller {
 				foreach ($objects as $item) {
 					echo ("<h3>Output</h3><pre>" . print_r($category, 1) . print_r($item, 1) . "</pre>");
 					//$q = $this->db->
+
+					$html = $this->getHTMLDataFrom("SS", $item['sku']);
+
+					if (!$html) {
+
+						echo "<P>----NO HTML " . print_r($item, 1);
+						continue;
+					}
+
+					//$this->db->query("delete from jt_supplier_data where sku='$id'");
+
+					$url = "https://www.slsarts.com/viewitem.asp?slssku=${id}";
+					$imgbase = "https://www.slsarts.com/";
+
+					$t = $html->find('h3', 0);
+					if ($t) {
+						$t = $t->innertext;
+					} else {
+						$t = $html->find('td.gridbtns', 0);
+						if (!$t) {
+							$t = "";
+						} else {
+							$t = $t->innertext;
+							$t = explode("<br>", $t);
+							$t = ucwords($t[count($t) - 1]);
+						}
+					}
+					//$out['title'] = preg_replace('/[\x00-\x1F\x7F]/u', '', $t);
+
+					$desc = $html->find('td.gridleft', 0)->innertext;
+					$desc = str_replace("\r", "", $desc);
+					$desc = str_replace("\n", "", $desc);
+					$desc = preg_replace('#<h3>(.*?)</h3>#', '', $desc, 1);
+					$desc = preg_replace('/(<font[^>]*>)|(<\/font>)/', '', $desc);
+					$item['description'] = $desc;
+
+					$img = $html->find('.gridcenter img')->src;
+					@$imge = $html->find('.gridcenter img')->onerror;
+					if ($imge && strpos($imge, "rimgsku(this") !== false) {
+						//holy crap we gotta deal with this shit
+						$imge = str_replace("rimgsku(this,'", "", $imge);
+						$imge = str_replace("');", "", $imge);
+
+						$imge = str_replace("rimgsku(this,'", "", $imge);
+						$imge = str_replace("');", "", $imge);
+
+						$img = "/images/" . $imge;
+						$img = str_replace("/images/images/", "/images/", $img);
+					}
+
+					$img = str_replace("\\", "/", $img);
+					$img = str_replace("./", "", $img);
+					//$img = str_replace("/images/", "", $img);
+					$img = str_replace("Regular Images", "Large Images", $img);
+
+					$oimg = $img;
+					if (strpos($oimg, "/") === 0) {
+						$oimg = substr($img, 1);
+					}
+
+					$oimg = str_replace(" ", "", strtolower($oimg));
+					$oimg = str_replace("/", "-", strtolower($oimg));
+					$oimg = str_replace("productimages-", "", $oimg);
+					$oimg = str_replace("largeimages-", "", $oimg);
+
+					$img = $imgbase . $img;
+
+					// test and save image
+
+					$hasimg = $this->getImage($img, $oimg);
+
+					if (!$hasimg) {
+						$oimg = "";
+					}
+					$item['image'] = $img;
+					$item['orig_img'] = $img;
+
+					die("<h3>Output</h3><pre>" . print_r($item, 1) . print_r($lrow, 1) . "</pre>");
+
 				}
 
 			}
