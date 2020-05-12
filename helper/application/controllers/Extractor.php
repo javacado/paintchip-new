@@ -966,27 +966,30 @@ class Extractor extends CI_Controller {
 
 				$q = "select * from wp_terms where name='$nt'";
 				$rr = $this->db->query($q)->row();
+				if (!$rr) {
+					die("<h3>Output</h3><pre>" . print_r($nt, 1) . "</pre>");
+				}
 				$term_id = $rr->term_id;
 				$subids[] = $term_id;
 
-/*
-$in = array("name" => $nt, "slug" => $slug);
-$this->db->insert("wp_terms", $in);
-$term_id = $this->db->insert_id();
-$subids[] = $term_id;
+				$in = array("name" => $nt, "slug" => $slug);
+				$this->db->insert("wp_terms", $in);
+				$term_id = $this->db->insert_id();
+				$subids[] = $term_id;
 
-$in = array("term_id" => $term_id, "meta_key" => "order", "meta_value" => $order);
-$this->db->insert("wp_termmeta", $in);
+				$in = array("term_id" => $term_id, "meta_key" => "order", "meta_value" => $order);
+				$this->db->insert("wp_termmeta", $in);
 
-$in = array("term_id" => $term_id, "meta_key" => "display_type", "meta_value" => "products");
-$this->db->insert("wp_termmeta", $in);
+				$in = array("term_id" => $term_id, "meta_key" => "display_type", "meta_value" => "products");
+				$this->db->insert("wp_termmeta", $in);
 
-$in = array("term_id" => $term_id, "meta_key" => "thumbnail_id", "meta_value" => "0");
-$this->db->insert("wp_termmeta", $in);
+				$in = array("term_id" => $term_id, "meta_key" => "thumbnail_id", "meta_value" => "0");
+				$this->db->insert("wp_termmeta", $in);
 
-$in = array("term_id" => $term_id, "taxonomy" => "product_cat", "parent" => $uid);
-$this->db->insert("wp_term_taxonomy", $in);
-$order++;*/
+				$in = array("term_id" => $term_id, "taxonomy" => "product_cat", "parent" => $uid);
+				$this->db->insert("wp_term_taxonomy", $in);
+				$order++;
+/**/
 			}
 
 			$a[$uid] = $subids;
@@ -996,7 +999,7 @@ $order++;*/
 		$a = serialize($a);
 		$in = array("option_value" => $a);
 
-		$this->db->update("wp_options", $in, array('option_name' => 'product_cat_children'));
+		//$this->db->update("wp_options", $in, array('option_name' => 'product_cat_children'));
 
 		//$this->db->update("wp_options", array("option_value" => $d), array('option_name' => 'product_cat_children'));
 
