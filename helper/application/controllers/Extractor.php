@@ -649,8 +649,9 @@ class Extractor extends CI_Controller {
 				if ($ic % 7 == 0) {
 
 					$upp['price'] = str_replace("$", "", $item);
-					$q = $this->db->update_string('jt_supplier_data', $upp, array("sku" => $sku));
-					echo ("<h3>Output</h3><pre>" . print_r($q, 1) . "</pre>");
+					$upp['category'] = $mycat;
+					echo "<P>" . $this->db->update_string('jt_supplier_data', $upp, array("sku" => $sku));
+					//echo ("<h3>updated</h3><pre>" . print_r($this, 1) . "</pre>");
 
 					$upp = array();
 					$sku = '';
