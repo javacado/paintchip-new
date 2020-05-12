@@ -2273,6 +2273,12 @@ $order++;*/
 
 		$in[] = array(
 			"post_id" => $row->post_id,
+			"meta_key" => "_wpm_gtin_code",
+			"meta_value" => $row->upc,
+		);
+
+		$in[] = array(
+			"post_id" => $row->post_id,
 			"meta_key" => "_edit_last",
 			"meta_value" => "1",
 		);
