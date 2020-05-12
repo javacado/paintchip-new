@@ -610,6 +610,58 @@ class Extractor extends CI_Controller {
 
 	}
 
+	function getMyCategoryFromLinkData($ldata) {
+
+		$cats = $this->getLiveCats();
+		$catref = array();
+		foreach ($cats as $cat) {
+			$catref[strtolower($cat->name)] = $cat->term_id;
+		}
+
+		$cat = $ldata->struc;
+		foreach ($cats as $thecat) {
+			if (strtolower($thecat->name) == strtolower($cat[1])) {
+				return array("mycat" => $thecat->name, "mycatid" => $thecat->term_id);
+
+			}
+		}
+		return array();
+
+	}
+	function returnItemsFromLinkData($ldata) {
+		$ic = 0;
+		$upp = array();
+		$upps = array();
+		foreach ($ldata->data as $item) {
+			$ic++;
+
+			if ($ic == 1) {
+				$sku = $item;
+			}
+
+			if ($ic == 3) {
+				$upp['upc'] = $item;
+			}
+
+			if ($ic % 7 == 0) {
+
+				$upp['price'] = str_replace("$", "", $item);
+				$upp['category'] = $mycat;
+				$upp['cat_id'] = $mycatid;
+				$upps[] = $upp;
+				/*$this->db->update('jt_supplier_data', $upp, array("sku" => $sku));
+					echo ("<h3>updated</h3><pre>" . print_r($this->db->affected_rows(), 1) . "</pre>");
+*/
+				$upp = array();
+				$sku = '';
+				$ic = 0;
+			}
+
+		}
+		return $upps;
+
+	}
+
 	function fixupcs() {
 		$q = "select * from jt_supplier_data where data='' and upc!='' ";
 
@@ -617,7 +669,22 @@ class Extractor extends CI_Controller {
 		foreach ($r as $row) {
 			$q = "select * from linkys where data like '%" . $row->upc . "%'";
 			$rr = $this->db->query($q)->result();
-			echo ("<h3>Output</h3><pre>" . print_r($rr, 1) . "</pre>");
+
+			if (count($rr) > 0) {
+				$lrow = $rr[0];
+				$ldata = json_decode($lrow->data);
+
+				//get category
+				$category = $this->getMyCategoryFromLinkData($ldata);
+				$objects = $this->returnItemsFromLinkData($ldata);
+
+				foreach ($objects as $item) {
+					echo ("<h3>Output</h3><pre>" . print_r($category, 1) . print_r($item, 1) . "</pre>");
+					//$q = $this->db->
+				}
+
+			}
+			//echo ("<h3>Output</h3><pre>" . print_r($rr, 1) . "</pre>");
 			continue;
 
 			$data = json_decode($row->tmp_data);
@@ -651,16 +718,11 @@ class Extractor extends CI_Controller {
 
 		foreach ($r as $row) {
 			$data = json_decode($row->data);
-			$cat = $data->struc;
 
-			$mycat = $cat[1];
-			foreach ($cats as $thecat) {
-				if (strtolower($thecat->name) == strtolower($cat[1])) {
-					$mycat = $thecat->name;
-					$mycatid = $thecat->term_id;
-					break;
-				}
-			}
+			$thecat = $this->getMyCategoryFromLinkData($ldata);
+			$mycat = $thecat['name'];
+			$mycatid = $thecat['term_id'];
+
 			//$mycatid = $catref[strtolower($mycat)];
 
 			$pdata = $data->data;
