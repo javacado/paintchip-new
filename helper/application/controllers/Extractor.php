@@ -678,8 +678,8 @@ class Extractor extends CI_Controller {
 		}
 
 		$a = serialize($a);
-		$in = array("option_name" => "product_cat_children", "option_value" => $a, "autoload" => "yes");
-		$this->db->update("wp_options", $in, array("option_id" => 104554));
+		$in = array("option_value" => $a);
+		$this->db->update("wp_options", $in, array("option_id" => 104590));
 
 		die("<h3>Output</h3><pre>" . print_r($titles, 1) . "</pre>");
 	}
