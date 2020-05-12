@@ -670,7 +670,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function fixupcs() {
-		$q = "select * from jt_supplier_data where moved=0 and triedlink=0  and upc!='' limit 1 ";
+		$q = "select * from jt_supplier_data where moved=0 and triedlink=0  and upc!='' limit 3 ";
 
 		$r = $this->db->query($q)->result();
 		if (count($r) == 0) {
@@ -706,7 +706,7 @@ class Extractor extends CI_Controller {
 					$rrr = $this->db->query($qq)->result();
 					if (count($rrr) > 0) {
 						$u = array('triedlink' => 1);
-						//$this->db->update('jt_supplier_data', $u, array("id" => $row->id));
+						$this->db->update('jt_supplier_data', $u, array("id" => $row->id));
 						die(json_encode(array("done" => 1, "exists" => 1)));
 
 						//echo "<P>SKU Exists " . $item['sku'];
