@@ -670,7 +670,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function fixupcs() {
-		$q = "select * from jt_supplier_data where data='' and triedlink=0 and and upc!='' limit 1 ";
+		$q = "select * from jt_supplier_data where data='' and triedlink=0  and upc!='' limit 1 ";
 
 		$r = $this->db->query($q)->result();
 		if (count($r) == 0) {
