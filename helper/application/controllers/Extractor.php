@@ -1069,7 +1069,7 @@ $order++;*/
 	function mine() {
 		$r = $this->db->query("select * from linkys where mined=0 and link!='' and  tm='' limit 30 ")->result();
 		if (count($r) == 0) {
-			die(json_encode(array("complete" => 1)));
+			die(json_encode(array("donwithelinks" => 1)));
 		}
 		foreach ($r as $el) {
 			$file = $el->link;
