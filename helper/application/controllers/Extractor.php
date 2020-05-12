@@ -611,9 +611,15 @@ class Extractor extends CI_Controller {
 	}
 
 	function fixupcs() {
-		$q = "select * from jt_supplier_data where data='' and tmp_data!='' ";
+		$q = "select * from jt_supplier_data where data='' and upc!='' ";
+
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
+			$q = "select * from linkys where data like '%" . $row->upc . "%'";
+			$rr = $this->db->query($q)->result();
+			echo ("<h3>Output</h3><pre>" . print_r($rr, 1) . "</pre>");
+			continue;
+
 			$data = json_decode($row->tmp_data);
 			$ld = $data->linedata;
 			$ld = explode('"', $ld);
