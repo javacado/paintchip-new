@@ -769,8 +769,9 @@ class Extractor extends CI_Controller {
 					if (!$hasimg) {
 						$oimg = "";
 					}
-					$item['image'] = $img;
+					$item['image'] = $oimg;
 					$item['orig_img'] = $img;
+					$item['data'] = $row->tmp_data;
 
 					die("<h3>Output</h3><pre>" . print_r($item, 1) . print_r($row, 1) . "</pre>");
 
