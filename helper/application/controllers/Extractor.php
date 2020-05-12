@@ -726,6 +726,9 @@ class Extractor extends CI_Controller {
 		foreach ($r as $row) {
 			$data = json_decode($row->data);
 			$cat = $data->struc;
+			if ($cat[0] !== "BOOKS") {
+				continue;
+			}
 
 			if (!array_key_exists($cat[0], $titles)) {
 				$titles[$cat[0]] = array($cat[1]);
@@ -747,6 +750,7 @@ class Extractor extends CI_Controller {
 			$catref[strtolower($cat->name)] = $cat->term_id;
 		}
 
+		die("<h3>Output</h3><pre>" . print_r($titles, 1) . "</pre>");
 		foreach ($titles as $cat => $subcats) {
 			$uid = $catref[strtolower($cat)];
 			if (!$uid) {
