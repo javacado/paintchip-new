@@ -610,6 +610,15 @@ class Extractor extends CI_Controller {
 
 	}
 
+	function fixupcs() {
+		$q = "select * from jt_supplier_data where data='' and tmp_data!='' ";
+		$r = $this->db->query($q)->result();
+		foreach ($r as $row) {
+			$data = json_decode($row->tmp_data);
+			echo ("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
+		}
+	}
+
 	function updater() {
 		$titles = array();
 		$q = "select * from linkys where data!='' and mined=1 and moved=0 ";
