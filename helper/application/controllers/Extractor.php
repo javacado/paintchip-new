@@ -641,6 +641,10 @@ class Extractor extends CI_Controller {
 				$sku = $item;
 			}
 
+			if ($ic == 2) {
+				$upp['title'] = $item;
+			}
+
 			if ($ic == 3) {
 				$upp['upc'] = $item;
 			}
