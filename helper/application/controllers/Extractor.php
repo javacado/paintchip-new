@@ -679,7 +679,7 @@ class Extractor extends CI_Controller {
 		foreach ($r as $row) {
 			$q = "select * from linkys where data like '%" . $row->upc . "%'";
 			//echo "<P>$q";
-			$u = array('triedlink' => 1, "rowid" => $row->id);
+			$u = array('triedlink' => 1);
 			$this->db->update('jt_supplier_data', $u, array("id" => $row->id));
 
 			$rr = $this->db->query($q)->result();
