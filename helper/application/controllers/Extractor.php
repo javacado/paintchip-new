@@ -629,7 +629,14 @@ class Extractor extends CI_Controller {
 			$cat = $data->struc;
 
 			$mycat = $cat[1];
-			$mycatid = $catref[strtolower($mycat)];
+			foreach ($cats as $cat) {
+				if (strtolower($cat->name) == strtolower($cat[1])) {
+					$mycat = $cat->name;
+					$mycatid = $cat->term_id;
+					break;
+				}
+			}
+			//$mycatid = $catref[strtolower($mycat)];
 
 			$pdata = $data->data;
 
