@@ -836,6 +836,22 @@ class Extractor extends CI_Controller {
 
 	*/
 
+	function fixone() {
+		$q = "select * from wp_terms where term_id>1133";
+		$r = $this->db->query($q)->result();
+		$s = array('1133' => array());
+		foreach ($r as $row) {
+			$s['1133'][] = $row->term_id;
+		}
+		$q = "select * from wp_options where option_name='product_cat_children'";
+		$o = $this->db->query($q)->row();
+		$d = unserialize($o->option_value);
+		$d = array_merge($d, $s);
+		$d = serialize($d);
+		$this->db->update("wp_options", array("option_value" => $d), array('option_name' => 'product_cat_children'));
+
+	}
+
 	function mine() {
 		$r = $this->db->query("select * from linkys where mined=0 and link!='' and  tm='' limit 30 ")->result();
 		if (count($r) == 0) {
