@@ -616,6 +616,7 @@ class Extractor extends CI_Controller {
 		$rq = $this->db->query($q);
 		$r = $rq->result();
 		$rq->free_result();
+		$a = array();
 
 		foreach ($r as $row) {
 			$data = json_decode($row->data);
@@ -672,12 +673,13 @@ class Extractor extends CI_Controller {
 				$order++;
 			}
 
-			$a = array($uid => $subids);
-			$a = serialize($a);
-			$in = array("option_name" => "product_cat_children", "option_value" => $a, "autoload" => "yes");
-			$this->db->insert("wp_options", $in);
+			$a[$uid] = $subids;
 
 		}
+
+		$a = serialize($a);
+		$in = array("option_name" => "product_cat_children", "option_value" => $a, "autoload" => "yes");
+		$this->db->update("wp_options", $in, array("option_id" => 104554));
 
 		die("<h3>Output</h3><pre>" . print_r($titles, 1) . "</pre>");
 	}
