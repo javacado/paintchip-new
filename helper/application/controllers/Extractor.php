@@ -690,14 +690,20 @@ class Extractor extends CI_Controller {
 
 				foreach ($objects as $item) {
 
+					if ($item['upc'] != $row->upc) {
+						continue;
+					}
+
 					$qq = "select * from jt_supplier_data where sku='{$item['sku']}'";
 					$rrr = $this->db->query($qq)->result();
 					if (count($rrr) > 0) {
-						echo "<P>SKU Exists " . $item['sku'];
-						echo ("<h3>Output</h3><pre>" . print_r($rrr, 1) . "</pre>");
+						die(json_encode(array("done" => 1, "exists" => 1)));
+
+						//echo "<P>SKU Exists " . $item['sku'];
+						//echo ("<h3>Output</h3><pre>" . print_r($rrr, 1) . "</pre>");
 						continue;
 					}
-					echo ("<h3>Output</h3><pre>" . print_r($category, 1) . print_r($item, 1) . "</pre>");
+					//echo ("<h3>Output</h3><pre>" . print_r($category, 1) . print_r($item, 1) . "</pre>");
 					//$q = $this->db->
 
 					$html = $this->getHTMLDataFrom("SS", $item['sku']);
