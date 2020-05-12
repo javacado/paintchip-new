@@ -750,7 +750,6 @@ class Extractor extends CI_Controller {
 			$catref[strtolower($cat->name)] = $cat->term_id;
 		}
 
-		die("<h3>Output</h3><pre>" . print_r($titles, 1) . "</pre>");
 		foreach ($titles as $cat => $subcats) {
 			$uid = $catref[strtolower($cat)];
 			if (!$uid) {
