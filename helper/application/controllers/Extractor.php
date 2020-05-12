@@ -615,10 +615,10 @@ class Extractor extends CI_Controller {
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
 			$data = json_decode($row->tmp_data);
-			$ld = $row->linedata;
+			$ld = $data->linedata;
 			$ld = explode('"', $ld);
 			foreach ($ld as $i) {
-				$i = preg_replace("/[^0-9]/", $i);
+				$i = preg_replace("/[^0-9]/", "", $i);
 				$i = String($i);
 				if (strlen($i) == 12) {
 					$this->db->query("update jt_supplier_data set upc='$i' where id=" . $row->id);
