@@ -964,14 +964,6 @@ class Extractor extends CI_Controller {
 				$nt = ucwords($nt);
 				$nt = str_replace("And ", "and ", $nt);
 
-				$q = "select * from wp_terms where name='$nt'";
-				$rr = $this->db->query($q)->row();
-				if (!$rr) {
-					die("<h3>Output</h3><pre>" . print_r($nt, 1) . "</pre>");
-				}
-				$term_id = $rr->term_id;
-				$subids[] = $term_id;
-
 				$in = array("name" => $nt, "slug" => $slug);
 				$this->db->insert("wp_terms", $in);
 				$term_id = $this->db->insert_id();
