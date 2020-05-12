@@ -679,8 +679,8 @@ class Extractor extends CI_Controller {
 		foreach ($r as $row) {
 			$q = "select * from linkys where data like '%" . $row->upc . "%'";
 			//echo "<P>$q";
-			//$u = array('triedlink' => 1);
-			//$this->db->update('jt_supplier_data', $u, array("id" => $row->id));
+			$u = array('triedlink' => 1, "rowid" => $row->id);
+			$this->db->update('jt_supplier_data', $u, array("id" => $row->id));
 
 			$rr = $this->db->query($q)->result();
 
@@ -790,6 +790,7 @@ class Extractor extends CI_Controller {
 					}
 					$item['image'] = $oimg;
 					$item['orig_img'] = $img;
+					$item['approved'] = 1;
 					$item['data'] = $row->tmp_data;
 					$item['triedlink'] = 1;
 					//echo ("<h3>Output</h3><pre>" . print_r($item, 1) . "</pre>");
@@ -808,9 +809,13 @@ class Extractor extends CI_Controller {
 			continue;
 
 		}
-		die(json_encode(array("done" => 1)));
+		die(json_encode(array("done" => 1, "rowid" => $row->id)));
 
 		die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
+	}
+
+	function newupdate() {
+		$q = "select * from jt_supplier_data where moved=0 and triedlink";
 	}
 
 	function updater() {
