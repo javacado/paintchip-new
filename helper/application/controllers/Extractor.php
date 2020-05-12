@@ -689,8 +689,8 @@ class Extractor extends CI_Controller {
 				$ldata = json_decode($lrow->data);
 
 				//get category
-				// $category = $this->getMyCategoryFromLinkData($ldata);
-				$category = array("mycat" => $row->category, "mycatid" => $row->cat_id);
+				$category = $this->getMyCategoryFromLinkData($ldata);
+				//$category = array("mycat" => $row->category, "mycatid" => $row->cat_id);
 				$objects = $this->returnItemsFromLinkData($ldata, $category);
 
 				foreach ($objects as $item) {
