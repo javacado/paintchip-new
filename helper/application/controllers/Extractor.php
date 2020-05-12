@@ -686,6 +686,14 @@ class Extractor extends CI_Controller {
 				$objects = $this->returnItemsFromLinkData($ldata, $category);
 
 				foreach ($objects as $item) {
+
+					$qq = "select * from jt_supplier_data where sku='{$item['sku']}'";
+					$rrr = $this->db->query($qq)->result();
+					if (count($rrr) > 0) {
+						echo "<P>SKU Exists " . $item['sku'];
+						echo ("<h3>Output</h3><pre>" . print_r($rrr, 1) . "</pre>");
+						continue;
+					}
 					echo ("<h3>Output</h3><pre>" . print_r($category, 1) . print_r($item, 1) . "</pre>");
 					//$q = $this->db->
 
@@ -699,7 +707,6 @@ class Extractor extends CI_Controller {
 
 					//$this->db->query("delete from jt_supplier_data where sku='$id'");
 
-					$url = "https://www.slsarts.com/viewitem.asp?slssku=${id}";
 					$imgbase = "https://www.slsarts.com/";
 
 					$t = $html->find('h3', 0);
@@ -765,7 +772,7 @@ class Extractor extends CI_Controller {
 					$item['image'] = $img;
 					$item['orig_img'] = $img;
 
-					die("<h3>Output</h3><pre>" . print_r($item, 1) . print_r($lrow, 1) . "</pre>");
+					die("<h3>Output</h3><pre>" . print_r($item, 1) . print_r($row, 1) . "</pre>");
 
 				}
 
