@@ -679,8 +679,8 @@ class Extractor extends CI_Controller {
 		foreach ($r as $row) {
 			$q = "select * from linkys where data like '%" . $row->upc . "%'";
 			//echo "<P>$q";
-			$u = array('triedlink' => 1);
-			$this->db->update('jt_supplier_data', $u, array("id" => $row->id));
+			//$u = array('triedlink' => 1);
+			//$this->db->update('jt_supplier_data', $u, array("id" => $row->id));
 
 			$rr = $this->db->query($q)->result();
 
@@ -705,7 +705,7 @@ class Extractor extends CI_Controller {
 					$rrr = $this->db->query($qq)->result();
 					if (count($rrr) > 0) {
 						$u = array('triedlink' => 1);
-						$this->db->update('jt_supplier_data', $u, array("id" => $row->id));
+						//$this->db->update('jt_supplier_data', $u, array("id" => $row->id));
 						die(json_encode(array("done" => 1, "exists" => 1)));
 
 						//echo "<P>SKU Exists " . $item['sku'];
@@ -791,6 +791,8 @@ class Extractor extends CI_Controller {
 					$item['orig_img'] = $img;
 					$item['data'] = $row->tmp_data;
 					$item['triedlink'] = 1;
+					echo ("<h3>Output</h3><pre>" . print_r($item, 1) . "</pre>");
+					continue;
 
 					$up = $this->db->update("jt_supplier_data", $item, array("id" => $row->id));
 					if (!$up) {
