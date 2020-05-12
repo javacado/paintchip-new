@@ -618,6 +618,82 @@ class Extractor extends CI_Controller {
 		$rq->free_result();
 		$a = array();
 
+		$cats = $this->getLiveCats();
+		$catref = array();
+		foreach ($cats as $cat) {
+			$catref[strtolower($cat->name)] = $cat->term_id;
+		}
+
+		foreach ($r as $row) {
+			$data = json_decode($row->data);
+			$cat = $data->struc;
+
+			$mycat = $cat[1];
+			$mycatid = $catref[strtolower($mycat)];
+
+			$pdata = $data->data;
+
+			echo ("<h3>Output - $mycatid </h3><pre>" . print_r($pdata, 1) . "</pre>");
+			continue;
+			foreach ($pdata as $item) {
+
+			}
+
+			//echo ("<h3>Output</h3><pre>" . print_r($catdata, 1) . print_r($pdata, 1) . "</pre>");
+		}
+
+		die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
+
+		foreach ($titles as $cat => $subcats) {
+			$uid = $catref[strtolower($cat)];
+			if (!$uid) {
+				die("<h3>Output</h3><pre>" . print_r("NO UID", 1) . "</pre>");
+			}
+			$order = 0;
+			$subids = array();
+			foreach ($subcats as $sub) {
+				$nt = strtolower($sub);
+				$slug = str_replace(" ", "-", $nt);
+				$nt = ucwords($nt);
+				$nt = str_replace("And ", "and ", $nt);
+				$in = array("name" => $nt, "slug" => $slug);
+				$this->db->insert("wp_terms", $in);
+				$term_id = $this->db->insert_id();
+				$subids[] = $term_id;
+
+				$in = array("term_id" => $term_id, "meta_key" => "order", "meta_value" => $order);
+				$this->db->insert("wp_termmeta", $in);
+
+				$in = array("term_id" => $term_id, "meta_key" => "display_type", "meta_value" => "products");
+				$this->db->insert("wp_termmeta", $in);
+
+				$in = array("term_id" => $term_id, "meta_key" => "thumbnail_id", "meta_value" => "0");
+				$this->db->insert("wp_termmeta", $in);
+
+				$in = array("term_id" => $term_id, "taxonomy" => "product_cat", "parent" => $uid);
+				$this->db->insert("wp_term_taxonomy", $in);
+				$order++;
+			}
+
+			$a[$uid] = $subids;
+
+		}
+
+		$a = serialize($a);
+		$in = array("option_value" => $a);
+		$this->db->update("wp_options", $in, array("option_id" => 104590));
+
+		die("<h3>Output</h3><pre>" . print_r($titles, 1) . "</pre>");
+	}
+
+	function updatercats() {
+		$titles = array();
+		$q = "select * from linkys where data!='' and mined=1 and moved=0 ";
+		$rq = $this->db->query($q);
+		$r = $rq->result();
+		$rq->free_result();
+		$a = array();
+
 		foreach ($r as $row) {
 			$data = json_decode($row->data);
 			$cat = $data->struc;
