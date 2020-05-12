@@ -657,6 +657,7 @@ class Extractor extends CI_Controller {
 
 					$upp['price'] = str_replace("$", "", $item);
 					$upp['category'] = $mycat;
+					$upp['cat_id'] = $mycatid;
 					echo "<P>" . $this->db->update_string('jt_supplier_data', $upp, array("sku" => $sku));
 					//echo ("<h3>updated</h3><pre>" . print_r($this, 1) . "</pre>");
 
