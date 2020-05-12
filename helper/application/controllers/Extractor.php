@@ -619,7 +619,7 @@ class Extractor extends CI_Controller {
 			$ld = explode('"', $ld);
 			foreach ($ld as $i) {
 				$i = preg_replace("/[^0-9]/", "", $i);
-				$i = String($i);
+				$i = "$i";
 				if (strlen($i) == 12) {
 					$this->db->query("update jt_supplier_data set upc='$i' where id=" . $row->id);
 				}
