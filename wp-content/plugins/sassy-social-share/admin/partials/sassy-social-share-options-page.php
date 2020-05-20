@@ -954,7 +954,7 @@ defined( 'ABSPATH' ) or die( "Cheating........Uh!!" );
 								<?php echo $sharing_network == 'Goodreads' ? '<a href="https://www.heateor.com/comparison-between-sassy-social-share-pro-and-premium/" target="_blank">' : ''; ?>
 								<input id="heateor_sss_<?php echo $sharing_network ?>" type="checkbox" <?php echo $sharing_network == 'Goodreads' ? 'disabled ' : ''; ?><?php echo isset( $options['horizontal_re_providers'] ) && in_array( $sharing_network, $options['horizontal_re_providers'] ) ? 'checked = "checked"' : '';?> value="<?php echo $sharing_network ?>" />
 								<label <?php echo $sharing_network != 'Goodreads' ? 'for="heateor_sss_' . $sharing_network . '"' : ''; ?>><i style="display:block;width:18px;height:18px;" class="heateorSssSharing heateorSss<?php echo str_replace( array( '_', '.', ' ' ), '', ucfirst( $sharing_network ) ) ?>Background"><ss style="display:block;" class="heateorSssSharingSvg heateorSss<?php echo str_replace(array( '_', '.', ' ' ), '', ucfirst( $sharing_network) ) ?>Svg"></ss></i></label>
-								<label <?php echo $sharing_network != 'Goodreads' ? 'for="heateor_sss_' . $sharing_network . '"' : ''; ?>><?php echo str_replace( '_', ' ', ucfirst( $sharing_network ) ) ?></label>
+								<label class="lblSocialNetwork" <?php echo $sharing_network != 'Goodreads' ? 'for="heateor_sss_' . $sharing_network . '"' : ''; ?>><?php echo str_replace( '_', ' ', ucfirst( $sharing_network ) ) ?></label>
 								<?php echo $sharing_network == 'Goodreads' ? '</a>' : ''; ?>
 								</div>
 								<?php
@@ -1394,7 +1394,7 @@ defined( 'ABSPATH' ) or die( "Cheating........Uh!!" );
 								<div class="heateorSssVerticalSharingProviderContainer">
 								<input id="heateor_sss_vertical_sharing_<?php echo $sharing_network ?>" type="checkbox" <?php echo isset( $options['vertical_re_providers'] ) && in_array( $sharing_network, $options['vertical_re_providers'] ) ? 'checked = "checked"' : '';?> value="<?php echo $sharing_network ?>" />
 								<label for="heateor_sss_vertical_sharing_<?php echo $sharing_network ?>"><i style="display:block;width:18px;height:18px;" class="heateorSssSharing heateorSss<?php echo str_replace(array( '_', '.', ' ' ), '', ucfirst( $sharing_network) ) ?>Background"><ss style="display:block;" class="heateorSssSharingSvg heateorSss<?php echo str_replace(array( '_', '.', ' ' ), '', ucfirst( $sharing_network) ) ?>Svg"></ss></i></label>
-								<label for="heateor_sss_vertical_sharing_<?php echo $sharing_network ?>"><?php echo str_replace( '_', ' ', ucfirst( $sharing_network) ) ?></label>
+								<label class="lblSocialNetwork" for="heateor_sss_vertical_sharing_<?php echo $sharing_network ?>"><?php echo str_replace( '_', ' ', ucfirst( $sharing_network) ) ?></label>
 								</div>
 								<?php
 							}
@@ -1933,38 +1933,18 @@ defined( 'ABSPATH' ) or die( "Cheating........Uh!!" );
 						
 						<tr>
 							<th>
-							<label for="heateor_sss_bitly_login"><?php _e("bit.ly Login", 'sassy-social-share' ); ?></label>
-							<img id="heateor_sss_bitly_login_help" class="heateor_sss_help_bubble" src="<?php echo plugins_url( '../../images/info.png', __FILE__ ) ?>" />
+							<label for="heateor_sss_bitly_access_token"><?php _e( "Bit.ly Generic Access Token", 'sassy-social-share' ); ?></label>
+							<img id="heateor_sss_bitly_access_token_help" class="heateor_sss_help_bubble" src="<?php echo plugins_url( '../../images/info.png', __FILE__ ) ?>" />
 							</th>
 							<td>
-							<input id="heateor_sss_bitly_login" name="heateor_sss[bitly_username]" type="text" value="<?php echo isset( $options['bitly_username'] ) ? $options['bitly_username'] : '' ?>" />
+							<input id="heateor_sss_bitly_access_token" name="heateor_sss[bitly_access_token]" type="text" value="<?php echo isset( $options['bitly_access_token'] ) ? $options['bitly_access_token'] : '' ?>" />
 							</td>
 						</tr>
 						
-						<tr class="heateor_sss_help_content" id="heateor_sss_bitly_login_help_cont">
+						<tr class="heateor_sss_help_content" id="heateor_sss_bitly_access_token_help_cont">
 							<td colspan="2">
 							<div>
-							<?php echo sprintf(__( 'Login to your bit.ly account and navigate to <a href="%s" target="_blank">this link</a> to get bit.ly Login', 'sassy-social-share' ), 'https://bitly.com/a/your_api_key' ) ?>
-							<img width="550" src="<?php echo plugins_url( '../../images/snaps/sss_bitly_username.png', __FILE__ ); ?>" />
-							</div>
-							</td>
-						</tr>
-						
-						<tr>
-							<th>
-							<label for="heateor_sss_bitly_key"><?php _e("bit.ly API Key", 'sassy-social-share' ); ?></label>
-							<img id="heateor_sss_bitly_key_help" class="heateor_sss_help_bubble" src="<?php echo plugins_url( '../../images/info.png', __FILE__ ) ?>" />
-							</th>
-							<td>
-							<input id="heateor_sss_bitly_key" name="heateor_sss[bitly_key]" type="text" value="<?php echo isset( $options['bitly_key'] ) ? $options['bitly_key'] : '' ?>" />
-							</td>
-						</tr>
-						
-						<tr class="heateor_sss_help_content" id="heateor_sss_bitly_key_help_cont">
-							<td colspan="2">
-							<div>
-							<?php echo sprintf(__( 'Login to your bit.ly account and navigate to <a href="%s" target="_blank">this link</a> to get your API key', 'sassy-social-share' ), 'https://bitly.com/a/your_api_key' ) ?>
-							<img width="550" src="<?php echo plugins_url( '../../images/snaps/sss_bitly_apikey.png', __FILE__ ); ?>" />
+							<?php echo sprintf( __( 'Login to your bit.ly account and navigate to <strong>Profile Settings > Generic Access Token</strong> (top-right corner) and authenticate to generate access token. More details at the <a href="%s" target="_blank">link</a>', 'sassy-social-share' ), 'https://support.sendible.com/hc/en-us/articles/360021876751-How-To-Access-Your-Bit-ly-Key' ) ?>
 							</div>
 							</td>
 						</tr>
@@ -2172,7 +2152,7 @@ defined( 'ABSPATH' ) or die( "Cheating........Uh!!" );
 						<tr>
 							<td>
 							<?php _e( 'If Facebook sharing is not working fine, click at the following link and enter the problematic url (where Facebook sharing is not working properly) of your website in the text field. Click "Fetch New Scrape Information" button.', 'sassy-social-share' ) ?><br/>
-							<a style="text-decoration: none" target="_blank" href="https://developers.facebook.com/tools/debug/og/object/">https://developers.facebook.com/tools/debug/og/object</a>
+							<a style="text-decoration: none" target="_blank" href="https://developers.facebook.com/tools/debug/">https://developers.facebook.com/tools/debug/</a>
 							</td>
 						</tr>
 					</table>

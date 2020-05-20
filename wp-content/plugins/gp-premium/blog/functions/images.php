@@ -1,8 +1,73 @@
 <?php
 defined( 'WPINC' ) or die;
 
-if ( ! defined( 'GP_IMAGE_RESIZER' ) ) {
-	require_once GP_LIBRARY_DIRECTORY . 'image-processing-queue/image-processing-queue.php';
+/**
+ * Collects all available image sizes which we use in the Customizer.
+ *
+ * @since 1.10.0
+ *
+ * @return array
+ */
+function generate_blog_get_image_sizes() {
+	$sizes = get_intermediate_image_sizes();
+
+	$new_sizes = array(
+		'full' => 'full',
+	);
+
+	foreach ( $sizes as $key => $name ) {
+		$new_sizes[ $name ] = $name;
+	}
+
+	return $new_sizes;
+}
+
+add_filter( 'generate_page_header_default_size', 'generate_blog_set_featured_image_size' );
+/**
+ * Set our featured image sizes.
+ *
+ * @since 1.10.0
+ *
+ * @param string $size The existing size.
+ * @return string The new size.
+ */
+function generate_blog_set_featured_image_size( $size ) {
+	$settings = wp_parse_args(
+		get_option( 'generate_blog_settings', array() ),
+		generate_blog_get_defaults()
+	);
+
+	if ( ! is_singular() ) {
+		$size = $settings['post_image_size'];
+	}
+
+	if ( is_single() ) {
+		$size = $settings['single_post_image_size'];
+	}
+
+	if ( is_page() ) {
+		$size = $settings['page_post_image_size'];
+	}
+
+	$atts = generate_get_blog_image_attributes();
+
+	if ( ! empty( $atts ) ) {
+		$values = array(
+			$atts['width'],
+			$atts['height'],
+			$atts['crop'],
+		);
+
+		$image_src = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID(), 'full' ), $values );
+
+		if ( $image_src && $image_src[3] && apply_filters( 'generate_use_featured_image_size_match', true ) ) {
+			return $values;
+		} else {
+			return $size;
+		}
+	}
+
+	return $size;
 }
 
 if ( ! function_exists( 'generate_get_blog_image_attributes' ) ) {
@@ -110,7 +175,7 @@ if ( ! function_exists( 'generate_blog_setup' ) ) {
 
 add_filter( 'generate_featured_image_output', 'generate_blog_featured_image' );
 /**
- * Filter our core featured image so we can include support for resized images.
+ * Remove featured image if set or using WooCommerce.
  *
  * @since 1.5
  * @return string The image HTML
@@ -121,35 +186,11 @@ function generate_blog_featured_image( $output ) {
 		generate_blog_get_defaults()
 	);
 
-	$image_atts = generate_get_blog_image_attributes();
-	$image_id = get_post_thumbnail_id( get_the_ID(), 'full' );
-
 	if ( ( function_exists( 'is_woocommerce' ) && is_woocommerce() ) || ! $settings['post_image'] ) {
 		return false;
 	}
 
-	if ( $image_atts && function_exists( 'ipq_get_theme_image' ) ) {
-		$image_html = ipq_get_theme_image( $image_id,
-			array(
-				array( $image_atts[ 'width' ], $image_atts[ 'height' ], $image_atts[ 'crop' ] )
-			),
-			array(
-				'itemprop' => 'image',
-			)
-		);
-	} else {
-		return $output;
-	}
-
-	return apply_filters( 'generate_resized_featured_image_output', sprintf(
-		'<div class="post-image">
-			<a href="%1$s">
-				%2$s
-			</a>
-		</div>',
-		esc_url( get_permalink() ),
-		$image_html
-	), $image_html );
+	return $output;
 }
 
 /**
@@ -168,7 +209,6 @@ function generate_blog_single_featured_image() {
 		generate_blog_get_defaults()
 	);
 
-	$image_atts = generate_get_blog_image_attributes();
 	$image_id = get_post_thumbnail_id( get_the_ID(), 'full' );
 
 	if ( function_exists( 'generate_page_header_get_image' ) && generate_page_header_get_image( 'ID' ) ) {
@@ -183,32 +223,17 @@ function generate_blog_single_featured_image() {
 		return false;
 	}
 
-	if ( $image_atts && function_exists( 'ipq_get_theme_image' ) ) {
-
-		$image_html = ipq_get_theme_image( $image_id,
-			array(
-				array( $image_atts[ 'width' ], $image_atts[ 'height' ], $image_atts[ 'crop' ] )
-			),
+	$image_html = apply_filters( 'post_thumbnail_html',
+		wp_get_attachment_image( $image_id, apply_filters( 'generate_page_header_default_size', 'full' ), '',
 			array(
 				'itemprop' => 'image',
 			)
-		);
-
-	} else {
-
-		$image_html = apply_filters( 'post_thumbnail_html',
-			wp_get_attachment_image( $image_id, apply_filters( 'generate_page_header_default_size', 'full' ), '',
-				array(
-					'itemprop' => 'image',
-				)
-			),
-			get_the_ID(),
-			$image_id,
-			apply_filters( 'generate_page_header_default_size', 'full' ),
-			''
-		);
-
-	}
+		),
+		get_the_ID(),
+		$image_id,
+		apply_filters( 'generate_page_header_default_size', 'full' ),
+		''
+	);
 
 	$location = generate_blog_get_singular_template();
 

@@ -188,37 +188,39 @@ class ES_Contacts_Table extends WP_List_Table {
 
 			?>
 
-			<h1 class="wp-heading-inline">
-				<span class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate"><?php 
-				_e( 'Audience', 'email-subscribers' ); ?>
-			</span>
+			<h2 class="wp-heading-inline">
+				<span class="text-base font-normal text-indigo-600 sm:leading-7 sm:truncate"><?php 
+				_e( 'Audience <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4 inline-block align-middle text-gray-900"><path d="M9 5l7 7-7 7"></path></svg>', 'email-subscribers' ); ?>
+				 </span>
+				 <span class="text-2xl font-medium text-gray-900 sm:leading-9 sm:truncate">
 			<?php 
-				_e( ' > Contacts', 'email-subscribers' ); ?>
-				<?php ES_Common::prepare_main_header_navigation( $audience_tab_main_navigation );
-				?>
-			</h1>
+			_e( 'Contacts', 'email-subscribers' ); ?>
+		</span>
+			<?php ES_Common::prepare_main_header_navigation( $audience_tab_main_navigation );
+			?>
+		</h2>
 
-			<div class="es-contact-reports">
-				<?php $this->get_contacts_reports() ?>
-			</div>
+		<div class="my-4">
+			<?php $this->get_contacts_reports() ?>
+		</div>
 
-			<div id="poststuff" class="es-audience-view">
-				<div id="post-body" class="metabox-holder column-1">
-					<div id="post-body-content">
-						<div class="meta-box-sortables ui-sortable">
-							<form method="post">
-								<?php
-								$this->prepare_items();
-								$this->display();
-								?>
-							</form>
-						</div>
+		<div id="poststuff" class="es-audience-view es-items-lists">
+			<div id="post-body" class="metabox-holder column-1">
+				<div id="post-body-content">
+					<div class="meta-box-sortables ui-sortable">
+						<form method="post">
+							<?php
+							$this->prepare_items();
+							$this->display();
+							?>
+						</form>
 					</div>
 				</div>
-				<br class="clear">
 			</div>
+			<br class="clear">
 		</div>
-	<?php }
+	</div>
+<?php }
 }
 
 	/**
@@ -262,25 +264,55 @@ class ES_Contacts_Table extends WP_List_Table {
 		$es_total_unsubscribed_contacts  = ES_Reports_Data::get_total_unsubscribed_contacts( 60 );
 		$es_total_contacts_opened_emails = ES_Reports_Data::get_total_contacts_opened_emails( 60 );
 		?>
-		<div class="es_total_contact">
-			<h2 class="es_contact_kpi_text"><?php _e( 'Contacts', 'email-subscribers' ); ?></h2>
-			<span class="es_contact_kpi_no"><?php echo $es_total_contact; ?></span></br>
-		</div>
-		<div class="es_last_60_days">
-			<h2><?php _e( 'Last 60 Days', 'email-subscribers' ); ?></h2>
-			<div class="es_contact_kpi">
-				<span class="es_contact_kpi_no" style="color: #009e00"><?php echo $es_total_subscribed_contacts; ?></span></br>
-				<span class="es_contact_kpi_text"><?php _e( 'Subscribed', 'email-subscribers' ); ?></span>
-			</div>
-			<div class="es_contact_kpi">
-				<span class="es_contact_kpi_no" style="color: #d40303"><?php echo $es_total_unsubscribed_contacts; ?></span></br>
-				<span class="es_contact_kpi_text"><?php _e( 'Unsubscribed', 'email-subscribers' ); ?></span>
-			</div>
-			<div class="es_contact_kpi">
-				<span class="es_contact_kpi_no" style="color: #006cc1"><?php echo $es_total_contacts_opened_emails; ?></span></br>
-				<span class="es_contact_kpi_text"><?php _e( 'Opened', 'email-subscribers' ); ?></span>
-			</div>
-			<?php do_action( 'ig_es_after_contacts_kpis' ); ?>
+		<div class="bg-white rounded-md shadow ">
+			<table class="min-w-full overflow-hidden bg-white border-t border-b sm:border-l sm:border-r sm:rounded shadow font-sans">
+				<tr>
+					<td class="w-1/5 border-r lg:px-4">
+						<div class="block pt-3 pb-2 pl-2"><span class="text-lg font-medium text-gray-400"><?php _e( 'Total Contacts', 'email-subscribers' ); ?></span></div>
+						<div class="flex pt-2 pb-2 h-20">
+							<div class="lg:pl-2 ">
+								<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-400 mt-1"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+							</div>
+							<div>
+								<span class="text-4xl font-bold leading-none text-indigo-600 pl-4"><?php echo number_format($es_total_contact); ?></span>
+								
+							</div>
+						</div>
+					</td>
+					<td class="w-4/5">
+						<div class="block pt-4 pb-1"><span class="text-lg font-medium text-gray-400 pl-4"><?php _e( 'Last 60 Days', 'email-subscribers' ); ?></span></div>
+						<div class="flex">
+							<div class="lg:w-3/12 xl:w-2/12 h-20 pl-4 pt-3 border-r border-gray-200">
+								<div class="mb-1">
+									<span class="text-2xl font-bold leading-none text-gray-700"><?php echo number_format($es_total_subscribed_contacts); ?></span>
+								</div>
+								<div class="text-sm text-gray-400 tracking-wide">
+									<?php _e( 'Subscribed', 'email-subscribers' ); ?>
+								</div>	
+							</div>
+							<div class="lg:w-3/12 xl:w-2/12 h-20 pl-4 pt-3 mb-2 border-r border-gray-200">
+								<div class=" mb-1">
+									<span class="text-2xl font-bold leading-none text-gray-700"><?php echo number_format($es_total_unsubscribed_contacts); ?></span>
+								</div>
+								<div class="text-sm text-gray-400 tracking-wide">
+									<?php _e( 'Unsubscribed', 'email-subscribers' ); ?>
+								</div>
+							</div>
+							<div class="lg:w-3/12 xl:w-2/12 h-20 pl-4 pt-3 border-r border-gray-200">
+								<div class="mb-1">
+									<span class="text-2xl font-bold leading-none text-gray-700"><?php echo number_format($es_total_contacts_opened_emails); ?></span>
+								</div>
+								<div class="text-sm text-gray-400 tracking-wide">
+									<?php _e( 'Opened', 'email-subscribers' ); ?>
+								</div>
+							</div>
+							<div class="lg:w-3/12 xl:w-2/12 h-20 pl-4 pt-3">
+								<?php do_action( 'ig_es_after_contacts_kpis' ); ?>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
 		</div>
 		<?php
 	}
@@ -462,31 +494,37 @@ class ES_Contacts_Table extends WP_List_Table {
 			<header class="ml-12 mr-8 wp-heading-inline">
 				<div class="md:flex md:items-center md:justify-between justify-center">
 					<div class="flex-1 min-w-0">
-						<h1 class="text-2xl leading-7 font-bold text-gray-900 sm:text-3xl sm:leading-9 sm:truncate">
-						 	<span class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate">
-							<a href="admin.php?page=es_subscribers"><?php _e('Audience ','email-subscribers'); ?></a></span> >
-							<?php echo $title; ?>
-						</h1>
-					</div>
+						<h2 class="text-2xl leading-7 text-gray-900 sm:leading-9 sm:truncate">
+							<span class="text-base font-normal leading-7 text-indigo-600 sm:leading-9 sm:truncate">
+								<a href="admin.php?page=es_subscribers"><?php _e('Audience ','email-subscribers'); ?></a></span> <svg class="w-6 h-6 mt-2 inline-block" fill="currentColor" viewBox="0 0 24 24">
+											<path
+											fill-rule="evenodd"
+											d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+											clip-rule="evenodd"
+											></path>
+										</svg>
+								<?php echo $title; ?>
+							</h2>
+						</div>
 
-					<div class="py-2 flex md:mt-0 pb-2">
-						<div id="ig-es-create-button" class="relative inline-block text-left">
-							<span class="rounded-md shadow-sm">
-								 <?php
-								echo $title_action; ?>		
-							</span>
+						<div class="py-2 flex md:mt-0 pb-2">
+							<div id="ig-es-create-button" class="relative inline-block text-left">
+								<span class="rounded-md shadow-sm">
+									<?php
+									echo $title_action; ?>		
+								</span>
+							</div>
 						</div>
 					</div>
+				</header>
+				<div class="ml-12 mr-8"><hr class="wp-header-end"></div>
+				<div class="meta-box-sortables ui-sortable bg-white shadow-md ml-12 mr-8 mt-6 rounded-lg">
+					<?php echo $this->prepare_contact_form( $data, $is_new ); ?>
+
 				</div>
-			</header>
-			<div class="ml-12 mr-8"><hr class="wp-header-end"></div>
-			<div class="meta-box-sortables ui-sortable bg-white shadow-md ml-12 mr-8 mt-6 rounded-lg">
-				<?php echo $this->prepare_contact_form( $data, $is_new ); ?>
+				<?php
 
-			</div>
-			<?php
-
-		}
+			}
 
 	/**
 	 * Retrieve subscribers data from the database
@@ -636,7 +674,7 @@ class ES_Contacts_Table extends WP_List_Table {
 									<span class="my-2 mr-10 dashicons dashicons-admin-users"></span>
 								</span>
 							</div>
-							<input id="ig-es-contact-first-name" class="ig-es-contact-first-name form-input block border-gray-400 w-full pl-10 pr-12 shadow-sm  focus:bg-gray-100 sm:text-sm sm:leading-5"  placeholder="Enter first name" name="contact_data[first_name]" value="<?php echo esc_attr( $first_name ); ?>" />
+							<input id="ig-es-contact-first-name" class="ig-es-contact-first-name form-input block border-gray-400 w-full pl-10 pr-12 shadow-sm  focus:bg-gray-100 sm:text-sm sm:leading-5"  placeholder="<?php _e('Enter First Name', 'email-subscribers'); ?>" name="contact_data[first_name]" value="<?php echo esc_attr( $first_name ); ?>" />
 						</div>
 					</div>
 				</div>
@@ -656,7 +694,7 @@ class ES_Contacts_Table extends WP_List_Table {
 									<span class="my-2 mr-10 dashicons dashicons-admin-users"></span>
 								</span>
 							</div>
-							<input id="ig-es-contact-last-name" class="ig-es-contact-last-name form-input block border-gray-400 w-full pl-10 pr-12 shadow-sm  focus:bg-gray-100 sm:text-sm sm:leading-5" placeholder="Enter last name" name="contact_data[last_name]" value="<?php echo esc_attr( $last_name ); ?>" />
+							<input id="ig-es-contact-last-name" class="ig-es-contact-last-name form-input block border-gray-400 w-full pl-10 pr-12 shadow-sm  focus:bg-gray-100 sm:text-sm sm:leading-5" placeholder="<?php _e('Enter Last Name', 'email-subscribers'); ?>" name="contact_data[last_name]" value="<?php echo esc_attr( $last_name ); ?>" />
 						</div>
 					</div>
 				</div>
@@ -675,7 +713,7 @@ class ES_Contacts_Table extends WP_List_Table {
 								<span class="inset-y-0 text-gray-400 sm:text-sm sm:leading-5">
 									<span class="my-2 mr-10 dashicons dashicons-email-alt"></span></span>
 								</div>
-								<input id="email" class="form-input block border-gray-400 w-full pl-10 pr-12 shadow-sm  focus:bg-gray-100 sm:text-sm sm:leading-5"" id="email" name="contact_data[email]" value="<?php echo esc_attr( $email ); ?>"  placeholder="Enter Email" />
+								<input id="email" class="form-input block border-gray-400 w-full pl-10 pr-12 shadow-sm  focus:bg-gray-100 sm:text-sm sm:leading-5"" id="email" name="contact_data[email]" value="<?php echo esc_attr( $email ); ?>"  placeholder="<?php _e('Enter Email', 'email-subscribers'); ?>" />
 							</div>
 						</div>
 					</div>
@@ -727,14 +765,14 @@ class ES_Contacts_Table extends WP_List_Table {
 							<input type="hidden" name="contact_data[created_at]" value="<?php echo $created; ?>" />
 							<input type="hidden" name="contact_data[guid]" value="<?php echo $guid; ?>" />
 							<input type="hidden" name="submitted" value="submitted" />
-							<input type="submit" name="submit" class="cursor-pointer px-4 my-2 py-2 mx-2 ig-es-primary-button hover:shadow-md" value="<?php if ( $is_new ) {  
+							<input type="submit" name="submit" class="cursor-pointer align-middle px-4 my-2 py-2 mx-2 ig-es-primary-button hover:shadow-md" value="<?php if ( $is_new ) {  
 								_e( 'Save Contact', 'email-subscribers' ); 
 							}
 							else{
 								_e( 'Save Changes', 'email-subscribers' ); 
 							}
-							 ?>"/>
-							 <a href="admin.php?page=es_subscribers" class="cursor-pointer rounded-md border border-indigo-600 hover:shadow-md focus:outline-none focus:shadow-outline-indigo text-sm leading-5 font-medium transition ease-in-out duration-150 px-4 my-2 py-2 mx-2 ">Cancel</a>
+							?>"/>
+							<a href="admin.php?page=es_subscribers" class="cursor-pointer align-middle rounded-md border border-indigo-600 hover:shadow-md focus:outline-none focus:shadow-outline-indigo text-sm leading-5 font-medium transition ease-in-out duration-150 px-4 my-2 py-2 mx-2 ">Cancel</a>
 						</div>
 					</div>
 				</form>

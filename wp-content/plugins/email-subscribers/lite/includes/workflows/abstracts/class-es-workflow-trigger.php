@@ -179,6 +179,18 @@ abstract class ES_Workflow_Trigger {
 	}
 
 	/**
+	 * Add trigger option field
+	 *
+	 * @param object $option Option object.
+	 * 
+	 * @since 4.4.6
+	 */
+	public function add_field( $option ) {
+		$option->set_name_base( 'ig_es_workflow_data[trigger_options]' );
+		$this->fields[ $option->get_name() ] = $option;
+	}
+
+	/**
 	 * Get supplied data item from trigger
 	 *
 	 * @since 4.4.1
@@ -186,6 +198,36 @@ abstract class ES_Workflow_Trigger {
 	 */
 	public function get_supplied_data_items() {
 		return $this->supplied_data_items;
+	}
+
+	/**
+	 * Method to get trigger option field
+	 *
+	 * @param string $name Field name.
+	 *
+	 * @return ES_Field|false
+	 * 
+	 * @since 4.4.6
+	 */
+	public function get_field( $name ) {
+		$this->maybe_load_fields();
+
+		if ( ! isset( $this->fields[ $name ] ) ) {
+			return false;
+		}
+
+		return $this->fields[ $name ];
+	}
+
+
+	/**
+	 * Method to get trigger option fields
+	 *
+	 * @return ES_Field[]
+	 */
+	public function get_fields() {
+		$this->maybe_load_fields();
+		return $this->fields;
 	}
 
 	/**

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 4.0
  */
-Class ES_Common {
+class ES_Common {
 	/**
 	 * Convert email subscribe templates.
 	 *
@@ -196,6 +196,7 @@ Class ES_Common {
 
 		return $dropdown;
 	}
+
 
 	/**
 	 * Generate GUID
@@ -1245,13 +1246,13 @@ Class ES_Common {
 	public static function get_useful_articles() {
 
 		$articles = array(
-			array( 'title' => __( '8 Tips To Improve Email Open Rates', 'email_subscribers' ), 'link' => 'https://www.icegram.com/2bx5' ),
-			array( 'title' => __( 'Prevent Your Email From Landing In Spam', 'email_subscribers' ), 'link' => 'https://www.icegram.com/2bx6' ),
-			array( 'title' => __( '<b>Email Subscribers Secret Club</b>', 'email_subscribers' ), 'link' => 'https://www.facebook.com/groups/2298909487017349/', 'label' => __( 'Join Now', 'email-subscribers' ), 'label_class' => 'bg-green-100 text-green-800' ),
-			array( 'title' => __( 'Best Way To Keep Customers Engaged', 'email_subscribers' ), 'link' => 'https://www.icegram.com/ymrn' ),
-			array( 'title' => __( 'Access Control', 'email_subscribers' ), 'link' => 'https://www.icegram.com/81z9' ),
-			array( 'title' => __( 'Prevent Spam Subscription Using Captcha', 'email_subscribers' ), 'link' => 'https://www.icegram.com/3jy4' ),
-			array( 'title' => __( 'Email Subscribers PRO', 'email_subscribers' ), 'link' => 'https://www.icegram.com/er6r', 'label' => __( 'Lifetime', 'email-subscribers' ), 'label_class' => 'bg-green-100 text-green-800' )
+			array( 'title' => __( '8 Tips To Improve Email Open Rates', 'email-subscribers' ), 'link' => 'https://www.icegram.com/2bx5' ),
+			array( 'title' => __( 'Prevent Your Email From Landing In Spam', 'email-subscribers' ), 'link' => 'https://www.icegram.com/2bx6' ),
+			array( 'title' => __( '<b>Email Subscribers Secret Club</b>', 'email-subscribers' ), 'link' => 'https://www.facebook.com/groups/2298909487017349/', 'label' => __( 'Join Now', 'email-subscribers' ), 'label_class' => 'bg-green-100 text-green-800' ),
+			array( 'title' => __( 'Best Way To Keep Customers Engaged', 'email-subscribers' ), 'link' => 'https://www.icegram.com/ymrn' ),
+			array( 'title' => __( 'Access Control', 'email-subscribers' ), 'link' => 'https://www.icegram.com/81z9' ),
+			array( 'title' => __( 'Prevent Spam Subscription Using Captcha', 'email-subscribers' ), 'link' => 'https://www.icegram.com/3jy4' ),
+			array( 'title' => __( 'Email Subscribers PRO', 'email-subscribers' ), 'link' => 'https://www.icegram.com/er6r', 'label' => __( 'Lifetime', 'email-subscribers' ), 'label_class' => 'bg-green-100 text-green-800' )
 		);
 
 		return $articles;
@@ -1288,6 +1289,82 @@ Class ES_Common {
 
 		return $url;
 
+	}
+
+	/**
+	 * Get Captcha setting
+	 *
+	 * @param $id null|int
+	 * @param $data array
+	 *
+	 * @return bool|mixed|void
+	 *
+	 * @since 4.4.7
+	 */
+	public static function get_captcha_setting( $form_id = null, $data = array() ) {
+
+		if ( ! empty( $form_id ) ) {
+
+			$form_id = (int) $form_id;
+
+			$form_data = ES()->forms_db->get_form_by_id( $form_id );
+
+			$settings = ig_es_get_data( $form_data, 'settings', array() );
+
+			if ( ! empty( $settings ) ) {
+
+				$settings = maybe_unserialize( $settings );
+
+				if ( isset( $settings['captcha'] ) ) {
+					return empty( $settings['captcha'] ) ? 'no' : $settings['captcha'];
+				}
+
+			}
+
+			return get_option( 'ig_es_enable_captcha', 'no' );
+		}
+
+		if ( ! isset( $data['captcha'] ) || empty( $data['captcha'] ) ) {
+			$setting = get_option( 'ig_es_enable_captcha', 'no' );
+		} else {
+			$setting = $data['captcha'];
+		}
+
+		return $setting;
+	}
+
+	public static function convert_date_to_wp_date( $date ) {
+		$convert_date_format = get_option( 'date_format' );
+		$convert_time_format = get_option( 'time_format' );
+
+		return date_i18n( "$convert_date_format $convert_time_format", strtotime( $date ) );
+	}
+
+	/**
+	 * Method to convert emojis character into their equivalent HTML entity in the given string if conversion supported
+	 * else remove them
+	 *
+	 * @param string $string String with emojis characters.
+	 *
+	 * @return string $string Converted string with equivalent HTML entities
+	 *
+	 * @since 4.4.7
+	 */
+	public static function handle_emoji_characters( $string = '' ) {
+
+		if( ! empty( $string ) ) {
+			if( function_exists( 'wp_encode_emoji' ) ) {
+				$string = wp_encode_emoji( $string );
+			} else {
+				$string = preg_replace('%(?:
+						\xF0[\x90-\xBF][\x80-\xBF]{2}      # planes 1-3
+					| [\xF1-\xF3][\x80-\xBF]{3}          # planes 4-15
+					| \xF4[\x80-\x8F][\x80-\xBF]{2}      # plane 16
+				)%xs', '', $string);
+			}
+		}
+
+		return $string;
 	}
 
 }

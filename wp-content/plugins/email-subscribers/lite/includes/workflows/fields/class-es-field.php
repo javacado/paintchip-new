@@ -45,6 +45,15 @@ abstract class ES_Field {
 	protected $type;
 
 	/**
+	 * Field description
+	 *
+	 * @since 4.4.6
+	 * 
+	 * @var string
+	 */
+	protected $description;
+
+	/**
 	 * Field name base
 	 *
 	 * @since 4.4.1
@@ -172,6 +181,32 @@ abstract class ES_Field {
 	 */
 	public function get_type() {
 		return $this->type;
+	}
+
+	/**
+	 * Set field description
+	 * 
+	 * @since 4.4.6
+	 * 
+	 * @param $description
+	 * 
+	 * @return $this
+	 */
+	public function set_description( $description ) {
+		$this->description = $description;
+		return $this;
+	}
+
+
+	/**
+	 * Get field description
+	 * 
+	 * @since 4.4.6
+	 * 
+	 * @return string
+	 */
+	public function get_description() {
+		return $this->description;
 	}
 
 	/**

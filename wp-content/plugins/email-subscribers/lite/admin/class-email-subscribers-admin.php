@@ -99,23 +99,10 @@ class Email_Subscribers_Admin {
 
 		wp_enqueue_style( $this->email_subscribers, plugin_dir_url( __FILE__ ) . 'css/email-subscribers-admin.css', array(), $this->version, 'all' );
 
-		$get_page = ig_es_get_request_data( 'page' );
-
-		if ( ! empty( $get_page ) && 'es_settings' === $get_page ) {
-			//wp_enqueue_style( 'email-jquery-ui', plugin_dir_url( __FILE__ ) . 'css/jquery-ui.css', array(), $this->version, 'all' );
-		}
-
-
 		wp_register_style( $this->email_subscribers . '-timepicker', plugin_dir_url( __FILE__ ) . 'css/jquery.timepicker.css' );
 		wp_enqueue_style( $this->email_subscribers . '-timepicker' );
 
-
-		$allowed_pages = array( 'es_campaigns', 'es_reports', 'es_lists', 'es_forms', 'es_dashboard', 'es_workflows', 'es_settings', 'go_to_icegram', 'es_subscribers', 'es_general_information' , 'es_notifications' , 'es_settings' );
-		//if ( ! empty( $get_page ) && ( in_array( $get_page, $allowed_pages , true ) ) ) {
 		wp_enqueue_style( 'ig-es-style', plugin_dir_url( __FILE__ ) . 'dist/main.css', array(), $this->version, 'all' );
-		//}
-
-
 	}
 
 	/**
@@ -131,9 +118,17 @@ class Email_Subscribers_Admin {
 
 		wp_enqueue_script( $this->email_subscribers, plugin_dir_url( __FILE__ ) . 'js/email-subscribers-admin.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs' ), $this->version, false );
 
+
+
 		$ig_es_js_data = array(
-			'ajax_error_message' => __( 'An error has occured. Please try again later.', 'email-subscribers' ),
-			'security'           => wp_create_nonce( 'ig-es-admin-ajax-nonce' ),
+			'security'  => wp_create_nonce( 'ig-es-admin-ajax-nonce' ),
+			'i18n_data' => array(
+				'ajax_error_message' 			  => __( 'An error has occured. Please try again later.', 'email-subscribers' ),
+				'broadcast_draft_success_message' => __( 'Broadcast saved as draft successfully.', 'email-subscribers' ),
+				'broadcast_draft_error_message'   => __( 'An error has occured while saving the broadcast. Please try again later.', 'email-subscribers' ),
+				'broadcast_subject_empty_message' => __( 'Please add a broadcast subject before saving.', 'email-subscribers' ),
+				'empty_template_message'          => __( 'Please add email body.', 'email-subscribers' ),
+			),
 		);
 
 		wp_localize_script( $this->email_subscribers, 'ig_es_js_data', $ig_es_js_data );
@@ -165,6 +160,7 @@ class Email_Subscribers_Admin {
 		if ( ! empty( $get_page ) && 'es_dashboard' === $get_page ) {
 			wp_enqueue_script( 'frappe-js', plugin_dir_url( __FILE__ ) . 'js/frappe-charts.min.life.js', array( 'jquery' ), $this->version, false );
 		}
+
 	}
 
 	public function remove_submenu() {
@@ -649,7 +645,6 @@ class Email_Subscribers_Admin {
 			'custom_admin_notice',
 			'output_custom_notices',
 			'ig_es_fail_php_version_notice',
-			'contact_background_notice'
 		);
 
 		// User admin notices
@@ -720,19 +715,19 @@ class Email_Subscribers_Admin {
 
 	/**
 	 * Method to handle campaign status change
-	 * 
+	 *
 	 * @return string JSON response of the request
-	 * 
+	 *
 	 * @since 4.4.4
 	 */
 	public function toggle_campaign_status() {
-		
+
 		check_ajax_referer( 'ig-es-admin-ajax-nonce', 'security' );
 
 		$campaign_id         = ig_es_get_request_data( 'campaign_id' );
 		$new_campaign_status = ig_es_get_request_data( 'new_campaign_status' );
 
-		if( ! empty( $campaign_id ) ) {
+		if ( ! empty( $campaign_id ) ) {
 
 			$status_updated = ES()->campaigns_db->update_status( $campaign_id, $new_campaign_status );
 
@@ -742,5 +737,28 @@ class Email_Subscribers_Admin {
 				wp_send_json_error();
 			}
 		}
+	}
+
+	/**
+	 * Update admin footer text
+	 *
+	 * @param $footer_text
+	 *
+	 * @return string
+	 *
+	 * @since 4.4.6
+	 */
+	public function update_admin_footer_text( $footer_text ) {
+
+		// Update Footer admin only on ES pages
+		if ( ES()->is_es_admin_screen() ) {
+
+			$wordpress_url = 'https://www.wordpress.org';
+			$icegram_url   = 'https://www.icegram.com';
+
+			$footer_text = sprintf( __( '<span id="footer-thankyou">Thank you for creating with <a href="%s" target="_blank">WordPress</a> | Email Subscribers <b>%s</b>. Developed by team <a href="%s" target="_blank">Icegram</a></span>', 'email-subscribers' ), $wordpress_url, ES_PLUGIN_VERSION, $icegram_url );
+		}
+
+		return $footer_text;
 	}
 }

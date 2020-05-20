@@ -3,8 +3,8 @@ Contributors: Heateor, jatin8heateor, farhan8heateor
 Donate link: https://www.heateor.com/donate/?action=Sassy+Social+Share
 Tags: social share, social sharing, social media share, share facebook, facebook social share, wordpress social share, share buttons, social share buttons, facebook like, twitter tweet, whatsapp share, line share
 Requires at least: 2.5.0
-Tested up to: 5.3.2
-Stable tag: 3.3.8
+Tested up to: 5.4.1
+Stable tag: 3.3.10
 License: GPLv2 or later
 
 Slickest, Simplest and Optimized Share buttons. Facebook, Twitter, Reddit, Pinterest, WhatsApp and over 100 more.
@@ -123,13 +123,26 @@ Yes, we can help you with it. Just drop an email at support[at]heateor[dot]com
 4. **Universal Sharing Popup**: Universal Sharing popup having all the supported sharing and bookmarking services
 
 == Changelog ==
-= 3.3.8 [16 January 2020] =
+= 3.3.10 [14 May 2020] =
+[Bugfix] Email share popup was being triggered in the same bowser tab instead of the new tab
+[Bugfix] Url of Facebook Debugger in "Troubleshooter" section was broken
+[Bugfix] Print icon in the "More" popup is using PrintFriendly instead of Print
+
+= 3.3.9 [8 April 2020] =
+[Bugfix] Sina Weibo share was not working
+[Bugfix] Facebook Messenger share was not working on mobile devices
+[Bugfix] "Search social networks" feature was not working at options page in admin area
+[Bugfix] bit.ly url shortener was not working
+[Improvement] Updated Facebook JS SDK to latest version 6.0
+[Improvement] Updated ClipBoard JS to latest version 2.0.6
+
+= 3.3.8 [1 March 2020] =
 [Bugfix] [Sassy_Follow_Icons] shortcode was not accepting "=" in the url of social networks. Now it can be used in encoded form.
 [Bugfix] Social Media Follow Icons were appearing broken in some cases
 [Improvement] Admin UI improvement
 [Improvement] Removed Wanelo, CiteULike and DZone from social share networks as these services are not functional anymore
 
-= 3.3.7 [14 December 2019] =
+= 3.3.7 [24 December 2019] =
 [New] Christmas surprise
 [Bugfix] Pinterest Pin button was showing pin count even if share count was disabled from options
 
@@ -871,12 +884,25 @@ Yes, we can help you with it. Just drop an email at support[at]heateor[dot]com
 [Bugfix] Previous version was breaking social share on custom posts
 [New] Added option (in Miscellaneous section) to control if Javascript should be loaded on every page or only where it's needed
 
-= 3.3.7 [14 December 2019] =
+= 3.3.7 [24 December 2019] =
 [New] Christmas surprise
 [Bugfix] Pinterest Pin button was showing pin count even if share count was disabled from options
 
-= 3.3.8 [16 January 2020] =
+= 3.3.8 [1 March 2020] =
 [Bugfix] [Sassy_Follow_Icons] shortcode was not accepting "=" in the url of social networks. Now it can be used in encoded form.
 [Bugfix] Social Media Follow Icons were appearing broken in some cases
 [Improvement] Admin UI improvement
 [Improvement] Removed Wanelo, CiteULike and DZone from social share networks as these services are not functional anymore
+
+= 3.3.9 [8 April 2020] =
+[Bugfix] Sina Weibo share was not working
+[Bugfix] Facebook Messenger share was not working on mobile devices
+[Bugfix] "Search social networks" feature was not working at options page in admin area
+[Bugfix] bit.ly url shortener was not working
+[Improvement] Updated Facebook JS SDK to latest version 6.0
+[Improvement] Updated ClipBoard JS to latest version 2.0.6
+
+= 3.3.10 [14 May 2020] =
+[Bugfix] Email share popup was being triggered in the same bowser tab instead of the new tab
+[Bugfix] Url of Facebook Debugger in "Troubleshooter" section was broken
+[Bugfix] Print icon in the "More" popup is using PrintFriendly instead of Print

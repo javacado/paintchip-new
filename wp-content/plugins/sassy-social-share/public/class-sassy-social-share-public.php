@@ -120,7 +120,7 @@ class Sassy_Social_Share_Public {
 						$inline_script .= 'var heateorSssUrlCountFetched = [], heateorSssSharesText = \''. htmlspecialchars(__('Shares', 'sassy-social-share'), ENT_QUOTES) .'\', heateorSssShareText = \''. htmlspecialchars(__('Share', 'sassy-social-share'), ENT_QUOTES) .'\';';
 						$inline_script .= 'function heateorSssPopup(e) {window.open(e,"popUpWindow","height=400,width=600,left=400,top=100,resizable,scrollbars,toolbar=0,personalbar=0,menubar=no,location=no,directories=no,status")}';
 						if ( $this->facebook_like_recommend_enabled() || $this->facebook_share_enabled() ) {
-							$inline_script .= 'function heateorSssInitiateFB() {FB.init({appId:"",channelUrl:"",status:!0,cookie:!0,xfbml:!0,version:"v3.0"})}window.fbAsyncInit=function() {heateorSssInitiateFB(),' . ( defined( 'HEATEOR_SOCIAL_SHARE_MYCRED_INTEGRATION_VERSION' ) && $this->facebook_like_recommend_enabled() ? 1 : 0 ) . '&&(FB.Event.subscribe("edge.create",function(e) {heateorSsmiMycredPoints("Facebook_like_recommend","",e?e:"")}),FB.Event.subscribe("edge.remove",function(e) {heateorSsmiMycredPoints("Facebook_like_recommend","",e?e:"","Minus point(s) for undoing Facebook like-recommend")}) ),'. ( defined( 'HEATEOR_SHARING_GOOGLE_ANALYTICS_VERSION' ) ? 1 : 0 ) .'&&(FB.Event.subscribe("edge.create",function(e) {heateorSsgaSocialPluginsTracking("Facebook","Like",e?e:"")}),FB.Event.subscribe("edge.remove",function(e) {heateorSsgaSocialPluginsTracking("Facebook","Unlike",e?e:"")}) )},function(e) {var n,i="facebook-jssdk",o=e.getElementsByTagName("script")[0];e.getElementById(i)||(n=e.createElement("script"),n.id=i,n.async=!0,n.src="//connect.facebook.net/'. ( $this->options['language'] ? $this->options['language'] : 'en_US' ) .'/sdk.js",o.parentNode.insertBefore(n,o) )}(document);';
+							$inline_script .= 'function heateorSssInitiateFB() {FB.init({appId:"",channelUrl:"",status:!0,cookie:!0,xfbml:!0,version:"v6.0"})}window.fbAsyncInit=function() {heateorSssInitiateFB(),' . ( defined( 'HEATEOR_SOCIAL_SHARE_MYCRED_INTEGRATION_VERSION' ) && $this->facebook_like_recommend_enabled() ? 1 : 0 ) . '&&(FB.Event.subscribe("edge.create",function(e) {heateorSsmiMycredPoints("Facebook_like_recommend","",e?e:"")}),FB.Event.subscribe("edge.remove",function(e) {heateorSsmiMycredPoints("Facebook_like_recommend","",e?e:"","Minus point(s) for undoing Facebook like-recommend")}) ),'. ( defined( 'HEATEOR_SHARING_GOOGLE_ANALYTICS_VERSION' ) ? 1 : 0 ) .'&&(FB.Event.subscribe("edge.create",function(e) {heateorSsgaSocialPluginsTracking("Facebook","Like",e?e:"")}),FB.Event.subscribe("edge.remove",function(e) {heateorSsgaSocialPluginsTracking("Facebook","Unlike",e?e:"")}) )},function(e) {var n,i="facebook-jssdk",o=e.getElementsByTagName("script")[0];e.getElementById(i)||(n=e.createElement("script"),n.id=i,n.async=!0,n.src="//connect.facebook.net/'. ( $this->options['language'] ? $this->options['language'] : 'en_US' ) .'/sdk.js",o.parentNode.insertBefore(n,o) )}(document);';
 						}
 						$inline_script .= ';var heateorSssWhatsappShareAPI = "' . $this->whatsapp_share_api() . '";';
 						wp_enqueue_script( 'heateor_sss_sharing_js', plugins_url( 'js/sassy-social-share-public.js', __FILE__ ), array( 'jquery' ), $this->version, $in_footer );
@@ -138,6 +138,20 @@ class Sassy_Social_Share_Public {
 	 */
 	public function whatsapp_share_api() {
 
+		if ( $this->check_if_mobile() ) {
+			return 'api';
+		}
+		return 'web';
+
+	}
+
+	/**
+	 * Check if webpage is being visited in a mobile device
+	 *
+	 * @since    3.3.9
+	 */
+	public function check_if_mobile() {
+
 		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 			// detect the device for Whatsapp share API
 			$iphone = strpos( $_SERVER['HTTP_USER_AGENT'], "iPhone" );
@@ -145,15 +159,13 @@ class Sassy_Social_Share_Public {
 			$palmpre = strpos( $_SERVER['HTTP_USER_AGENT'], "webOS" );
 			$berry = strpos( $_SERVER['HTTP_USER_AGENT'], "BlackBerry" );
 			$ipod = strpos( $_SERVER['HTTP_USER_AGENT'], "iPod" );
-			// check if is a mobile
+			// check if it's a mobile
 			if ( $iphone || $android || $palmpre || $ipod || $berry == true ) {
-				return 'api';
-			} else {
-				return 'web';
+				return true;
 			}
 		}
 
-		return 'api';
+		return false;
 
 	}
 
@@ -197,14 +209,30 @@ class Sassy_Social_Share_Public {
 	    $bitlyUrl = get_post_meta( $post_id, '_heateor_sss_bitly_url', true );
 	    if ( $bitlyUrl ) {
 	    	return $bitlyUrl;
-	    } else {
+	    } elseif ( extension_loaded( 'curl' ) ) {
+	    	$generic_access_token = $this->options['bitly_access_token'];
 		    //generate the URL
-		    $bitly = 'http://api.bit.ly/v3/shorten?format=txt&login=' . $this->options['bitly_username'] . '&apiKey=' . $this->options['bitly_key'] . '&longUrl=' . urlencode( $url );
-			$response = wp_remote_get( $bitly,  array( 'timeout' => 15 ) );
-			if ( ! is_wp_error( $response ) && isset( $response['response']['code'] ) && 200 === $response['response']['code'] ) {
-				$short_url = trim( wp_remote_retrieve_body( $response ) );
-				update_post_meta( $post_id, '_heateor_sss_bitly_url', $short_url );
-				return $short_url;
+		    $bitly_api = 'https://api-ssl.bitly.com/v4/bitlinks';
+		    $payload = json_encode( array( 'long_url' => $url ) );
+		    
+		    $ch = curl_init( $bitly_api );
+            curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
+            curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
+            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+            curl_setopt( $ch, CURLOPT_HTTPHEADER, array(
+            	'Authorization: Bearer ' . $generic_access_token,
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen( $payload )
+            ) );
+            $response = curl_exec( $ch );
+
+			if ( ! is_wp_error( $response ) ) {
+				$short_url_object = json_decode( trim( $response ) );
+				if ( isset( $short_url_object->link ) ) {
+					$short_url = esc_url( $short_url_object->link );
+					update_post_meta( $post_id, '_heateor_sss_bitly_url', $short_url );
+					return $short_url;
+				}
 			}
 		}
 		return false;
@@ -229,7 +257,7 @@ class Sassy_Social_Share_Public {
 				$this->short_urls[$url] = $short_url;
 			}
 			// if bit.ly integration enabled, generate bit.ly short url
-		} elseif ( isset( $this->options['bitly_enable'] ) && $this->options['bitly_username'] != '' && $this->options['bitly_key'] != '' ) {
+		} elseif ( isset( $this->options['bitly_enable'] ) && $this->options['bitly_access_token'] != '' ) {
 			$short_url = $this->generate_bitly_url( $url, $post_id );
 			if ( $short_url ) {
 				$this->short_urls[$url] = $short_url;

@@ -61,9 +61,7 @@ class ES_Shortcode {
 	public static function render_es_form( $atts ) {
 		ob_start();
 
-		$atts = shortcode_atts( array(
-			'id' => ''
-		), $atts, 'email-subscribers-form' );
+		$atts = shortcode_atts( array( 'id' => '' ), $atts, 'email-subscribers-form' );
 
 		$id = $atts['id'];
 
@@ -165,7 +163,6 @@ class ES_Shortcode {
 		$hp_style  = "position:absolute;top:-99999px;" . ( is_rtl() ? 'right' : 'left' ) . ":-99999px;z-index:-99;";
 		$nonce     = wp_create_nonce( 'es-subscribe' );
 
-
 		// Name
 		$name_html = $required = '';
 		if ( ! empty( $show_name ) && 'no' !== $show_name ) {
@@ -226,17 +223,17 @@ class ES_Shortcode {
                 <input type="hidden" name="status" value="Unconfirmed"/>
                 <input type="hidden" name="es-subscribe" id="es-subscribe" value="<?php echo $nonce; ?>"/>
                 <label style="<?php echo $hp_style; ?>"><input type="email" name="es_hp_email" class="es_required_field" tabindex="-1" autocomplete="-1" value=""/></label>
-				<?php do_action( 'ig_es_after_form_fields' ) ?>
 				<?php
 
+				do_action( 'ig_es_after_form_fields', $data );
 
-                if($gdpr_consent === 'yes') { ?>
-                    <p><input type="checkbox" name="es_gdpr_consent" value="true" required />&nbsp;<label style="display: inline"><?php echo $gdpr_consent_text; ?></label></p>
-                <?php } else if ( ( in_array( 'gdpr/gdpr.php', $active_plugins ) || array_key_exists( 'gdpr/gdpr.php', $active_plugins ) ) ) {
+				if ( $gdpr_consent === 'yes' ) { ?>
+                    <p><input type="checkbox" name="es_gdpr_consent" value="true" required/>&nbsp;<label style="display: inline"><?php echo $gdpr_consent_text; ?></label></p>
+				<?php } elseif ( ( in_array( 'gdpr/gdpr.php', $active_plugins ) || array_key_exists( 'gdpr/gdpr.php', $active_plugins ) ) ) {
 					echo GDPR::consent_checkboxes();
 				}
 
-                ?>
+				?>
                 <input type="submit" name="submit" class="es_subscription_form_submit es_submit_button es_textbox_button" id="es_subscription_form_submit_<?php echo $unique_id; ?>" value="<?php echo $button_label; ?>"/>
 
 				<?php $spinner_image_path = ES_PLUGIN_URL . 'lite/public/images/spinner.gif'; ?>

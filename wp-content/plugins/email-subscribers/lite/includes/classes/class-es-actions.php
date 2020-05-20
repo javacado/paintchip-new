@@ -187,6 +187,8 @@ if ( ! class_exists( 'ES_Actions' ) ) {
 			// Track only if campaign sent.
 			if ( $this->is_campaign_sent( $contact_id, $message_id, $campaign_id ) ) {
 
+				$this->update_viewed_status( $contact_id, $campaign_id, $message_id );
+
 				return $this->add_action( array(
 					'contact_id'  => $contact_id,
 					'message_id'  => $message_id,
@@ -286,6 +288,30 @@ if ( ! class_exists( 'ES_Actions' ) ) {
 			$sql = "SELECT count(*) FROM $ig_actions_table WHERE contact_id = %d AND message_id = %d AND campaign_id = %d AND type = %d";
 
 			return $wpdb->get_var( $wpdb->prepare( $sql, $contact_id, $message_id, $campaign_id, IG_MESSAGE_SENT ) );
+		}
+
+		/**
+		 * @param int $conact_id
+		 * @param int $campaign_id
+		 * @param int $message_id
+		 *
+		 * @return bool|false|int|void
+		 *
+		 * @since 4.4.7
+		 */
+		public function update_viewed_status( $conact_id = 0, $campaign_id = 0, $message_id = 0 ) {
+			global $wpdb;
+
+			if ( empty( $conact_id ) || empty( $campaign_id ) ) {
+				return;
+			}
+
+			$current_date = ig_get_current_date_time();
+
+			$query = "UPDATE " . IG_SENDING_QUEUE_TABLE . " SET opened_at = %s, opened = %d WHERE contact_id = %d AND campaign_id = %d AND mailing_queue_id = %d";
+			$sql   = $wpdb->prepare( $query, $current_date, 1, $conact_id, $campaign_id, $message_id );
+
+			return $wpdb->query( $sql );
 		}
 	}
 }

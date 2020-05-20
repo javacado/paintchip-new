@@ -526,12 +526,9 @@ function generatepress_wc_cart_link() {
 		$icon ? 'has-svg-icon' : '',
 		esc_attr__( 'View your shopping cart', 'gp-premium' ),
 		$icon,
-		sprintf (
-			_n(
-				'<span class="number-of-items ' . $no_items . '">%d</span>',
-				'<span class="number-of-items ' . $no_items . '">%d</span>',
-				WC()->cart->get_cart_contents_count()
-			),
+		sprintf(
+			'<span class="number-of-items %1$s">%2$s</span>',
+			$no_items,
 			WC()->cart->get_cart_contents_count()
 		),
 		$legacy_icon,

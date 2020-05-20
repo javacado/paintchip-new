@@ -72,7 +72,7 @@ class ES_Templates_Table {
 		{{EMAIL}} </p>
 		<div id="post_digest">
 			<span style="font-size: 0.8em; margin-left: 0.3em; padding: 2px; background: #e66060; color: #fff; border-radius: 2px; ">Pro</span>&nbsp;
-			<a href="https://www.icegram.com/send-post-digest-using-email-subscribers-plugin/?utm_source=es&amp;utm_medium=in_app&amp;utm_campaign=view_post_digest_post" target="_blank"><?php _e( 'Available Keywords', 'email-subscribers' ); ?></a> <?php _e( 'for Post Digest:', 'email-subscribers' ); ?> 
+			<a href="https://www.icegram.com/send-post-digest-using-email-subscribers-plugin/?utm_source=es&amp;utm_medium=in_app&amp;utm_campaign=view_post_digest_post" target="_blank"><?php _e( 'Available Keywords', 'email-subscribers' ); ?></a> <?php _e( 'for Post Digest:', 'email-subscribers' ); ?>
 			{{FIRSTNAME}}, {{LASTNAME}}, {{NAME}}<div class="post_digest_block"> {{POSTDIGEST}} <br/><?php _e( 'Any keywords related Post Notification', 'email-subscribers' ); ?> <br/>{{/POSTDIGEST}} </div>
 		</div>
 		<?php
@@ -143,6 +143,25 @@ class ES_Templates_Table {
 			$current_user = wp_get_current_user();
 			$username     = $current_user->user_login;
 			$useremail    = $current_user->user_email;
+			$display_name = $current_user->display_name;
+
+			$contact_id   = ES()->contacts_db->get_contact_id_by_email( $useremail );
+			$first_name   = '';
+			$last_name    = '';
+
+			// Use details from contacts data if present else fetch it from wp profile.
+			if( ! empty( $contact_id ) ) {
+				$contact_data = ES()->contacts_db->get_by_id( $contact_id );
+				$first_name   = $contact_data['first_name'];
+				$last_name    = $contact_data['last_name'];
+			} else if( ! empty( $display_name ) ) {
+				$contact_details = explode( ' ', $display_name );
+				$first_name      = $contact_details[0];
+				// Check if last name is set.
+				if( ! empty( $contact_details[1] ) ) {
+					$last_name  = $contact_details[1];
+				}
+			}
 
 			$es_template_body = $template['post_content'];
 
@@ -165,6 +184,8 @@ class ES_Templates_Table {
 
 			$es_template_body = str_replace( '{{NAME}}', $username, $es_template_body );
 			$es_template_body = str_replace( '{{EMAIL}}', $useremail, $es_template_body );
+			$es_template_body = str_replace( '{{FIRSTNAME}}', $first_name, $es_template_body );
+			$es_template_body = str_replace( '{{LASTNAME}}', $last_name, $es_template_body );
 
 			if ( has_post_thumbnail( $template_id ) ) {
 				$image_array = wp_get_attachment_image_src( get_post_thumbnail_id( $template_id ), 'full' );
@@ -280,7 +301,7 @@ class ES_Templates_Table {
 		// Get the post as an array
 		$duplicate = get_post( $original_id, 'ARRAY_A' );
 		// Modify some of the elements
-		$duplicate['post_title']  = $duplicate['post_title'] . ' ' . __( 'Copy', 'icegram' );
+		$duplicate['post_title']  = $duplicate['post_title'] . ' ' . __( 'Copy', 'email-subscribers' );
 		$duplicate['post_status'] = 'draft';
 		// Set the post date
 		$timestamp = current_time( 'timestamp', 0 );
@@ -291,6 +312,12 @@ class ES_Templates_Table {
 		unset( $duplicate['ID'] );
 		unset( $duplicate['guid'] );
 		unset( $duplicate['comment_count'] );
+
+		$current_user_id = get_current_user_id();
+		if( ! empty( $current_user_id ) ) {
+			// Set post author to current logged in author.
+			$duplicate['post_author'] = $current_user_id;
+		}
 
 		// Insert the post into the database
 		$duplicate_id = wp_insert_post( $duplicate );

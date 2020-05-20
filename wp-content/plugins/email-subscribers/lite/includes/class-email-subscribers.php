@@ -608,7 +608,6 @@ if ( ! class_exists( 'Email_Subscribers' ) ) {
 				'lite/includes/classes/class-es-message.php',
 				'lite/includes/classes/class-es-lists-table.php',
 				'lite/includes/classes/class-es-contacts-table.php',
-				'lite/includes/classes/class-es-contact-background-process.php',
 				'lite/includes/classes/class-es-post-notifications.php',
 				'lite/includes/classes/class-es-templates-table.php',
 				'lite/includes/classes/class-es-campaigns-table.php',
@@ -690,6 +689,7 @@ if ( ! class_exists( 'Email_Subscribers' ) ) {
 				'lite/includes/workflows/class-es-workflow-factory.php',
 
 				// Data Types
+				'lite/includes/workflows/data-types/abstracts/class-es-data-type-form-data.php',
 				'lite/includes/workflows/data-types/class-es-data-type-user.php',
 				'lite/includes/workflows/class-es-workflow-data-types.php',
 
@@ -711,6 +711,7 @@ if ( ! class_exists( 'Email_Subscribers' ) ) {
 				'lite/includes/workflows/admin/class-es-workflow-admin-ajax.php',
 
 				// Workflow Triggers.
+				'lite/includes/workflows/triggers/abstracts/class-es-trigger-form-submitted.php',
 				'lite/includes/workflows/triggers/class-es-trigger-user-registered.php',
 				'lite/includes/workflows/triggers/class-es-trigger-user-deleted.php',
 				'lite/includes/workflows/triggers/class-es-trigger-user-updated.php',
@@ -742,6 +743,7 @@ if ( ! class_exists( 'Email_Subscribers' ) ) {
 				'starter/workflows/data-types/class-es-data-type-ninja-forms-data.php',
 				'starter/workflows/data-types/class-es-data-type-give-data.php',
 				'starter/workflows/data-types/class-es-data-type-gravity-forms-data.php',
+				'starter/workflows/data-types/class-es-data-type-forminator-forms-data.php',
 
 				// Triggers from Starter version
 				'starter/workflows/triggers/class-es-trigger-comment-added.php',
@@ -752,6 +754,7 @@ if ( ! class_exists( 'Email_Subscribers' ) ) {
 				'starter/workflows/triggers/class-es-trigger-ninja-forms-submitted.php',
 				'starter/workflows/triggers/class-es-trigger-give-donation-made.php',
 				'starter/workflows/triggers/class-es-trigger-gravity-forms-submitted.php',
+				'starter/workflows/triggers/class-es-trigger-forminator-forms-submitted.php',
 
 				// Actions from Pro version
 				'pro/workflows/actions/class-es-action-move-to-list.php',
@@ -806,6 +809,8 @@ if ( ! class_exists( 'Email_Subscribers' ) ) {
 			$this->loader->add_action( 'wp_ajax_count_contacts_by_list', $plugin_admin, 'count_contacts_by_list' );
 			$this->loader->add_action( 'wp_ajax_get_template_content', $plugin_admin, 'get_template_content' );
 			$this->loader->add_action( 'admin_print_scripts', $plugin_admin, 'remove_other_admin_notices' );
+
+			$this->loader->add_filter( 'admin_footer_text', $plugin_admin, 'update_admin_footer_text' );
 
 		}
 
@@ -1113,10 +1118,10 @@ if ( ! class_exists( 'Email_Subscribers' ) ) {
 		 *
 		 * @since 4.4.4
 		 */
-		public function init_action_scheduler_queue_runner() {
+		public function init_action_scheduler_queue_runner( $action = 'ig_es_init_queue_runner' ) {
 
 			$admin_ajax_url = admin_url( 'admin-ajax.php' );
-			$admin_ajax_url = add_query_arg( 'action', 'ig_es_init_queue_runner', $admin_ajax_url );
+			$admin_ajax_url = add_query_arg( 'action', $action, $admin_ajax_url );
 			$args           = array(
 				'timeout'   => 0.01,
 				'blocking'  => false,

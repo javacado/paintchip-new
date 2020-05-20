@@ -504,7 +504,6 @@ class ES_Cron {
 		}
 
 		if ( $self ) {
-
 			$total_emails_sent       = ! empty( $response['total_emails_sent'] ) ? $response['total_emails_sent'] : 0;
 			$status                  = ! empty( $response['status'] ) ? $response['status'] : 'ERROR';
 			$total_emails_to_be_sent = ! empty( $response['es_remaining_email_count'] ) ? $response['es_remaining_email_count'] : 0;
@@ -558,5 +557,6 @@ class ES_Cron {
 		$message_text = ! empty( $status_messages[ $message ] ) ? $status_messages[ $message ] : '';
 
 		return $message_text;
+
 	}
 }

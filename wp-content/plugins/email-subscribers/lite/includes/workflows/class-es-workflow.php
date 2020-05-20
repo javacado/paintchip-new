@@ -648,8 +648,30 @@ class ES_Workflow {
 	 * @return array
 	 */
 	function get_trigger_options() {
-		$options = $this->get_meta( 'trigger_options' );
+		$options = $this->trigger_options;
 		return is_array( $options ) ? $options : array();
+	}
+
+	/**
+	 * Get's the value of workflow trigger option.
+	 *
+	 * @param string $name
+	 * @param bool|string $default used when value is not set, this should only be if the option was added workflow was created
+	 *
+	 * @return mixed Will vary depending on the field type specified in the trigger's fields.
+	 * 
+	 * @since 4.4.6
+	 */
+	function get_trigger_option( $name, $default = false ) {
+		$options = $this->get_trigger_options();
+
+		if ( isset( $options[$name] ) ) {
+			$value = $options[$name];
+		} else {
+			$value = $default;
+		}
+
+		return $value;
 	}
 
 	/**

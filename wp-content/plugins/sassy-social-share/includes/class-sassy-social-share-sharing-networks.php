@@ -52,7 +52,7 @@ class Sassy_Social_Share_Sharing_Networks {
 		'twitter' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("http://twitter.com/intent/tweet?%via_twitter_username%text=%wpseo_post_title%&url=%encoded_post_url%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
 		'linkedin' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("http://www.linkedin.com/shareArticle?mini=true&url=%encoded_post_url%&title=%post_title%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
 		'print' => '<li class="%li_class%"><i %style% alt="%title%" Title="Print" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'window.print()\'><ss style="display:block" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
-		'email' => '<li class="%li_class%"><i %style% alt="%title%" Title="Email" class="heateorSssSharing heateorSss%ucfirst_network%Background" %amp_email% onclick="window.location.href = \'mailto:?subject=\' + decodeURIComponent(\'%post_title%\' ).replace(\'&\', \'%26\') + \'&body=\' + decodeURIComponent(\'%encoded_post_url%\' )"><ss style="display:block" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
+		'email' => '<li class="%li_class%"><i %style% alt="%title%" Title="Email" class="heateorSssSharing heateorSss%ucfirst_network%Background" %amp_email% onclick="window.open(\'mailto:?subject=\' + decodeURIComponent(\'%post_title%\' ).replace(\'&\', \'%26\') + \'&body=\' + decodeURIComponent(\'%encoded_post_url%\' ), \'_blank\')"><ss style="display:block" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
 		'reddit' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("http://reddit.com/submit?url=%encoded_post_url%&title=%post_title%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
 		'digg' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("http://digg.com/submit?url=%encoded_post_url%&title=%post_title%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
 		'float_it' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("http://www.designfloat.com/submit.php?url=%encoded_post_url%&title=%post_title%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
@@ -128,7 +128,7 @@ class Sassy_Social_Share_Sharing_Networks {
 		'Refind' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("https://refind.com/?url=%encoded_post_url%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
 		'Renren' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("//www.connect.renren.com/share/sharer?url=%encoded_post_url%&title=%post_title%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
 		'Segnalo' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("http://segnalo.virgilio.it/post.html.php?url=%encoded_post_url%&title=%post_title%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
-		'Sina Weibo' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("//service.weibo.com/share/share.php?url=%encoded_post_url%&title=%post_title%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
+		'Sina Weibo' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("http://service.weibo.com/share/share.php?url=%encoded_post_url%&title=%post_title%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
 		'SiteJot' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("http://www.sitejot.com/loginform.php?iSiteAdd=&iSiteDes=")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
 		'Skype' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("https://web.skype.com/share?url=%encoded_post_url%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
 		'Slashdot' => '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("//slashdot.org/submission?url=%encoded_post_url%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>',
@@ -249,7 +249,7 @@ class Sassy_Social_Share_Sharing_Networks {
 		'Refind' => '<a class="heateor_sss_amp heateor_sss_amp_refind" href="https://refind.com/?url=%encoded_post_url%" title="Refind" rel="nofollow noopener" target="_blank"><amp-img src="%img_url%/refind.svg" width="%width%" height="%height%" alt="Refind" class="amp-wp-enforced-sizes" style="width: %width%px;"></amp-img></a>',
 		'Renren' => '<a class="heateor_sss_amp heateor_sss_amp_renren" href="//www.connect.renren.com/share/sharer?url=%encoded_post_url%&title=%post_title%" title="Renren" rel="nofollow noopener" target="_blank"><amp-img src="%img_url%/renren.svg" width="%width%" height="%height%" alt="Renren" class="amp-wp-enforced-sizes" style="width: %width%px;"></amp-img></a>',
 		'Segnalo' => '<a class="heateor_sss_amp heateor_sss_amp_segnalo" href="http://segnalo.virgilio.it/post.html.php?url=%encoded_post_url%&title=%post_title%" title="Segnalo" rel="nofollow noopener" target="_blank"><amp-img src="%img_url%/segnalo.svg" width="%width%" height="%height%" alt="Segnalo" class="amp-wp-enforced-sizes" style="width: %width%px;"></amp-img></a>',
-		'Sina Weibo' => '<a class="heateor_sss_amp heateor_sss_amp_sina_weibo" href="//service.weibo.com/share/share.php?url=%encoded_post_url%&title=%post_title%" title="Sina Weibo" rel="nofollow noopener" target="_blank"><amp-img src="%img_url%/sina_weibo.svg" width="%width%" height="%height%" alt="Sina Weibo" class="amp-wp-enforced-sizes" style="width: %width%px;"></amp-img></a>',
+		'Sina Weibo' => '<a class="heateor_sss_amp heateor_sss_amp_sina_weibo" href="http://service.weibo.com/share/share.php?url=%encoded_post_url%&title=%post_title%" title="Sina Weibo" rel="nofollow noopener" target="_blank"><amp-img src="%img_url%/sina_weibo.svg" width="%width%" height="%height%" alt="Sina Weibo" class="amp-wp-enforced-sizes" style="width: %width%px;"></amp-img></a>',
 		'SiteJot' => '<a class="heateor_sss_amp heateor_sss_amp_sitejot" href="http://www.sitejot.com/loginform.php?iSiteAdd=&iSiteDes=" title="SiteJot" rel="nofollow noopener" target="_blank"><amp-img src="%img_url%/sitejot.svg" width="%width%" height="%height%" alt="SiteJot" class="amp-wp-enforced-sizes" style="width: %width%px;"></amp-img></a>',
 		'Skype' => '<a class="heateor_sss_amp heateor_sss_amp_skype" href="https://web.skype.com/share?url=%encoded_post_url%" title="Skype" rel="nofollow noopener" target="_blank"><amp-img src="%img_url%/skype.svg" width="%width%" height="%height%" alt="Skype" class="amp-wp-enforced-sizes" style="width: %width%px;"></amp-img></a>',
 		'Slashdot' => '<a class="heateor_sss_amp heateor_sss_amp_slashdot" href="//slashdot.org/submission?url=%encoded_post_url%" title="Slashdot" rel="nofollow noopener" target="_blank"><amp-img src="%img_url%/slashdot.svg" width="%width%" height="%height%" alt="Slashdot" class="amp-wp-enforced-sizes" style="width: %width%px;"></amp-img></a>',
@@ -295,7 +295,7 @@ class Sassy_Social_Share_Sharing_Networks {
 		if ( $this->options['fb_key'] != '' ) {
 			$fb_key = $this->options['fb_key'];
 		}
-		$this->sharing_networks['Facebook_Messenger'] = '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("https://www.facebook.com/dialog/send?app_id=' . $fb_key . '&display=popup&link=%encoded_post_url%&redirect_uri=%encoded_post_url%")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>';
+		$this->sharing_networks['Facebook_Messenger'] = '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background" onclick=\'heateorSssPopup("' . ( $this->check_if_mobile() ? 'fb-messenger://share/?link=%encoded_post_url%' : 'https://www.facebook.com/dialog/send?app_id='. $fb_key .'&display=popup&link=%encoded_post_url%&redirect_uri=%encoded_post_url%' ) . '")\'><ss style="%inner_style%" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></i></li>';
 		$whatsapp_share_url = $this->whatsapp_share_api();
 		$this->sharing_networks['whatsapp'] = '<li class="%li_class%"><i %style% alt="%title%" Title="%title%" class="heateorSssSharing heateorSss%ucfirst_network%Background"><a %amp_whatsapp% href="https://' . $whatsapp_share_url . '.whatsapp.com/send?text=%post_title% %encoded_post_url%" rel="nofollow noopener" target="_blank"><ss style="display:block" class="heateorSssSharingSvg heateorSss%ucfirst_network%Svg"></ss></a></i></li>';
 		
@@ -317,8 +317,7 @@ class Sassy_Social_Share_Sharing_Networks {
 		if ( $this->options['fb_key'] ) {
 			$fb_key = $this->options['fb_key'];
 		}
-		$this->amp_sharing_networks['Facebook_Messenger'] = '<a class="heateor_sss_amp heateor_sss_amp_facebook_messenger" href="https://www.facebook.com/dialog/send?app_id=' . $fb_key . '&display=popup&link=%encoded_post_url%&redirect_uri=%encoded_post_url%" title="Facebook Messenger" rel="nofollow noopener" target="_blank"><amp-img src="%img_url%/facebook_messenger.svg" width="%width%" height="%height%" alt="Facebook Messenger" class="amp-wp-enforced-sizes" style="width:%width%px;"></amp-img></a>';
-		
+		$this->amp_sharing_networks['Facebook_Messenger'] = '<a class="heateor_sss_amp heateor_sss_amp_facebook_messenger" href="' . ( $this->check_if_mobile() ? 'fb-messenger://share/?link=%encoded_post_url%' : 'https://www.facebook.com/dialog/send?app_id=' . $fb_key . '&display=popup&link=%encoded_post_url%&redirect_uri=%encoded_post_url%' ) . '" title="Facebook Messenger" rel="nofollow noopener" target="_blank"><amp-img src="%img_url%/facebook_messenger.svg" width="%width%" height="%height%" alt="Facebook Messenger" class="amp-wp-enforced-sizes" style="width:%width%px;"></amp-img></a>';
 
 		return $this->amp_sharing_networks;
 	
@@ -331,6 +330,20 @@ class Sassy_Social_Share_Sharing_Networks {
 	 */
 	private function whatsapp_share_api() {
 
+		if ( $this->check_if_mobile() ) {
+			return 'api';
+		}
+		return 'web';
+
+	}
+
+	/**
+	 * Check if webpage is being visited in a mobile device
+	 *
+	 * @since    3.3.9
+	 */
+	private function check_if_mobile() {
+
 		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 			// detect the device for Whatsapp share API
 			$iphone = strpos( $_SERVER['HTTP_USER_AGENT'], "iPhone" );
@@ -338,15 +351,13 @@ class Sassy_Social_Share_Sharing_Networks {
 			$palmpre = strpos( $_SERVER['HTTP_USER_AGENT'], "webOS" );
 			$berry = strpos( $_SERVER['HTTP_USER_AGENT'], "BlackBerry" );
 			$ipod = strpos( $_SERVER['HTTP_USER_AGENT'], "iPod" );
-			// check if is a mobile
+			// check if it's a mobile
 			if ( $iphone || $android || $palmpre || $ipod || $berry == true ) {
-				return 'api';
-			} else {
-				return 'web';
+				return true;
 			}
 		}
 
-		return 'api';
+		return false;
 
 	}
 

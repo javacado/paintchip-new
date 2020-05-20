@@ -39,7 +39,8 @@ class GeneratePress_Sites_Restore {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		$backup_data = get_option( '_generatepress_site_library_backup', array() );
@@ -111,7 +112,8 @@ class GeneratePress_Sites_Restore {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		$backup_data = get_option( '_generatepress_site_library_backup', array() );
@@ -140,7 +142,8 @@ class GeneratePress_Sites_Restore {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		$backup_data = get_option( '_generatepress_site_library_backup', array() );
@@ -164,7 +167,8 @@ class GeneratePress_Sites_Restore {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		$backup_data = get_option( '_generatepress_site_library_backup', array() );
@@ -182,7 +186,8 @@ class GeneratePress_Sites_Restore {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		$backup_data = get_option( '_generatepress_site_library_backup', array() );
@@ -200,7 +205,8 @@ class GeneratePress_Sites_Restore {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		$backup_data = get_option( '_generatepress_site_library_backup', array() );
@@ -230,7 +236,8 @@ class GeneratePress_Sites_Restore {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		delete_option( 'generate_dynamic_css_output' );

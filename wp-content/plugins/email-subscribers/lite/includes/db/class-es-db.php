@@ -476,6 +476,8 @@ abstract class ES_DB {
 		// Convert Batches into smaller chunk
 		$batches = array_chunk( $values, $length );
 
+		$error_flag = false;
+
 		foreach ( $batches as $key => $batch ) {
 
 			$place_holders = $final_values = array();
@@ -497,8 +499,13 @@ abstract class ES_DB {
 			$sql   = $wpdb->prepare( $query, $final_values );
 
 			if ( ! $wpdb->query( $sql ) ) {
-				return false;
+				$error_flag = true;
 			}
+		}
+
+		// Check if error occured during executing the query.
+		if( $error_flag ) {
+			return false;
 		}
 
 		return true;

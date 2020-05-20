@@ -147,13 +147,13 @@ class ES_Workflows_Table extends WP_List_Table {
 	 */
 	public function load_workflow_list() {
 		?>
-		<h1 class=" wp-heading-inline"><span class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate"><?php esc_html_e( 'Workflows', 'email-subscribers' ); ?>
+		<h1 class=" wp-heading-inline"><span class="text-2xl font-medium leading-7 text-gray-900 sm:leading-9 sm:truncate"><?php esc_html_e( 'Workflows', 'email-subscribers' ); ?>
 		</span>
 		<a href="admin.php?page=es_workflows&action=new"
-		class="pt-2 ig-es-title-button px-2 py-2 mx-2"><?php esc_html_e( 'Add New', 'email-subscribers' ); ?></a>
+		class="px-2 py-2 pt-2 mx-2 ig-es-title-button"><?php esc_html_e( 'Add New', 'email-subscribers' ); ?></a>
 		<?php do_action( 'ig_es_after_workflow_type_buttons' ); ?>
 	</h1>
-	<div id="poststuff">
+	<div id="poststuff" class="es-items-lists">
 		<div id="post-body" class="metabox-holder column-1">
 			<div id="post-body-content">
 				<div class="meta-box-sortables ui-sortable">

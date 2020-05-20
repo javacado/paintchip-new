@@ -171,10 +171,11 @@ class ES_Handle_Post_Notification {
 	}
 
 	public static function prepare_body( $es_templ_body, $post_id, $email_template_id ) {
+		global $post;
 		$post          = get_post( $post_id );
-		$post_date     = $post->post_modified;
+		$post_date 	   = ES_Common::convert_date_to_wp_date( $post->post_modified );
 		$es_templ_body = str_replace( '{{DATE}}', $post_date, $es_templ_body );
-
+		
 		$post_title    = get_the_title( $post );
 		$es_templ_body = str_replace( '{{POSTTITLE}}', $post_title, $es_templ_body );
 		$post_link     = get_permalink( $post_id );

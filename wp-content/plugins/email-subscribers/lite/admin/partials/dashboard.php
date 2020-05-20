@@ -56,14 +56,14 @@ $topics_indexes = array_rand( $topics, 3 );
         <div class="md:flex md:items-center md:justify-between">
             <div class="flex-1 min-w-0">
                 <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate">
-					<?php _e( 'Dashboard', 'email_subscribers' ); ?>
+					<?php _e( 'Dashboard', 'email-subscribers' ); ?>
                 </h2>
             </div>
             <div class="flex mt-4 md:mt-0 md:ml-4">
                 <a href="<?php echo $audience_url; ?>">
                 <span class="rounded-md shadow-sm">
                 <button type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:shadow-outline focus:border-blue-300">
-                    <?php _e( 'Audience', 'email_subscribers' ); ?>
+                    <?php _e( 'Audience', 'email-subscribers' ); ?>
                 </button>
                 </span>
                 </a>
@@ -72,7 +72,7 @@ $topics_indexes = array_rand( $topics, 3 );
                         <div>
                           <span class="rounded-md shadow-sm">
                             <button type="button" class="w-full ig-es-primary-button">
-                              <?php _e( 'Create', 'email_subscribers' ); ?>
+                              <?php _e( 'Create', 'email-subscribers' ); ?>
                               <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
                               </svg>
@@ -83,26 +83,26 @@ $topics_indexes = array_rand( $topics, 3 );
                              x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 hidden w-56 mt-2 origin-top-right rounded-md shadow-lg">
                           <div class="bg-white rounded-md shadow-xs">
                             <div class="py-1">
-                              <a href="<?php echo $new_broadcast_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Broadcast', 'email_subscribers' ); ?></a>
+                              <a href="<?php echo $new_broadcast_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Broadcast', 'email-subscribers' ); ?></a>
                               
-                              <a href="<?php echo $new_post_notification_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Post Notification', 'email_subscribers' ); ?></a>
+                              <a href="<?php echo $new_post_notification_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Post Notification', 'email-subscribers' ); ?></a>
 
                               <?php if ( ES()->is_pro() ) { ?>
-                                  <a href="<?php echo $new_sequence_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Sequence', 'email_subscribers' ); ?></a>
+                                  <a href="<?php echo $new_sequence_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Sequence', 'email-subscribers' ); ?></a>
                               <?php } else { ?>
-                                  <a href="<?php echo $icegram_pricing_url; ?>" target="_blank" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Sequence', 'email_subscribers' ); ?>
-                                      <span class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full"><?php _e( 'Premium', 'email_subscribers' ); ?></span></a>
+                                  <a href="<?php echo $icegram_pricing_url; ?>" target="_blank" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Sequence', 'email-subscribers' ); ?>
+                                      <span class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full"><?php _e( 'Premium', 'email-subscribers' ); ?></span></a>
                               <?php } ?>
                             </div>
                             <div class="border-t border-gray-100"></div>
                             <div class="py-1">
-                                    <a href="<?php echo $new_template_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Template', 'email_subscribers' ); ?></a>
+                                    <a href="<?php echo $new_template_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Template', 'email-subscribers' ); ?></a>
                             </div>
                             <div class="border-t border-gray-100"></div>
                             <div class="py-1">
-                                    <a href="<?php echo $new_form_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Form', 'email_subscribers' ); ?></a>
-                                    <a href="<?php echo $new_list_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New List', 'email_subscribers' ); ?></a>
-                                    <a href="<?php echo $new_contact_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Contact', 'email_subscribers' ); ?></a>
+                                    <a href="<?php echo $new_form_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Form', 'email-subscribers' ); ?></a>
+                                    <a href="<?php echo $new_list_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New List', 'email-subscribers' ); ?></a>
+                                    <a href="<?php echo $new_contact_url; ?>" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"><?php _e( 'New Contact', 'email-subscribers' ); ?></a>
                             </div>
                           </div>
                         </div>
@@ -117,7 +117,7 @@ $topics_indexes = array_rand( $topics, 3 );
         <section class="py-4 my-8 bg-white rounded-lg shadow md:flex md:items-start md:justify-between sm:px-4 sm:px-0 sm:grid sm:grid-cols-3">
             <div class="flex-1 min-w-0">
                 <p class="px-3 text-lg font-medium leading-6 text-gray-400">
-                    <span class="text-black"><?php echo $active_contacts; ?></span><?php _e( ' active contacts', 'email_subscribers' ); ?>
+                    <span class="text-black"><?php echo $active_contacts; ?></span><?php _e( ' active contacts', 'email-subscribers' ); ?>
                 </p>
                 <div class="text-center bg-white-100" id="ig-es-contacts-growth">
 
@@ -125,7 +125,7 @@ $topics_indexes = array_rand( $topics, 3 );
             </div>
             <div class="flex-1 min-w-0">
                 <p class="px-3 text-lg font-medium leading-6 text-gray-400">
-					<?php _e( 'Last 60 days', 'email_subscribers' ); ?>
+					<?php _e( 'Last 60 days', 'email-subscribers' ); ?>
                 </p>
                 <div class="sm:grid sm:grid-cols-2">
                     <div class="p-3">
@@ -133,7 +133,7 @@ $topics_indexes = array_rand( $topics, 3 );
 							<?php echo $total_email_opens; ?>
                         </p>
                         <p class="mt-1 font-medium leading-6 text-gray-500">
-							<?php _e( 'Opens', 'email_subscribers' ); ?>
+							<?php _e( 'Opens', 'email-subscribers' ); ?>
                         </p>
                     </div>
                     <div class="p-3">
@@ -141,7 +141,7 @@ $topics_indexes = array_rand( $topics, 3 );
 							<?php echo $avg_open_rate; ?> %
                         </p>
                         <p class="mt-1 font-medium leading-6 text-gray-500">
-							<?php _e( ' Avg Open Rate', 'email_subscribers' ); ?>
+							<?php _e( ' Avg Open Rate', 'email-subscribers' ); ?>
                         </p>
                     </div>
                     <div class="p-3">
@@ -149,7 +149,7 @@ $topics_indexes = array_rand( $topics, 3 );
 							<?php echo $total_message_sent; ?>
                         </p>
                         <p class="mt-1 font-medium leading-6 text-gray-500">
-							<?php _e( 'Messages Sent', 'email_subscribers' ); ?>
+							<?php _e( 'Messages Sent', 'email-subscribers' ); ?>
                         </p>
                     </div>
                     <div class="p-3">
@@ -157,7 +157,7 @@ $topics_indexes = array_rand( $topics, 3 );
 							<?php echo $avg_click_rate; ?> %
                         </p>
                         <p class="mt-1 font-medium leading-6 text-gray-500">
-							<?php _e( 'Avg Click Rate', 'email_subscribers' ); ?>
+							<?php _e( 'Avg Click Rate', 'email-subscribers' ); ?>
                         </p>
                     </div>
                 </div>
@@ -190,10 +190,10 @@ $topics_indexes = array_rand( $topics, 3 );
                         <li class="">
                             <div class="px-2 py-2 text-sm leading-5 text-gray-900 sm:px-2">
 
-								<?php _e( 'Jump to: ', 'email_subscribers' ); ?><a href="<?php echo $reports_url; ?>" class="font-bold" target="_blank"><?php _e( 'Reports', 'email_subscribers' ); ?></a> ・<a href="<?php echo $templates_url; ?>" class="font-bold" target="_blank"><?php _e( 'Templates', 'email_subscribers' ); ?></a> ・<a
+								<?php _e( 'Jump to: ', 'email-subscribers' ); ?><a href="<?php echo $reports_url; ?>" class="font-bold" target="_blank"><?php _e( 'Reports', 'email-subscribers' ); ?></a> ・<a href="<?php echo $templates_url; ?>" class="font-bold" target="_blank"><?php _e( 'Templates', 'email-subscribers' ); ?></a> ・<a
                                         href="<?php echo $settings_url; ?>"
                                         class="font-bold" target="_blank"><?php _e( 'Settings',
-										'email_subscribers' ); ?></a>
+										'email-subscribers' ); ?></a>
 
                             </div>
                         </li>

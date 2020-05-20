@@ -14,7 +14,20 @@
 
 			$('.es_visible').change();
 
-			$('#tabs-signup_confirmation, #tabs-email_sending, #tabs-security_settings, #tabs-user_roles').hide();
+			$('#menu-nav li:first-child').addClass('active').find('a').addClass('active');
+			$('.setting-content').hide();
+			$('.setting-content:first').show();
+
+			$('#menu-nav li').click(function(){
+				$('#menu-nav li,#menu-nav li a').removeClass('active');
+				$(this).addClass('active').find('a').addClass('active');
+				$('.setting-content').hide();
+				var activeTab = $(this).find('a').attr('href');
+				$(activeTab).show();
+				return false;
+			});
+
+			/*$('#tabs-signup_confirmation, #tabs-email_sending, #tabs-security_settings, #tabs-user_roles').hide();
 
 			$('#tabs-general').show();
 
@@ -26,22 +39,57 @@
 				var target = $(this).attr('href');
 				$('.setting-content' + target).show();
 				return false;
+			});*/
+
+			$(".next_btn, #summary_menu").click(function() {
+				var $fieldset = $(this).closest('.es_fieldset');
+				$fieldset.next().find('div.es_broadcast_second').fadeIn('normal');
+				$fieldset.find('.es_broadcast_first').hide();
+
+				$fieldset.find('#broadcast_button1,#broadcast_button2').show();
+				$fieldset.find('#broadcast_button').hide();
+
+				$('#content_menu').removeClass("active");
+    			$('#summary_menu').addClass("active");
+				//$('.active').removeClass('active').next().addClass('active');
+
+				// Trigger template content changed event to update email preview.
+				$('.wp-editor-boradcast').trigger('change');
+
 			});
 
 
-			/*$('#es-settings-tabs').tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
+			$(".pre_btn, #content_menu").click(function() {
+				var $fieldset = $(this).closest('.es_fieldset');
+				$fieldset.find('.es_broadcast_first').fadeIn('normal');
+				$fieldset.next().find('.es_broadcast_second').hide();
 
-			var defaultHeight = $('div#es-settings-tabs div#menu-tab-content div#tabs-general').height() + 30;
-			$('div#es-settings-tabs div#menu-tab-listing ul').height(defaultHeight);
+				$fieldset.find('#broadcast_button').show();
+				$fieldset.find('#broadcast_button1, #broadcast_button2').hide();
 
-			// Set Tab Height
-			$('.ui-tabs-anchor').click(function() {
-				var tab = $(this).attr('href');
-				$('#email_tabs_form').attr('action', tab);
-				var tabHight = $('div#es-settings-tabs div#menu-tab-content div' + tab).height() + 30;
-				$('div#es-settings-tabs div#menu-tab-listing ul').height(tabHight);
+				$('#summary_menu').removeClass("active");
+    			$('#content_menu').addClass("active");
+				//$('.active').removeClass('active').prev().addClass('active');
+
 			});
-			*/
+
+			$("input:radio[name='broadcast_data[scheduling_option]']").click(function() {
+
+				let scheduling_option = $(this).val();
+				if( 'schedule_later' === scheduling_option ) {
+					$('.display_schedule').removeClass('hidden');
+				} else {
+					$('.display_schedule').addClass('hidden');
+				}
+			});
+
+			$('#preview_template').hide();
+			$('#spam_score_modal').hide();
+
+			$("#close_template").on('click', function (event) {
+				event.preventDefault();
+				$('#preview_template').hide();
+			});
 
 			if (jQuery('.statusesselect').length) {
 				var statusselect = jQuery('.statusesselect')[0].outerHTML;
@@ -207,8 +255,10 @@
 							response = JSON.parse(response);
 							if (response.hasOwnProperty('total')) {
 								var total = response.total;
-								var total_contacts_text = "<b>Total Contacts: " + total + "</b>";
+								var total_contacts_text = "<h2 class='text-sm font-normal text-gray-600'>Total Contacts: <span class='text-base font-medium text-gray-700'> " + total + "</span></h2>";
+								var total_recipients_text = "<span class='font-medium text-base text-gray-700'>" + total + " <span class='text-base font-medium text-gray-700'></span><span class='font-normal text-sm text-gray-500'> recipients </span>";
 								$('#ig_es_total_contacts').html(total_contacts_text);
+								$('#ig_es_total_recipients').html(total_recipients_text);
 								if (total == 0) {
 									$('#ig_es_campaign_submit_button').attr("disabled", true);
 								} else {
@@ -238,10 +288,13 @@
 							if (response.hasOwnProperty('subject')) {
 								jQuery('.wp-editor-boradcast').val(response.body);
 								if ('undefined' !== typeof tinyMCE) {
+
 									var activeEditor = tinyMCE.get('edit-es-boradcast-body');
+
 									if (activeEditor !== null) { // Make sure we're not calling setContent on null
 										response.body = response.body.replace(/\n/g, "<br />");
 										activeEditor.setContent(response.body); // Update tinyMCE's content
+
 									}
 								}
 
@@ -250,6 +303,11 @@
 								}
 								if (response.es_utm_campaign && jQuery('#es_utm_campaign').length) {
 									jQuery('#es_utm_campaign').val(response.es_utm_campaign);
+								}
+
+								if( 1 === $('#edit-es-boradcast-body').length ) {
+									tinyMCE.triggerSave();
+									$('#edit-es-boradcast-body').trigger('change');
 								}
 							}
 						}
@@ -290,6 +348,7 @@
 					jQuery(this).unbind('submit').submit();
 				}
 			});
+
 			jQuery(document).on('click', '#ig_es_campaign_submit_button', function (e) {
 				if (jQuery('.wp-editor-boradcast').val() !== '') {
 					jQuery('.es-form').find('form').attr('target', '');
@@ -299,11 +358,10 @@
 			//add target new to go pro
 			jQuery('a[href="admin.php?page=es_pricing"]').attr('target', '_blank').attr('href', 'https://www.icegram.com/email-subscribers-pricing/');
 
-			$('.ig-es-campaign-status-toggle-label').click(function (e) {
-				e.preventDefault();
-				let checkbox_elem = $(this).find('.es-check-toggle');
-				let campaign_id = $(checkbox_elem).val();
-				let new_campaign_status = $(checkbox_elem).prop('checked') ? 0 : 1;
+			$('.ig-es-campaign-status-toggle-label input[type="checkbox"]').change(function() {
+				let checkbox_elem       = $(this);
+				let campaign_id         = $(checkbox_elem).val();
+				let new_campaign_status = $(checkbox_elem).prop('checked') ? 1 : 0;
 				let data = {
 					action: 'ig_es_toggle_campaign_status',
 					campaign_id: campaign_id,
@@ -316,18 +374,137 @@
 					data: data,
 					dataType: 'json',
 					success: function (response) {
-						if (response.success) {
-							$(checkbox_elem).prop('checked', new_campaign_status);
-						} else {
-							alert(ig_es_js_data.ajax_error_message);
+						if ( !response.success ) {
+							alert( ig_es_js_data.i18n_data.ajax_error_message );
+							// Revert back toggle status.
+							$(checkbox_elem).prop( 'checked', ! new_campaign_status );
 						}
 					},
 					error: function (err) {
-						alert(ig_es_js_data.ajax_error_message);
+						alert( ig_es_js_data.i18n_data.ajax_error_message );
 					}
 				});
 			});
 
+			$('.ig_es_draft_broadcast, .next_btn, #summary_menu').on('click', function(e) {
+
+				let trigger_elem    = $(this);
+				let is_draft_bttuon = $(trigger_elem).hasClass('ig_es_draft_broadcast');
+
+				let broadcast_subject = $('#ig_es_broadcast_subject').val();
+				if( '' === broadcast_subject ) {
+					if( is_draft_bttuon ) {
+						alert( ig_es_js_data.i18n_data.broadcast_subject_empty_message );
+					}
+					return;
+				}
+
+				// If draft button is clicked then change broadcast status to draft..
+				if( is_draft_bttuon ) {
+					$('#broadcast_status').val(0);
+				}
+
+				// Trigger save event for content of wp_editor instances.
+				window.tinyMCE.triggerSave();
+
+				let form_data = $(this).closest('form').serialize();
+				// Add action to form data
+				form_data += form_data + '&action=ig_es_draft_broadcast&security='  + ig_es_js_data.security;
+				jQuery.ajax({
+					method: 'POST',
+					url: ajaxurl,
+					data: form_data,
+					dataType: 'json',
+					beforeSend: function() {
+						// Prevent submit button untill saving is complete.
+						$('#ig_es_broadcast_submitted').addClass('opacity-50 cursor-not-allowed').attr('disabled','disabled');
+					},
+					success: function (response) {
+						if (response.success) {
+							if( 'undefined' !== typeof response.data ) {
+								let response_data = response.data;
+								let broadcast_id  = response_data.broadcast_id;
+								$('#broadcast_id').val( broadcast_id );
+								if( is_draft_bttuon ) {
+									alert( ig_es_js_data.i18n_data.broadcast_draft_success_message );
+								}
+							} else {
+								if( is_draft_bttuon ) {
+									alert( ig_es_js_data.i18n_data.broadcast_draft_error_message );
+								}
+							}
+						} else {
+							alert( ig_es_js_data.i18n_data.ajax_error_message );
+						}
+					},
+					error: function (err) {
+						alert( ig_es_js_data.i18n_data.ajax_error_message );
+					}
+				}).always(function(){
+					$('#ig_es_broadcast_submitted').removeClass('opacity-50 cursor-not-allowed').removeAttr('disabled');
+				});
+			});
+
+			$('.wp-editor-boradcast, #edit-es-boradcast-body,#ig_es_broadcast_subject,#ig_es_broadcast_list_ids').on('change',function(event){
+
+				// Trigger save event for content of wp_editor instances before processing it.
+				window.tinyMCE.triggerSave();
+
+				let form_data = $(this).closest('form').serialize();
+				// Add action to form data
+				form_data += form_data + '&action=ig_es_preview_broadcast&preview_type=inline&security='  + ig_es_js_data.security;
+				jQuery.ajax({
+					method: 'POST',
+					url: ajaxurl,
+					data: form_data,
+					dataType: 'json',
+					success: function (response) {
+						if (response.success) {
+							if( 'undefined' !== typeof response.data ) {
+								let response_data = response.data;
+								let template_html  = response_data.template_html;
+								let broadcast_subject = response_data.broadcast_subject;
+								let contact_name = response_data.contact_name;
+								let contact_email = response_data.contact_email;
+								$('.broadcast_preview_subject').html(broadcast_subject);
+								$('.broadcast_preview_contact_name').html(contact_name);
+								if( '' !== contact_email ) {
+									$('.broadcast_preview_contact_email').html( '&lt;' + contact_email + '&gt;');
+								}
+								$('.broadcast_preview_content').html(template_html);
+							}
+						} else {
+							alert( ig_es_js_data.i18n_data.ajax_error_message );
+						}
+					},
+					error: function (err) {
+						alert( ig_es_js_data.i18n_data.ajax_error_message );
+					}
+				});
+			});
+
+			$('#es_test_email_btn').on('click', function(){
+				let preview_option  = $('[name="preview_option"]:checked').val();
+				let template_button = $('#es_test_email_btn');
+
+				$(template_button).parent().find('.es-send-success').hide();
+				$(template_button).parent().find('.es-send-error').hide();
+				if( 'preview_in_popup' === preview_option ) {
+					ig_es_show_broadcast_preview_in_popup();
+				} else if( 'preview_in_email' === preview_option ) {
+					ig_es_send_broadcast_preview_email();
+				}
+			});
+
+			$('#broadcast_form [name="preview_option"]').on('click',function(){
+				let preview_option  = $('[name="preview_option"]:checked').val();
+
+				if( 'preview_in_email' === preview_option ) {
+					$('#es_test_send_email').show();
+				} else {
+					$('#es_test_send_email').hide();
+				}
+			});
 
 		});
 
@@ -335,4 +512,51 @@
 
 function checkDelete() {
 	return confirm('Are you sure?');
+}
+
+function ig_es_show_broadcast_preview_in_popup() {
+	// Trigger save event for content of wp_editor instances before processing it.
+	window.tinyMCE.triggerSave();
+
+	let content = jQuery('.wp-editor-boradcast').val();
+	if (jQuery("#wp-edit-es-boradcast-body-wrap").hasClass("tmce-active")){
+		content = tinyMCE.activeEditor.getContent();
+	}else{
+		content = jQuery('.wp-editor-boradcast').val();
+	}
+
+
+	if( !content ){
+		alert( ig_es_js_data.i18n_data.empty_template_message );
+		return;
+	}
+
+	let template_button = jQuery('#es_test_email_btn');
+	jQuery(template_button).next('.es-loader').show();
+	let form_data = jQuery('#es_test_email_btn').closest('form').serialize();
+	// Add action to form data
+	form_data += form_data + '&action=ig_es_preview_broadcast&security='  + ig_es_js_data.security;
+	jQuery.ajax({
+		method: 'POST',
+		url: ajaxurl,
+		data: form_data,
+		dataType: 'json',
+		success: function (response) {
+			if (response.success) {
+				if( 'undefined' !== typeof response.data ) {
+					let response_data = response.data;
+					let template_html  = response_data.template_html;
+					jQuery('.broadcast_preview_container').html(template_html);
+					jQuery('#preview_template').load().show();
+				}
+			} else {
+				alert( ig_es_js_data.i18n_data.ajax_error_message );
+			}
+		},
+		error: function (err) {
+			alert( ig_es_js_data.i18n_data.ajax_error_message );
+		}
+	}).done(function(){
+		jQuery(template_button).next('.es-loader').hide();
+	});
 }

@@ -1,5 +1,32 @@
 == changelog ==
 
+= 1.10.0 =
+
+* Blog: Remove existing on-the-fly featured image resizer (Image Processing Queue)
+* Blog: Choose from existing image sizes for featured images
+* Blog: Use CSS to further resize featured images if necessary
+* Blog: Fix edge case persistent transient bug with old image resizer
+* Elements: Fix broken closing element in metabox
+* General: Change scroll variable to gpscroll in smooth scroll script to avoid conflicts
+* General: Update responsive widths in Customizer
+* General: Fix responsive Customizer views when using RTL
+* Menu Plus: Don't output sticky nav branding if sticky nav is disabled
+* Menu Plus: Fix focus when off canvas overlay is opened (a11y)
+* Menu Plus: Fix sticky navigation jump when navigation branding is in use
+* Sections: Fix visible block editor when Sections are enabled
+* WooCommerce: Use minmax in grid template definitions to fix overflow issue
+* WooCommerce: Prevent add to cart panel interfering with back to top button on mobile
+* WooCommerce: WooCommerce: Fix secondary image position if HTML isn't ordered correctly
+* General: Add/update all translations over 50% complete. Big thanks to all contributors!
+* Translation: Added Arabic - thank you anass!
+* Translation: Added Bengali - thank you gtmroy!
+* Translation: Added Spanish (Spain) - thank you davidperez (closemarketing.es)!
+* Translation: Added Spanish (Argentina) - thank you bratorr!
+* Translation: Added Finnish - thank you Stedi!
+* Translation: Add Dutch - thank you Robin!
+* Translation: Added Ukrainian - thank you EUROMEDIA!
+* Translation: Vietnamese added - thank you themevi!
+
 = 1.9.1 =
 * Blog: Fix "null" in infinite scroll load more button text
 * WooCommerce: Fix hidden added to cart panel on mobile when sticky nav active

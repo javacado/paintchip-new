@@ -23,10 +23,11 @@ if ( ! ES()->is_premium() ) {
 			'ig_es_comment_added' => __( 'Comment Added', 'email-subscribers' ),
 		),
 		'Form'    => array(
-			'ig_es_cf7_submitted'           => __( 'Contact Form 7 Submitted', 'email-subscribers' ),
-			'ig_es_wpforms_submitted'       => __( 'WP Form Submitted', 'email-subscribers' ),
-			'ig_es_ninja_forms_submitted'   => __( 'Ninja Form Submitted', 'email-subscribers' ),
-			'ig_es_gravity_forms_submitted' => __( 'Gravity Form Submitted', 'email-subscribers' ),
+			'ig_es_cf7_submitted'              => __( 'Contact Form 7 Submitted', 'email-subscribers' ),
+			'ig_es_wpforms_submitted'          => __( 'WP Form Submitted', 'email-subscribers' ),
+			'ig_es_ninja_forms_submitted'      => __( 'Ninja Form Submitted', 'email-subscribers' ),
+			'ig_es_gravity_forms_submitted'	   => __( 'Gravity Form Submitted', 'email-subscribers' ),
+			'ig_es_forminator_forms_submitted' => __( 'Forminator Form Submitted', 'email-subscribers' ),
 		),
 		'Order'   => array(
 			'ig_es_wc_order_completed'    => __( 'WooCommerce Order Completed', 'email-subscribers' ),
@@ -39,37 +40,52 @@ if ( ! ES()->is_premium() ) {
 }
 ?>
 <table class="ig-es-table">
-    <tr class="ig-es-table__row" data-name="trigger_name" data-type="select"
-        data-required="1">
-        <td class="ig-es-table__col ig-es-table__col--label">
-            <label><?php esc_html_e( 'Trigger', 'email-subscribers' ); ?> <span class="required">*</span></label>
-        </td>
-        <td class="ig-es-table__col ig-es-table__col--field">
-            <select name="ig_es_workflow_data[trigger_name]" class="ig-es-field js-trigger-select" required>
-                <option value=""><?php esc_html_e( '[Select]', 'email-subscribers' ); ?></option>
+	<tr class="ig-es-table__row" data-name="trigger_name" data-type="select"
+		data-required="1">
+		<td class="ig-es-table__col ig-es-table__col--label">
+			<label><?php esc_html_e( 'Trigger', 'email-subscribers' ); ?> <span class="required">*</span></label>
+		</td>
+		<td class="ig-es-table__col ig-es-table__col--field">
+			<select name="ig_es_workflow_data[trigger_name]" class="ig-es-field js-trigger-select" required>
+				<option value=""><?php esc_html_e( '[Select]', 'email-subscribers' ); ?></option>
 				<?php foreach ( $trigger_list as $trigger_group => $triggers ) : ?>
-                    <optgroup label="<?php echo esc_attr( $trigger_group ); ?>">
+					<optgroup label="<?php echo esc_attr( $trigger_group ); ?>">
 						<?php
 						foreach ( $triggers as $trigger_name => $_trigger ) :
 							if ( $_trigger instanceof ES_Workflow_Trigger ) :
 								?>
-                                <option value="<?php echo esc_attr( $_trigger->get_name() ); ?>" <?php echo esc_attr( $current_trigger && $current_trigger->get_name() === $trigger_name ? 'selected="selected"' : '' ); ?>><?php echo esc_html( $_trigger->get_title() ); ?></option>
-							<?php
-                            elseif ( is_string( $_trigger ) ) :
+								<option value="<?php echo esc_attr( $_trigger->get_name() ); ?>" <?php echo esc_attr( $current_trigger && $current_trigger->get_name() === $trigger_name ? 'selected="selected"' : '' ); ?>><?php echo esc_html( $_trigger->get_title() ); ?></option>
+								<?php
+							elseif ( is_string( $_trigger ) ) :
 								?>
-                                <option value="<?php echo esc_attr( $trigger_name ); ?>" disabled><?php echo $_trigger; ?></option>
-							<?php
+								<option value="<?php echo esc_attr( $trigger_name ); ?>" disabled><?php echo esc_html( $_trigger ); ?></option>
+								<?php
 							endif;
 						endforeach;
 						?>
-                    </optgroup>
+					</optgroup>
 				<?php endforeach; ?>
-            </select>
+			</select>
 			<?php if ( $current_trigger && $current_trigger->get_description() ) : ?>
                 <div class="js-trigger-description"><?php echo $current_trigger->get_description_html(); // phpcs:ignore ?></div>
 			<?php else : ?>
-                <div class="js-trigger-description"></div>
+				<div class="js-trigger-description"></div>
 			<?php endif; ?>
-        </td>
-    </tr>
+		</td>
+	</tr>
+
+	<?php
+
+	if ( $workflow ) {
+		ES_Workflow_Admin::get_view(
+			'trigger-fields',
+			array(
+				'trigger'     => $current_trigger,
+				'workflow'    => $workflow,
+				'fill_fields' => true,
+			)
+		);
+	}
+
+	?>
 </table>

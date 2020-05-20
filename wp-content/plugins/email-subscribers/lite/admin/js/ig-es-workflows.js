@@ -164,7 +164,7 @@
 
 					IG_ES_Workflows.$triggers_box.addClass('ig-es-loading');
 
-					let workflow_id = $('workflow_id').val();
+					let workflow_id = $('#workflow_id').val();
 					$.ajax({
 							url: ajaxurl,
 							data: {

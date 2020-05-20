@@ -739,7 +739,12 @@ class Sassy_Social_Share_Admin {
 			if ( $this->options['vertical_font_color_hover'] != '#fff' ) {
 				heateor_sss_update_svg_css( $this->options['vertical_font_color_hover'], 'sassy-social-share-hover-svg-vertical' );
 			}
-			
+
+			if ( version_compare( '3.3.9', $current_version ) > 0 ) {
+				$this->options['bitly_access_token'] = '';
+				update_option( 'heateor_sss', $this->options );
+			}
+
 			if ( version_compare( '3.3', $current_version ) > 0 ) {
 				$this->options['youtube_username'] = '';
 				$this->options['vertical_youtube_username'] = '';

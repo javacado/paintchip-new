@@ -1,0 +1,10 @@
+2020-05-12T11:36:03+00:00 CRITICAL Out of memory (allocated 6815744) (tried to allocate 20480 bytes) in /var/www/html/paintchip/wp-admin/includes/user.php on line 202
+
+2020-05-12T11:41:12+00:00 CRITICAL Out of memory (allocated 17301504) (tried to allocate 131072 bytes) in /var/www/html/paintchip/wp-content/plugins/woocommerce/i18n/countries.php on line 219
+
+2020-05-12T13:24:01+00:00 CRITICAL Out of memory (allocated 15204352) (tried to allocate 102400 bytes) in /var/www/html/paintchip/wp-content/plugins/gp-premium/typography/functions/google-fonts.json on line 1
+
+2020-05-12T13:26:01+00:00 CRITICAL Out of memory (allocated 11010048) (tried to allocate 12288 bytes) in /var/www/html/paintchip/wp-admin/includes/ajax-actions.php on line 1182
+
+2020-05-12T13:28:48+00:00 CRITICAL Out of memory (allocated 11010048) (tried to allocate 131072 bytes) in /var/www/html/paintchip/wp-content/plugins/woocommerce/i18n/countries.php on line 219
+

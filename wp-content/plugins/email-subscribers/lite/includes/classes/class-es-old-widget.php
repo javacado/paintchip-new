@@ -28,10 +28,10 @@ class ES_Old_Widget extends WP_Widget {
 
 		$name = strtolower( $display_name ) != 'no' ? 'yes' : '';
 
-		$list = ES()->lists_db->get_list_by_name($subscribers_group);
-		if(!empty($list)) {
-		    $list_id = $list['id'];
-        }
+		$list = ES()->lists_db->get_list_by_name( $subscribers_group );
+		if ( ! empty( $list ) ) {
+			$list_id = $list['id'];
+		}
 
 		$data['name_visible'] = $name;
 		$data['list_visible'] = 'no';

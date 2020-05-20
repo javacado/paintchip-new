@@ -86,7 +86,7 @@ function ig_es_render_broadcast_created_feedback_widget() {
 	ES_Common::render_feedback_widget( $params );
 }
 
-add_action( 'ig_es_broadcast_created', 'ig_es_render_broadcast_created_feedback_widget' );
+//add_action( 'ig_es_broadcast_created', 'ig_es_render_broadcast_created_feedback_widget' );
 
 /**
  * Render Broadcast Created feedback widget.
@@ -122,6 +122,7 @@ function ig_es_render_fb_widget() {
 				'width'             => 500,
 				'delay'             => 2, // seconds
 				'confirmButtonText' => '<i class="dashicons dashicons-es dashicons-facebook"></i> ' . __( 'Join Now', 'email-subscribers' ),
+				'confirmButtonLink' => 'https://www.facebook.com/groups/2298909487017349/',
 				'show_once'         => true
 			);
 
@@ -221,7 +222,6 @@ function ig_es_render_iges_merge_feedback() {
 				return;
 			}
 
-
 			$params = array(
 				'type'              => 'poll',
 				'title'             => __( 'Subscription forms and CTAs??', 'email-subscribers' ),
@@ -236,7 +236,7 @@ function ig_es_render_iges_merge_feedback() {
 				'width'             => 400,
 				'delay'             => 2, // seconds
 				'confirmButtonText' => __( 'Send my feedback to <b>Icegram team</b>', 'email-subscribers' ),
-				'show_once'         => true,
+				'show_once'         => true
 			);
 
 			ES_Common::render_feedback_widget( $params );
@@ -266,3 +266,46 @@ function ig_es_can_load_sweetalert_js( $load = false ) {
 }
 
 add_filter( 'ig_es_can_load_sweetalert_js', 'ig_es_can_load_sweetalert_js', 10, 1 );
+
+
+/**
+ * Render Broadcast Created feedback widget.
+ *
+ * @since 4.4.7
+ */
+function ig_es_render_broadcast_ui_review() {
+
+	if ( is_admin() ) {
+
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
+
+		if ( ! ES()->is_es_admin_screen() ) {
+			return;
+		}
+
+		$event = 'broadcast.ui.review';
+
+		$params = array(
+			'type'              => 'fb',
+			'widget_tyoe'       => 'success',
+			'title'             => __( 'Broadcast Created Successfully!', 'email-subscribers' ),
+			'event'             => $event,
+			'html'              => '<div style="margin-bottom:30px;"> ' . __( 'If you like new Broadcast UI, leave us a <b>5 stars review</b>. <br /><br />Do you have a feedback? Contact Us.', 'email-subscribers' ) . '</div>',
+			'position'          => 'top-right',
+			'width'             => 500,
+			'delay'             => 2, // seconds
+			'confirmButtonText' => '<i class="dashicons dashicons-star-empty"></i> ' . __( 'Leave Review', 'email-subscribers' ),
+			'confirmButtonLink' => 'https://wordpress.org/support/plugin/email-subscribers/reviews/?filter=5',
+			'showCancelButton'  => true,
+			'cancelButtonText'  => __( 'Contact Us', 'email-subscribers' ),
+			'cancelButtonLink'  => 'https://icegram.com',
+			'show_once'         => true
+		);
+
+		ES_Common::render_feedback_widget( $params );
+	}
+}
+
+add_action( 'ig_es_broadcast_created', 'ig_es_render_broadcast_ui_review' );

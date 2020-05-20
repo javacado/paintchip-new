@@ -5,9 +5,10 @@ jQuery( document ).ready( function($) {
 		'generate_blog_settings-post_image_padding',
 		'generate_blog_settings-post_image_position',
 		'generate_blog_settings-post_image_alignment',
+		'generate_blog_settings-post_image_size',
 		'generate_blog_settings-post_image_width',
 		'generate_blog_settings-post_image_height',
-		'post_image_apply_sizes',
+		'generate_regenerate_images_notice',
 	];
 
 	$.each( featured_image_archive_controls, function( index, value ) {
@@ -19,9 +20,10 @@ jQuery( document ).ready( function($) {
 		'generate_blog_settings-single_post_image_padding',
 		'generate_blog_settings-single_post_image_position',
 		'generate_blog_settings-single_post_image_alignment',
+		'generate_blog_settings-single_post_image_size',
 		'generate_blog_settings-single_post_image_width',
 		'generate_blog_settings-single_post_image_height',
-		'single_post_image_apply_sizes',
+		'generate_regenerate_single_post_images_notice',
 	];
 
 	$.each( featured_image_single_controls, function( index, value ) {
@@ -39,9 +41,10 @@ jQuery( document ).ready( function($) {
 		'generate_blog_settings-page_post_image_padding',
 		'generate_blog_settings-page_post_image_position',
 		'generate_blog_settings-page_post_image_alignment',
+		'generate_blog_settings-page_post_image_size',
 		'generate_blog_settings-page_post_image_width',
 		'generate_blog_settings-page_post_image_height',
-		'page_post_image_apply_sizes',
+		'generate_regenerate_page_images_notice',
 	];
 
 	$.each( featured_image_page_controls, function( index, value ) {

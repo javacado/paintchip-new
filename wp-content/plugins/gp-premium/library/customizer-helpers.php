@@ -223,14 +223,16 @@ add_action( 'customize_controls_print_styles', 'generate_premium_customize_print
  */
 function generate_premium_customize_print_styles() {
 	$sizes = apply_filters( 'generate_customizer_device_preview_sizes', array(
-		'tablet' => 900,
-		'mobile' => 640,
+		'tablet' => 800,
+		'mobile' => 411,
+		'mobile_height' => 731,
 	) );
     ?>
 	    <style>
 			.wp-customizer .preview-tablet .wp-full-overlay-main {
 				width: <?php echo absint( $sizes['tablet'] ); ?>px;
-				margin: 0 auto;
+				margin-left: 0;
+				margin-right: 0;
 				left: 50%;
 				-webkit-transform: translateX(-50%);
 				transform: translateX(-50%);
@@ -238,11 +240,18 @@ function generate_premium_customize_print_styles() {
 
 			.wp-customizer .preview-mobile .wp-full-overlay-main {
 				width: <?php echo absint( $sizes['mobile'] ); ?>px;
-				margin: 0 auto;
+				height: <?php echo absint( $sizes['mobile_height'] ); ?>px;
+				margin-left: 0;
+				margin-right: 0;
 				left: 50%;
 				-webkit-transform: translateX(-50%);
 				transform: translateX(-50%);
-				height: 100%;
+			}
+
+			.rtl.wp-customizer .preview-tablet .wp-full-overlay-main,
+			.rtl.wp-customizer .preview-mobile .wp-full-overlay-main {
+				-webkit-transform: translateX(50%);
+				transform: translateX(50%);
 			}
 	    </style>
     <?php

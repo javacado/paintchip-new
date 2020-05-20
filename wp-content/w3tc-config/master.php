@@ -1,5 +1,5 @@
 <?php exit; ?>{
-    "version": "0.13.1",
+    "version": "0.13.3",
     "cluster.messagebus.debug": false,
     "cluster.messagebus.enabled": false,
     "cluster.messagebus.sns.region": "",
@@ -888,5 +888,9 @@
     },
     "extensions.active_dropin": [],
     "plugin.license_key": "",
-    "plugin.type": ""
+    "plugin.type": "",
+    "pgcache.bad_behavior_path": "",
+    "newrelic": {
+        "monitoring_type": "apm"
+    }
 }

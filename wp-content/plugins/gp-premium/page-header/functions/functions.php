@@ -1,10 +1,6 @@
 <?php
 defined( 'WPINC' ) or die;
 
-if ( ! defined( 'GP_IMAGE_RESIZER' ) ) {
-	require_once GP_LIBRARY_DIRECTORY . 'image-processing-queue/image-processing-queue.php';
-}
-
 require plugin_dir_path( __FILE__ ) . 'post-type.php';
 require plugin_dir_path( __FILE__ ) . 'global-locations.php';
 require plugin_dir_path( __FILE__ ) . 'metabox.php';
@@ -370,8 +366,14 @@ function generate_page_header_get_image_output() {
 		}
 	}
 
-	if ( ! empty( $image_atts ) && 'enable' == $options[ 'image_resize' ] && function_exists( 'ipq_get_theme_image' ) ) {
-		return ipq_get_theme_image( $image_id, array( array( $image_atts[ 'width' ], $image_atts[ 'height' ], $image_atts[ 'crop' ] ) ) );
+	if ( ! empty( $image_atts ) && 'enable' == $options[ 'image_resize' ] ) {
+		return apply_filters( 'post_thumbnail_html',
+			wp_get_attachment_image( $image_id, array( $image_atts['width'], $image_atts['height'], $image_atts['crop'] ), '', array( 'itemprop' => 'image' ) ),
+			get_the_ID(),
+			$image_id,
+			apply_filters( 'generate_page_header_default_size', 'full' ),
+			''
+		);
 	} else {
 		return apply_filters( 'post_thumbnail_html',
 			wp_get_attachment_image( $image_id, apply_filters( 'generate_page_header_default_size', 'full' ), '', array( 'itemprop' => 'image' ) ),

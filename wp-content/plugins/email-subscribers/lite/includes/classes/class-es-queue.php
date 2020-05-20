@@ -595,7 +595,7 @@ if ( ! class_exists( 'ES_Queue' ) ) {
 		 */
 		public function process_campaigns() {
 
-			
+
 			if ( ES()->cron->should_unlock() ) {
 				ES()->cron->unlock();
 			}
@@ -623,6 +623,16 @@ if ( ! class_exists( 'ES_Queue' ) ) {
 				$campaign_id       = isset( $notification['campaign_id'] ) ? $notification['campaign_id'] : 0;
 
 				if ( ! is_null( $notification_guid ) ) {
+
+					$campaign_type = '';
+					if( ! empty( $campaign_id ) ) {
+						$campaign_type = ES()->campaigns_db->get_campaign_type_by_id( $campaign_id );
+					}
+
+					if( 'newsletter' === $campaign_type ) {
+						ES()->campaigns_db->update_status( $campaign_id, IG_ES_CAMPAIGN_STATUS_QUEUED );
+					}
+
 					ES_DB_Mailing_Queue::update_sent_status( $notification_guid, 'Sending' );
 
 					// Get subscribers from the sending_queue table based on fetched guid
@@ -655,6 +665,10 @@ if ( ! class_exists( 'ES_Queue' ) ) {
 						if ( $total_remaining_emails == 0 ) {
 							ES_DB_Mailing_Queue::update_sent_status( $notification_guid, 'Sent' );
 
+							if( 'newsletter' === $campaign_type ) {
+								ES()->campaigns_db->update_status( $campaign_id, IG_ES_CAMPAIGN_STATUS_FINISHED );
+							}
+
 							// Send Cron Email to admins
 							ES()->mailer->send_cron_admin_email( $notification_guid );
 						}
@@ -669,6 +683,7 @@ if ( ! class_exists( 'ES_Queue' ) ) {
 						$response['status']                   = 'SUCCESS';
 						// update last cron run time
 						update_option( 'ig_es_last_cron_run', time() );
+
 					} else {
 						$response['es_remaining_email_count'] = 0;
 						$response['message']                  = 'EMAILS_NOT_FOUND';

@@ -130,7 +130,8 @@ if ( ! function_exists( 'ig_es_format_date_time' ) ) {
 	 * @return string
 	 */
 	function ig_es_format_date_time( $date ) {
-		$local_timestamp = ( $date !== '0000-00-00 00:00:00' ) ? get_date_from_gmt( $date ) : '<i class="dashicons dashicons-es dashicons-minus"></i>';
+
+		$local_timestamp = ( $date !== '0000-00-00 00:00:00' ) ? ES_Common::convert_date_to_wp_date( get_date_from_gmt( $date )) : '<i class="dashicons dashicons-es dashicons-minus"></i>';
 
 		return $local_timestamp;
 	}

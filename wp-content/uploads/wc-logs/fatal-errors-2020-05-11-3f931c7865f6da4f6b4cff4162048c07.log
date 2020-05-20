@@ -1,0 +1,6 @@
+2020-05-11T23:37:22+00:00 CRITICAL Out of memory (allocated 8650752) (tried to allocate 65536 bytes) in /var/www/html/paintchip/wp-content/plugins/woocommerce/packages/woocommerce-admin/src/CategoryLookup.php on line 53
+
+2020-05-11T23:37:22+00:00 CRITICAL Out of memory (allocated 11010048) (tried to allocate 20480 bytes) in /var/www/html/paintchip/wp-content/plugins/woocommerce/packages/woocommerce-rest-api/src/Controllers/Version3/class-wc-rest-data-currencies-controller.php on line 220
+
+2020-05-11T23:37:33+00:00 CRITICAL Out of memory (allocated 8912896) (tried to allocate 32768 bytes) in /var/www/html/paintchip/wp-content/plugins/woocommerce/packages/woocommerce-admin/src/API/Notes.php on line 1
+

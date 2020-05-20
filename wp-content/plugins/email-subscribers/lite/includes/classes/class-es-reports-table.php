@@ -21,6 +21,7 @@ class ES_Reports_Table extends WP_List_Table {
 			'ajax'     => false, //does this table support ajax?,
 			'screen'   => 'es_reports'
 		) );
+
 	}
 
 	public function es_reports_callback() {
@@ -33,12 +34,12 @@ class ES_Reports_Table extends WP_List_Table {
 			?>
 
 			<div class="wrap">
-				<h1 class="wp-heading-inline"><span class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate"><?php _e( 'Reports', 'email-subscribers' ); ?></span></h1>
+				<h1 class="wp-heading-inline"><span class="text-2xl font-medium leading-7 text-gray-900 sm:leading-9 sm:truncate"><?php _e( 'Reports', 'email-subscribers' ); ?></span></h1>
 				<?php
 				$emails_to_be_sent = ES_DB_Sending_Queue::get_total_emails_to_be_sent();
 				if ( $emails_to_be_sent > 0 ) {
 					$cron_url = ES()->cron->url( true );
-					$content  = sprintf( __( "<a href='%s' target='_blank' class='ig-es-imp-button px-4 py-2'>Send Queued Emails Now</a>", 'email-subscribers' ), $cron_url );
+					$content  = sprintf( __( "<a href='%s' class='px-4 py-2 ig-es-imp-button'>Send Queued Emails Now</a>", 'email-subscribers' ), $cron_url );
 				} else {
 					$content = sprintf( __( "<span class='ig-es-send-queue-emails button-disabled'>Send Queued Emails Now</span>", 'email-subscribers' ) );
 					$content .= sprintf( __( "<br /><span class='es-helper'>No emails found in queue</span>", 'email-subscribers' ) );
@@ -48,7 +49,7 @@ class ES_Reports_Table extends WP_List_Table {
 				<span class="ig-es-process-queue"><?php echo $content; ?></span>
 
 
-				<div id="poststuff">
+				<div id="poststuff" class="es-items-lists">
 					<div id="post-body" class="metabox-holder column-1">
 						<div id="post-body-content">
 							<div class="meta-box-sortables ui-sortable">
@@ -253,6 +254,7 @@ class ES_Reports_Table extends WP_List_Table {
 			'view'          => sprintf( '<a href="?page=%s&action=%s&list=%s&_wpnonce=%s" class="text-indigo-600">%s</a>', esc_attr( $page ), 'view', $item['hash'], $es_nonce, __( 'View', 'email-subscribers' ) ),
 			'delete'        => sprintf( '<a href="?page=%s&action=%s&list=%s&_wpnonce=%s">%s</a>', esc_attr( $page ), 'delete', absint( $item['id'] ), $es_nonce, __( 'Delete', 'email-subscribers' ) ),
 			'preview_email' => sprintf( '<a target="_blank" href="?page=%s&action=%s&list=%s&_wpnonce=%s" class="text-indigo-600">%s</a>', esc_attr( $page ), 'preview', absint( $item['id'] ), $es_nonce, __( 'Preview', 'email-subscribers' ) )
+
 		);
 
 		return $title . $this->row_actions( $actions );

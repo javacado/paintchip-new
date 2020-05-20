@@ -101,7 +101,7 @@ class GeneratePress_Hero {
 		wp_add_inline_style( 'generate-style', self::build_css() );
 
 		if ( $options['parallax'] ) {
-			wp_enqueue_script( 'generate-hero-parallax', plugin_dir_url( __FILE__ ) . '/assets/js/parallax.min.js', array(), GP_PREMIUM_VERSION, true );
+			wp_enqueue_script( 'generate-hero-parallax', plugin_dir_url( __FILE__ ) . 'assets/js/parallax.min.js', array(), GP_PREMIUM_VERSION, true );
 			wp_localize_script( 'generate-hero-parallax', 'hero', array(
 				'parallax' => apply_filters( 'generate_hero_parallax_speed', 2 ),
 			) );

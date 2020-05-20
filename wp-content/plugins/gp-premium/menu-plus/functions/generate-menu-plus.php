@@ -1776,7 +1776,7 @@ function generate_do_navigation_branding() {
 		}
 	}
 
-	if ( '' !== $settings['sticky_navigation_logo'] ) {
+	if ( 'false' !== $settings['sticky_menu'] && '' !== $settings['sticky_navigation_logo'] ) {
 		$sticky_logo = apply_filters( 'generate_sticky_navigation_logo_output', sprintf(
 			'<div class="sticky-navigation-logo">
 				<a href="%1$s" title="%2$s" rel="home">

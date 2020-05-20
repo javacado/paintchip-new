@@ -4,21 +4,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! class_exists( 'IG_Feedback_V_1_2_2' ) ) {
+if ( ! class_exists( 'IG_Feedback_V_1_2_3' ) ) {
 	/**
 	 * IG Feedback
 	 *
 	 * The IG Feedback class adds functionality to get quick interactive feedback from users.
 	 * There are different types of feedabck widget like Stars, Emoji, Thubms Up/ Down, Number etc.
 	 *
-	 * @class       IG_Feedback_V_1_2_2
+	 * @class       IG_Feedback_V_1_2_3
 	 * @since       1.0.0
 	 * @copyright   Copyright (c) 2019, Icegram
 	 * @license     https://opensource.org/licenses/gpl-license GNU Public License
 	 * @author      Icegram
 	 * @package     feedback
 	 */
-	class IG_Feedback_V_1_2_2 {
+	class IG_Feedback_V_1_2_3 {
 
 		/**
 		 * Version of Feedback Library
@@ -27,7 +27,7 @@ if ( ! class_exists( 'IG_Feedback_V_1_2_2' ) ) {
 		 * @var string
 		 *
 		 */
-		public $version = '1.2.2';
+		public $version = '1.2.3';
 		/**
 		 * The API URL where we will send feedback data.
 		 *
@@ -798,22 +798,30 @@ if ( ! class_exists( 'IG_Feedback_V_1_2_2' ) ) {
 			$params = $this->prepare_widget_params( $params );
 
 			$title = $params['title'];
+			$widget_tyoe = !empty($params['widget_tyoe']) ? $params['widget_tyoe'] : 'question';
 			$slug  = sanitize_title( $title );
 			$event = $this->event_prefix . $params['event'];
 			$html  = ! empty( $params['html'] ) ? $params['html'] : '';
+			$confirm_button_link = ! empty( $params['confirmButtonLink'] ) ? $params['confirmButtonLink'] : '';
+			$cancel_button_link = ! empty( $params['cancelButtonLink'] ) ? $params['cancelButtonLink'] : '';
+			$show_cancel_button = ! empty( $params['showCancelButton'] ) ? 'true' : 'false';
+			$cancel_button_text = ! empty( $params['cancelButtonText'] ) ? $params['cancelButtonText'] : 'Cancel';
 
 			?>
 
             <script>
 
 				Swal.mixin({
-					type: 'question',
-					footer: '<?php echo $this->footer; ?>',
+					type: '<?php echo $widget_tyoe; ?>',
 					position: '<?php echo $params['position']; ?>',
 					width: <?php echo $params['width']; ?>,
 					animation: false,
-					focusConfirm: false,
+					focusConfirm: true,
 					allowEscapeKey: true,
+					showCancelButton: <?php echo $show_cancel_button; ?>,
+					confirmButtonColor: '#0e9f6e',
+					cancelButtonColor: '#5850ec',
+					cancelButtonText: '<?php echo $cancel_button_text; ?>',
 					showCloseButton: '<?php echo $params['showCloseButton']; ?>',
 					allowOutsideClick: '<?php echo $params['allowOutsideClick']; ?>',
 					showLoaderOnConfirm: true,
@@ -829,13 +837,14 @@ if ( ! class_exists( 'IG_Feedback_V_1_2_2' ) ) {
 
 						preConfirm: () => {
 							window.open(
-								'https://www.facebook.com/groups/2298909487017349/',
+								'<?php echo $confirm_button_link; ?>',
 								'_blank' // <- This is what makes it open in a new window.
 							);
 						}
 					}
 				]).then(response => {
 
+					console.log(response);
 					if (response.hasOwnProperty('value')) {
 
 						Swal.fire({
@@ -847,9 +856,12 @@ if ( ! class_exists( 'IG_Feedback_V_1_2_2' ) ) {
 							timer: 1500,
 							animation: false
 						});
-					}
-
-
+					} else if(response.dismiss == 'cancel') {
+						window.open(
+							'<?php echo $cancel_button_link; ?>',
+							'_blank' // <- This is what makes it open in a new window.
+						);
+                    }
 				});
 
             </script>

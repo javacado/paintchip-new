@@ -16,7 +16,8 @@ jQuery( document ).ready( function($) {
 			visibility: 'visible',
 			height: '',
 			width: '',
-			margin: ''
+			margin: '',
+			overflow: '',
 		} );
 
 		$.each( other_targets, function( index, value ) {
@@ -25,7 +26,8 @@ jQuery( document ).ready( function($) {
 				visibility: 'hidden',
 				height: '0',
 				width: '0',
-				margin: '0'
+				margin: '0',
+				overflow: 'hidden',
 			} );
 		} );
 	} );

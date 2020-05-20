@@ -549,7 +549,8 @@ class GeneratePress_Site {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		$theme_mods = GeneratePress_Sites_Helper::get_theme_mods();
@@ -584,7 +585,8 @@ class GeneratePress_Site {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		$settings = GeneratePress_Sites_Helper::get_options( $this->directory . 'options.json' );
@@ -624,7 +626,8 @@ class GeneratePress_Site {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		if ( ! GeneratePress_Sites_Helper::file_exists( $this->directory . 'options.json' ) ) {
@@ -781,7 +784,8 @@ class GeneratePress_Site {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		// Increase PHP max execution time.
@@ -808,7 +812,8 @@ class GeneratePress_Site {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		// Increase PHP max execution time.
@@ -852,7 +857,8 @@ class GeneratePress_Site {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		$widgets_path = $this->directory . 'widgets.wie';
@@ -882,7 +888,8 @@ class GeneratePress_Site {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		$backup_data = get_option( '_generatepress_site_library_backup', array() );
@@ -980,7 +987,8 @@ class GeneratePress_Site {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		$settings = GeneratePress_Sites_Helper::get_options( $this->directory . 'options.json' );
@@ -1029,7 +1037,8 @@ class GeneratePress_Site {
 		check_ajax_referer( 'generate_sites_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			wp_send_json_error( __( 'You are not allowed to perform this action', 'gp-premium' ) );
+			return; // Just in case.
 		}
 
 		if ( GeneratePress_Sites_Helper::file_exists( $this->directory . 'options.json' ) ) {

@@ -1077,7 +1077,7 @@ class GeneratePress_Elements_Metabox {
 							<input type="checkbox" name="_generate_disable_footer" id="_generate_disable_footer" value="true" <?php checked( get_post_meta( get_the_ID(), '_generate_disable_footer', true ), 'true' ); ?> />
 						</td>
 					</tr>
-				</body>
+				</tbody>
 			</table>
 
 			<table class="generate-elements-settings" data-type="layout" data-tab="content">

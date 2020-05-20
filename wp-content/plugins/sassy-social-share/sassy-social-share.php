@@ -7,7 +7,7 @@
  * Plugin Name:       Sassy Social Share
  * Plugin URI:        https://www.heateor.com
  * Description:       Slickest, Simplest and Optimized Share buttons. Facebook, Twitter, Reddit, Pinterest, WhatsApp and over 100 more
- * Version:           3.3.8
+ * Version:           3.3.10
  * Author:            Team Heateor
  * Author URI:        https://www.heateor.com
  * Text Domain:       sassy-social-share
@@ -21,7 +21,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'HEATEOR_SSS_VERSION', '3.3.8' );
+define( 'HEATEOR_SSS_VERSION', '3.3.10' );
 define( 'HEATEOR_SSS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 // plugin core class object
@@ -121,8 +121,7 @@ function heateor_sss_save_default_options() {
 	   'delete_options' => '1',
 	   'share_count_cache_refresh_count' => '10',
 	   'share_count_cache_refresh_unit' => 'minutes',
-	   'bitly_username' => '',
-	   'bitly_key' => '',
+	   'bitly_access_token' => '',
 	   'language' => get_locale(),
 	   'twitter_username' => '',
 	   'buffer_username' => '',

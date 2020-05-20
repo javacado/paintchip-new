@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GP Premium\n"
-"POT-Creation-Date: 2019-11-06 11:02-0800\n"
+"POT-Creation-Date: 2020-04-06 11:59-0700\n"
 "PO-Revision-Date: 2016-10-01 21:24-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -220,7 +220,7 @@ msgstr ""
 #: disable-elements/functions/functions.php:163
 #: disable-elements/functions/functions.php:323
 #: disable-elements/functions/functions.php:325 elements/class-metabox.php:199
-#: elements/class-metabox.php:1074 elements/class-metabox.php:2001
+#: elements/class-metabox.php:1074 elements/class-metabox.php:2003
 #: library/customizer-helpers.php:205
 #: spacing/functions/customizer/footer-spacing.php:12
 #: typography/functions/functions.php:2355
@@ -345,47 +345,47 @@ msgstr ""
 msgid "Pages"
 msgstr ""
 
-#: blog/functions/customizer.php:462 blog/functions/customizer.php:625
-#: blog/functions/customizer.php:789
+#: blog/functions/customizer.php:462 blog/functions/customizer.php:636
+#: blog/functions/customizer.php:811
 msgid "Display featured images"
 msgstr ""
 
-#: blog/functions/customizer.php:482 blog/functions/customizer.php:645
-#: blog/functions/customizer.php:809
+#: blog/functions/customizer.php:482 blog/functions/customizer.php:656
+#: blog/functions/customizer.php:831
 msgid "Display padding around images"
 msgstr ""
 
-#: blog/functions/customizer.php:503 blog/functions/customizer.php:666
-#: blog/functions/customizer.php:830 elements/class-metabox.php:1128
+#: blog/functions/customizer.php:503 blog/functions/customizer.php:677
+#: blog/functions/customizer.php:852 elements/class-metabox.php:1128
 #: elements/class-post-type.php:104 elements/class-post-type.php:114
 msgid "Location"
 msgstr ""
 
-#: blog/functions/customizer.php:506 blog/functions/customizer.php:669
-#: blog/functions/customizer.php:833
+#: blog/functions/customizer.php:506 blog/functions/customizer.php:680
+#: blog/functions/customizer.php:855
 msgid "Below Title"
 msgstr ""
 
-#: blog/functions/customizer.php:507 blog/functions/customizer.php:670
-#: blog/functions/customizer.php:834
+#: blog/functions/customizer.php:507 blog/functions/customizer.php:681
+#: blog/functions/customizer.php:856
 msgid "Above Title"
 msgstr ""
 
-#: blog/functions/customizer.php:528 blog/functions/customizer.php:692
-#: blog/functions/customizer.php:856
+#: blog/functions/customizer.php:528 blog/functions/customizer.php:703
+#: blog/functions/customizer.php:878
 msgid "Alignment"
 msgstr ""
 
-#: blog/functions/customizer.php:531 blog/functions/customizer.php:695
-#: blog/functions/customizer.php:859 elements/class-metabox.php:372
+#: blog/functions/customizer.php:531 blog/functions/customizer.php:706
+#: blog/functions/customizer.php:881 elements/class-metabox.php:372
 #: elements/class-metabox.php:394 secondary-nav/functions/functions.php:284
 #: woocommerce/functions/customizer/customizer.php:390
 #: woocommerce/functions/customizer/customizer.php:433
 msgid "Center"
 msgstr ""
 
-#: blog/functions/customizer.php:532 blog/functions/customizer.php:696
-#: blog/functions/customizer.php:860 elements/class-metabox.php:371
+#: blog/functions/customizer.php:532 blog/functions/customizer.php:707
+#: blog/functions/customizer.php:882 elements/class-metabox.php:371
 #: elements/class-metabox.php:444 elements/class-metabox.php:482
 #: library/customizer/controls/class-spacing-control.php:43
 #: menu-plus/functions/generate-menu-plus.php:655
@@ -396,8 +396,8 @@ msgstr ""
 msgid "Left"
 msgstr ""
 
-#: blog/functions/customizer.php:533 blog/functions/customizer.php:697
-#: blog/functions/customizer.php:861 elements/class-metabox.php:373
+#: blog/functions/customizer.php:533 blog/functions/customizer.php:708
+#: blog/functions/customizer.php:883 elements/class-metabox.php:373
 #: elements/class-metabox.php:426 elements/class-metabox.php:464
 #: library/customizer/controls/class-spacing-control.php:41
 #: menu-plus/functions/generate-menu-plus.php:656
@@ -408,45 +408,49 @@ msgstr ""
 msgid "Right"
 msgstr ""
 
-#: blog/functions/customizer.php:555 blog/functions/customizer.php:719
-#: blog/functions/customizer.php:883
+#: blog/functions/customizer.php:553 blog/functions/customizer.php:728
+#: blog/functions/customizer.php:903
+msgid "Media Attachment Size"
+msgstr ""
+
+#: blog/functions/customizer.php:575 blog/functions/customizer.php:750
+#: blog/functions/customizer.php:925
 msgid "Width"
 msgstr ""
 
-#: blog/functions/customizer.php:559 blog/functions/customizer.php:586
-#: blog/functions/customizer.php:723 blog/functions/customizer.php:750
-#: blog/functions/customizer.php:887 blog/functions/customizer.php:914
-msgid "Auto"
-msgstr ""
-
-#: blog/functions/customizer.php:582 blog/functions/customizer.php:746
-#: blog/functions/customizer.php:910
+#: blog/functions/customizer.php:596 blog/functions/customizer.php:771
+#: blog/functions/customizer.php:946
 msgid "Height"
 msgstr ""
 
-#: blog/functions/customizer.php:601 blog/functions/customizer.php:765
-#: blog/functions/customizer.php:929 inc/activation.php:139
-#: sections/functions/metaboxes/views/sections-template.php:80
-msgid "Apply"
+#: blog/functions/customizer.php:610 blog/functions/customizer.php:785
+#: blog/functions/customizer.php:960
+#, php-format
+msgid "We will attempt to serve exact image sizes based on your width/height settings. If that is not possible, we will resize your images using CSS. Learn more about featured image sizing %s."
 msgstr ""
 
-#: blog/functions/customizer.php:671 blog/functions/customizer.php:835
+#: blog/functions/customizer.php:611 blog/functions/customizer.php:786
+#: blog/functions/customizer.php:961
+msgid "here"
+msgstr ""
+
+#: blog/functions/customizer.php:682 blog/functions/customizer.php:857
 msgid "Above Content Area"
 msgstr ""
 
-#: blog/functions/customizer.php:943 blog/functions/customizer.php:983
+#: blog/functions/customizer.php:976 blog/functions/customizer.php:1016
 msgid "Columns"
 msgstr ""
 
-#: blog/functions/customizer.php:963
+#: blog/functions/customizer.php:996
 msgid "Display posts in columns"
 msgstr ""
 
-#: blog/functions/customizer.php:1010
+#: blog/functions/customizer.php:1043
 msgid "Make first post featured"
 msgstr ""
 
-#: blog/functions/customizer.php:1031
+#: blog/functions/customizer.php:1064
 msgid "Display posts in masonry grid"
 msgstr ""
 
@@ -1411,56 +1415,56 @@ msgstr ""
 msgid "Scripts & Styles"
 msgstr ""
 
-#: elements/class-metabox.php:1983
+#: elements/class-metabox.php:1985
 msgid "Comments"
 msgstr ""
 
-#: elements/class-metabox.php:1992
+#: elements/class-metabox.php:1994
 #: spacing/functions/customizer/sidebar-spacing.php:12
 msgid "Sidebars"
 msgstr ""
 
-#: elements/class-metabox.php:2017
+#: elements/class-metabox.php:2019
 msgid "WooCommerce - Global"
 msgstr ""
 
-#: elements/class-metabox.php:2027
+#: elements/class-metabox.php:2029
 msgid "WooCommerce - Shop"
 msgstr ""
 
-#: elements/class-metabox.php:2038
+#: elements/class-metabox.php:2040
 msgid "WooCommerce - Product"
 msgstr ""
 
-#: elements/class-metabox.php:2059
+#: elements/class-metabox.php:2061
 msgid "WooCommerce - Cart"
 msgstr ""
 
-#: elements/class-metabox.php:2081
+#: elements/class-metabox.php:2083
 msgid "WooCommerce - Checkout"
 msgstr ""
 
-#: elements/class-metabox.php:2108
+#: elements/class-metabox.php:2110
 msgid "WooCommerce - Account"
 msgstr ""
 
-#: elements/class-metabox.php:2124
+#: elements/class-metabox.php:2126
 msgid "The content title of the current post/taxonomy."
 msgstr ""
 
-#: elements/class-metabox.php:2129
+#: elements/class-metabox.php:2131
 msgid "The published date of the current post."
 msgstr ""
 
-#: elements/class-metabox.php:2134
+#: elements/class-metabox.php:2136
 msgid "The author of the current post."
 msgstr ""
 
-#: elements/class-metabox.php:2139
+#: elements/class-metabox.php:2141
 msgid "The terms attached to the chosen taxonomy (category, post_tag, product_cat)."
 msgstr ""
 
-#: elements/class-metabox.php:2144
+#: elements/class-metabox.php:2146
 msgid "Custom post meta. Replace \"name\" with the name of your custom field."
 msgstr ""
 
@@ -1475,7 +1479,7 @@ msgid "Element"
 msgstr ""
 
 #: elements/class-post-type.php:67 elements/class-post-type.php:255
-#: elements/class-post-type.php:256 elements/elements.php:66
+#: elements/class-post-type.php:256 elements/elements.php:71
 msgid "Elements"
 msgstr ""
 
@@ -1676,6 +1680,11 @@ msgstr ""
 
 #: inc/activation.php:136 inc/activation.php:156
 msgid "Deactivate"
+msgstr ""
+
+#: inc/activation.php:139
+#: sections/functions/metaboxes/views/sections-template.php:80
+msgid "Apply"
 msgstr ""
 
 #: inc/activation.php:173
@@ -2295,31 +2304,45 @@ msgstr ""
 msgid "No sections added!"
 msgstr ""
 
-#: sites/classes/class-site-restore.php:105
+#: sites/classes/class-site-restore.php:42
+#: sites/classes/class-site-restore.php:115
+#: sites/classes/class-site-restore.php:145
+#: sites/classes/class-site-restore.php:170
+#: sites/classes/class-site-restore.php:189
+#: sites/classes/class-site-restore.php:208
+#: sites/classes/class-site-restore.php:239 sites/classes/class-site.php:552
+#: sites/classes/class-site.php:588 sites/classes/class-site.php:629
+#: sites/classes/class-site.php:787 sites/classes/class-site.php:815
+#: sites/classes/class-site.php:860 sites/classes/class-site.php:891
+#: sites/classes/class-site.php:990 sites/classes/class-site.php:1040
+msgid "You are not allowed to perform this action"
+msgstr ""
+
+#: sites/classes/class-site-restore.php:106
 msgid "Theme options restored."
 msgstr ""
 
-#: sites/classes/class-site-restore.php:134
+#: sites/classes/class-site-restore.php:136
 msgid "Site options restored."
 msgstr ""
 
-#: sites/classes/class-site-restore.php:158
+#: sites/classes/class-site-restore.php:161
 msgid "Content restored."
 msgstr ""
 
-#: sites/classes/class-site-restore.php:176
+#: sites/classes/class-site-restore.php:180
 msgid "Plugins restored."
 msgstr ""
 
-#: sites/classes/class-site-restore.php:194
+#: sites/classes/class-site-restore.php:199
 msgid "Widgets restored."
 msgstr ""
 
-#: sites/classes/class-site-restore.php:224
+#: sites/classes/class-site-restore.php:230
 msgid "CSS restored."
 msgstr ""
 
-#: sites/classes/class-site-restore.php:240
+#: sites/classes/class-site-restore.php:247
 msgid "Completed clean-up."
 msgstr ""
 
@@ -2488,15 +2511,15 @@ msgstr ""
 msgid "View Your Site"
 msgstr ""
 
-#: sites/classes/class-site.php:631
+#: sites/classes/class-site.php:634
 msgid "No theme options exist."
 msgstr ""
 
-#: sites/classes/class-site.php:967
+#: sites/classes/class-site.php:974
 msgid "Site options imported"
 msgstr ""
 
-#: sites/classes/class-site.php:1011
+#: sites/classes/class-site.php:1019
 msgid "Plugins activated"
 msgstr ""
 
@@ -2978,7 +3001,7 @@ msgid "Display product meta data"
 msgstr ""
 
 #: woocommerce/functions/customizer/customizer.php:1005
-#: woocommerce/functions/functions.php:1114
+#: woocommerce/functions/functions.php:1117
 msgid "Checkout"
 msgstr ""
 
@@ -2994,35 +3017,29 @@ msgstr ""
 msgid "View your shopping cart"
 msgstr ""
 
-#: woocommerce/functions/functions.php:531
-msgid "<span class=\"number-of-items "
-msgid_plural "<span class=\"number-of-items "
-msgstr[0] ""
-msgstr[1] ""
-
-#: woocommerce/functions/functions.php:1038
+#: woocommerce/functions/functions.php:1035
 #, php-format
 msgid "Rated %s out of 5"
 msgstr ""
 
-#: woocommerce/functions/functions.php:1040
+#: woocommerce/functions/functions.php:1037
 msgid "Not yet rated"
 msgstr ""
 
-#: woocommerce/functions/functions.php:1045
+#: woocommerce/functions/functions.php:1042
 msgid "out of 5"
 msgstr ""
 
-#: woocommerce/functions/functions.php:1100
+#: woocommerce/functions/functions.php:1103
 msgid "Continue Shopping"
 msgstr ""
 
-#: woocommerce/functions/functions.php:1105
+#: woocommerce/functions/functions.php:1108
 msgid "Item added to cart."
 msgstr ""
 
-#: woocommerce/functions/functions.php:1109
-#: woocommerce/functions/functions.php:1179
+#: woocommerce/functions/functions.php:1112
+#: woocommerce/functions/functions.php:1182
 #, php-format
 msgid "%d item"
 msgid_plural "%d items"

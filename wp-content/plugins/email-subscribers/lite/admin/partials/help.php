@@ -76,10 +76,10 @@ $articles = array(
 );
 
 ?>
- <h1 class="mt-4 wp-heading-inline"><span class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate"><?php _e( 'Help & Info', 'email-subscribers' ) ?></span></h1>
-<div class="wrap font-sans">
-    <div class="container w-full flex flex-wrap border rounded-lg bg-white shadow ">
-        <div class="inline-block pl-2 border-r border-dashed px-2 w-4/12 ">
+ <h1 class="mt-4 wp-heading-inline"><span class="text-2xl font-medium leading-7 text-gray-900 sm:leading-9 sm:truncate"><?php _e( 'Help & Info', 'email-subscribers' ) ?></span></h1>
+<div class="font-sans wrap">
+    <div class="container flex flex-wrap w-full bg-white border rounded-lg shadow ">
+        <div class="inline-block w-4/12 px-2 pl-2 border-r border-dashed ">
             <div class="max-h-full" id="features_display">
                 <div class="pt-6 pb-6 pl-2 mt-2">
                     <ul class="mx-6 leading-relaxed list-disc">
@@ -155,7 +155,7 @@ $articles = array(
 
     <div class="container flex flex-wrap w-full mt-4">
         <div class="block mt-6">
-            <h3 class="text-2xl font-medium text-gray-700"><?php _e( 'Other awesome plugins from same author', 'email_subscribers' ); ?></h3>
+            <h3 class="text-2xl font-medium text-gray-700"><?php _e( 'Other awesome plugins from same author', 'email-subscribers' ); ?></h3>
         </div>
         <div class="grid w-full grid-cols-3 py-2 my-4">
 			<?php foreach ( $plugins as $plugin ) { ?>
@@ -184,11 +184,11 @@ $articles = array(
                     <div class="flex flex-row mb-0 border-t">
                         <div class="flex w-2/3 px-3 py-5 text-sm"><?php _e( 'Status', 'email-subscribers' ); ?>:
 							<?php if ( in_array( $plugin['name'], $active_plugins ) ) { ?>
-                                <span class="font-bold text-green-600">&nbsp;<?php _e( 'Active', 'email_subscribers' ); ?></span>
+                                <span class="font-bold text-green-600">&nbsp;<?php _e( 'Active', 'email-subscribers' ); ?></span>
 							<?php } elseif ( in_array( $plugin['name'], $inactive_plugins ) ) { ?>
-                                <span class="font-bold text-red-600">&nbsp;<?php _e( 'Inactive', 'email_subscribers' ); ?></span>
+                                <span class="font-bold text-red-600">&nbsp;<?php _e( 'Inactive', 'email-subscribers' ); ?></span>
 							<?php } else { ?>
-                                <span class="font-bold text-orange-500">&nbsp;<?php _e( 'Not Installed', 'email_subscribers' ); ?></span>
+                                <span class="font-bold text-orange-500">&nbsp;<?php _e( 'Not Installed', 'email-subscribers' ); ?></span>
 							<?php } ?>
                         </div>
                         <div class="flex justify-center w-1/3 py-3 md:pr-4">
@@ -199,10 +199,10 @@ $articles = array(
 
               if ( ! in_array( $plugin['name'], $all_plugins ) ) { ?>
                   <button type="button" class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out bg-white bg-green-600 border border-transparent rounded-md hover:bg-green-500 focus:outline-none focus:shadow-outline-blue">
-		              <?php _e( 'Install', 'email_subscribers' ); ?> </button>
+		              <?php _e( 'Install', 'email-subscribers' ); ?> </button>
               <?php } elseif ( in_array( $plugin['name'], $inactive_plugins ) ) { ?>
                   <button type="button" class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-white transition duration-150 ease-in-out bg-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-500 focus:outline-none focus:shadow-outline-blue">
-	              <?php _e( 'Activate', 'email_subscribers' ); ?> </button>
+	              <?php _e( 'Activate', 'email-subscribers' ); ?> </button>
               <?php } ?>
               </a>
             </span>

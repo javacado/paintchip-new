@@ -131,12 +131,14 @@ if ( ! class_exists( 'ES_Mailer' ) ) {
 
 			if ( ! $this->limits_set ) {
 
-				@set_time_limit( IG_ES_CRON_INTERVAL + 30 );
+				$cron_interval = ES()->cron->get_cron_interval();
+
+				@set_time_limit( $cron_interval );
 
 				// Set 95% of max_execution_time as a max limit. We can reduce it as well
 				$max_time = (int) ( @ini_get( 'max_execution_time' ) * 0.95 );
-				if ( $max_time == 0 || $max_time > IG_ES_CRON_INTERVAL ) {
-					$max_time = (int) ( IG_ES_CRON_INTERVAL * 0.95 );
+				if ( $max_time == 0 || $max_time > $cron_interval ) {
+					$max_time = (int) ( $cron_interval * 0.95 );
 				}
 
 				$this->time_limit = $this->time_start + $max_time;
@@ -557,6 +559,20 @@ if ( ! class_exists( 'ES_Mailer' ) ) {
 			$message_id       = ! empty( $merge_tags['message_id'] ) ? $merge_tags['message_id'] : 0;
 			$campaign_id      = ! empty( $merge_tags['campaign_id'] ) ? $merge_tags['campaign_id'] : 0;
 
+			$sender_data = array();
+			if( ! empty( $campaign_id )  ) {
+				$campaign = ES()->campaigns_db->get( $campaign_id );
+				if( ! empty( $campaign ) ) {
+					$campaign_type = $campaign['type'];
+					if( 'newsletter' === $campaign_type ) {
+						$from_name  = ! empty( $campaign['from_name'] ) ? $campaign['from_name'] : '';
+						$from_email = ! empty( $campaign['from_email'] ) ? $campaign['from_email'] : '';
+						$sender_data['from_name']  = $from_name;
+						$sender_data['from_email'] = $from_email;
+					}
+				}
+			}
+
 			$subject = $this->prepare_subject( $subject );
 
 			$content = $this->prepare_content( $content, $merge_tags, $nl2br );
@@ -597,7 +613,7 @@ if ( ! class_exists( 'ES_Mailer' ) ) {
 
 				do_action( 'ig_es_before_message_send', $contact_id, $campaign_id, $message_id );
 
-				$message = $this->build_message( $subject, $content, $email, $merge_tags, $nl2br );
+				$message = $this->build_message( $subject, $content, $email, $merge_tags, $nl2br, $sender_data );
 
 				//object | WP_Error
 				$send_response = $this->mailer->send( $message );
@@ -633,17 +649,36 @@ if ( ! class_exists( 'ES_Mailer' ) ) {
 		 * @param $body
 		 * @param $email
 		 * @param array $merge_tags
+		 * @param array $sender_data
 		 *
 		 * @return ES_Message
 		 *
 		 * @since 4.3.2
+		 * 
+		 * @since 4.4.7 Added sender data.
 		 */
-		public function build_message( $subject, $body, $email, $merge_tags = array(), $nl2br = false ) {
+		public function build_message( $subject, $body, $email, $merge_tags = array(), $nl2br = false, $sender_data = array() ) {
 
 			$message = new ES_Message();
 
-			$sender_name  = $this->get_from_name();
-			$sender_email = $this->get_from_email();
+			$sender_name  = '';
+			$sender_email = '';
+			// If sender data is passed .i.g. set in the campaign then use it.
+			if( ! empty( $sender_data ) ) {
+				$sender_name  = ! empty( $sender_data['from_name'] ) ? $sender_data['from_name'] : '';
+				$sender_email = ! empty( $sender_data['from_email'] ) ? $sender_data['from_email'] : '';
+			}
+
+			// If sender name is not passed then fetch it from ES settings.
+			if( empty( $sender_name ) ) {
+				$sender_name  = $this->get_from_name();
+			}
+
+			// If sender email is not passed then fetch it from ES settings.
+			if( empty( $sender_email ) ) {
+				$sender_email = $this->get_from_email();
+			}
+
 
 			$subject = html_entity_decode( $subject, ENT_QUOTES, get_bloginfo( 'charset' ) );
 
@@ -853,7 +888,7 @@ if ( ! class_exists( 'ES_Mailer' ) ) {
 
 			$subscribe_link   = $this->get_subscribe_link( $link_data );
 			$unsubscribe_link = $this->get_unsubscribe_link( $link_data );
-
+			
 			$content = str_replace( "{{NAME}}", $name, $content );
 			$content = str_replace( "{{FIRSTNAME}}", $first_name, $content );
 			$content = str_replace( "{{LASTNAME}}", $last_name, $content );
@@ -1047,7 +1082,7 @@ if ( ! class_exists( 'ES_Mailer' ) ) {
 		public function can_track_clicks( $contact_id = 0, $campaign_id = 0 ) {
 			$is_track_clicks = false;
 
-			return apply_filters( 'ig_es_track_clicks', $is_track_clicks, $contact_id, $campaign_id );
+			return apply_filters( 'ig_es_track_clicks', $is_track_clicks, $contact_id, $campaign_id, $this->link_data );
 		}
 
 		/**
@@ -1066,7 +1101,7 @@ if ( ! class_exists( 'ES_Mailer' ) ) {
 
 				$is_track_email_opens = get_option( 'ig_es_track_email_opens', 'yes' );
 
-				$is_track_email_opens = apply_filters( 'ig_es_track_open', $is_track_email_opens, $contact_id, $campaign_id );
+				$is_track_email_opens = apply_filters( 'ig_es_track_open', $is_track_email_opens, $contact_id, $campaign_id, $this->link_data );
 
 				if ( 'yes' === $is_track_email_opens ) {
 					return true;

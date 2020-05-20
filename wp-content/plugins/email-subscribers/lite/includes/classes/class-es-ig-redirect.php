@@ -26,10 +26,10 @@ if ( ! class_exists( 'ES_IG_Redirect' ) ) {
 
 			if ( 'create_campaign' === $action ) {
 				$redirect_url = admin_url( 'edit.php?post_type=ig_campaign' );
-				$info         = __( 'Create Onsite Campaigns Using <a href="https://wordpress.org/plugins/icegram">Icegram</a>', 'email_subscribers' );
+				$info         = __( 'Create Onsite Campaigns Using <a href="https://wordpress.org/plugins/icegram">Icegram</a>', 'email-subscribers' );
 			} elseif ( 'create_template' === $action ) {
 				$redirect_url = admin_url( 'edit.php?ig_campaign&page=icegram-gallery' );
-				$info         = __( 'Create Popups using <a href="https://wordpress.org/plugins/icegram">Icegram</a>', 'email_subscribers' );
+				$info         = __( 'Create Popups using <a href="https://wordpress.org/plugins/icegram">Icegram</a>', 'email-subscribers' );
 			}
 
 			$icegram_plugin = 'icegram/icegram.php';
@@ -70,9 +70,9 @@ if ( ! class_exists( 'ES_IG_Redirect' ) ) {
 
 		                              		<?php
 			                                if ( in_array( $icegram_plugin, $inactive_plugins ) ) {
-			                                    ?> <a href="<?php echo $ig_activate_url ?>"><button type="button" class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-white text-sm leading-5 font-medium text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-blue transition ease-in-out duration-150"> <?php _e( 'Activate Icegram','email_subscribers' );
+			                                    ?> <a href="<?php echo $ig_activate_url ?>"><button type="button" class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-white text-sm leading-5 font-medium text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-blue transition ease-in-out duration-150"> <?php _e( 'Activate Icegram','email-subscribers' );
 			                                } else {
-			                                    ?> <a href="<?php echo $ig_install_url ?>"><button type="button" class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-white text-sm leading-5 font-medium text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-blue transition ease-in-out duration-150"> <?php _e( 'Install Icegram','email_subscribers' );
+			                                    ?> <a href="<?php echo $ig_install_url ?>"><button type="button" class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-white text-sm leading-5 font-medium text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-blue transition ease-in-out duration-150"> <?php _e( 'Install Icegram','email-subscribers' );
 			                                } ?>
 		                              		</button></a>
 		                          		</span>

@@ -257,8 +257,10 @@ class ES_Post_Notifications_Table {
 			<header class="ml-12 mr-8 wp-heading-inline">
 				<div class="sm:grid sm:grid-cols lg:grid lg:grid-cols-2 max-w-full">
 					<div class="mt-2">		
-						<h2 class="text-xl font-medium text-gray-800 sm:leading-9 sm:truncate"><h1 class="text-xl leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate">
-							<span class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate"> <a href="admin.php?page=es_campaigns"><?php _e('Campaigns ','email-subscribers'); ?></a></span> > <?php echo $heading; ?>
+						<h2 class="text-2xl font-medium mt-2 text-gray-900 sm:leading-9 sm:truncate">
+							<span class="text-base font-normal leading-7 text-indigo-600 sm:leading-9 sm:truncate"> <a href="admin.php?page=es_campaigns"><?php _e('Campaigns ','email-subscribers'); ?></a></span> <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4 inline-block align-middle"><path d="M9 5l7 7-7 7"></path></svg>
+
+							 <?php echo $heading; ?>
 						</h2>
 					</div>
 					<div class="py-2 md:mt-0">
@@ -267,7 +269,7 @@ class ES_Post_Notifications_Table {
 								<?php if ( $action === 'edit' ) { ?>
 									<a href="admin.php?page=es_notifications&action=new" class="ig-es-title-button px-4 py-2 mx-2"><?php _e( 'Add New', 'email-subscribers' ) ?></a>
 								<?php } ?>
-								<a href="edit.php?post_type=es_template" class="ig-es-imp-button mx-2 px-4 py-2"><?php _e( 'Manage Templates', 'email-subscribers' ) ?></a>
+								<a href="edit.php?post_type=es_template" class="ig-es-imp-button px-4 py-2"><?php _e( 'Manage Templates', 'email-subscribers' ) ?></a>
 							</div>	
 						</div>
 					</div>
@@ -363,7 +365,7 @@ class ES_Post_Notifications_Table {
 									</tbody>
 								</table>
 								<div>
-									<p class="submit"><input type="submit" name="submit" id="ig_es_campaign_post_notification_submit_button" class="cursor-pointer ig-es-primary-button px-4 py-2 ml-6 mr-2" value="<?php if ( $is_new ) {  
+									<p class="submit"><input type="submit" name="submit" id="ig_es_campaign_post_notification_submit_button" class="cursor-pointer align-middle ig-es-primary-button px-4 py-2 ml-6 mr-2" value="<?php if ( $is_new ) {  
 											_e( 'Save Campaign', 'email-subscribers' ); 
 										}
 										else{
@@ -371,7 +373,7 @@ class ES_Post_Notifications_Table {
 										}
 
 										?>"/>
-										<a href="admin.php?page=es_campaigns" class="cursor-pointer rounded-md border border-indigo-600 hover:shadow-md focus:outline-none focus:shadow-outline-indigo text-sm leading-5 font-medium transition ease-in-out duration-150 px-4 my-2 py-2 mx-2 ">Cancel</a></p>	
+										<a href="admin.php?page=es_campaigns" class="cursor-pointer align-middle rounded-md border border-indigo-600 hover:shadow-md focus:outline-none focus:shadow-outline-indigo text-sm leading-5 font-medium transition ease-in-out duration-150 px-4 my-2 py-2 mx-2 ">Cancel</a></p>	
 								</div>
 
 							</form>

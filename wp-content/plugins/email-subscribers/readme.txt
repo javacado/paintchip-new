@@ -4,9 +4,9 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Author URI: https://www.icegram.com/
 Tags: subscription, newsletter, email marketing, post notification, email newsletter form, email signup, email widget, newsletter signup, subscribe, subscription form, bulk emails, signup form, list builder, lead generation, welcome email, contacts
 Requires at least: 3.9
-Tested up to: 5.4
+Tested up to: 5.4.1
 Requires PHP: 5.6
-Stable tag: 4.4.5
+Stable tag: 4.4.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses
 
@@ -68,7 +68,7 @@ Email Subscribers is a fully-featured subscription plugin specially created keep
 * **UTM Tracking**
 * **Automatic Spam Score Checking**
 * **Create Workflows to automatically add people to your mailing list whenever someone posts a comment on your website**
-* Integrate with **WooCommerce**, **EDD – Easy Digital Downloads**, **Give WP**, **Contact Form 7**, **Ninja Forms**, **WPForms**, **Gravity Forms**
+* Integrate with **[WooCommerce](https://wordpress.org/plugins/woocommerce/)**, **[EDD – Easy Digital Downloads](https://wordpress.org/plugins/easy-digital-downloads)**, **[Give](https://wordpress.org/plugins/give/)**, **[Contact Form 7](https://wordpress.org/plugins/contact-form-7/)**, **[Ninja Forms](https://wordpress.org/plugins/ninja-forms/)**, **[WPForms](https://wordpress.org/plugins/wpforms-lite/)**, **[Gravity Forms](https://www.gravityforms.com/)**, **[Forminator](http://wordpress.org/plugins/forminator)**
 
 Learn more about [Email Subscribers PRO](https://www.icegram.com/email-subscribers-pricing/)
 
@@ -246,7 +246,9 @@ Refer [here](https://www.icegram.com/documentation/es-faq/).
 
 4. Campaigns
 
-5. Send Broadcasts
+5. Broadcasts Content
+
+5_1. Broadcast Summary
 
 6. New Post Notification
 
@@ -279,29 +281,52 @@ Refer [here](https://www.icegram.com/documentation/es-faq/).
 
 == Changelog ==
 
+**4.4.7 (14.05.2020)**
+
+* New: Improved Broadcast UI
+* New: Now, able to draft broadcast and send later
+* New: Added campaign level open/ view tracking
+* New: Form level captcha is available (**PRO**)
+* New: Added campaign level Link tracking (**PRO**)
+* New: Added campaign level UTM tracking (**PRO**)
+* Update: Use date formate which set in WordPress
+* Update: UI improvements
+* Fix: Import/ Export issues
+
+**4.4.6 (23.04.2020)**
+
+* New: Integrate [Forminator](https://wordpress.org/plugins/forminator/) form plugin (**PRO**)
+* Update: Improved Import/ Export feature
+* Update: Improved manage lists UI
+* Update: Improved Export contacts UI
+* Update: Show date based on format set in WordPress settings
+* Fix: Import contact issue
+* Fix: "Continu Reading" link doesn't work in Post Notifications
+* Fix: Audience lists stick to bottom
+
 **4.4.5 (15.04.2020)**
 
-* Update: Improve Import & Export contacts UI
+* Update: Improved Import & Export contacts UI
 * Fix: Importing contacts progress stays at 0%
 * Fix: Test email send acknowledgement was not showing
 
 **4.4.4 (10.04.2020)**
 
-* Update: Improve Settings UI
-* Update: Improve Import/ Export contacts
+* Update: Improved Settings UI
+* Update: Improved Import/ Export contacts
 
 **4.4.3 (02.04.2020)**
 
-* Update: Improve Workflows
-* Update: Improve UI/ UX
+* Update: Improved Workflows
+* Update: Improved UI/ UX
 * Update: Compatibility check with WordPress 5.4
 * Fix: Fatal Error: Cannot Redeclare ig_es_may_activate_on_blog
 * Fix: Email Templates scroll issue
 
 **4.4.2 (26.03.2020)**
 
-* Update: Improve Help & Info page
-* Update: Improve Active Contacts Growth based on cumulative contacts
+* Update: Improved Help & Info page
+* Update: Improved Active Contacts Growth based on cumulative contacts
 * Fix: Migration issue
 * Fix: Campaign was sent while previewing campaign
 * Fix: Empty campaign body if any error occur

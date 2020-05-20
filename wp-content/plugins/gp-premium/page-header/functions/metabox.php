@@ -253,17 +253,20 @@ if ( ! function_exists( 'show_generate_page_header_meta_box' ) ) {
 						</p>
 
 						<div id="crop-enabled" style="display:none">
-							<p>
-								<label for="_meta-generate-page-header-image-width" class="example-row-title"><strong><?php _e( 'Image Width', 'gp-premium' );?></strong></label><br />
-								<input style="width:45px" type="text" name="_meta-generate-page-header-image-width" id="_meta-generate-page-header-image-width" value="<?php echo intval( generate_page_header_get_post_meta( get_the_ID(), '_meta-generate-page-header-image-width', true ) ); ?>" /><label for="_meta-generate-page-header-image-width"><span class="pixels">px</span></label>
-							</p>
+							<p><?php _e( 'These options are no longer available as of GP Premium 1.10.0.', 'gp-premium' ); ?>
+							<div style="display: none;">
+								<p>
+									<label for="_meta-generate-page-header-image-width" class="example-row-title"><strong><?php _e( 'Image Width', 'gp-premium' );?></strong></label><br />
+									<input style="width:45px" type="text" name="_meta-generate-page-header-image-width" id="_meta-generate-page-header-image-width" value="<?php echo intval( generate_page_header_get_post_meta( get_the_ID(), '_meta-generate-page-header-image-width', true ) ); ?>" /><label for="_meta-generate-page-header-image-width"><span class="pixels">px</span></label>
+								</p>
 
-							<p style="margin-bottom:0;">
-								<label for="_meta-generate-page-header-image-height" class="example-row-title"><strong><?php _e( 'Image Height', 'gp-premium' );?></strong></label><br />
-								<input placeholder="" style="width:45px" type="text" name="_meta-generate-page-header-image-height" id="_meta-generate-page-header-image-height" value="<?php echo intval( generate_page_header_get_post_meta( get_the_ID(), '_meta-generate-page-header-image-height', true ) ); ?>" />
-								<label for="_meta-generate-page-header-image-height"><span class="pixels">px</span></label>
-								<span class="description" style="display:block;"><?php _e( 'Use "0" or leave blank for proportional resizing.', 'gp-premium' );?></span>
-							</p>
+								<p style="margin-bottom:0;">
+									<label for="_meta-generate-page-header-image-height" class="example-row-title"><strong><?php _e( 'Image Height', 'gp-premium' );?></strong></label><br />
+									<input placeholder="" style="width:45px" type="text" name="_meta-generate-page-header-image-height" id="_meta-generate-page-header-image-height" value="<?php echo intval( generate_page_header_get_post_meta( get_the_ID(), '_meta-generate-page-header-image-height', true ) ); ?>" />
+									<label for="_meta-generate-page-header-image-height"><span class="pixels">px</span></label>
+									<span class="description" style="display:block;"><?php _e( 'Use "0" or leave blank for proportional resizing.', 'gp-premium' );?></span>
+								</p>
+							</div>
 						</div>
 					</div>
 				</div>
