@@ -69,17 +69,17 @@ class Extractor extends CI_Controller {
 	function getBrands() {
 		$a = array(
 			array(1167, "Gamblin"),
-			array(1168, "Winsor","Oil"),
+			array(1168, "Winsor", "Oil"),
 			array(1169, "Georgian Water Mixable Oil"),
-			array(1170, "Liquitex","Basic"),
+			array(1170, "Liquitex", "Basic"),
 			array(1171, "Golden Artist Colors"),
 			array(1172, "Golden Fluid "),
 			array(1173, "Golden High"),
-			array(1174, "Winsor","Acrylic"),
-			array(1175, "Liquitex","Heavy Body"),
-			array(1176, "Daniel Smith","Watercolor"),
-			array(1177, "Winsor","Water"),
-			array(1178, "LeFranc","Gouache"),
+			array(1174, "Winsor", "Acrylic"),
+			array(1175, "Liquitex", "Heavy Body"),
+			array(1176, "Daniel Smith", "Watercolor"),
+			array(1177, "Winsor", "Water"),
+			array(1178, "LeFranc", "Gouache"),
 			array(1179, "Louvre Acrylic"),
 			array(1180, "Golden Heavy Body"),
 		);
@@ -92,20 +92,23 @@ class Extractor extends CI_Controller {
 		$used = array();
 		$terma = array();
 		foreach ($a as $ar) {
-			$terma[]=$ar[0];
+			$terma[] = $ar[0];
 		}
 		$terma = implode(",", $terma);
 		foreach ($a as $ar) {
 			$str = $ar[1];
 			$str2 = $ar[2];
-			
+
 			$pt = "post_title like '%$str%'";
-			if ($ar[2]) $pt .= "and post_title like '%$str2%' "
+			if ($ar[2]) {
+				$pt .= "and post_title like '%$str2%' ";
+			}
+
 			$q = "select * from wp_posts where post_type='product' and ($pt)";
 			$r = $this->db->query($q)->result();
 			foreach ($r as $row) {
-				$ex=$this->db->query('select * from wp_term_relationships where object_id='.$row->ID. " and term_taxonomy_id in ($terma)");
-				if ($ex->num_rows()>0) {
+				$ex = $this->db->query('select * from wp_term_relationships where object_id=' . $row->ID . " and term_taxonomy_id in ($terma)");
+				if ($ex->num_rows() > 0) {
 					echo "<P>-- ALREADY ASSIGNED IN DB - ({$row->post_title})";
 					continue;
 
