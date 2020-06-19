@@ -66,6 +66,47 @@ class Extractor extends CI_Controller {
 		$this->load->view('extractor-index', $data);
 	}
 
+	function getBrands() {
+		$a = array(
+			array(1167, "Gamblin Artists Oil Colors"),
+			array(1168, "Winsor &amp; Newton Winton Oil Colour"),
+			array(1169, "Georgian Water Mixable Oil"),
+			array(1170, "Liquitex Basics"),
+			array(1171, "Golden Artist Colors"),
+			array(1172, "Golden Fluid Acrylics"),
+			array(1173, "Golden High Flow Acrylics"),
+			array(1174, "Winsor &amp; Newton Galeria Acrylic"),
+			array(1175, "Liquitex Professional Heavy Body Acrylic"),
+			array(1176, "Daniel Smith Extra Fine Watercolors"),
+			array(1177, "Winsor &amp; Newton Cotman Water Colour"),
+			array(1178, "LeFranc &amp; Bourgeois Fine Gouache"),
+			array(1179, "Louvre Acrylic"),
+		);
+
+		return $a;
+	}
+
+	function fixBrands() {
+		$a = $this->getBrands();
+		$used = array();
+		foreach ($a as $ar) {
+			$str = $ar[1];
+			$str = explode(" ", $str);
+			$str = $str[0];
+
+			$q = "select * from wp_posts where post_type='product' and (post_title like '%$str%' or post_content like '%$str%')";
+			$r = $this->db->query($q)->result();
+			foreach ($r as $row) {
+				if (in_array($row->ID, $used)) {
+					echo "<P>-- ERROR - already assigned this post: {$row->post_title} for another brand, not {$ar[1]}";
+				}
+				$used[] = $row->ID;
+				echo "<P>-- {$row->post_title} getting branded as {$ar[1]}";
+				echo "<P>INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$row->ID}', '{$ar[0]}', '0');";
+			}
+		}
+	}
+
 	function getCSV($file) {
 
 		ini_set("memory_limit", "500M");
