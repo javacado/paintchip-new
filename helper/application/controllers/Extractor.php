@@ -94,6 +94,8 @@ class Extractor extends CI_Controller {
 		foreach ($a as $ar) {
 			$terma[] = $ar[0];
 		}
+
+		$ct = 0;
 		$terma = implode(",", $terma);
 		foreach ($a as $ar) {
 			$str = $ar[1];
@@ -125,7 +127,10 @@ class Extractor extends CI_Controller {
 				echo "<P>-- <strong>{$row->post_title}</strong> getting branded as <strong><i>{$ar[1]} - {$str2}</i></strong>";
 				echo "<P>INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$row->ID}', '{$ar[0]}', '0');";
 			}
+
 		}
+
+		die("<h3>INSERTED</h3><pre>" . print_r(count($used), 1) . "</pre>");
 	}
 
 	function getCSV($file) {
