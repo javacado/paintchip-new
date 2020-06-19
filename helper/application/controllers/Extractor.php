@@ -97,10 +97,12 @@ class Extractor extends CI_Controller {
 		$terma = implode(",", $terma);
 		foreach ($a as $ar) {
 			$str = $ar[1];
-			$str2 = $ar[2];
+			if (isset($ar[2])) {
+				$str2 = $ar[2];
+			}
 
 			$pt = "post_title like '%$str%'";
-			if ($ar[2]) {
+			if (isset($ar[2])) {
 				$pt .= "and post_title like '%$str2%' ";
 			}
 
@@ -118,7 +120,7 @@ class Extractor extends CI_Controller {
 					echo "<P>-- ERROR - already assigned this post: {$row->post_title} for another brand, not {$ar[1]}";
 				}
 				$used[] = $row->ID;
-				echo "<P>-- {$row->post_title} getting branded as {$ar[1]}";
+				echo "<P>-- <strong>{$row->post_title}</strong> getting branded as <strong><i>{$ar[1]}</i></strong>";
 				echo "<P>INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$row->ID}', '{$ar[0]}', '0');";
 			}
 		}
