@@ -122,7 +122,7 @@ class Extractor extends CI_Controller {
 					echo "<P>-- ERROR - already assigned this post: {$row->post_title} for another brand, not {$ar[1]}";
 				}
 				$used[] = $row->ID;
-				echo "<P>-- <strong>{$row->post_title}</strong> getting branded as <strong><i>{$ar[1]} - {$str2}</i><";
+				echo "<P>-- <strong>{$row->post_title}</strong> getting branded as <strong><i>{$ar[1]} - {$str2}</i></strong>";
 				echo "<P>INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$row->ID}', '{$ar[0]}', '0');";
 			}
 		}
