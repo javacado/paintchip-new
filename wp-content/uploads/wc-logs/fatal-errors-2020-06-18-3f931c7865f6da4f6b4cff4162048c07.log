@@ -1,0 +1,12 @@
+2020-06-18T06:16:52+00:00 CRITICAL Out of memory (allocated 29884416) (tried to allocate 12288 bytes) in /var/www/html/paintchip/wp-content/themes/generatepress/inc/block-editor.php on line 356
+
+2020-06-18T06:17:16+00:00 CRITICAL Out of memory (allocated 12845056) (tried to allocate 4718592 bytes) in /var/www/html/paintchip/wp-content/plugins/wd-facebook-feed/framework/WDFacebookFeed.php on line 532
+
+2020-06-18T06:17:20+00:00 CRITICAL Out of memory (allocated 8650752) (tried to allocate 131072 bytes) in /var/www/html/paintchip/wp-content/plugins/wd-facebook-feed/framework/WDFacebookFeed.php on line 1200
+
+2020-06-18T06:17:20+00:00 CRITICAL Out of memory (allocated 4456448) (tried to allocate 131072 bytes) in /var/www/html/paintchip/wp-content/plugins/wd-facebook-feed/framework/WDFacebookFeed.php on line 1200
+
+2020-06-18T06:17:20+00:00 CRITICAL Out of memory (allocated 8650752) (tried to allocate 131072 bytes) in /var/www/html/paintchip/wp-content/plugins/wd-facebook-feed/framework/WDFacebookFeed.php on line 1200
+
+2020-06-18T06:17:20+00:00 CRITICAL Out of memory (allocated 4456448) (tried to allocate 131072 bytes) in /var/www/html/paintchip/wp-content/plugins/wd-facebook-feed/framework/WDFacebookFeed.php on line 1200
+
