@@ -6,7 +6,7 @@ class Extractor extends CI_Controller {
 
 		parent::__construct();
 		$this->base_url = "http://paintchip.local/";
-		$this->local_image_path = "2020/05/";
+		$this->local_image_path = "2020/06/";
 		$this->img_dir = "wp-content/uploads/" . $this->local_image_path;
 		$this->temp_img_dir = $_SERVER['DOCUMENT_ROOT'] . "/helper/uploads/";
 		$this->prod_img_dir = $_SERVER['DOCUMENT_ROOT'] . "/" . $this->img_dir;
@@ -2663,7 +2663,7 @@ class Extractor extends CI_Controller {
 
 						"width" => $sz[0],
 						"height" => $sz[1],
-						"file" => "2020/05/" . $row->image,
+						"file" => "2020/06/" . $row->image,
 						"sizes" => Array
 						(
 						),
@@ -2804,7 +2804,7 @@ class Extractor extends CI_Controller {
 
 					"width" => $sz[0],
 					"height" => $sz[1],
-					"file" => "2020/05/" . $row->image,
+					"file" => "2020/06/" . $row->image,
 					"sizes" => Array
 					(
 					),
