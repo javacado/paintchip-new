@@ -444,17 +444,61 @@ class Extractor extends CI_Controller {
 
 	}
 
-	function macBrands() {
+	function macBrands($go = 0) {
 		$q = "select * from jt_mac_data where data='DONE'";
 		$r = $this->db->query($q)->result();
+
+		$brands = array();
+		foreach ($r as $row) {
+			if (!in_array($row->brand, $brands)) {
+				$brands[] = $row->brand;
+			}
+
+		}
+		$newbrands = array();
+		$ct = 1;
+		foreach ($brands as $b) {
+			$slug = $this->utility_model->safe_string($b);
+			$in = array("name" => $b, "slug" => $slug);
+			$str = $this->db->insert_string("wp_terms", $in);
+
+			echo "<P>" . $str;
+			if ($go) {
+				$this->db->query($str);
+			}
+			$id = $go ? $this->db->insert_id() : $ct;
+			$newbrands[$b] = $id;
+
+			$ct++;
+
+		}
+
+		echo "<hr>";
 
 		foreach ($r as $row) {
 			$q = "select * from wp_posts where lower(post_title) = '" . addslashes(strtolower(trim(str_replace("\n", "", $row->title)))) . "'";
 			$rr = $this->db->query($q)->result();
 
 			if (count($rr) == 0) {
-				echo ("<h3>Output</h3>" . count($rr) . "<pre>" . print_r($q, 1) . "</pre>");
+				//echo ("<h3>Output</h3>" . count($rr) . "<pre>" . print_r($q, 1) . "</pre>");
 			} else {
+
+				foreach ($rr as $rrow) {
+					$ex = $this->db->query('select * from wp_term_relationships where object_id=' . $rrow->ID . " and term_taxonomy_id =" . $newbrands[$row->brand]);
+					if ($ex->num_rows() > 0) {
+						echo "<P>-- ALREADY ASSIGNED IN DB - ({$row->post_title})";
+						continue;
+
+					}
+					$ex->free_result();
+					if (in_array($rrow->ID, $used)) {
+						echo "<P>-- ERROR - already assigned this post: {$row->post_title} for another brand, not {$newbrands[$row->brand]}";
+					}
+					$used[] = $rrow->ID;
+					echo "<P>-- <strong>{$rrow->post_title}</strong> getting branded as <strong><i>{$row->brand}</i></strong>";
+					echo "<P>INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$rrow->ID}', '{$newbrands[$row->brand]}', '0');";
+				}
+
 				//echo ("<h3>Output</h3><pre>" . print_r($rr, 1) . "</pre>");
 			}
 
