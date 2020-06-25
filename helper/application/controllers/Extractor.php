@@ -18,6 +18,7 @@ class Extractor extends CI_Controller {
 
 		$this->load->helper('cookie');
 		$this->load->helper('file');
+		parse_str($_SERVER['QUERY_STRING'], $this->get);
 
 		/*$str = "a:12:{i:20;a:17:{i:0;i:866;i:1;i:867;i:2;i:868;i:3;i:869;i:4;i:870;i:5;i:871;i:6;i:872;i:7;i:873;i:8;i:874;i:9;i:875;i:10;i:876;i:11;i:877;i:12;i:878;i:13;i:879;i:14;i:880;i:15;i:881;i:16;i:882;}i:21;a:15:{i:0;i:883;i:1;i:884;i:2;i:885;i:3;i:886;i:4;i:887;i:5;i:888;i:6;i:889;i:7;i:890;i:8;i:891;i:9;i:892;i:10;i:893;i:11;i:894;i:12;i:895;i:13;i:896;i:14;i:897;}i:23;a:29:{i:0;i:898;i:1;i:899;i:2;i:900;i:3;i:901;i:4;i:902;i:5;i:903;i:6;i:904;i:7;i:905;i:8;i:906;i:9;i:907;i:10;i:908;i:11;i:909;i:12;i:910;i:13;i:911;i:14;i:912;i:15;i:913;i:16;i:914;i:17;i:915;i:18;i:916;i:19;i:917;i:20;i:918;i:21;i:919;i:22;i:920;i:23;i:921;i:24;i:922;i:25;i:923;i:26;i:924;i:27;i:925;i:28;i:926;}i:26;a:14:{i:0;i:927;i:1;i:928;i:2;i:929;i:3;i:930;i:4;i:931;i:5;i:932;i:6;i:933;i:7;i:934;i:8;i:935;i:9;i:936;i:10;i:937;i:11;i:938;i:12;i:939;i:13;i:940;}i:27;a:39:{i:0;i:941;i:1;i:942;i:2;i:943;i:3;i:944;i:4;i:945;i:5;i:946;i:6;i:947;i:7;i:948;i:8;i:949;i:9;i:950;i:10;i:951;i:11;i:952;i:12;i:953;i:13;i:954;i:14;i:955;i:15;i:956;i:16;i:957;i:17;i:958;i:18;i:959;i:19;i:960;i:20;i:961;i:21;i:962;i:22;i:963;i:23;i:964;i:24;i:965;i:25;i:966;i:26;i:967;i:27;i:968;i:28;i:969;i:29;i:970;i:30;i:971;i:31;i:972;i:32;i:973;i:33;i:974;i:34;i:975;i:35;i:976;i:36;i:977;i:37;i:978;i:38;i:979;}i:28;a:15:{i:0;i:980;i:1;i:981;i:2;i:982;i:3;i:983;i:4;i:984;i:5;i:985;i:6;i:986;i:7;i:987;i:8;i:988;i:9;i:989;i:10;i:990;i:11;i:991;i:12;i:992;i:13;i:993;i:14;i:994;}i:33;a:26:{i:0;i:995;i:1;i:996;i:2;i:997;i:3;i:998;i:4;i:999;i:5;i:1000;i:6;i:1001;i:7;i:1002;i:8;i:1003;i:9;i:1004;i:10;i:1005;i:11;i:1006;i:12;i:1007;i:13;i:1008;i:14;i:1009;i:15;i:1010;i:16;i:1011;i:17;i:1012;i:18;i:1013;i:19;i:1014;i:20;i:1015;i:21;i:1016;i:22;i:1017;i:23;i:1018;i:24;i:1019;i:25;i:1020;}i:35;a:49:{i:0;i:1021;i:1;i:1022;i:2;i:1023;i:3;i:1024;i:4;i:1025;i:5;i:1026;i:6;i:1027;i:7;i:1028;i:8;i:1029;i:9;i:1030;i:10;i:1031;i:11;i:1032;i:12;i:1033;i:13;i:1034;i:14;i:1035;i:15;i:1036;i:16;i:1037;i:17;i:1038;i:18;i:1039;i:19;i:1040;i:20;i:1041;i:21;i:1042;i:22;i:1043;i:23;i:1044;i:24;i:1045;i:25;i:1046;i:26;i:1047;i:27;i:1048;i:28;i:1049;i:29;i:1050;i:30;i:1051;i:31;i:1052;i:32;i:1053;i:33;i:1054;i:34;i:1055;i:35;i:1056;i:36;i:1057;i:37;i:1058;i:38;i:1059;i:39;i:1060;i:40;i:1061;i:41;i:1062;i:42;i:1063;i:43;i:1064;i:44;i:1065;i:45;i:1066;i:46;i:1067;i:47;i:1068;i:48;i:1069;}i:37;a:25:{i:0;i:1070;i:1;i:1071;i:2;i:1072;i:3;i:1073;i:4;i:1074;i:5;i:1075;i:6;i:1076;i:7;i:1077;i:8;i:1078;i:9;i:1079;i:10;i:1080;i:11;i:1081;i:12;i:1082;i:13;i:1083;i:14;i:1084;i:15;i:1085;i:16;i:1086;i:17;i:1087;i:18;i:1088;i:19;i:1089;i:20;i:1090;i:21;i:1091;i:22;i:1092;i:23;i:1093;i:24;i:1094;}i:38;a:23:{i:0;i:1095;i:1;i:1096;i:2;i:1097;i:3;i:1098;i:4;i:1099;i:5;i:1100;i:6;i:1101;i:7;i:1102;i:8;i:1103;i:9;i:1104;i:10;i:1105;i:11;i:1106;i:12;i:1107;i:13;i:1108;i:14;i:1109;i:15;i:1110;i:16;i:1111;i:17;i:1112;i:18;i:1113;i:19;i:1114;i:20;i:1115;i:21;i:1116;i:22;i:1117;}i:39;a:15:{i:0;i:1118;i:1;i:1119;i:2;i:1120;i:3;i:1121;i:4;i:1122;i:5;i:1123;i:6;i:1124;i:7;i:1125;i:8;i:1126;i:9;i:1127;i:10;i:1128;i:11;i:1129;i:12;i:1130;i:13;i:1131;i:14;i:1132;}i:1133;a:22:{i:0;i:1134;i:1;i:1135;i:2;i:1136;i:3;i:1137;i:4;i:1138;i:5;i:1139;i:6;i:1140;i:7;i:1141;i:8;i:1142;i:9;i:1143;i:10;i:1144;i:11;i:1145;i:12;i:1146;i:13;i:1147;i:14;i:1148;i:15;i:1149;i:16;i:1150;i:17;i:1151;i:18;i:1152;i:19;i:1153;i:20;i:1154;i:21;i:1155;}}";*/
 		//die("<h3>Output</h3><pre>" . print_r(unserialize($str), 1) . "</pre>");
@@ -64,6 +65,383 @@ class Extractor extends CI_Controller {
 		$data = array("ok" => $ok);
 
 		$this->load->view('extractor-index', $data);
+	}
+
+	function getMac() {
+		$csv = $_SERVER['DOCUMENT_ROOT'] . "/dta/inventory-mac.csv";
+		$handle = fopen($csv, "r");
+		$octr = 0;
+		$ct = 0;
+		$prods = array();
+		while (($row = fgetcsv($handle, 10000, ",")) != FALSE) //get row vales
+		{
+			$first = false;
+
+			$parts = preg_split('/  +/', $row[0]);
+			//echo ("<h3>Output</h3><pre>" . print_r($parts, 1) . "</pre>");
+			if ($ct == 0) {
+				$prod = array();
+				$first = true;
+			}
+			$id = $sku = $title = $price = '';
+			if ($first) {
+				$prod['title'] = ucwords(strtolower($parts[2]));
+
+				if ($prod['title'] == '0' || $prod['title'] == '1') {
+					$t = explode(" ", $parts[1]);
+					unset($t[0]);
+					$t = implode(" ", $t);
+					$t = ucwords(strtolower($t));
+					$prod['title'] = $t;
+				}
+
+				if ($prod['title'] == '0' || $prod['title'] == '1') {
+					die("<h3>Output</h3><pre>" . print_r($parts, 1) . "</pre>");
+
+				}
+			} else {
+				$die = 0;
+				$subarr = array();
+				foreach ($parts as $p) {
+					if ($p == "019538 MVBD20071000 689076764506") {
+						$die = 1;
+					}
+					if (strpos($p, " ") !== false) {
+						$p = explode(" ", $p);
+						foreach ($p as $pp) {
+							$subarr[] = $pp;
+						}
+						//die("<h3>Output</h3><pre>" . print_r($p, 1) . "</pre>");
+					} else {
+						$subarr[] = $p;
+					}
+
+					//$subarr = array_merge($subarr, $p);
+				}
+
+				//if (count($subarr) != 12) {
+				//	echo ("<h3>Output</h3><pre>" . print_r($subarr, 1) . "</pre>");
+				//}
+
+				if ($subarr[10] == "disc") {
+					echo "<P>SKIPPING";
+					$ct = 0;
+					continue;
+				}
+
+				$prod['sku'] = $subarr[1];
+				$prod['upc'] = $subarr[2];
+				$prod['price'] = str_replace("$", "", $subarr[4]);
+				$prod['supplier'] = "mac";
+
+			}
+
+			if ($ct == 1) {
+				echo "\n" . $this->db->insert_string("jt_mac_data", $prod) . ";";
+				//$prods[] = $prod;
+			}
+			$ct = $ct == 0 ? 1 : 0;
+			$octr++;
+
+			//print_r($row); //rows in array
+
+			//here you can manipulate the values by accessing the array
+
+		}
+
+		//die("<h3>Output</h3><pre>" . print_r("TOTAL: $octr", 1) . "</pre>");
+
+	}
+
+	function getRelatedSLSCat($main_cat, $cat) {
+		$newcat = $cat;
+
+		return $newcat;
+	}
+
+	function getMacCats() {
+		$r = $this->db->query('select * from jt_mac_data where data="DONE"')->result();
+
+		$cats = array();
+		foreach ($r as $row) {
+			if (!isset($cats[$row->main_category])) {
+				$cats[$row->main_category] = array();
+			}
+
+			if (!in_array($row->category, $cats[$row->main_category])) {
+				$cats[$row->main_category][] = $row->category;
+			}
+
+		}
+
+		foreach ($cats as $maincat => $subs) {
+			foreach ($subs as $sub) {
+				$i = array("o_cat" => $maincat, "o_subcat" => $sub);
+
+				//$this->db->insert("jt_mac_cats", $i);
+			}
+
+		}
+
+		/**/
+
+		/*foreach ($r as $row) {
+				if (!isset($cats[$row->main_category])) {
+					$cats[$row->main_category] = array("related" => $this->getRelatedCat($row->main_category), "sub" => array());
+				}
+
+				if (!in_array($row->category, $cats[$row->main_category]["sub"])) {
+					$cats[$row->main_category]['sub'][$row->category] = array("cat" => $row->category, "related" => $this->getRelatedCat($row->main_category, $row->category));
+				}
+
+			}
+		*/
+		return $cats;
+		die("<h3>Output</h3><pre>" . print_r($cats, 1) . "</pre>");
+	}
+
+	function doMac() {
+
+	}
+
+	function assign() {
+		$u = array("category" => $this->get['id']);
+		$done = $this->db->update("jt_mac_cats", $u, array("o_subcat" => urldecode($this->get['cat'])));
+		//die("<h3>Output</h3><pre>" . print_r($done, 1) . "</pre>");
+		echo json_encode(array("ok" => $done));
+	}
+	function mackey() {
+		$r = $this->db->query('select * from jt_mac_cats where category="40" order by o_cat asc')->result();
+
+		$cats = array();
+		$us = array();
+		foreach ($r as $row) {
+			if (in_array($row->o_cat, $us)) {
+				continue;
+			}
+
+			$us[] = $row->o_cat;
+		}
+
+		foreach ($us as $item) {
+			$r = $this->db->query('select * from jt_mac_cats where o_cat="' . $item . '" and  category="40" order by o_subcat asc')->result();
+
+			foreach ($r as $row) {
+				$cats[$item][] = $row->o_subcat;
+				/*if (in_array($cats['p'.$row->o_subcat], $cats)) {
+					continue;
+				*/
+			}
+
+//			$us[] = $row->o_cat;
+		}
+
+		$data['keys'] = $cats;
+
+		$data['cats'] = $this->getSCats();
+
+		//die("<h3>Output</h3><pre>" . print_r($data['cats'], 1) . "</pre>");
+
+		$this->load->view('assign-cats', $data);
+
+	}
+
+	function getSCats() {
+
+		$q = "select * from wp_terms ";
+		$t = $this->db->query($q)->result();
+		$names = array();
+		foreach ($t as $tt) {
+			$names['p' . $tt->term_id] = $tt;
+
+		}
+
+		$q = "select * from wp_wc_category_lookup ";
+		$r = $this->db->query($q)->result();
+		$cats = array();
+		foreach ($r as $row) {
+			if (!isset($cats['p' . $row->category_tree_id])) {
+				$subs = array(
+					$names['p' . $row->category_id],
+				);
+				if ($row->category_id == $row->category_tree_id) {
+					$subs = array();
+				}
+
+				$cats['p' . $row->category_tree_id] = array(
+					"cat" => $names['p' . $row->category_tree_id],
+					"subs" => $subs,
+				);
+
+			} else {
+
+				$cats['p' . $row->category_tree_id]['subs'][] = $names['p' . $row->category_id];
+			}
+		}
+
+		//die("<h3>Output</h3><pre>" . print_r($cats, 1) . "</pre>");
+		return $cats;
+	}
+
+	function getRelatedCat($parent, $cat = "") {
+
+		return "";
+
+	}
+
+	function scrapeMac() {
+		$q = "select * from jt_mac_data where data='' limit 4";
+		$r = $this->db->query($q);
+
+		$rw = $r->result();
+		if (count($rw) == 0) {
+			echo json_encode(array("complete" => 1));
+			die();
+		}
+		$ct = 0;
+		$act = 0;
+		foreach ($rw as $row) {
+			$url = "https://www.macphersonart.com/cgi-bin/maclive/wam_tmpl/catalog_browse.p?site=MAC&layout=Responsive&page=catalog_browse&searchText=" . $row->sku;
+			//echo "<P> starting $ct";
+			$res = array();
+			$options = array(
+				CURLOPT_RETURNTRANSFER => true, // return web page
+				CURLOPT_HEADER => false, // do not return headers
+				CURLOPT_FOLLOWLOCATION => true, // follow redirects
+				CURLOPT_USERAGENT => "spider", // who am i
+				CURLOPT_AUTOREFERER => true, // set referer on redirect
+				CURLOPT_CONNECTTIMEOUT => 120, // timeout on connect
+				CURLOPT_TIMEOUT => 120, // timeout on response
+				CURLOPT_MAXREDIRS => 10, // stop after 10 redirects
+			);
+			$ch = curl_init($url);
+			curl_setopt_array($ch, $options);
+			$content = curl_exec($ch);
+			$err = curl_errno($ch);
+			$errmsg = curl_error($ch);
+			$header = curl_getinfo($ch);
+			curl_close($ch);
+
+			$res['content'] = $content;
+			$res['content'] = strip_tags($content, "<body>");
+			$res['url'] = $header['url'];
+
+			$newurl = str_replace('document.location.replace("', "", $res['content']);
+			$newurl = str_replace('");', "", $newurl);
+
+			if (!$newurl || strpos($newurl, "Catalog Browse | MacPherson's") != FALSE) {
+				$item['data'] = "NO URL";
+				$this->db->update("jt_mac_data", $item, array("id" => $row->id));
+
+				continue;
+			}
+			$html = file_get_html($newurl);
+			//return $res;
+
+			$item = array();
+
+			//print_r(get_web_page("http://www.example.com/redirectfrom"));
+
+			/*foreach ($d as $dd) {
+					echo ("<h3>Output</h3><pre>" . print_r($dd->innerText, 1) . "</pre>");
+				}
+			*/
+			$d = $html->find('#row' . $row->sku . ' td');
+			if (count($d) == 0) {
+				$ct++;
+
+				//echo "<p>continuoing... <a href='$url' target='_blank'>$url</a>";
+
+				//die("<h3>no data</h3><pre>" . print_r($newurl, 1) . print_r($row, 1) . "</pre>");
+				$item['data'] = "NO DATA";
+				$this->db->update("jt_mac_data", $item, array("id" => $row->id));
+
+				continue;
+			}
+
+			$de = $html->find('.prodDescription');
+			$desc = "";
+			foreach ($de as $des) {
+				$desc .= $des->innerText;
+			}
+
+			$item['description'] = $desc;
+			$imagetoget = "";
+
+			$a = $d[0]->find('a');
+			if (count($a) > 0) {
+				$a = $a->href;
+				if ($a) {
+					$iname = explode("/", $a);
+					$iname = $iname[count($iname) - 1];
+					$imagetoget = "https://www.macphersonart.com" . $a;
+				}
+			} else {
+				$a = $d[0]->find('img');
+				if (count($a) > 0) {
+					$a = $a->src;
+					if ($a) {
+						$iname = explode("/", $a);
+						$iname = $iname[count($iname) - 1];
+						$imagetoget = "https://www.macphersonart.com" . $a;
+					}
+				}
+			}
+
+			if (!$imagetoget) {
+
+				foreach ($d as $dd) {
+					echo ("<h3>Output</h3><pre>" . print_r($dd->innerText, 1) . "</pre>");
+				}
+
+				die("<h3>NO IMG</h3><pre>" . print_r($d[0]->innerText, 1) . "</pre>");
+			}
+
+			if (!file_exists($_SERVER['DOCUMENT_ROOT'] . "/helper/uploads/{$iname}")) {
+				$up = $this->getImage($imagetoget, $iname);
+				if (!$up) {
+					die("<h3>Output</h3><pre>" . print_r("DID not get image", 1) . "</pre>");
+				} else {
+					$item['image'] = $iname;
+				}
+			} else {
+				$item['image'] = $iname;
+
+			}
+
+			$tdata = $html->find('h2.prodCrumbDesc');
+			$tdata = $tdata[0];
+			$item['category'] = $tdata->innerText;
+
+			$tdata = $html->find('.millDescription a');
+			$tdata = $tdata[0];
+			$item['brand'] = $tdata->innerText;
+
+			$tdata = $html->find('a.prodCrumbLink');
+			$tdata = $tdata[count($tdata) - 1];
+			$item['main_category'] = $tdata->innerText;
+
+			$tdata = $d[1]->find('div');
+			//die("<h3>Output</h3><pre>" . print_r($d[1]->innerText, 1) . "</pre>");
+			$tdata = $tdata[1];
+			$item['title'] = str_replace("<br>", " ", $tdata->innerText);
+
+			$tdata = $d[6]->find('div.qoRegPrice');
+			$tdata = $tdata[0];
+			$item['macprice'] = str_replace("$", "", $tdata->innerText);
+
+			$item['data'] = "DONE";
+			$this->db->update("jt_mac_data", $item, array("id" => $row->id));
+			$act++;
+			//echo ("<h3>Output</h3><pre>" . print_r($item, 1) . "</pre>");
+			$ct++;
+			//sleep(1);
+			//die("<h3>Output</h3><pre>" . print_r($a, 1) . "</pre>");
+
+		}
+
+		echo json_encode(array("actual" => $act));
+
 	}
 
 	function getBrands() {
@@ -2045,8 +2423,106 @@ class Extractor extends CI_Controller {
 		*/
 	}
 
+	function fixMacCatsWithNew($go = 0) {
+		$fix = array(
+			"Paints, Mediums and Finishes" => array(
+				"acrylic",
+				"liquitex",
+				"weber",
+				"linseed",
+				"testor",
+				"linoleum",
+				"plastalina",
+				"gamblin",
+				"emulsion",
+				"gouache",
+				"oil color",
+				"tempera",
+				"tube",
+				"jacquard",
+				"spray paint",
+				"m. graham",
+				"scribbles",
+				"daniel smith",
+				"mask",
+				"retarder",
+				"versatex",
+				"gum arabic",
+				"grumbacher",
+				"golden",
+				"varnish",
+				"decoart",
+				"filler",
+				"gesso",
+			),
+			"Airbrush Supplies" => array(
+				"airbrush ",
+
+			),
+
+			"Brushes and Brush Care" => array(
+				"brush ",
+				"brushes",
+
+			),
+
+			"Canvas and Surface" => array(
+				"canvas",
+				"board",
+			),
+			"Art Accessories" => array(
+				"tray",
+				"easel",
+				"bin",
+			),
+			"Pastels" => array(
+				"pastel",
+			),
+			"Pens and Markers" => array(
+				"nibs",
+				"pen ",
+				"pens",
+				"marker",
+			),
+		);
+		$ids = array();
+		foreach ($fix as $cat => $keywords) {
+			$key = array();
+			foreach ($keywords as $k) {
+				$key[] = " lower(title) like  '%" . $k . "%' ";
+			}
+
+			$q = "select * from jt_mac_data where data='DONE' and site_category='' and (" . implode(" OR ", $key) . ")";
+			echo "<P>$q";
+			$r = $this->db->query($q)->result();
+			foreach ($r as $row) {
+				if (in_array($row->id, $ids)) {
+					continue;
+				}
+
+				$title = strip_tags($row->title);
+				echo "<P> changing " . $title . " to $cat (from " . $row->category . ")";
+				$q = "update jt_mac_data set site_category='$cat' where id={$row->id}";
+				echo "<P>$q";
+				$ids[] = $row->id;
+				if ($go) {
+					$this->db->query($q);
+				}
+
+			}
+		}
+
+		/*
+
+			"canvas",
+				"easel",
+				"tray",
+
+		*/
+	}
+
 	function getLiveCats() {
-		$q = "select * from wp_terms where term_id>14";
+		$q = "select * from wp_terms where term_id>14 order by name asc";
 		$res = $this->db->query($q);
 		$result = $res->result();
 		$res->free_result();
@@ -2249,6 +2725,146 @@ class Extractor extends CI_Controller {
 				//echo ("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
 
 			}
+		}
+
+	}
+
+	function popm() {
+		$q = "select * from jt_mac_cats ";
+		$r = $this->db->query($q)->result();
+		foreach ($r as $row) {
+			$u = array("site_category" => $row->category);
+			$this->db->update('jt_mac_data', $u, array("category" => $row->o_subcat));
+		}
+	}
+
+	function moveMacProducts($go = 0) {
+
+		ini_set('display_errors', 1);
+		ini_set('display_startup_errors', 1);
+		error_reporting(E_ALL);
+
+		/*$str = 'a:5:{s:5:"width";i:225;s:6:"height";i:225;s:4:"file";s:19:"2020/03/images.jpeg";s:5:"sizes";a:0:{}s:10:"image_meta";a:12:{s:8:"aperture";s:1:"0";s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";s:1:"0";s:9:"copyright";s:0:"";s:12:"focal_length";s:1:"0";s:3:"iso";s:1:"0";s:13:"shutter_speed";s:1:"0";s:5:"title";s:0:"";s:11:"orientation";s:1:"0";s:8:"keywords";a:0:{}}}';
+		die("<h3>Output</h3><pre>" . print_r(unserialize($str), 1) . "</pre>");*/
+
+		// $go = 0;
+		$q = "select * from jt_mac_data where data='DONE' and approved=0 order by image desc, id asc limit 500";
+
+		$rr = $this->db->query($q);
+		$r = $rr->result();
+		$rr->free_result();
+		foreach ($r as $row) {
+
+			//echo ("<p> going for it " . print_r($row, 1));
+
+			$in = $this->getPostInsertA($row);
+			echo "<p>" . $this->db->insert_string("wp_posts", $in);
+			if ($go) {
+				$done = $this->db->insert("wp_posts", $in);
+				if (!$done) {
+					die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+				}
+				$post_id = $this->db->insert_id();
+			} else {
+				$post_id = "NEWPOSTID";
+			}
+			$row->post_id = $post_id;
+
+			$ustr = $this->db->update_string("wp_posts", array("guid" => $this->base_url . "?post_type=product&#038;p=" . $post_id), array("id" => $post_id));
+
+			if ($go) {
+				$this->db->query($ustr);
+			} else {
+				echo "<P>$ustr";
+			}
+			$row->image_post_id = null;
+			if ($row->image) {
+				$in = $this->getImgInsertA($row);
+				echo "<p>" . $this->db->insert_string("wp_posts", $in);
+				if ($go) {
+					$done = $this->db->insert("wp_posts", $in);
+					if (!$done) {
+						die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+					}
+					$image_post_id = $this->db->insert_id();
+				} else {
+					$image_post_id = "NEW-IMAGE-POSTID";
+				}
+
+				echo "<P>moving " . $this->temp_img_dir . $row->image . " to " . $this->prod_img_dir . $row->image;
+				if ($go) {
+					copy($this->temp_img_dir . $row->image, $this->prod_img_dir . $row->image);
+				}
+
+				$row->image_post_id = $image_post_id;
+
+				$sz = getimagesize($this->temp_img_dir . $row->image);
+
+				$img_meta = array(
+
+					"width" => $sz[0],
+					"height" => $sz[1],
+					"file" => "2020/05/" . $row->image,
+					"sizes" => Array
+					(
+					),
+
+					"image_meta" => Array
+					(
+						"aperture" => 0,
+						"credit" => "",
+						"camera" => "",
+						"caption" => "",
+						"created_timestamp" => 0,
+						"copyright" => "",
+						"focal_length" => 0,
+						"iso" => 0,
+						"shutter_speed" => 0,
+						"title" => $row->title,
+						"orientation" => 0,
+						"keywords" => Array
+						(
+						),
+
+					),
+				);
+				$img_meta = serialize($img_meta);
+				$i = array();
+				$i[] = array("post_id" => $image_post_id, "meta_key" => "_wp_attached_file", "meta_value" => $this->local_image_path . $row->image);
+				$i[] = array("post_id" => $image_post_id, "meta_key" => "_wp_attachment_metadata", "meta_value" => $img_meta);
+
+				if ($go) {
+					$this->db->insert_batch("wp_postmeta", $i);
+				}
+
+				//echo "<p>post meta: " . print_r($i, 1);
+
+			}
+
+			$up = array("object_id" => $post_id, "term_taxonomy_id" => $row->site_category);
+			if ($go) {
+				$this->db->insert("wp_term_relationships", $up);
+			}
+
+			echo "<P>wp_term_relationships: " . print_r($up, 1);
+
+			// insert meta
+			$in = $this->getPostMetaInsertA($row);
+
+			if ($go) {
+				$done = $this->db->insert_batch("wp_postmeta", $in);
+				if (!$done) {
+					die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+				}
+
+				$upp = array("moved" => 1);
+				$this->db->update("jt_supplier_data", $upp, array("id" => $row->id));
+			} else {
+				echo ("<h3>post meta</h3><pre>" . print_r($in, 1) . "</pre>");
+			}
+
+			//echo ("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
+
 		}
 
 	}
@@ -2557,6 +3173,35 @@ class Extractor extends CI_Controller {
 		-------------------------
 
 	*/
+
+	function getMacCats2() {
+
+		// with '// new' below update db on records before may 6
+		$cats = array(
+			"Crafts" => "Basic Craft Supplies",
+			"Art Accessories" => "Art Accessories", // new
+			"Airbrush Supplies" => "Airbrush Supplies", // new
+			"Brushes and Brush Care" => "Brushes and Brush Care", // new
+			"Canvas and Surface" => "Canvas and Surface", // new
+			"Adhesives" => "Tapes and Adhesives",
+			"Drafting" => "Drafting Supplies",
+			"Print" => "Printmaking",
+			"Gifts" => "Gifts",
+			"Kids" => "Childrens Crafts",
+			"Books" => "Books",
+			"Bookmaking" => "Bookmaking",
+			"Pastels" => "Pastels",
+			"Paper" => "Paper and Pads",
+			"Drawing" => "Drawing Supplies",
+			"Pens and Markers" => "Pens and Markers", // new
+			"Frames" => "Frames",
+			"Ceramics" => "Clays and Accessories",
+			"Painting" => "Paints, Mediums and Finishes");
+
+		ksort($cats);
+
+		return $cats;
+	}
 
 	function getCats() {
 

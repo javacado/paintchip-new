@@ -104,6 +104,13 @@ for ($x = 1; $x < 15; $x++) {?>
 
 
 -->
+
+ <button class='btn btn-success btn-sm pull-right' onclick='moveMac()'>MOVE MAC</button>
+
+
+
+
+ <button class='btn btn-success btn-sm pull-right' onclick='runMac()'>Do the MAC</button>
  <button class='btn btn-danger btn-sm pull-right' onclick='upcfix()'>Run UPC fix</button>
  <button class='btn btn-danger btn-sm pull-right' onclick='mine()'>Run Mine</button>
  <button class='btn btn-default btn-sm' onclick='approvePrices()'>Approve Category/Prices</button>
@@ -222,6 +229,55 @@ setTimeout(function() {
        }
     })
 }
+
+
+function runMac() {
+
+
+ $.ajax({
+        url: "/helper/extractor/scrapeMac",
+        context: document.body,
+        method: 'get'
+    }).done(function(res) {
+        res = JSON.parse(res)
+       if (res.complete==1) {
+alert("DONE")
+       } else {
+setTimeout(function() {
+    runMac();
+
+}, 500);
+       }
+    })
+}
+
+
+
+
+
+
+function doMac() {
+
+
+ $.ajax({
+        url: "/helper/extractor/scrapeMac",
+        context: document.body,
+        method: 'get'
+    }).done(function(res) {
+        res = JSON.parse(res)
+       if (res.complete==1) {
+alert("DONE")
+       } else {
+setTimeout(function() {
+    runMac();
+
+}, 500);
+       }
+    })
+}
+
+
+
 
 
 function upcfix() {
