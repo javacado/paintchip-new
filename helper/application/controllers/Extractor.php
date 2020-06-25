@@ -444,6 +444,17 @@ class Extractor extends CI_Controller {
 
 	}
 
+	function macBrands() {
+		$q = "select * from jt_mac_data where data='DONE'";
+		$r = $this->db->query($q)->result();
+
+		foreach ($r as $row) {
+			$q = "select * from wp_posts where lower(post_title) = '" . strtolower($row->title) . "'";
+			$rr = $this->db->query($q)->result();
+
+			echo ("<h3>Output</h3><pre>" . print_r($rr, 1) . "</pre>");
+		}
+	}
 	function getBrands() {
 		$a = array(
 			array(1167, "Gamblin"),
