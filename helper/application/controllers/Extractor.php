@@ -2738,7 +2738,7 @@ class Extractor extends CI_Controller {
 		}
 	}
 
-	function movei($go = 0) {
+	/*function movei($go = 0) {
 		$q = "select * from jt_mac_data where data='DONE' and approved=0 order by image desc, id asc limit 500";
 		$rr = $this->db->query($q);
 		$r = $rr->result();
@@ -2753,7 +2753,7 @@ class Extractor extends CI_Controller {
 
 		}
 
-	}
+	}*/
 
 	function moveMacProducts($go = 0) {
 
@@ -2765,7 +2765,7 @@ class Extractor extends CI_Controller {
 		die("<h3>Output</h3><pre>" . print_r(unserialize($str), 1) . "</pre>");*/
 
 		// $go = 0;
-		$q = "select * from jt_mac_data where data='DONE' and approved=0 order by image desc, id asc limit 500";
+		$q = "select * from jt_mac_data where data='DONE' and approved=0 order by image desc, id asc limit 500, 100000";
 
 		$rr = $this->db->query($q);
 		$r = $rr->result();
