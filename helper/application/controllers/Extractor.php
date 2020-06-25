@@ -449,16 +449,17 @@ class Extractor extends CI_Controller {
 		$r = $this->db->query($q)->result();
 
 		foreach ($r as $row) {
-			$q = "select * from wp_posts where lower(post_title) = '" . addslashes(strtolower($row->title)) . "'";
+			$q = "select * from wp_posts where lower(post_title) = '" . addslashes(strtolower(trim(str_replace("\n", "", $row->title)))) . "'";
 			$rr = $this->db->query($q)->result();
 
-			if (count($rr) != 1) {
+			if (count($rr) == 0) {
 				echo ("<h3>Output</h3>" . count($rr) . "<pre>" . print_r($q, 1) . "</pre>");
 			} else {
 				//echo ("<h3>Output</h3><pre>" . print_r($rr, 1) . "</pre>");
 			}
 
 		}
+		die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
 	}
 	function getBrands() {
 		$a = array(
