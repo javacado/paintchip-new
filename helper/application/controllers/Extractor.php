@@ -458,7 +458,10 @@ class Extractor extends CI_Controller {
 		$newbrands = array();
 		$ct = 1;
 		foreach ($brands as $b) {
-			$slug = $this->utility_model->safe_string($b);
+
+			$nt = strtolower($b);
+			$slug = str_replace(" ", "-", $nt);
+
 			$in = array("name" => $b, "slug" => $slug);
 			$str = $this->db->insert_string("wp_terms", $in);
 
