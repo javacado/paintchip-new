@@ -449,7 +449,7 @@ class Extractor extends CI_Controller {
 		$r = $this->db->query($q)->result();
 
 		foreach ($r as $row) {
-			$q = "select * from wp_posts where lower(post_title) = '" . strtolower($row->title) . "'";
+			$q = "select * from wp_posts where lower(post_title) = '" . addslashes(strtolower($row->title)) . "'";
 			$rr = $this->db->query($q)->result();
 
 			if (count($rr) != 1) {
