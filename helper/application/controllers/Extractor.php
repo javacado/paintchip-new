@@ -453,9 +453,9 @@ class Extractor extends CI_Controller {
 			$rr = $this->db->query($q)->result();
 
 			if (count($rr) != 1) {
-				die("<h3>Output</h3><pre>" . print_r($q, 1) . "</pre>");
+				echo ("<h3>Output</h3>" . count($rr) . "<pre>" . print_r($q, 1) . "</pre>");
 			} else {
-				echo ("<h3>Output</h3><pre>" . print_r($rr, 1) . "</pre>");
+				//echo ("<h3>Output</h3><pre>" . print_r($rr, 1) . "</pre>");
 			}
 
 		}
