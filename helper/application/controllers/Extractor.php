@@ -2738,6 +2738,23 @@ class Extractor extends CI_Controller {
 		}
 	}
 
+	function movei($go = 0) {
+		$q = "select * from jt_mac_data where data='DONE' and approved=0 order by image desc, id asc limit 500";
+		$rr = $this->db->query($q);
+		$r = $rr->result();
+		$rr->free_result();
+		foreach ($r as $row) {
+
+			echo "<P>moving " . $this->temp_img_dir . $row->image . " to " . $this->prod_img_dir . $row->image;
+			echo "<P>exists? " . file_exists($this->prod_img_dir . $row->image);
+			if ($go) {
+				copy($this->temp_img_dir . $row->image, $this->prod_img_dir . $row->image);
+			}
+
+		}
+
+	}
+
 	function moveMacProducts($go = 0) {
 
 		ini_set('display_errors', 1);
