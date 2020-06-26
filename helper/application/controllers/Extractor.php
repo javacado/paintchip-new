@@ -489,13 +489,13 @@ class Extractor extends CI_Controller {
 				foreach ($rr as $rrow) {
 					$ex = $this->db->query('select * from wp_term_relationships where object_id=' . $rrow->ID . " and term_taxonomy_id =" . $newbrands[$row->brand]);
 					if ($ex->num_rows() > 0) {
-						echo "<P>-- ALREADY ASSIGNED IN DB - ({$row->post_title})";
+						echo "<P>----------- ALREADY ASSIGNED IN DB - ({$row->post_title})";
 						continue;
 
 					}
 					$ex->free_result();
 					if (in_array($rrow->ID, $used)) {
-						echo "<P>-- ERROR - already assigned this post: {$row->post_title} for another brand, not {$newbrands[$row->brand]}";
+						echo "<P>------------------------ ERROR - already assigned this post: {$row->post_title} for another brand, not {$newbrands[$row->brand]}";
 					}
 					$used[] = $rrow->ID;
 					echo "<P>-- <strong>{$rrow->post_title}</strong> getting branded as <strong><i>{$row->brand}</i></strong>";
@@ -506,7 +506,7 @@ class Extractor extends CI_Controller {
 			}
 
 		}
-		die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
+		die("<h3>Brands</h3><pre>" . print_r($brands, 1) . "</pre>");
 	}
 	function getBrands() {
 		$a = array(
@@ -528,6 +528,33 @@ class Extractor extends CI_Controller {
 
 		return $a;
 	}
+
+	/*function addBrands($go = 0) {
+		$brands = array(
+			"Prismacolor",
+		);
+
+		foreach ($brands as $b) {
+
+			$nt = strtolower($b);
+			$slug = str_replace(" ", "-", $nt);
+
+			$in = array("name" => $b, "slug" => $slug);
+			$str = $this->db->insert_string("wp_terms", $in);
+
+			//echo "<P>" . $str;
+			if ($go) {
+				$this->db->query($str);
+			}
+			$id = $go ? $this->db->insert_id() : $ct;
+
+			echo "<br>array({$id}, '$b'),";
+			//$newbrands[$b] = $id;
+
+			$ct++;
+
+		}
+	}*/
 
 	function fixBrands() {
 		$a = $this->getBrands();
