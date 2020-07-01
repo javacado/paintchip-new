@@ -558,7 +558,7 @@ class Extractor extends CI_Controller {
 	function makeTags($go = 0) {
 		$tags = array(
 			"Georgian Water Mixable Oils",
-			"Gamblin Artist Colors",
+			"Gamblin Artist Oil Colors",
 			"Golden Artist Colors",
 			"Golden Fluid Acrylics",
 			"Golden Heavy Body Acrylics",
@@ -568,7 +568,7 @@ class Extractor extends CI_Controller {
 			"Winsor & Newton Cotman Water Colour",
 			"Winsor & Newton Winton Oil Colour",
 			"Winsor & Newton Galeria Acrylic",
-			"Daniel Smith Watercolors",
+			"Daniel Smith Extra-Fine Watercolors",
 			"Louvre Acrylic",
 			"LeFranc Guache",
 		);
