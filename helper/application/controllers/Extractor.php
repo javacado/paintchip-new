@@ -3638,11 +3638,11 @@ post_mime_type like image/jpeg
 			echo <<<EOT
 
 array(
-				"upc" => "{$upc}",
-				"meta_thumbnail_id" => "{$item->meta_thumbnail_id}",
-				"image_post_id" => "{$item->image_post_id}",
-				"product_post_id" => "{$item->product_post_id}",
-				"_wp_attachment_metadata_id" => "{$item->_wp_attachment_metadata_id}",
+				"upc" => "{$item['upc']}",
+				"meta_thumbnail_id" => "{$item['meta_thumbnail_id']}",
+				"image_post_id" => "{$item['image_post_id']}",
+				"product_post_id" => "{$item['product_post_id']}",
+				"_wp_attachment_metadata_id" => "{$item['_wp_attachment_metadata_id']}",
 				"new_image_url" => "$img",
 				"_wp_attached_file_id" => "",
 			),
