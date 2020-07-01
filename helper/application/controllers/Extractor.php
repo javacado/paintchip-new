@@ -3599,7 +3599,20 @@ post_mime_type like image/jpeg
 				continue;
 			}
 
-			echo "<p>https://www.upcitemdb.com/upc/" . $item['upc'];
+			$html = file_get_html("https://www.upcitemdb.com/upc/" . $item['upc']);
+
+			$d = $html->find('img.product');
+			if (count($d) == 0) {
+				continue;
+			}
+			$img = $d->sec;
+
+			$img = explode("?", $img);
+			$img = $img[0];
+
+			echo "<p>" . $img;
+
+			//echo "<p>https://www.upcitemdb.com/upc/" . $item['upc'];
 		}
 
 	}
