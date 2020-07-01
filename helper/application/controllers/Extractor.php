@@ -3590,16 +3590,16 @@ post_mime_type like image/jpeg
 		die(json_encode($out));
 	}
 
-	function loopimages() {
+	function loopimages($go = 0) {
 
 		$items = $this->getIarr();
 		$ct = 0;
 
 		foreach ($items as $item) {
 			$ct++;
-			if ($ct > 100) {
+			/*if ($ct > 100) {
 				die();
-			}
+			}*/
 
 			if (!$item['upc']) {
 				continue;
@@ -3635,7 +3635,22 @@ post_mime_type like image/jpeg
 			$img = explode("?", $img);
 			$img = $img[0];
 
-			echo "<p>" . $img;
+			echo <<<EOT
+
+array(
+				"upc" => "{$upc}",
+				"meta_thumbnail_id" => "{$item->meta_thumbnail_id}",
+				"image_post_id" => "{$item->image_post_id}",
+				"product_post_id" => "{$item->product_post_id}",
+				"_wp_attachment_metadata_id" => "{$item->_wp_attachment_metadata_id}",
+				"new_image_url" => "$img",
+				"_wp_attached_file_id" => "",
+			),
+
+
+EOT;
+
+			//echo "<br>" . '"' . $img . '",';
 
 			//echo "<p>https://www.upcitemdb.com/upc/" . $item['upc'];
 		}
