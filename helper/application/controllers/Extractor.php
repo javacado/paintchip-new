@@ -593,7 +593,7 @@ class Extractor extends CI_Controller {
 	function findImages() {
 
 		$arr = array();
-		$r = $this->db->query("SELECT * FROM `wp_postmeta`  where meta_value like '%width\";N%' limit 200");
+		$r = $this->db->query("SELECT * FROM `wp_postmeta`  where meta_value like '%width\";N%' ");
 		$rr = $r->result();
 		$r->free_result();
 
