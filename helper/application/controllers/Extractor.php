@@ -485,6 +485,17 @@ class Extractor extends CI_Controller {
 			$id = $go ? $this->db->insert_id() : $ct;
 			$newbrands[$b] = $id;
 
+			// create the Taxonomy connex
+
+			$in = array("term_id" => $id, "taxonomy" => "pwb-brand", "description" => "<h2>{$b}</h2>");
+			$str = $this->db->insert_string("wp_term_taxonomy", $in);
+
+			echo "<P>" . $str;
+			if ($go) {
+				$this->db->query($str);
+			}
+			///$id = $go ? $this->db->insert_id() : $ct;
+
 			$ct++;
 
 		}
@@ -512,7 +523,9 @@ class Extractor extends CI_Controller {
 					}
 					$used[] = $rrow->ID;
 					echo "<P>-- <strong>{$rrow->post_title}</strong> getting branded as <strong><i>{$row->brand}</i></strong>";
-					echo "<P>INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$rrow->ID}', '{$newbrands[$row->brand]}', '0');";
+					if ($go) {
+						$this->db->query("INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$rrow->ID}', '{$newbrands[$row->brand]}', '0');");
+					}
 				}
 
 				//echo ("<h3>Output</h3><pre>" . print_r($rr, 1) . "</pre>");
@@ -524,7 +537,7 @@ class Extractor extends CI_Controller {
 	function getBrands() {
 		$a = array(
 			array(1167, "Gamblin"),
-			array(1169, "Georgian Water Mixable Oil"),
+			array(1169, "Georgian"),
 			array(1170, "Liquitex", "Basic"),
 			array(1171, "Golden", "Artist Colors"),
 			/*array(1172, "Golden Fluid "),
@@ -536,10 +549,65 @@ class Extractor extends CI_Controller {
 			array(1175, "Liquitex", "Heavy Body"),
 			array(1176, "Daniel Smith", "Watercolor"),
 			array(1178, "LeFranc", "Gouache"),
-			array(1179, "Louvre Acrylic"),
+			array(1179, "Louvre"),
 		);
 
 		return $a;
+	}
+
+	function makeTags($go = 0) {
+		$tags = array(
+			"Georgian Water Mixable Oils",
+			"Gamblin Artist Colors",
+			"Golden Artist Colors",
+			"Golden Fluid Acrylics",
+			"Golden Heavy Body Acrylics",
+			"Golden High Flow Acrylics",
+			"Liquitex Basics",
+			"Liquitex Processional Heavy Body Acrylic",
+			"Winsor & Newton Cotman Water Colour",
+			"Winsor & Newton Winton Oil Colour",
+			"Winsor & Newton Galeria Acrylic",
+			"Daniel Smith Watercolors",
+			"Louvre Acrylic",
+			"LeFranc Guache",
+		);
+
+		$ct = 1;
+		$ntags = array();
+
+		foreach ($tags as $tag) {
+
+			$nt = strtolower($tag);
+			$nt = str_replace("& ", "", $nt);
+			$nt = str_replace("&", "", $nt);
+			$slug = str_replace(" ", "-", $nt);
+
+			//	$b = htmlentities($b);
+
+			$in = array("name" => $tag, "slug" => $slug);
+			$str = $this->db->insert_string("wp_terms", $in);
+
+			echo "<P>" . $str;
+			if ($go) {
+				$this->db->query($str);
+			}
+			$id = $go ? $this->db->insert_id() : $ct;
+			$ntags[$tag] = $id;
+
+			$in = array("term_id" => $id, "taxonomy" => "product_tag");
+			$str = $this->db->insert_string("wp_term_taxonomy", $in);
+
+			echo "<P>" . $str;
+			if ($go) {
+				$this->db->query($str);
+			}
+
+			$ct++;
+		}
+
+		die("<h3>Output</h3><pre>" . print_r($ntags, 1) . "</pre>");
+
 	}
 
 	/*
