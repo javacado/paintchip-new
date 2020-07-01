@@ -3594,6 +3594,7 @@ post_mime_type like image/jpeg
 
 		$items = $this->getIarr();
 		$ct = 0;
+		$cont = 0;
 
 		foreach ($items as $item) {
 			$ct++;
@@ -3602,6 +3603,7 @@ post_mime_type like image/jpeg
 			}*/
 
 			if (!$item['upc']) {
+				$cont++;
 				continue;
 			}
 
@@ -3654,6 +3656,8 @@ EOT;
 
 			//echo "<p>https://www.upcitemdb.com/upc/" . $item['upc'];
 		}
+
+		die("<h3>cont</h3><pre>" . print_r($cont, 1) . "</pre>");
 
 	}
 
