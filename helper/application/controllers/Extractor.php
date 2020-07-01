@@ -687,7 +687,8 @@ class Extractor extends CI_Controller {
 				}
 				$ex->free_result();
 				if (in_array($row->ID, $used)) {
-					echo "<P>-- ERROR - already assigned this post: {$row->post_title} for another brand, not {$ar[1]}";
+					//echo "<P>-- ERROR - already assigned this post: {$row->post_title} for another brand, not {$ar[1]}";
+					continue;
 				}
 				$used[] = $row->ID;
 				//echo "<P>-- <strong>{$row->post_title}</strong> getting branded as <strong><i>{$ar[1]} - {$str2}</i></strong>";
