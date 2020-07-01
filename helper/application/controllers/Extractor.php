@@ -3592,14 +3592,12 @@ post_mime_type like image/jpeg
 
 	function loopimages() {
 
-		$arrContextOptions=array(
-    "ssl"=>array(
-        "verify_peer"=>false,
-        "verify_peer_name"=>false,
-    ),
-); 
-
-
+		$arrContextOptions = array(
+			"ssl" => array(
+				"verify_peer" => false,
+				"verify_peer_name" => false,
+			),
+		);
 
 		$items = $this->getIarr();
 
@@ -3608,7 +3606,7 @@ post_mime_type like image/jpeg
 				continue;
 			}
 
-			$html = file_get_html("https://www.upcitemdb.com/upc/" . $item['upc'],  false, stream_context_create($arrContextOptions)));
+			$html = file_get_html("https://www.upcitemdb.com/upc/" . $item['upc'], false, stream_context_create($arrContextOptions));
 
 			$d = $html->find('img.product');
 			if (count($d) == 0) {
