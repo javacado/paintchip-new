@@ -534,6 +534,62 @@ class Extractor extends CI_Controller {
 		}
 		die("<h3>Brands</h3><pre>" . print_r($brands, 1) . "</pre>");
 	}
+
+	function fixTags($go = 0) {
+
+		$tags = array(
+			array(1319, "Georgian", "Water Mixable"),
+			array(1320, "Gamblin", "Artist Oil Colors"),
+			array(1321, "Golden", "Artist"),
+			array(1322, "Golden", "Fluid"),
+			array(1323, "Golden", "Heavy Body"),
+			array(1324, "Golden", "High Flow"),
+			array(1325, "Liquitex", "Basics"),
+			array(1326, "Liquitex", "Heavy Body"),
+			array(1327, "Winsor", "Cotman Water Colour"),
+			array(1328, "Winsor", "Winton Oil Colour"),
+			array(1329, "Winsor", "Galeria Acrylic"),
+			array(1330, "Daniel Smith", "Watercolors"),
+			array(1331, "Louvre", "Acrylic"),
+			array(1332, "LeFranc", "Guache"),
+		);
+
+		foreach ($tags as $ar) {
+			$str = $ar[1];
+			if (isset($ar[2])) {
+				$str2 = $ar[2];
+			} else {
+				$str2 = "";
+			}
+
+			$pt = "post_title like '%$str%'";
+			if (isset($ar[2])) {
+				$pt .= "and post_title like '%$str2%' ";
+			}
+
+			$q = "select * from wp_posts where post_type='product' and ($pt)";
+			$r = $this->db->query($q)->result();
+			foreach ($r as $row) {
+				/*$ex = $this->db->query('select * from wp_term_relationships where object_id=' . $row->ID . " and term_taxonomy_id in ($terma)");
+					if ($ex->num_rows() > 0) {
+						//echo "<P>-- ALREADY ASSIGNED IN DB - ({$row->post_title})";
+						continue;
+
+					}
+				*/
+				if (in_array($row->ID, $used)) {
+					//echo "<P>-- ERROR - already assigned this post: {$row->post_title} for another brand, not {$ar[1]}";
+					continue;
+				}
+				$used[] = $row->ID;
+				//echo "<P>-- <strong>{$row->post_title}</strong> getting branded as <strong><i>{$ar[1]} - {$str2}</i></strong>";
+				echo "<P>INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$row->ID}', '{$ar[0]}', '0');";
+			}
+
+		}
+
+	}
+
 	function getBrands() {
 		$a = array(
 			array(1167, "Gamblin"),
