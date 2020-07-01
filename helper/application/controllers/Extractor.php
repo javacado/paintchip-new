@@ -673,7 +673,7 @@ class Extractor extends CI_Controller {
 
 			$pt = "post_title like '%$str%'";
 			if (isset($ar[2])) {
-				$pt .= "and post_title like '%$str2%' ";
+				//$pt .= "and post_title like '%$str2%' ";
 			}
 
 			$q = "select * from wp_posts where post_type='product' and ($pt)";
@@ -681,7 +681,7 @@ class Extractor extends CI_Controller {
 			foreach ($r as $row) {
 				$ex = $this->db->query('select * from wp_term_relationships where object_id=' . $row->ID . " and term_taxonomy_id in ($terma)");
 				if ($ex->num_rows() > 0) {
-					echo "<P>-- ALREADY ASSIGNED IN DB - ({$row->post_title})";
+					//echo "<P>-- ALREADY ASSIGNED IN DB - ({$row->post_title})";
 					continue;
 
 				}
@@ -690,7 +690,7 @@ class Extractor extends CI_Controller {
 					echo "<P>-- ERROR - already assigned this post: {$row->post_title} for another brand, not {$ar[1]}";
 				}
 				$used[] = $row->ID;
-				echo "<P>-- <strong>{$row->post_title}</strong> getting branded as <strong><i>{$ar[1]} - {$str2}</i></strong>";
+				//echo "<P>-- <strong>{$row->post_title}</strong> getting branded as <strong><i>{$ar[1]} - {$str2}</i></strong>";
 				echo "<P>INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$row->ID}', '{$ar[0]}', '0');";
 			}
 
