@@ -3593,8 +3593,14 @@ post_mime_type like image/jpeg
 	function loopimages() {
 
 		$items = $this->getIarr();
+		$ct = 0;
 
 		foreach ($items as $item) {
+			$ct++;
+			if ($ct > 100) {
+				die();
+			}
+
 			if (!$item['upc']) {
 				continue;
 			}
@@ -3624,7 +3630,7 @@ post_mime_type like image/jpeg
 			if (count($d) == 0) {
 				continue;
 			}
-			$img = $d->sec;
+			$img = $d->src;
 
 			$img = explode("?", $img);
 			$img = $img[0];
