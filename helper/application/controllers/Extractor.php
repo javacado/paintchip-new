@@ -590,6 +590,81 @@ class Extractor extends CI_Controller {
 
 	}
 
+	function findImages() {
+
+		$arr = array();
+		$r = $this->db->query("SELECT * FROM `wp_postmeta`  where meta_value like '%width\";N%' limit 200");
+		$rr = $r->result();
+		$r->free_result();
+
+		foreach ($rr as $row) {
+
+			// this post id is the image post
+			// we'll test it to make sure there's an WP_POST image associated with it
+			$q = $this->db->query("select * from wp_posts where ID=" . $row->post_id);
+			$imgp = $q->result();
+			$q->free_result();
+			if (count($imgp) == 0) {
+				echo "<p>-- continueing, no iamge post";
+				continue;
+			}
+
+			// each of these is a broken image
+			// find the post id so we can get the upc
+			$r = $this->db->query("SELECT * FROM `wp_postmeta`  where meta_key='_thumbnail_id' and meta_value=" . $row->post_id);
+			$pm = $r->result();
+			$r->free_result();
+
+			if (count($pm) == 0) {
+				echo "<p>-- continuing, no _thumbnail_id ";
+				continue;
+			}
+
+			// now we have the actual post ID, make sure there is a post
+			$the_post_id = $pm[0]->post_id;
+
+			$r = $this->db->query("SELECT * FROM `wp_postmeta`  where meta_key='_wpm_gtin_code' and post_id=" . $the_post_id);
+			$pp = $r->row();
+
+			$upc = $pp->meta_value;
+			$r->free_result();
+			foreach ($pm as $p) {
+
+				$arr[] = array(
+					"upc" => $upc,
+					"meta_thumbnail_id" => $p->meta_id,
+					"image_post_id" => $row->post_id,
+					"product_post_id" => $the_post_id,
+					"_wp_attachment_metadata_id" => $row->meta_id,
+					"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
+				);
+
+/*
+
+// update:::
+get new image
+-- update wp_postmeta _wp_attachment_metadata with values like
+a:5:{s:5:"width";N;s:6:"height";N;s:4:"file";s:27:"2020/05/images-tb-56555.jpg";s:5:"sizes";a:0:{}s:10:"image_meta";a:12:{s:8:"aperture";i:0;s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";i:0;s:9:"copyright";s:0:"";s:12:"focal_length";i:0;s:3:"iso";i:0;s:13:"shutter_speed";i:0;s:5:"title";s:36:"DUAL BRUSH PEN REFLEX BLUE (ABT 493)";s:11:"orientation";i:0;s:8:"keywords";a:0:{}}}
+-- update wp_postmeta _wp_attached_file with values like
+2020/05/images-tb-56555.jpg
+
+-- update wp_posts with
+post_title like mc21120_t
+post_name like  mc21120_t
+guid like https://thepaint-chip.com/wp-content/uploads/2020/06/MC21120_t.png
+post_mime_type like image/jpeg
+
+ */
+
+			}
+
+			// get post UID
+		}
+
+		die("<h3>Output</h3><pre>" . print_r($arr, 1) . "</pre>");
+
+	}
+
 	function getBrands() {
 		$a = array(
 			array(1167, "Gamblin"),
