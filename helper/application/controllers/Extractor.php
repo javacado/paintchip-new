@@ -3618,7 +3618,7 @@ post_mime_type like image/jpeg
 			$content = curl_exec($ch);
 			curl_close($ch);
 
-			$html = file_get_html($content);
+			$html = str_get_html($content);
 
 			$d = $html->find('img.product');
 			if (count($d) == 0) {
