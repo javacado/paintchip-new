@@ -538,20 +538,20 @@ class Extractor extends CI_Controller {
 	function fixTags($go = 0) {
 
 		$tags = array(
-			array(1319, "Georgian", "Water Mixable"),
-			array(1320, "Gamblin", "Artist Oil Colors"),
-			array(1321, "Golden", "Artist"),
-			array(1322, "Golden", "Fluid"),
-			array(1323, "Golden", "Heavy Body"),
-			array(1324, "Golden", "High Flow"),
-			array(1325, "Liquitex", "Basics"),
-			array(1326, "Liquitex", "Heavy Body"),
-			array(1327, "Winsor", "Cotman Water Colour"),
-			array(1328, "Winsor", "Winton Oil Colour"),
-			array(1329, "Winsor", "Galeria Acrylic"),
-			array(1330, "Daniel Smith", "Watercolors"),
-			array(1331, "Louvre", "Acrylic"),
-			array(1332, "LeFranc", "Guache"),
+			array(1327, "Winsor", "Cotman"),
+			array(1328, "Winsor", "Oil"),
+			/*array(1319, "Georgian", "Water Mixable"),
+				array(1320, "Gamblin", "Artist Oil Colors"),
+				array(1321, "Golden", "Artist"),
+				array(1322, "Golden", "Fluid"),
+				array(1323, "Golden", "Heavy Body"),
+				array(1324, "Golden", "High Flow"),
+				array(1325, "Liquitex", "Basics"),
+				array(1326, "Liquitex", "Heavy Body"),
+				array(1329, "Winsor", "Galeria Acrylic"),
+				array(1330, "Daniel Smith", "Watercolors"),
+				array(1331, "Louvre", "Acrylic"),
+			*/
 		);
 
 		foreach ($tags as $ar) {
@@ -570,13 +570,13 @@ class Extractor extends CI_Controller {
 			$q = "select * from wp_posts where post_type='product' and ($pt)";
 			$r = $this->db->query($q)->result();
 			foreach ($r as $row) {
-				/*$ex = $this->db->query('select * from wp_term_relationships where object_id=' . $row->ID . " and term_taxonomy_id in ($terma)");
-					if ($ex->num_rows() > 0) {
-						//echo "<P>-- ALREADY ASSIGNED IN DB - ({$row->post_title})";
-						continue;
+				$ex = $this->db->query('select * from wp_term_relationships where object_id=' . $row->ID . " and term_taxonomy_id in ($terma)");
+				if ($ex->num_rows() > 0) {
+					echo "<P>-- ALREADY ASSIGNED IN DB - ({$row->post_title})";
+					continue;
 
-					}
-				*/
+				}
+				/**/
 				if (in_array($row->ID, $used)) {
 					//echo "<P>-- ERROR - already assigned this post: {$row->post_title} for another brand, not {$ar[1]}";
 					continue;
