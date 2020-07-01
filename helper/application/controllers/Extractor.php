@@ -445,22 +445,35 @@ class Extractor extends CI_Controller {
 	}
 
 	function macBrands($go = 0) {
+		$newbrands = array();
+		$newbrandsy = array();
+		$a = $this->getBrands();
+		foreach ($a as $aa) {
+			$newbrands[$aa[1]] = $aa[0];
+			$newbrandsy[] = $aa[1];
+
+		}
+
+		//die("<h3>Output</h3><pre>" . print_r($ex, 1) . "</pre>");
 		$q = "select * from jt_mac_data where data='DONE'";
 		$r = $this->db->query($q)->result();
 
 		$brands = array();
 		foreach ($r as $row) {
-			if (!in_array($row->brand, $brands)) {
+			if (!in_array($row->brand, $brands) && !in_array($row->brand, $newbrandsy)) {
 				$brands[] = $row->brand;
 			}
 
 		}
-		$newbrands = array();
 		$ct = 1;
 		foreach ($brands as $b) {
 
 			$nt = strtolower($b);
+			$nt = str_replace("& ", "", $nt);
+			$nt = str_replace("&", "", $nt);
 			$slug = str_replace(" ", "-", $nt);
+
+			//	$b = htmlentities($b);
 
 			$in = array("name" => $b, "slug" => $slug);
 			$str = $this->db->insert_string("wp_terms", $in);
@@ -511,23 +524,39 @@ class Extractor extends CI_Controller {
 	function getBrands() {
 		$a = array(
 			array(1167, "Gamblin"),
-			array(1168, "Winsor", "Oil"),
 			array(1169, "Georgian Water Mixable Oil"),
 			array(1170, "Liquitex", "Basic"),
-			array(1171, "Golden Artist Colors"),
-			array(1172, "Golden Fluid "),
-			array(1173, "Golden High"),
-			array(1174, "Winsor", "Acrylic"),
+			array(1171, "Golden", "Artist Colors"),
+			/*array(1172, "Golden Fluid "),
+				array(1180, "Golden Heavy Body"),
+			*/
+			array(1174, "Winsor & Newton", "Acrylic"),
+			/*array(1168, "Winsor", "Oil"),
+			array(1177, "Winsor", "Water"),*/
 			array(1175, "Liquitex", "Heavy Body"),
 			array(1176, "Daniel Smith", "Watercolor"),
-			array(1177, "Winsor", "Water"),
 			array(1178, "LeFranc", "Gouache"),
 			array(1179, "Louvre Acrylic"),
-			array(1180, "Golden Heavy Body"),
 		);
 
 		return $a;
 	}
+
+	/*
+
+		Golden Artist Colors
+		Golden Fluid Acrylics
+		Golden Heavy Body Acrylics
+		Golden High Flow Acrylics
+
+		Liquitex Basics
+		Liquitex Processional Heavy Body Acrylic
+
+		Winsor & Newton Cotman Water Colour
+		Winsor & Newton Winton Oil Colour
+		Winsor & Newton Galeria Acrylic
+
+	*/
 
 	/*function addBrands($go = 0) {
 		$brands = array(
