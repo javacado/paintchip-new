@@ -570,12 +570,12 @@ class Extractor extends CI_Controller {
 			$q = "select * from wp_posts where post_type='product' and ($pt)";
 			$r = $this->db->query($q)->result();
 			foreach ($r as $row) {
-				$ex = $this->db->query('select * from wp_term_relationships where object_id=' . $row->ID . " and term_taxonomy_id in ($terma)");
-				if ($ex->num_rows() > 0) {
-					echo "<P>-- ALREADY ASSIGNED IN DB - ({$row->post_title})";
-					continue;
+				/*$ex = $this->db->query('select * from wp_term_relationships where object_id=' . $row->ID . " and term_taxonomy_id in ($terma)");
+					if ($ex->num_rows() > 0) {
+						echo "<P>-- ALREADY ASSIGNED IN DB - ({$row->post_title})";
+						continue;
 
-				}
+				*/
 				/**/
 				if (in_array($row->ID, $used)) {
 					//echo "<P>-- ERROR - already assigned this post: {$row->post_title} for another brand, not {$ar[1]}";
