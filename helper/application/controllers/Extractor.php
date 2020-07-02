@@ -3628,7 +3628,7 @@ post_mime_type like image/jpeg
 			}
 
 			$url = "https://www.upcitemdb.com/upc/" . $item['upc'];
-
+			$url = "https://api.barcodespider.com/v1/lookup?token=f9ef1f0279e7b37de96b&upc=" . $item['upc'];
 			$put[] = $url;
 			//, false, stream_context_create($arrContextOptions));
 
@@ -3648,7 +3648,7 @@ post_mime_type like image/jpeg
 			curl_setopt_array($ch, $options);
 			$content = curl_exec($ch);
 			curl_close($ch);
-
+			die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
 			$html = str_get_html($content);
 
 			$d = $html->find('img.product');
