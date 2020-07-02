@@ -106,7 +106,7 @@ for ($x = 1; $x < 15; $x++) {?>
 -->
 
  <button class='btn btn-danger btn-sm pull-right' onclick='stoploop()'>Stop Image LLOOP</button>
- <button class='btn btn-success btn-sm pull-right' onclick='loopimages(0)'>Get Missing Images</button>
+ <button class='btn btn-success btn-sm pull-right' onclick='loopimages(10)'>Get Missing Images</button>
 
 
 
@@ -279,7 +279,7 @@ setTimeout(function() {
     loopimages(res.startat);
 }
 
-}, 6000);
+}, 2100);
        }
     })
 }
