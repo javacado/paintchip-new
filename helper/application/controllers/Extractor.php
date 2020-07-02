@@ -304,6 +304,12 @@ class Extractor extends CI_Controller {
 		$data = json_decode($row->data);
 		$item = json_decode(json_encode($data->item), 1);
 
+		$img_title = null;
+
+		$pp = $this->db->query('select * from wp_posts where ID=' . $item['product_post_id'])->row();
+		if ($pp) {
+			$img_title = $pp->post_title;
+		}
 		$img = $row->imagetoget;
 		$iname = explode("/", $img);
 		$iname = $iname[count($iname) - 1];
