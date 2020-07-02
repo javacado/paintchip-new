@@ -3653,7 +3653,7 @@ post_mime_type like image/jpeg
 					die();
 				}
 				//die("<h3>NO IMAGE</h3><pre>" . print_r($content, 1) . "</pre>");
-				$ct++;
+				//$ct++;
 				$cont++;
 				continue;
 
@@ -3676,7 +3676,7 @@ post_mime_type like image/jpeg
 
 			if (!file_exists($dest)) {
 
-				$ct++;
+				//$ct++;
 				continue;
 				die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
 			}
