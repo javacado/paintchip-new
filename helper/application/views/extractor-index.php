@@ -105,7 +105,7 @@ for ($x = 1; $x < 15; $x++) {?>
 
 -->
 
- <button class='btn btn-success btn-sm pull-right' onclick='loopimages(56)'>Get Missing Images</button>
+ <button class='btn btn-success btn-sm pull-right' onclick='loopimages(74)'>Get Missing Images</button>
 
 
 
