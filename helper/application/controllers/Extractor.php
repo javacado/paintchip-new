@@ -3624,6 +3624,8 @@ post_mime_type like image/jpeg
 
 			if (!$item['upc']) {
 				$put[] = "NO UPC";
+				$puts[] = $put;
+
 				$cont++;
 				continue;
 			}
@@ -3663,6 +3665,12 @@ post_mime_type like image/jpeg
 
 			$json = json_decode($content);
 			if ($json->item_response->code != 200) {
+				$write = array("item" => $item, "response" => $content, "url" => $endpoint . "?token=f9ef1f0279e7b37de96b&upc=" . $item['upc']);
+				$aaa = array("data" => json_encode($write), "upc" => $item['upc']);
+				$this->db->insert("jt_noimg", $aaa);
+				$put[] = "Did not find page on api";
+				$puts[] = $put;
+				continue;
 				die("<h3>BAD response</h3><pre>" . print_r($json, 1) . "</pre>");
 			}
 
@@ -3693,6 +3701,12 @@ post_mime_type like image/jpeg
 
 			if (!$img) {
 				$put[] = "NO IMAGE at UPC";
+				$puts[] = $put;
+
+				$write = array("item" => $item, "response" => $content, "url" => $endpoint . "?token=f9ef1f0279e7b37de96b&upc=" . $item['upc']);
+				$aaa = array("data" => json_encode($write), "upc" => $item['upc']);
+				$this->db->insert("jt_noimg", $aaa);
+
 				//die("<h3>NO IMAGE</h3><pre>" . print_r($content, 1) . "</pre>");
 				//$ct++;
 				$cont++;
@@ -3745,6 +3759,10 @@ post_mime_type like image/jpeg
 
 			if (!file_exists($dest)) {
 				$put[] = "image did not download";
+				$puts[] = $put;
+				$write = array("item" => $item, "response" => $content, "url" => $endpoint . "?token=f9ef1f0279e7b37de96b&upc=" . $item['upc']);
+				$aaa = array("data" => json_encode($write), "upc" => $item['upc']);
+				$this->db->insert("jt_noimg", $aaa);
 
 				//$ct++;
 				continue;
