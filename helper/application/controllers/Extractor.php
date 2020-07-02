@@ -352,6 +352,10 @@ class Extractor extends CI_Controller {
 
 		$sz = getimagesize($dest);
 
+		if (!$sz) {
+			die("<h3>Output</h3><pre>" . print_r($dest, 1) . "</pre>");
+		}
+
 		$img_meta = array(
 
 			"width" => $sz[0],
