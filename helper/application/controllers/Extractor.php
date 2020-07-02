@@ -3649,7 +3649,8 @@ post_mime_type like image/jpeg
 			$d = $html->find('img.product');
 			if (count($d) == 0) {
 				if (strpos(strtolower($content), "slow down") !== false) {
-					sleep(5);
+					echo json_encode(array("startat" => $ct));
+					die();
 				}
 				//die("<h3>NO IMAGE</h3><pre>" . print_r($content, 1) . "</pre>");
 				$ct++;
