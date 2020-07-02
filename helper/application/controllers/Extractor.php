@@ -3726,8 +3726,8 @@ post_mime_type like image/jpeg
 				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
 			}
 
-			$up = array("post_title" => $ipostname, "post_name" => $ipostname, "guid" => $gurl, "post_mime" => $mime);
-			$uuup = $this->db->update("wp_posts", $up, array("ID" => $item['product_post_id']));
+			$up = array("post_title" => $ipostname, "post_name" => $ipostname, "guid" => $gurl, "post_mime_type" => $mime);
+			$uuup = $this->db->update("wp_posts", $up, array("ID" => $item['image_post_id']));
 
 			if (!$uuup) {
 				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
