@@ -293,7 +293,7 @@ class Extractor extends CI_Controller {
 
 		$ct = 0;
 
-		$q = "select * from jt_noimg where id>$last_id and supplier='MAC' and imgtoget='' limit 1";
+		$q = "select * from jt_noimg where id>$last_id and supplier='MAC' and imagetoget='' limit 1";
 		$r = $this->db->query($q);
 		if ($r->num_rows() == 0) {
 			die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
