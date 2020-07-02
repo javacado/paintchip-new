@@ -3877,6 +3877,20 @@ EOT;
 
 	}
 
+	function upnoimg() {
+		$q = "select * from jt_noimg where sku=''";
+		$r = $this->db->query($q)->result();
+		foreach ($r as $row) {
+			$qq = "select * from jt_supplier_data where upc ='" . $row->upc . "'";
+			$rr = $this->db->query($qq);
+			if ($rr->num_rows() > 0) {
+				$this->db->update('jt_noimg', array("supplier" => "SLS", "sku" => $rr->row()->sku), array("id" => $row->id));
+
+			}
+			$rr->free_result();
+		}
+	}
+
 	function fixslugs() {
 		$q = "SELECT * FROM `wp_posts` where post_name like '%-'";
 		$r = $this->db->query($q)->result();
