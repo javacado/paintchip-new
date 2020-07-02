@@ -260,7 +260,7 @@ function loopimages(index) {
 
 
  $.ajax({
-        url: "/helper/extractor/loopimages/",
+        url: "/helper/extractor/loopimages/"+index,
         context: document.body,
         method: 'get'
     }).done(function(res) {
