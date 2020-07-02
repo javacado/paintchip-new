@@ -3635,8 +3635,16 @@ post_mime_type like image/jpeg
 
 			$ch = curl_init();
 
+			$headers = array(
+				'token' => "f9ef1f0279e7b37de96b",
+				'Host' => "api.barcodespider.com",
+				'Accept-Encoding' => "gzip, deflate",
+				'Connection' => "keep-alive",
+				'cache-control' => "no-cache",
+			);
+
 			curl_setopt_array($ch, array(
-				CURLOPT_URL => $endpoint . "?upc=" . $item['upc'],
+				CURLOPT_URL => $endpoint . "?token=f9ef1f0279e7b37de96b&upc=" . $item['upc'],
 				CURLOPT_SSL_VERIFYHOST => 0, // do not return headers
 				CURLOPT_SSL_VERIFYPEER => 0, // do not return headers
 				CURLOPT_RETURNTRANSFER => true,
@@ -3646,7 +3654,7 @@ post_mime_type like image/jpeg
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 				CURLOPT_CUSTOMREQUEST => "GET",
 				CURLOPT_POSTFIELDS => "",
-				CURLOPT_HTTPHEADER => "token: f9ef1f0279e7b37de96b",
+				CURLOPT_HTTPHEADER => $headers,
 			));
 
 			$content = curl_exec($ch);
@@ -3657,8 +3665,10 @@ post_mime_type like image/jpeg
 				die("<h3>BAD response</h3><pre>" . print_r($json, 1) . "</pre>");
 			}
 
-			$imgs = array();
+			die("<h3>Output</h3><pre>" . print_r($json, 1) . "</pre>");
 
+			$imgs = array();
+			$img = null;
 			if ($json->item_attributes->image) {
 				$imgs[] = $json->item_attributes->image;
 			}
@@ -3667,9 +3677,25 @@ post_mime_type like image/jpeg
 
 				foreach ($json->Stores as $store) {
 					if ($store->image) {
-						$imgs[] = $store->image;
+						if (strpos($store->store_name, "Amazon") !== false) {
+							$img = $store->image;
+						} else {
+							$imgs[] = $store->image;
+						}
 					}
 				}
+			}
+
+			if (!$img && count($imgs) > 0) {
+				$img = $imgs[count($imgs) - 1];
+			}
+
+			if (!$img) {
+				$put[] = "NO IMAGE at UPC";
+				//die("<h3>NO IMAGE</h3><pre>" . print_r($content, 1) . "</pre>");
+				//$ct++;
+				$cont++;
+				continue;
 			}
 
 			/*
@@ -3697,93 +3723,93 @@ post_mime_type like image/jpeg
 
 			*/
 
-			foreach ($imgs as $img) {
+			//foreach ($imgs as $img) {
 
-				$iname = explode("/", $img);
-				$iname = $iname[count($iname) - 1];
+			$iname = explode("/", $img);
+			$iname = $iname[count($iname) - 1];
 
-				$ipostname = explode(".", $iname);
-				$ext = strtolower($ipostname[count($ipostname) - 1]);
-				$ipostname = $ipostname[0];
+			$ipostname = explode(".", $iname);
+			$ext = strtolower($ipostname[count($ipostname) - 1]);
+			$ipostname = $ipostname[0];
 
-				$iloc = "2020/06/" . $iname;
-				$dest = $_SERVER['DOCUMENT_ROOT'] . "/wp-content/uploads/" . $iloc;
-				$this->getImage($img, $dest);
+			$iloc = "2020/06/" . $iname;
+			$dest = $_SERVER['DOCUMENT_ROOT'] . "/wp-content/uploads/" . $iloc;
+			$this->getImage($img, $dest);
 
-				if (!file_exists($dest)) {
-					$put[] = "image did not download";
+			if (!file_exists($dest)) {
+				$put[] = "image did not download";
 
-					//$ct++;
-					continue;
-					die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
-				}
-				$put[] = "downloaded: $iloc";
-
-				$gurl = "https://thepaint-chip.com/wp-content/uploads/" . $iloc;
-				$mime = "";
-				if ($ext == "jpg" || $ext == "jpeg") {
-					$mime = "image/jpeg";
-				} else if ($ext == "png") {
-					$mime = "image/png";
-
-				} else if ($ext == "gif") {
-					$mime = "image/gif";
-
-				}
-
-				$sz = getimagesize($dest);
-
-				$img_meta = array(
-
-					"width" => $sz[0],
-					"height" => $sz[1],
-					"file" => $iloc,
-					"sizes" => Array
-					(
-					),
-
-					"image_meta" => Array
-					(
-						"aperture" => 0,
-						"credit" => "",
-						"camera" => "",
-						"caption" => "",
-						"created_timestamp" => 0,
-						"copyright" => "",
-						"focal_length" => 0,
-						"iso" => 0,
-						"shutter_speed" => 0,
-						"title" => $iname,
-						"orientation" => 0,
-						"keywords" => Array
-						(
-						),
-
-					),
-				);
-				$img_meta = serialize($img_meta);
-
-				$up = array("meta_value" => $img_meta);
-				$uuup = $this->db->update("wp_postmeta", $up, array("meta_id" => $item['_wp_attachment_metadata_id']));
-				if (!$uuup) {
-					die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
-				}
-
-				$up = array("meta_value" => $iloc);
-				$uuup = $this->db->update("wp_postmeta", $up, array("meta_key" => "_wp_attached_file", "post_id" => $item['image_post_id']));
-				if (!$uuup) {
-					die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
-				}
-
-				$up = array("post_title" => $ipostname, "post_name" => $ipostname, "guid" => $gurl, "post_mime_type" => $mime);
-				$uuup = $this->db->update("wp_posts", $up, array("ID" => $item['image_post_id']));
-
-				if (!$uuup) {
-					die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
-				}
-
-				$put[] = "did everything image: $iloc";
+				//$ct++;
+				continue;
+				die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
 			}
+			$put[] = "downloaded: $iloc";
+
+			$gurl = "https://thepaint-chip.com/wp-content/uploads/" . $iloc;
+			$mime = "";
+			if ($ext == "jpg" || $ext == "jpeg") {
+				$mime = "image/jpeg";
+			} else if ($ext == "png") {
+				$mime = "image/png";
+
+			} else if ($ext == "gif") {
+				$mime = "image/gif";
+
+			}
+
+			$sz = getimagesize($dest);
+
+			$img_meta = array(
+
+				"width" => $sz[0],
+				"height" => $sz[1],
+				"file" => $iloc,
+				"sizes" => Array
+				(
+				),
+
+				"image_meta" => Array
+				(
+					"aperture" => 0,
+					"credit" => "",
+					"camera" => "",
+					"caption" => "",
+					"created_timestamp" => 0,
+					"copyright" => "",
+					"focal_length" => 0,
+					"iso" => 0,
+					"shutter_speed" => 0,
+					"title" => $iname,
+					"orientation" => 0,
+					"keywords" => Array
+					(
+					),
+
+				),
+			);
+			$img_meta = serialize($img_meta);
+
+			$up = array("meta_value" => $img_meta);
+			$uuup = $this->db->update("wp_postmeta", $up, array("meta_id" => $item['_wp_attachment_metadata_id']));
+			if (!$uuup) {
+				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+			}
+
+			$up = array("meta_value" => $iloc);
+			$uuup = $this->db->update("wp_postmeta", $up, array("meta_key" => "_wp_attached_file", "post_id" => $item['image_post_id']));
+			if (!$uuup) {
+				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+			}
+
+			$up = array("post_title" => $ipostname, "post_name" => $ipostname, "guid" => $gurl, "post_mime_type" => $mime);
+			$uuup = $this->db->update("wp_posts", $up, array("ID" => $item['image_post_id']));
+
+			if (!$uuup) {
+				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+			}
+
+			$put[] = "did everything image: $iloc";
+			//}
 
 /*
 
