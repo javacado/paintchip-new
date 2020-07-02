@@ -311,6 +311,9 @@ class Extractor extends CI_Controller {
 			$img_title = $pp->post_title;
 		}
 		$img = $row->imagetoget;
+		$img = explode("?", $img);
+		$img = $img[0];
+
 		$iname = explode("/", $img);
 		$iname = $iname[count($iname) - 1];
 
