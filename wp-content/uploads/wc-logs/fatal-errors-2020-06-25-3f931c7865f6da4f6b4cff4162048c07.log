@@ -1,0 +1,10 @@
+2020-06-25T21:21:41+00:00 CRITICAL Out of memory (allocated 4456448) (tried to allocate 4718592 bytes) in /var/www/html/paintchip/wp-content/plugins/wd-facebook-feed/framework/WDFacebookFeed.php on line 323
+
+2020-06-25T21:21:44+00:00 CRITICAL Out of memory (allocated 25690112) (tried to allocate 32768 bytes) in /var/www/html/paintchip/wp-content/plugins/woocommerce/packages/woocommerce-admin/src/API/ProductCategories.php on line 1
+
+2020-06-25T21:41:33+00:00 CRITICAL Out of memory (allocated 4456448) (tried to allocate 4718592 bytes) in /var/www/html/paintchip/wp-content/plugins/wd-facebook-feed/framework/WDFacebookFeed.php on line 329
+
+2020-06-25T21:41:45+00:00 CRITICAL Out of memory (allocated 6815744) (tried to allocate 20480 bytes) in /var/www/html/paintchip/wp-includes/functions.php on line 4363
+
+2020-06-25T22:31:19+00:00 CRITICAL Out of memory (allocated 15204352) (tried to allocate 147456 bytes) in /var/www/html/paintchip/wp-includes/plugin.php on line 111
+
