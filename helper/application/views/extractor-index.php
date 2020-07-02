@@ -274,14 +274,14 @@ $.ajax({
     }).done(function(res) {
         res = JSON.parse(res)
         console.log(res);
-       if (res.last_id) {
+       if (res.this_id) {
 
 setTimeout(function() {
 
     scrapeMacImg(res.this_id);
 
 
-}, 1000);
+}, 100);
        }
     })
 }
