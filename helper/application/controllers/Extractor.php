@@ -359,15 +359,12 @@ class Extractor extends CI_Controller {
 		$item['description'] = $desc;
 		$imagetoget = "";
 
-		$a = $d[0]->find('a');
+		$a = $html->find('img#mainProdImg1');
 		if (count($a) > 0) {
-			$a = $a->href;
-			if ($a) {
-				$iname = explode("/", $a);
-				$iname = $iname[count($iname) - 1];
-				$imagetoget = "https://www.macphersonart.com" . $a;
-			}
+			$imagetoget = $a->src;
+
 		} else {
+			die("<h3>Output</h3><pre>" . print_r("nadad", 1) . "</pre>");
 			$a = $d[0]->find('img');
 			if (count($a) > 0) {
 				$a = $a->src;
