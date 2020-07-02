@@ -289,9 +289,19 @@ class Extractor extends CI_Controller {
 
 	}
 
-	function scrapeMacImg($sku) {
+	function scrapeMacImg($last_id = 0) {
+
 		$ct = 0;
 
+		$q = "select * from jt_noimg where id>$last_id and supplier='MAC' limit 1";
+		$r = $this->db->query($q);
+		if ($r->num_rows() == 0) {
+			die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
+		}
+		$row = $r->row();
+		$r->free_result();
+		$sku = $row->sku;
+		$id = $row->id;
 		$url = "https://www.macphersonart.com/cgi-bin/maclive/wam_tmpl/catalog_browse.p?site=MAC&layout=Responsive&page=catalog_browse&searchText=" . $sku;
 		//echo "<P> starting $ct";
 		$res = array();
@@ -362,7 +372,9 @@ class Extractor extends CI_Controller {
 		$a = $html->find('img#mainProdImg1');
 		if (count($a) > 0) {
 			$imagetoget = "https://www.macphersonart.com" . $a->src;
-
+			$this->db->update("jt_noimg", array("imagetoget" => $imagetoget), array("id" => $id));
+			echo json_encode(array("this_id" => $id));
+			return;
 		} else {
 			die("<h3>Output</h3><pre>" . print_r("nadad", 1) . "</pre>");
 			$a = $d[0]->find('img');
