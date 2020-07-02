@@ -387,7 +387,7 @@ class Extractor extends CI_Controller {
 
 			die("<h3>NO IMG</h3><pre>" . print_r($d[0]->innerText, 1) . "</pre>");
 		}
-		die("<h3>Output</h3><pre>" . print_r("DD", 1) . "</pre>");
+		die("<h3>Output</h3><pre>" . print_r($imagetoget, 1) . "</pre>");
 		if (!file_exists($_SERVER['DOCUMENT_ROOT'] . "/helper/uploads/{$iname}")) {
 			$up = $this->getImage($imagetoget, $iname);
 			if (!$up) {
