@@ -300,8 +300,8 @@ class Extractor extends CI_Controller {
 		$id = $row->id;
 
 		$data = json_decode($row->data);
-
-		die("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
+		$item = json_decode(json_encode($data->item), 1);
+		die("<h3>Output</h3><pre>" . print_r($item, 1) . "</pre>");
 		$img = $row->imagetoget;
 		$iname = explode("/", $img);
 		$iname = $iname[count($iname) - 1];
