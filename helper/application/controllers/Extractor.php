@@ -3627,7 +3627,10 @@ post_mime_type like image/jpeg
 				continue;
 			}
 
-			$url = "https://www.upcitemdb.com/upc/" . $item['upc']; //, false, stream_context_create($arrContextOptions));
+			$url = "https://www.upcitemdb.com/upc/" . $item['upc'];
+
+			$put['url'] = $url;
+			//, false, stream_context_create($arrContextOptions));
 
 			$options = array(
 				CURLOPT_RETURNTRANSFER => true, // return web page
