@@ -3731,6 +3731,10 @@ post_mime_type like image/jpeg
 			$iname = explode("/", $img);
 			$iname = $iname[count($iname) - 1];
 
+			if (!$img_title) {
+				$img_title = $iname;
+			}
+
 			$ipostname = explode(".", $iname);
 			$ext = strtolower($ipostname[count($ipostname) - 1]);
 			$ipostname = $ipostname[0];
@@ -3782,7 +3786,7 @@ post_mime_type like image/jpeg
 					"focal_length" => 0,
 					"iso" => 0,
 					"shutter_speed" => 0,
-					"title" => $iname,
+					"title" => $img_title,
 					"orientation" => 0,
 					"keywords" => Array
 					(
