@@ -3600,6 +3600,8 @@ post_mime_type like image/jpeg
 		$cont = 0;
 		$num = 3;
 
+		$put = array();
+
 		foreach ($items as $item) {
 
 			if ($ct < $startindex) {
@@ -3607,9 +3609,9 @@ post_mime_type like image/jpeg
 				continue;
 			} else if ($ct == $startindex + $num || $ct == count($items)) {
 				if ($ct == count($items)) {
-					echo json_encode(array("startat" => "done"));
+					echo json_encode(array("startat" => "done", "put" => $put));
 				} else {
-					echo json_encode(array("startat" => $ct));
+					echo json_encode(array("startat" => $ct, "put" => $put));
 
 				}
 				die();
@@ -3620,7 +3622,7 @@ post_mime_type like image/jpeg
 			}*/
 
 			if (!$item['upc']) {
-
+				$put[] = "NO UPC";
 				$cont++;
 				continue;
 			}
@@ -3648,7 +3650,9 @@ post_mime_type like image/jpeg
 
 			$d = $html->find('img.product');
 			if (count($d) == 0) {
+				$put[] = "did not find image";
 				if (strpos(strtolower($content), "slow down") !== false) {
+					$put[] = "slowdown";
 					echo json_encode(array("startat" => $ct));
 					die();
 				}
@@ -3675,6 +3679,7 @@ post_mime_type like image/jpeg
 			$this->getImage($img, $dest);
 
 			if (!file_exists($dest)) {
+				$put[] = "image did not reacfer";
 
 				//$ct++;
 				continue;
@@ -3743,6 +3748,8 @@ post_mime_type like image/jpeg
 			if (!$uuup) {
 				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
 			}
+
+			$put[] = "did everything image: $iloc";
 
 /*
 
