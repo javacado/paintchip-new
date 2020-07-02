@@ -291,7 +291,7 @@ class Extractor extends CI_Controller {
 	function getscrapeMacImg($last_id = 0) {
 		$put = array();
 		$puts = array();
-		$q = "select * from jt_noimg where id>$last_id and supplier='MAC' and imagetoget!='' and got=0 limit 1";
+		$q = "select * from jt_noimg where id>$last_id imagetoget!='' and got=0 limit 1";
 		$r = $this->db->query($q);
 		if ($r->num_rows() == 0) {
 			die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
@@ -331,7 +331,7 @@ class Extractor extends CI_Controller {
 			$puts[] = $put;
 			$write = array("item" => $item, "response" => $content, "url" => $endpoint . "?token=f9ef1f0279e7b37de96b&upc=" . $item['upc']);
 			$aaa = array("data" => json_encode($write), "upc" => $item['upc']);
-			$this->db->insert("jt_noimg", $aaa);
+			//$this->db->insert("jt_noimg", $aaa);
 
 			//$ct++;
 			die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
