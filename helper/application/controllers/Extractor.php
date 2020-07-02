@@ -3877,6 +3877,22 @@ EOT;
 
 	}
 
+	function fixslugs() {
+		$q = "SELECT * FROM `wp_posts` where post_name like '%-'";
+		$r = $this->db->query($q)->result();
+		foreach ($r as $row) {
+			$p = $row->post_name;
+			$p = str_replace("-x-", "x", $p);
+			$p = explode("-", $p);
+			$p = array_filter($p);
+			$p = implode("-", $p);
+			$u = array("post_name" => $p);
+			$qq = $this->db->update_string("wp_posts", $u, array("ID" => $row->ID));
+			echo "<P>$qq;";
+
+		}
+	}
+
 	function getIarr() {
 
 		return
