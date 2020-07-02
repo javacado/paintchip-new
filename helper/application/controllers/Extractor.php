@@ -3671,6 +3671,9 @@ post_mime_type like image/jpeg
 			$this->getImage($img, $dest);
 
 			if (!file_exists($dest)) {
+
+				$ct++;
+				continue;
 				die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
 			}
 
