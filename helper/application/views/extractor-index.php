@@ -105,7 +105,7 @@ for ($x = 1; $x < 15; $x++) {?>
 
 -->
 
- <button class='btn btn-success btn-sm pull-right' onclick='moveMac()'>MOVE MAC</button>
+ <button class='btn btn-success btn-sm pull-right' onclick='loopimages(1)'>Get Missing Images</button>
 
 
 
@@ -252,6 +252,30 @@ setTimeout(function() {
 }
 
 
+
+
+
+
+function loopimages(index) {
+
+
+ $.ajax({
+        url: "/helper/extractor/loopimages/",
+        context: document.body,
+        method: 'get'
+    }).done(function(res) {
+        res = JSON.parse(res)
+        console.log(res);
+       if (res.startat=="done") {
+alert("DONE")
+       } else {
+setTimeout(function() {
+    loopimages(res.startat);
+
+}, 500);
+       }
+    })
+}
 
 
 
