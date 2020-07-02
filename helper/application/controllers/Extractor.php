@@ -3629,27 +3629,26 @@ post_mime_type like image/jpeg
 
 			$url = "https://www.upcitemdb.com/upc/" . $item['upc'];
 			$url = "https://api.barcodespider.com/v1/lookup?upc=" . $item['upc'];
+			$endpoint = "https://api.barcodespider.com/v1/lookup";
 			$put[] = $url;
 			//, false, stream_context_create($arrContextOptions));
 
-			$options = array(
-				CURLOPT_RETURNTRANSFER => true, // return web page
+			$ch = curl_init();
+
+			curl_setopt_array($ch, array(
+				CURLOPT_URL => $endpoint . "?upc=" . $item['upc'],
 				CURLOPT_SSL_VERIFYHOST => 0, // do not return headers
 				CURLOPT_SSL_VERIFYPEER => 0, // do not return headers
-				CURLOPT_HEADER => false, // do not return headers
-				CURLOPT_FOLLOWLOCATION => true, // follow redirects
-				CURLOPT_USERAGENT => "spider", // who am i
-				CURLOPT_AUTOREFERER => true, // set referer on redirect
-				CURLOPT_CONNECTTIMEOUT => 120, // timeout on connect
-				CURLOPT_TIMEOUT => 120, // timeout on response
-				CURLOPT_MAXREDIRS => 10, // stop after 10 redirects
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => "",
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 30,
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 				CURLOPT_CUSTOMREQUEST => "GET",
 				CURLOPT_POSTFIELDS => "",
 				CURLOPT_HTTPHEADER => "token: f9ef1f0279e7b37de96b",
-			);
-			$ch = curl_init($url);
-			curl_setopt_array($ch, $options);
+			));
+
 			$content = curl_exec($ch);
 			curl_close($ch);
 
