@@ -361,7 +361,7 @@ class Extractor extends CI_Controller {
 
 		$a = $html->find('img#mainProdImg1');
 		if (count($a) > 0) {
-			$imagetoget = $a->src;
+			$imagetoget = "https://www.macphersonart.com" . $a->src;
 
 		} else {
 			die("<h3>Output</h3><pre>" . print_r("nadad", 1) . "</pre>");
