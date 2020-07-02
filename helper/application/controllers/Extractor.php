@@ -3629,7 +3629,7 @@ post_mime_type like image/jpeg
 
 			$url = "https://www.upcitemdb.com/upc/" . $item['upc'];
 
-			$put['url'] = $url;
+			$put[] = $url;
 			//, false, stream_context_create($arrContextOptions));
 
 			$options = array(
@@ -3653,6 +3653,7 @@ post_mime_type like image/jpeg
 
 			$d = $html->find('img.product');
 			if (count($d) == 0) {
+				die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
 				$put[] = "did not find image";
 				if (strpos(strtolower($content), "slow down") !== false) {
 					$put[] = "slowdown";
