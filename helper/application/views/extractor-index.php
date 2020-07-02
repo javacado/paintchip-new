@@ -106,8 +106,8 @@ for ($x = 1; $x < 15; $x++) {?>
 -->
 
 
-scrapeMacImg
- <button class='btn btn-success btn-sm pull-right' onclick='scrapeMacImg(0)'>scrape Mac Img</button>
+
+ <button class='btn btn-success btn-sm pull-right' onclick='getscrapeMacImg(0)'>GET Mac Img</button>
 
 
  <input class='form-control'  id='startat' placeholder='Start At what INDEX'/>
@@ -265,10 +265,10 @@ function stoploop(){
     stopl=true
 }
 
-function scrapeMacImg(index) {
+function getscrapeMacImg(index) {
     if (!index) $index=0;
 $.ajax({
-        url: "/helper/extractor/scrapeMacImg/"+index,
+        url: "/helper/extractor/getscrapeMacImg/"+index,
         context: document.body,
         method: 'get'
     }).done(function(res) {
@@ -278,7 +278,7 @@ $.ajax({
 
 setTimeout(function() {
 
-    scrapeMacImg(res.this_id);
+    getscrapeMacImg(res.this_id);
 
 
 }, 100);
