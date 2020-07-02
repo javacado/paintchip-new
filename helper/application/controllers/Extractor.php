@@ -3598,7 +3598,7 @@ post_mime_type like image/jpeg
 		$items = $this->getIarr();
 		$ct = 0;
 		$cont = 0;
-		$num = 10;
+		$num = 1;
 
 		$puts = array();
 
