@@ -397,6 +397,7 @@ class Extractor extends CI_Controller {
 
 		$put[] = "did everything image: $iloc";
 		$puts[] = $put;
+		$this->db->update("jt_noimg", array("got" => 1), array("id" => $id));
 
 		echo json_encode(array("this_id" => $id, "put" => $put));
 
