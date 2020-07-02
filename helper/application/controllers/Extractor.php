@@ -289,7 +289,148 @@ class Extractor extends CI_Controller {
 
 	}
 
-	function scrapeMac() {
+	function scrapeMacImg($sku) {
+
+		$url = "https://www.macphersonart.com/cgi-bin/maclive/wam_tmpl/catalog_browse.p?site=MAC&layout=Responsive&page=catalog_browse&searchText=" . $sku;
+		//echo "<P> starting $ct";
+		$res = array();
+		$options = array(
+			CURLOPT_RETURNTRANSFER => true, // return web page
+			CURLOPT_HEADER => false, // do not return headers
+			CURLOPT_FOLLOWLOCATION => true, // follow redirects
+			CURLOPT_USERAGENT => "spider", // who am i
+			CURLOPT_AUTOREFERER => true, // set referer on redirect
+			CURLOPT_CONNECTTIMEOUT => 120, // timeout on connect
+			CURLOPT_TIMEOUT => 120, // timeout on response
+			CURLOPT_MAXREDIRS => 10, // stop after 10 redirects
+		);
+		$ch = curl_init($url);
+		curl_setopt_array($ch, $options);
+		$content = curl_exec($ch);
+		$err = curl_errno($ch);
+		$errmsg = curl_error($ch);
+		$header = curl_getinfo($ch);
+		curl_close($ch);
+
+		$res['content'] = $content;
+		$res['content'] = strip_tags($content, "<body>");
+		$res['url'] = $header['url'];
+
+		$newurl = str_replace('document.location.replace("', "", $res['content']);
+		$newurl = str_replace('");', "", $newurl);
+
+		if (!$newurl || strpos($newurl, "Catalog Browse | MacPherson's") != FALSE) {
+			$item['data'] = "NO URL";
+			//$this->db->update("jt_mac_data", $item, array("id" => $row->id));
+			die("<h3>Output</h3><pre>" . print_r("no url", 1) . "</pre>");
+
+		}
+		$html = file_get_html($newurl);
+		//return $res;
+
+		$item = array();
+
+		//print_r(get_web_page("http://www.example.com/redirectfrom"));
+
+		/*foreach ($d as $dd) {
+					echo ("<h3>Output</h3><pre>" . print_r($dd->innerText, 1) . "</pre>");
+				}
+			*/
+		$d = $html->find('#row' . $row->sku . ' td');
+		if (count($d) == 0) {
+			$ct++;
+
+			//echo "<p>continuoing... <a href='$url' target='_blank'>$url</a>";
+
+			die("<h3>Output</h3><pre>" . print_r("no data", 1) . "</pre>");
+			//die("<h3>no data</h3><pre>" . print_r($newurl, 1) . print_r($row, 1) . "</pre>");
+			$item['data'] = "NO DATA";
+			$this->db->update("jt_mac_data", $item, array("id" => $row->id));
+
+		}
+
+		$de = $html->find('.prodDescription');
+		$desc = "";
+		foreach ($de as $des) {
+			$desc .= $des->innerText;
+		}
+
+		$item['description'] = $desc;
+		$imagetoget = "";
+
+		$a = $d[0]->find('a');
+		if (count($a) > 0) {
+			$a = $a->href;
+			if ($a) {
+				$iname = explode("/", $a);
+				$iname = $iname[count($iname) - 1];
+				$imagetoget = "https://www.macphersonart.com" . $a;
+			}
+		} else {
+			$a = $d[0]->find('img');
+			if (count($a) > 0) {
+				$a = $a->src;
+				if ($a) {
+					$iname = explode("/", $a);
+					$iname = $iname[count($iname) - 1];
+					$imagetoget = "https://www.macphersonart.com" . $a;
+				}
+			}
+		}
+
+		if (!$imagetoget) {
+
+			foreach ($d as $dd) {
+				echo ("<h3>Output</h3><pre>" . print_r($dd->innerText, 1) . "</pre>");
+			}
+
+			die("<h3>NO IMG</h3><pre>" . print_r($d[0]->innerText, 1) . "</pre>");
+		}
+		die("<h3>Output</h3><pre>" . print_r("DD", 1) . "</pre>");
+		if (!file_exists($_SERVER['DOCUMENT_ROOT'] . "/helper/uploads/{$iname}")) {
+			$up = $this->getImage($imagetoget, $iname);
+			if (!$up) {
+				die("<h3>Output</h3><pre>" . print_r("DID not get image", 1) . "</pre>");
+			} else {
+				$item['image'] = $iname;
+			}
+		} else {
+			$item['image'] = $iname;
+
+		}
+
+		$tdata = $html->find('h2.prodCrumbDesc');
+		$tdata = $tdata[0];
+		$item['category'] = $tdata->innerText;
+
+		$tdata = $html->find('.millDescription a');
+		$tdata = $tdata[0];
+		$item['brand'] = $tdata->innerText;
+
+		$tdata = $html->find('a.prodCrumbLink');
+		$tdata = $tdata[count($tdata) - 1];
+		$item['main_category'] = $tdata->innerText;
+
+		$tdata = $d[1]->find('div');
+		//die("<h3>Output</h3><pre>" . print_r($d[1]->innerText, 1) . "</pre>");
+		$tdata = $tdata[1];
+		$item['title'] = str_replace("<br>", " ", $tdata->innerText);
+
+		$tdata = $d[6]->find('div.qoRegPrice');
+		$tdata = $tdata[0];
+		$item['macprice'] = str_replace("$", "", $tdata->innerText);
+
+		$item['data'] = "DONE";
+		$this->db->update("jt_mac_data", $item, array("id" => $row->id));
+		$act++;
+		//echo ("<h3>Output</h3><pre>" . print_r($item, 1) . "</pre>");
+		$ct++;
+		//sleep(1);
+		//die("<h3>Output</h3><pre>" . print_r($a, 1) . "</pre>");
+
+	}
+
+	function scrapeMac($sku) {
 		$q = "select * from jt_mac_data where data='' limit 4";
 		$r = $this->db->query($q);
 
