@@ -308,9 +308,9 @@ class Extractor extends CI_Controller {
 		$iname = explode("/", $img);
 		$iname = $iname[count($iname) - 1];
 
-		if (!$img_title) {
-			$img_title = $iname;
-		}
+		//if (!$img_title) {
+		$img_title = $iname;
+		//}
 
 		$ipostname = explode(".", $iname);
 		$ext = strtolower($ipostname[count($ipostname) - 1]);
