@@ -289,6 +289,8 @@ class Extractor extends CI_Controller {
 
 	}
 	function getscrapeMacImg($last_id = 0) {
+		$put = array();
+		$puts = array();
 		$q = "select * from jt_noimg where id>$last_id and supplier='MAC' and imagetoget!='' and got=0 limit 1";
 		$r = $this->db->query($q);
 		if ($r->num_rows() == 0) {
@@ -301,7 +303,7 @@ class Extractor extends CI_Controller {
 
 		$data = json_decode($row->data);
 		$item = json_decode(json_encode($data->item), 1);
-		die("<h3>Output</h3><pre>" . print_r($item, 1) . "</pre>");
+
 		$img = $row->imagetoget;
 		$iname = explode("/", $img);
 		$iname = $iname[count($iname) - 1];
@@ -395,6 +397,9 @@ class Extractor extends CI_Controller {
 
 		$put[] = "did everything image: $iloc";
 		$puts[] = $put;
+
+		echo json_encode(array("this_id" => $id, "put" => $put));
+
 	}
 
 	function scrapeMacImg($last_id = 0) {
