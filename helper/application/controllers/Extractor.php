@@ -3648,7 +3648,10 @@ post_mime_type like image/jpeg
 
 			$d = $html->find('img.product');
 			if (count($d) == 0) {
-				die("<h3>NO IMAGE</h3><pre>" . print_r($content, 1) . "</pre>");
+				if (strpos(strtolower($content), "slow down") !== false) {
+					sleep(5);
+				}
+				//die("<h3>NO IMAGE</h3><pre>" . print_r($content, 1) . "</pre>");
 				$ct++;
 				$cont++;
 				continue;
