@@ -2123,7 +2123,7 @@ post_mime_type like image/jpeg
 		$url = trim($url);
 		$url = str_replace(" ", "%20", $url);
 		$img = str_replace(" ", "-", $img);
-		$saveto = $_SERVER['DOCUMENT_ROOT'] . "/helper/uploads/{$img}";
+		$saveto = $img; //$_SERVER['DOCUMENT_ROOT'] . "/helper/uploads/{$img}";
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
