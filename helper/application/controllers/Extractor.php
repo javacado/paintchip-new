@@ -2126,8 +2126,11 @@ post_mime_type like image/jpeg
 		$saveto = $_SERVER['DOCUMENT_ROOT'] . "/helper/uploads/{$img}";
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+
 		$raw = curl_exec($ch);
 		curl_close($ch);
 		if ($raw !== false) {
@@ -3590,19 +3593,34 @@ post_mime_type like image/jpeg
 		die(json_encode($out));
 	}
 
-	function loopimages($go = 0) {
+	function loopimages($startindex = 0) {
 
 		$items = $this->getIarr();
 		$ct = 0;
 		$cont = 0;
+		$num = 1;
 
 		foreach ($items as $item) {
+
+			if ($ct < $startindex) {
+				$ct++;
+				continue;
+			} else if ($ct == $startindex + $num || $ct == count($items)) {
+				if ($ct == count($items)) {
+					echo json_encode(array("startat" => "done"));
+				} else {
+					echo json_encode(array("startat" => $ct));
+
+				}
+				die();
+			}
 			$ct++;
 			/*if ($ct > 100) {
 				die();
 			}*/
 
 			if (!$item['upc']) {
+				$ct++;
 				$cont++;
 				continue;
 			}
@@ -3630,7 +3648,8 @@ post_mime_type like image/jpeg
 
 			$d = $html->find('img.product');
 			if (count($d) == 0) {
-				die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
+				die("<h3>NO IMAGE</h3><pre>" . print_r($content, 1) . "</pre>");
+				$ct++;
 				$cont++;
 				continue;
 
@@ -3640,24 +3659,114 @@ post_mime_type like image/jpeg
 			$img = explode("?", $img);
 			$img = $img[0];
 
-			echo <<<EOT
+			$iname = explode("/", $img);
+			$iname = $iname[count($iname) - 1];
+
+			$ipostname = explode(".", $iname);
+			$ext = strtolower($ipostname[count($ipostname) - 1]);
+			$ipostname = $ipostname[0];
+
+			$iloc = "2020/06/" . $iname;
+			$dest = $_SERVER['DOCUMENT_ROOT'] . "/wp-content/uploads/" . $iloc;
+			$this->getImage($img, $dest);
+
+			$gurl = "https://thepaint-chip.com/wp-content/uploads/" . $iloc;
+			$mime = "";
+			if ($ext == "jpg" || $ext == "jpeg") {
+				$mime = "image/jpeg";
+			} else if ($ext == "png") {
+				$mime = "image/png";
+
+			} else if ($ext == "gif") {
+				$mime = "image/gif";
+
+			}
+
+			$sz = getimagesize($dest);
+
+			$img_meta = array(
+
+				"width" => $sz[0],
+				"height" => $sz[1],
+				"file" => $iloc,
+				"sizes" => Array
+				(
+				),
+
+				"image_meta" => Array
+				(
+					"aperture" => 0,
+					"credit" => "",
+					"camera" => "",
+					"caption" => "",
+					"created_timestamp" => 0,
+					"copyright" => "",
+					"focal_length" => 0,
+					"iso" => 0,
+					"shutter_speed" => 0,
+					"title" => $iname,
+					"orientation" => 0,
+					"keywords" => Array
+					(
+					),
+
+				),
+			);
+			$img_meta = serialize($img_meta);
+
+			$up = array("meta_value" => $img_meta);
+			$uuup = $this->db->update("wp_postmeta", $up, array("meta_id" => $item['_wp_attachment_metadata_id']));
+			if (!$uuup) {
+				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+			}
+
+			$up = array("meta_value" => $iloc);
+			$uuup = $this->db->update("wp_postmeta", $up, array("meta_key" => "_wp_attached_file", "post_id" => $item['image_post_id']));
+			if (!$uuup) {
+				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+			}
+
+			$up = array("post_title" => $ipostname, "post_name" => $ipostname, "guid" => $gurl, "post_mime" => $mime);
+			$uuup = $this->db->update("wp_posts", $up, array("ID" => $item['product_post_id']));
+
+			if (!$uuup) {
+				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+			}
+
+/*
+
+// update:::
+get new image
+-- update wp_postmeta _wp_attachment_metadata with values like
+a:5:{s:5:"width";N;s:6:"height";N;s:4:"file";s:27:"2020/05/images-tb-56555.jpg";s:5:"sizes";a:0:{}s:10:"image_meta";a:12:{s:8:"aperture";i:0;s:6:"credit";s:0:"";s:6:"camera";s:0:"";s:7:"caption";s:0:"";s:17:"created_timestamp";i:0;s:9:"copyright";s:0:"";s:12:"focal_length";i:0;s:3:"iso";i:0;s:13:"shutter_speed";i:0;s:5:"title";s:36:"DUAL BRUSH PEN REFLEX BLUE (ABT 493)";s:11:"orientation";i:0;s:8:"keywords";a:0:{}}}
+-- update wp_postmeta _wp_attached_file with values like
+2020/05/images-tb-56555.jpg
+
+-- update wp_posts with
+post_title like mc21120_t
+post_name like  mc21120_t
+guid like https://thepaint-chip.com/wp-content/uploads/2020/06/MC21120_t.png
+post_mime_type like image/jpeg
+
+echo <<<EOT
 
 array(
-				"upc" => "{$item['upc']}",
-				"meta_thumbnail_id" => "{$item['meta_thumbnail_id']}",
-				"image_post_id" => "{$item['image_post_id']}",
-				"product_post_id" => "{$item['product_post_id']}",
-				"_wp_attachment_metadata_id" => "{$item['_wp_attachment_metadata_id']}",
-				"new_image_url" => "$img",
-				"_wp_attached_file_id" => "",
-			),
-
+"upc" => "{$item['upc']}",
+"meta_thumbnail_id" => "{$item['meta_thumbnail_id']}",
+"image_post_id" => "{$item['image_post_id']}",
+"product_post_id" => "{$item['product_post_id']}",
+"_wp_attachment_metadata_id" => "{$item['_wp_attachment_metadata_id']}",
+"new_image_url" => "$img",
+"_wp_attached_file_id" => "",
+),
 
 EOT;
 
+ */
 			//echo "<br>" . '"' . $img . '",';
 
 			//echo "<p>https://www.upcitemdb.com/upc/" . $item['upc'];
+
 		}
 
 		die("<h3>cont</h3><pre>" . print_r($cont, 1) . "</pre>");
@@ -3670,92 +3779,11 @@ EOT;
 		array(
 
 			array(
-				"upc" => "",
-				"meta_thumbnail_id" => "60201",
-				"image_post_id" => "6139",
-				"product_post_id" => "6138",
-				"_wp_attachment_metadata_id" => "60179",
-				"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
-			),
-
-			array(
-				"upc" => "",
-				"meta_thumbnail_id" => "60225",
-				"image_post_id" => "6141",
-				"product_post_id" => "6140",
-				"_wp_attachment_metadata_id" => "60203",
-				"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
-			),
-
-			array(
-				"upc" => "",
-				"meta_thumbnail_id" => "60249",
-				"image_post_id" => "6143",
-				"product_post_id" => "6142",
-				"_wp_attachment_metadata_id" => "60227",
-				"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
-			),
-
-			array(
-				"upc" => "",
-				"meta_thumbnail_id" => "60273",
-				"image_post_id" => "6145",
-				"product_post_id" => "6144",
-				"_wp_attachment_metadata_id" => "60251",
-				"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
-			),
-
-			array(
-				"upc" => "",
-				"meta_thumbnail_id" => "60297",
-				"image_post_id" => "6147",
-				"product_post_id" => "6146",
-				"_wp_attachment_metadata_id" => "60275",
-				"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
-			),
-
-			array(
-				"upc" => "",
-				"meta_thumbnail_id" => "60321",
-				"image_post_id" => "6149",
-				"product_post_id" => "6148",
-				"_wp_attachment_metadata_id" => "60299",
-				"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
-			),
-
-			array(
-				"upc" => "",
-				"meta_thumbnail_id" => "60345",
-				"image_post_id" => "6151",
-				"product_post_id" => "6150",
-				"_wp_attachment_metadata_id" => "60323",
-				"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
-			),
-
-			array(
-				"upc" => "",
-				"meta_thumbnail_id" => "60369",
-				"image_post_id" => "6153",
-				"product_post_id" => "6152",
-				"_wp_attachment_metadata_id" => "60347",
-				"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
-			),
-
-			array(
-				"upc" => "",
-				"meta_thumbnail_id" => "60393",
-				"image_post_id" => "6155",
-				"product_post_id" => "6154",
-				"_wp_attachment_metadata_id" => "60371",
-				"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
-			),
-
-			array(
-				"upc" => "",
-				"meta_thumbnail_id" => "60417",
-				"image_post_id" => "6157",
-				"product_post_id" => "6156",
-				"_wp_attachment_metadata_id" => "60395",
+				"upc" => "082335330045",
+				"meta_thumbnail_id" => "164359",
+				"image_post_id" => "15328",
+				"product_post_id" => "15327",
+				"_wp_attachment_metadata_id" => "164337",
 				"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
 			),
 
@@ -9507,15 +9535,6 @@ EOT;
 				"image_post_id" => "15326",
 				"product_post_id" => "15325",
 				"_wp_attachment_metadata_id" => "164313",
-				"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
-			),
-
-			array(
-				"upc" => "082335330045",
-				"meta_thumbnail_id" => "164359",
-				"image_post_id" => "15328",
-				"product_post_id" => "15327",
-				"_wp_attachment_metadata_id" => "164337",
 				"_wp_attached_file_id" => "FIND based on post_id value like 2020/05/images-tb-56555.jpg",
 			),
 
