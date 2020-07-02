@@ -288,6 +288,114 @@ class Extractor extends CI_Controller {
 		return "";
 
 	}
+	function getscrapeMacImg($last_id = 0) {
+		$q = "select * from jt_noimg where id>$last_id and supplier='MAC' and imagetoget!='' and got=0 limit 1";
+		$r = $this->db->query($q);
+		if ($r->num_rows() == 0) {
+			die("<h3>Output</h3><pre>" . print_r("DONE", 1) . "</pre>");
+		}
+		$row = $r->row();
+		$r->free_result();
+		$sku = $row->sku;
+		$id = $row->id;
+
+		$data = json_decode($row->data);
+
+		die("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
+		$img = $row->imagetoget;
+		$iname = explode("/", $img);
+		$iname = $iname[count($iname) - 1];
+
+		if (!$img_title) {
+			$img_title = $iname;
+		}
+
+		$ipostname = explode(".", $iname);
+		$ext = strtolower($ipostname[count($ipostname) - 1]);
+		$ipostname = $ipostname[0];
+
+		$iloc = "2020/06/" . $iname;
+		$dest = $_SERVER['DOCUMENT_ROOT'] . "/wp-content/uploads/" . $iloc;
+		$this->getImage($img, $dest);
+
+		if (!file_exists($dest)) {
+			$put[] = "image did not download";
+			$puts[] = $put;
+			$write = array("item" => $item, "response" => $content, "url" => $endpoint . "?token=f9ef1f0279e7b37de96b&upc=" . $item['upc']);
+			$aaa = array("data" => json_encode($write), "upc" => $item['upc']);
+			$this->db->insert("jt_noimg", $aaa);
+
+			//$ct++;
+			die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
+		}
+		$put[] = "downloaded: $iloc";
+
+		$gurl = "https://thepaint-chip.com/wp-content/uploads/" . $iloc;
+		$mime = "";
+		if ($ext == "jpg" || $ext == "jpeg") {
+			$mime = "image/jpeg";
+		} else if ($ext == "png") {
+			$mime = "image/png";
+
+		} else if ($ext == "gif") {
+			$mime = "image/gif";
+
+		}
+
+		$sz = getimagesize($dest);
+
+		$img_meta = array(
+
+			"width" => $sz[0],
+			"height" => $sz[1],
+			"file" => $iloc,
+			"sizes" => Array
+			(
+			),
+
+			"image_meta" => Array
+			(
+				"aperture" => 0,
+				"credit" => "",
+				"camera" => "",
+				"caption" => "",
+				"created_timestamp" => 0,
+				"copyright" => "",
+				"focal_length" => 0,
+				"iso" => 0,
+				"shutter_speed" => 0,
+				"title" => $img_title,
+				"orientation" => 0,
+				"keywords" => Array
+				(
+				),
+
+			),
+		);
+		$img_meta = serialize($img_meta);
+
+		$up = array("meta_value" => $img_meta);
+		$uuup = $this->db->update("wp_postmeta", $up, array("meta_id" => $item['_wp_attachment_metadata_id']));
+		if (!$uuup) {
+			die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+		}
+
+		$up = array("meta_value" => $iloc);
+		$uuup = $this->db->update("wp_postmeta", $up, array("meta_key" => "_wp_attached_file", "post_id" => $item['image_post_id']));
+		if (!$uuup) {
+			die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+		}
+
+		$up = array("post_title" => $img_title, "post_name" => $img_title, "guid" => $gurl, "post_mime_type" => $mime);
+		$uuup = $this->db->update("wp_posts", $up, array("ID" => $item['image_post_id']));
+
+		if (!$uuup) {
+			die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+		}
+
+		$put[] = "did everything image: $iloc";
+		$puts[] = $put;
+	}
 
 	function scrapeMacImg($last_id = 0) {
 
