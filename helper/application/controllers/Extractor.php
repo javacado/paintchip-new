@@ -3598,7 +3598,7 @@ post_mime_type like image/jpeg
 		$items = $this->getIarr();
 		$ct = 0;
 		$cont = 0;
-		$num = 3;
+		$num = 1;
 
 		$put = array();
 
@@ -3628,7 +3628,7 @@ post_mime_type like image/jpeg
 			}
 
 			$url = "https://www.upcitemdb.com/upc/" . $item['upc'];
-
+			$url = "https://api.barcodespider.com/v1/lookup?upc=" . $item['upc'];
 			$put[] = $url;
 			//, false, stream_context_create($arrContextOptions));
 
@@ -3643,117 +3643,148 @@ post_mime_type like image/jpeg
 				CURLOPT_CONNECTTIMEOUT => 120, // timeout on connect
 				CURLOPT_TIMEOUT => 120, // timeout on response
 				CURLOPT_MAXREDIRS => 10, // stop after 10 redirects
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => "GET",
+				CURLOPT_POSTFIELDS => "",
+				CURLOPT_HTTPHEADER => "token: f9ef1f0279e7b37de96b",
 			);
 			$ch = curl_init($url);
 			curl_setopt_array($ch, $options);
 			$content = curl_exec($ch);
 			curl_close($ch);
 
-			$html = str_get_html($content);
+			$json = json_decode($content);
+			if ($json->item_response->code != 200) {
+				die("<h3>BAD response</h3><pre>" . print_r($json, 1) . "</pre>");
+			}
 
-			$d = $html->find('img.product');
-			if (count($d) == 0) {
-				die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
-				$put[] = "did not find image";
-				if (strpos(strtolower($content), "slow down") !== false) {
-					$put[] = "slowdown";
-					echo json_encode(array("startat" => $ct));
-					die();
+			$imgs = array();
+
+			if ($json->item_attributes->image) {
+				$imgs[] = $json->item_attributes->image;
+			}
+
+			if (isset($json->Stores)) {
+
+				foreach ($json->Stores as $store) {
+					if ($store->image) {
+						$imgs[] = $store->image;
+					}
 				}
-				//die("<h3>NO IMAGE</h3><pre>" . print_r($content, 1) . "</pre>");
-				//$ct++;
-				$cont++;
-				continue;
-
-			}
-			$img = $d->src;
-
-			$img = explode("?", $img);
-			$img = $img[0];
-
-			$iname = explode("/", $img);
-			$iname = $iname[count($iname) - 1];
-
-			$ipostname = explode(".", $iname);
-			$ext = strtolower($ipostname[count($ipostname) - 1]);
-			$ipostname = $ipostname[0];
-
-			$iloc = "2020/06/" . $iname;
-			$dest = $_SERVER['DOCUMENT_ROOT'] . "/wp-content/uploads/" . $iloc;
-			$this->getImage($img, $dest);
-
-			if (!file_exists($dest)) {
-				$put[] = "image did not reacfer";
-
-				//$ct++;
-				continue;
-				die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
 			}
 
-			$gurl = "https://thepaint-chip.com/wp-content/uploads/" . $iloc;
-			$mime = "";
-			if ($ext == "jpg" || $ext == "jpeg") {
-				$mime = "image/jpeg";
-			} else if ($ext == "png") {
-				$mime = "image/png";
+			/*
+				$html = str_get_html($content);
 
-			} else if ($ext == "gif") {
-				$mime = "image/gif";
+				$d = $html->find('img.product');
+				if (count($d) == 0) {
+					die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
+					$put[] = "did not find image";
+					if (strpos(strtolower($content), "slow down") !== false) {
+						$put[] = "slowdown";
+						echo json_encode(array("startat" => $ct));
+						die();
+					}
+					//die("<h3>NO IMAGE</h3><pre>" . print_r($content, 1) . "</pre>");
+					//$ct++;
+					$cont++;
+					continue;
 
-			}
+				}
+				$img = $d->src;
 
-			$sz = getimagesize($dest);
+				$img = explode("?", $img);
+				$img = $img[0];
 
-			$img_meta = array(
+			*/
 
-				"width" => $sz[0],
-				"height" => $sz[1],
-				"file" => $iloc,
-				"sizes" => Array
-				(
-				),
+			foreach ($imgs as $img) {
 
-				"image_meta" => Array
-				(
-					"aperture" => 0,
-					"credit" => "",
-					"camera" => "",
-					"caption" => "",
-					"created_timestamp" => 0,
-					"copyright" => "",
-					"focal_length" => 0,
-					"iso" => 0,
-					"shutter_speed" => 0,
-					"title" => $iname,
-					"orientation" => 0,
-					"keywords" => Array
+				$iname = explode("/", $img);
+				$iname = $iname[count($iname) - 1];
+
+				$ipostname = explode(".", $iname);
+				$ext = strtolower($ipostname[count($ipostname) - 1]);
+				$ipostname = $ipostname[0];
+
+				$iloc = "2020/06/" . $iname;
+				$dest = $_SERVER['DOCUMENT_ROOT'] . "/wp-content/uploads/" . $iloc;
+				$this->getImage($img, $dest);
+
+				if (!file_exists($dest)) {
+					$put[] = "image did not download";
+
+					//$ct++;
+					continue;
+					die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
+				}
+				$put[] = "downloaded: $iloc";
+
+				$gurl = "https://thepaint-chip.com/wp-content/uploads/" . $iloc;
+				$mime = "";
+				if ($ext == "jpg" || $ext == "jpeg") {
+					$mime = "image/jpeg";
+				} else if ($ext == "png") {
+					$mime = "image/png";
+
+				} else if ($ext == "gif") {
+					$mime = "image/gif";
+
+				}
+
+				$sz = getimagesize($dest);
+
+				$img_meta = array(
+
+					"width" => $sz[0],
+					"height" => $sz[1],
+					"file" => $iloc,
+					"sizes" => Array
 					(
 					),
 
-				),
-			);
-			$img_meta = serialize($img_meta);
+					"image_meta" => Array
+					(
+						"aperture" => 0,
+						"credit" => "",
+						"camera" => "",
+						"caption" => "",
+						"created_timestamp" => 0,
+						"copyright" => "",
+						"focal_length" => 0,
+						"iso" => 0,
+						"shutter_speed" => 0,
+						"title" => $iname,
+						"orientation" => 0,
+						"keywords" => Array
+						(
+						),
 
-			$up = array("meta_value" => $img_meta);
-			$uuup = $this->db->update("wp_postmeta", $up, array("meta_id" => $item['_wp_attachment_metadata_id']));
-			if (!$uuup) {
-				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+					),
+				);
+				$img_meta = serialize($img_meta);
+
+				$up = array("meta_value" => $img_meta);
+				$uuup = $this->db->update("wp_postmeta", $up, array("meta_id" => $item['_wp_attachment_metadata_id']));
+				if (!$uuup) {
+					die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+				}
+
+				$up = array("meta_value" => $iloc);
+				$uuup = $this->db->update("wp_postmeta", $up, array("meta_key" => "_wp_attached_file", "post_id" => $item['image_post_id']));
+				if (!$uuup) {
+					die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+				}
+
+				$up = array("post_title" => $ipostname, "post_name" => $ipostname, "guid" => $gurl, "post_mime_type" => $mime);
+				$uuup = $this->db->update("wp_posts", $up, array("ID" => $item['image_post_id']));
+
+				if (!$uuup) {
+					die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+				}
+
+				$put[] = "did everything image: $iloc";
 			}
-
-			$up = array("meta_value" => $iloc);
-			$uuup = $this->db->update("wp_postmeta", $up, array("meta_key" => "_wp_attached_file", "post_id" => $item['image_post_id']));
-			if (!$uuup) {
-				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
-			}
-
-			$up = array("post_title" => $ipostname, "post_name" => $ipostname, "guid" => $gurl, "post_mime_type" => $mime);
-			$uuup = $this->db->update("wp_posts", $up, array("ID" => $item['image_post_id']));
-
-			if (!$uuup) {
-				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
-			}
-
-			$put[] = "did everything image: $iloc";
 
 /*
 
