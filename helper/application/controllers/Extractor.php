@@ -3598,20 +3598,21 @@ post_mime_type like image/jpeg
 		$items = $this->getIarr();
 		$ct = 0;
 		$cont = 0;
-		$num = 1;
+		$num = 10;
 
-		$put = array();
+		$puts = array();
 
 		foreach ($items as $item) {
+			$put = array();
 
 			if ($ct < $startindex) {
 				$ct++;
 				continue;
 			} else if ($ct == $startindex + $num || $ct == count($items)) {
 				if ($ct == count($items)) {
-					echo json_encode(array("startat" => "done", "put" => $put));
+					echo json_encode(array("startat" => "done", "puts" => $puts));
 				} else {
-					echo json_encode(array("startat" => $ct, "put" => $put));
+					echo json_encode(array("startat" => $ct, "puts" => $puts));
 
 				}
 				die();
@@ -3698,6 +3699,7 @@ post_mime_type like image/jpeg
 				continue;
 			}
 
+			$img_title = $json->item_attributes->title;
 			/*
 				$html = str_get_html($content);
 
@@ -3801,7 +3803,7 @@ post_mime_type like image/jpeg
 				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
 			}
 
-			$up = array("post_title" => $ipostname, "post_name" => $ipostname, "guid" => $gurl, "post_mime_type" => $mime);
+			$up = array("post_title" => $img_title, "post_name" => $img_title, "guid" => $gurl, "post_mime_type" => $mime);
 			$uuup = $this->db->update("wp_posts", $up, array("ID" => $item['image_post_id']));
 
 			if (!$uuup) {
@@ -3809,6 +3811,7 @@ post_mime_type like image/jpeg
 			}
 
 			$put[] = "did everything image: $iloc";
+			$puts[] = $put;
 			//}
 
 /*
