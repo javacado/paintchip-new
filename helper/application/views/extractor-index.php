@@ -272,7 +272,7 @@ alert("DONE")
 setTimeout(function() {
     loopimages(res.startat);
 
-}, 5000);
+}, 4000);
        }
     })
 }
