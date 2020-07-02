@@ -290,6 +290,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function scrapeMacImg($sku) {
+		$ct = 0;
 
 		$url = "https://www.macphersonart.com/cgi-bin/maclive/wam_tmpl/catalog_browse.p?site=MAC&layout=Responsive&page=catalog_browse&searchText=" . $sku;
 		//echo "<P> starting $ct";
@@ -336,7 +337,7 @@ class Extractor extends CI_Controller {
 					echo ("<h3>Output</h3><pre>" . print_r($dd->innerText, 1) . "</pre>");
 				}
 			*/
-		$d = $html->find('#row' . $row->sku . ' td');
+		$d = $html->find('#row' . $sku . ' td');
 		if (count($d) == 0) {
 			$ct++;
 
