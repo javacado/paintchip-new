@@ -3665,7 +3665,7 @@ post_mime_type like image/jpeg
 				die("<h3>BAD response</h3><pre>" . print_r($json, 1) . "</pre>");
 			}
 
-			die("<h3>Output</h3><pre>" . print_r($json, 1) . "</pre>");
+			//die("<h3>Output</h3><pre>" . print_r($json, 1) . "</pre>");
 
 			$imgs = array();
 			$img = null;
