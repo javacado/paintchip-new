@@ -3698,6 +3698,7 @@ post_mime_type like image/jpeg
 				$cont++;
 				continue;
 			}
+			$put[] = "image: " . $img;
 
 			$img_title = $json->item_attributes->title;
 			/*
