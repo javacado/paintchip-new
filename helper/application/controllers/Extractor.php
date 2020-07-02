@@ -350,9 +350,11 @@ class Extractor extends CI_Controller {
 
 		}
 
-		$sz = getimagesize($dest);
+		@$sz = getimagesize($dest);
 
 		if (!$sz) {
+			echo json_encode(array("this_id" => $id, "put" => $put, 'error' => 'no image'));
+			die();
 			die("<h3>Output</h3><pre>" . print_r($dest, 1) . "</pre>");
 		}
 
