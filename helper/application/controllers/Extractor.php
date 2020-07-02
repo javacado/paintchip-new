@@ -3670,6 +3670,10 @@ post_mime_type like image/jpeg
 			$dest = $_SERVER['DOCUMENT_ROOT'] . "/wp-content/uploads/" . $iloc;
 			$this->getImage($img, $dest);
 
+			if (!file_exists($dest)) {
+				die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
+			}
+
 			$gurl = "https://thepaint-chip.com/wp-content/uploads/" . $iloc;
 			$mime = "";
 			if ($ext == "jpg" || $ext == "jpeg") {
