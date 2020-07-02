@@ -105,6 +105,7 @@ for ($x = 1; $x < 15; $x++) {?>
 
 -->
 
+ <button class='btn btn-danger btn-sm pull-right' onclick='stoploop()'>Stop Image LLOOP</button>
  <button class='btn btn-success btn-sm pull-right' onclick='loopimages(0)'>Get Missing Images</button>
 
 
@@ -251,9 +252,11 @@ setTimeout(function() {
     })
 }
 
+var stopl=false
 
-
-
+function stoploop(){
+    stopl=true
+}
 
 
 function loopimages(index) {
@@ -270,7 +273,11 @@ function loopimages(index) {
 alert("DONE")
        } else {
 setTimeout(function() {
+    if (stopl) {
+        console.log("STOPPED");
+    } else {
     loopimages(res.startat);
+}
 
 }, 6000);
        }
