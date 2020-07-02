@@ -3620,7 +3620,7 @@ post_mime_type like image/jpeg
 			}*/
 
 			if (!$item['upc']) {
-				$ct++;
+
 				$cont++;
 				continue;
 			}
