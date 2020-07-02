@@ -661,7 +661,7 @@ post_mime_type like image/jpeg
 			// get post UID
 		}
 
-		die("<h3>Output</h3><pre>" . print_r($arr, 1) . "</pre>");
+		die("<h3>" . count($arr) . "</h3><pre>" . print_r($arr, 1) . "</pre>");
 
 	}
 
