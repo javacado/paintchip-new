@@ -367,7 +367,7 @@ class Extractor extends CI_Controller {
 			die("<h3>Output</h3><pre>" . print_r("nadad", 1) . "</pre>");
 			$a = $d[0]->find('img');
 			if (count($a) > 0) {
-				$a = $a->src;
+				$a = "https://www.macphersonart.com" . $a->src;
 				if ($a) {
 					$iname = explode("/", $a);
 					$iname = $iname[count($iname) - 1];
