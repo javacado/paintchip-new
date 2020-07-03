@@ -294,6 +294,7 @@ class Extractor extends CI_Controller {
 		$item = array(
 			"product_post_id" => $this->input->post('product_post_id'),
 			"image_post_id" => $this->input->post('image_post_id'),
+			"_wp_attachment_metadata_id" => $this->input->post('_wp_attachment_metadata_id'),
 		);
 
 		$img_title = null;
@@ -397,11 +398,7 @@ class Extractor extends CI_Controller {
 			die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
 		}
 
-		$put[] = "did everything image: $iloc";
-		$puts[] = $put;
-		$this->db->update("jt_noimg", array("got" => 1), array("id" => $id));
-
-		echo json_encode(array("this_id" => $id, "put" => $put));
+		echo json_encode(array("msg" => "New Photo Updated!"));
 
 	}
 
