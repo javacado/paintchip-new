@@ -259,9 +259,9 @@ var row, html=''
       for(var x=0;x<res.length;x++) {
         row=res[x]
         html="<div>";
-        html+="<div class='pull-right'><input type='text' class='form-control' placeholder='New image URL here' /> <button class='btn btn-xs btn-primary; onclick='updateimg(this)'>Update</button></div>";
-        html+=row.post_title+" - <img class='simg' src='"+row.image+'/> '
-        html+="</div><hr>"
+        html+="<div class='pull-right'><input type='text'  placeholder='New image URL here' /> <button class='btn btn-xs btn-primary; onclick='updateimg(this)'>Update</button></div>";
+        html+=row.post_title+" - <img class='simg' src='https://the-paintchip.com/wp-content/uploads/"+row.image+'/> '
+        html+="</div><hr style='clear:all'>"
 
 
         $('#ihtml').append(html);
@@ -1287,6 +1287,11 @@ body .container{
     position:absolute;
     right:0;
     z-index:10000;
+}
+
+
+img.simg{
+    max-height:50px;
 }
         </style>
 
