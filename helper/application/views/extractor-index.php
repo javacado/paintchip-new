@@ -110,7 +110,7 @@ for ($x = 1; $x < 15; $x++) {?>
 <span class='input-group-addon'>Search for:</span>
  <input class='form-control'  id='searcht' placeholder='Text to search for'/>
 
-<span class='input-group-addon'> <button class='btn btn-success btn-sm pull-right' onclick='textsearch()'><i class='fa fa-search'></i> Search</button></span>
+<span class='input-group-addon'> <button class='btn btn-success btn-sm  '' onclick='textsearch()'><i class='fa fa-search'></i> Search</button></span>
 </div>
 </div>
 
@@ -118,7 +118,7 @@ for ($x = 1; $x < 15; $x++) {?>
 
 
 
-<div class='well' id='ihtml'></div>
+<div class='well' style='display:none;' id='ihtml'></div>
 <!--
  <input class='form-control'  id='startat' placeholder='Start At what INDEX'/>
 
@@ -251,6 +251,7 @@ setTimeout(function() {
 
 
 function textsearch() {
+    $('#ihtml').show();
     var s=$('#searcht').val();
      $.ajax({
         url: "/helper/extractor/textsearch",
