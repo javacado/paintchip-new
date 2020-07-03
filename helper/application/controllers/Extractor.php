@@ -290,7 +290,6 @@ class Extractor extends CI_Controller {
 	}
 
 	function updateimg() {
-		die("<h3>Output</h3><pre>" . print_r($_POST, 1) . "</pre>");
 
 		$item = array(
 			"product_post_id" => $this->input->post('product_post_id'),
