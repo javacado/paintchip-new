@@ -444,7 +444,7 @@ class Extractor extends CI_Controller {
 	}
 
 	function fixd($go = 0) {
-		$q = "select * from wp_posts where post_title like 'Van Gogh%'";
+		$q = "select * from wp_posts where post_title like '%Van Gogh%'";
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
 
