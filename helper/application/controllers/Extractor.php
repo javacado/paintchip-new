@@ -289,6 +289,10 @@ class Extractor extends CI_Controller {
 
 	}
 
+	function updateimg() {
+		die("<h3>Output</h3><pre>" . print_r($_POST, 1) . "</pre>");
+	}
+
 	function textsearch() {
 		$str = $this->input->post('str');
 		$q = "SELECT * FROM wp_posts where post_title like '%{$str}%'";
@@ -304,6 +308,9 @@ class Extractor extends CI_Controller {
 			$q = "SELECT * FROM `wp_postmeta`  where meta_key='_wp_attached_file' and post_id=" . $ipost_id;
 			$t = $this->db->query($q)->row();
 			$row->img = $t->meta_value;
+
+			$row->product_post_id = $row->ID;
+			$row->image_post_id = $ipost_id;
 
 			$out[] = $row;
 		}

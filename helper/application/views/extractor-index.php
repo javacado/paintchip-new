@@ -259,8 +259,8 @@ var row, html=''
       for(var x=0;x<res.length;x++) {
         row=res[x]
         html="<div>";
-        html+=row.post_title+" - <img class='simg' src='https://thepaint-chip.com/wp-content/uploads/"+row.img+"'/> ";
-        html+="<span class=''><input type='text'  placeholder='New image URL here' /> <button class='btn btn-xs btn-primary; onclick='updateimg(this)'>Update</button></span>";
+        html+="<input type='text'  placeholder='' value='"+row.post_title+"' style='width:240px;' /> - <img class='simg' src='https://thepaint-chip.com/wp-content/uploads/"+row.img+"'/> ";
+        html+="<span class=''><input type='text' data-product_post_id='"+row.product_post_id+"'  data-image_post_id='"+row.image_post_id+"' class='newimg' placeholder='New image URL here' /> <button class='btn btn-xs btn-primary; onclick='updateimg(this)'>Update</button></span>";
         html+="</div><hr style='clear:both'>"
 
 
@@ -270,6 +270,25 @@ var row, html=''
 
 }
 
+
+function updateimg(el) {
+var field = $(el).closest('div').find('.newimg')
+    var data={
+        "newimg" : field.val(),
+        "product_post_id" : field.attr('data-product_post_id'),
+        "image_post_id" : field.attr('data-image_post_id')
+    }
+    $.ajax({
+        url: "/helper/extractor/updateimg/",
+        context: document.body,
+        method: 'post',
+        data: data
+    }).done(function(res) {
+        res = JSON.parse(res)
+        console.log(res);
+
+    })
+}
 
 function runMac() {
 
