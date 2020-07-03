@@ -267,7 +267,8 @@ var row, html=''
       for(var x=0;x<res.length;x++) {
         row=res[x]
         html="<div>";
-        html+="<input type='text'  placeholder='' value='"+row.post_title+"' style='width:540px;' /> - <img class='simg' src='https://thepaint-chip.com/wp-content/uploads/"+row.img+"'/> ";
+        html+="<a class='btn btn-link btn-xs pull-right' target='_blank' href='https://thepaint-chip.com/wp-admin/post.php?post="+row.product_post_id+"&action=edit'>edit product</a>"
+        html+="<input type='text'  placeholder='' value='"+row.post_title+"' style='width:440px;' /> - <img class='simg' src='https://thepaint-chip.com/wp-content/uploads/"+row.img+"'/> ";
         html+="<span class=''><input type='text' ";
         html +=" data-product_post_id='"+row.product_post_id+"'  ";
         html +="data-_wp_attachment_metadata_id='"+row._wp_attachment_metadata_id+"' data-image_post_id='"+row.image_post_id+"' class='newimg' placeholder='New image URL here' /> <button class='btn btn-xs btn-primary' onclick='updateimg(this)'>Update</button></span>";
