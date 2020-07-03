@@ -443,207 +443,83 @@ class Extractor extends CI_Controller {
 		echo json_encode($out);
 	}
 
-
-
-
-
-
-
-
-
 	function findimage($upc) {
 
+		$url = "https://api.barcodespider.com/v1/lookup?upc=" . $upc;
+		$endpoint = "https://api.barcodespider.com/v1/lookup";
+		$put[] = $url;
 
-			$url = "https://api.barcodespider.com/v1/lookup?upc=" . $upc;
-			$endpoint = "https://api.barcodespider.com/v1/lookup";
-			$put[] = $url;
+		$ch = curl_init();
 
-			$ch = curl_init();
+		$headers = array(
+			'token' => "f9ef1f0279e7b37de96b",
+			'Host' => "api.barcodespider.com",
+			'Accept-Encoding' => "gzip, deflate",
+			'Connection' => "keep-alive",
+			'cache-control' => "no-cache",
+		);
 
-			$headers = array(
-				'token' => "f9ef1f0279e7b37de96b",
-				'Host' => "api.barcodespider.com",
-				'Accept-Encoding' => "gzip, deflate",
-				'Connection' => "keep-alive",
-				'cache-control' => "no-cache",
-			);
+		curl_setopt_array($ch, array(
+			CURLOPT_URL => $endpoint . "?token=f9ef1f0279e7b37de96b&upc=" . $upc,
+			CURLOPT_SSL_VERIFYHOST => 0, // do not return headers
+			CURLOPT_SSL_VERIFYPEER => 0, // do not return headers
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "GET",
+			CURLOPT_POSTFIELDS => "",
+			CURLOPT_HTTPHEADER => $headers,
+		));
 
-			curl_setopt_array($ch, array(
-				CURLOPT_URL => $endpoint . "?token=f9ef1f0279e7b37de96b&upc=" . $upc,
-				CURLOPT_SSL_VERIFYHOST => 0, // do not return headers
-				CURLOPT_SSL_VERIFYPEER => 0, // do not return headers
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_ENCODING => "",
-				CURLOPT_MAXREDIRS => 10,
-				CURLOPT_TIMEOUT => 30,
-				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-				CURLOPT_CUSTOMREQUEST => "GET",
-				CURLOPT_POSTFIELDS => "",
-				CURLOPT_HTTPHEADER => $headers,
-			));
+		$content = curl_exec($ch);
+		curl_close($ch);
 
-			$content = curl_exec($ch);
-			curl_close($ch);
+		$json = json_decode($content);
+		if ($json->item_response->code != 200) {
 
-			$json = json_decode($content);
-			if ($json->item_response->code != 200) {
-			
-				$put[] = "Did not find page on api";
-				$puts[] = $put;
-				die("<h3>BAD response</h3><pre>" . print_r($json, 1) . "</pre>");
-			}
+			$put[] = "Did not find page on api";
+			$puts[] = $put;
+			die("<h3>BAD response</h3><pre>" . print_r($json, 1) . "</pre>");
+		}
 
-			//die("<h3>Output</h3><pre>" . print_r($json, 1) . "</pre>");
+		//die("<h3>Output</h3><pre>" . print_r($json, 1) . "</pre>");
 
-			$imgs = array();
-			$img = null;
-			if ($json->item_attributes->image) {
-				$imgs[] = $json->item_attributes->image;
-			}
+		$imgs = array();
+		$img = null;
+		if ($json->item_attributes->image) {
+			$imgs[] = $json->item_attributes->image;
+		}
 
-			if (isset($json->Stores)) {
+		if (isset($json->Stores)) {
 
-				foreach ($json->Stores as $store) {
-					if ($store->image) {
-						if (strpos($store->store_name, "Amazon") !== false) {
-							$img = $store->image;
-						} else {
-							$imgs[] = $store->image;
-						}
+			foreach ($json->Stores as $store) {
+				if ($store->image) {
+					if (strpos($store->store_name, "Amazon") !== false) {
+						$img = $store->image;
+					} else {
+						$imgs[] = $store->image;
 					}
 				}
 			}
-
-			if (!$img && count($imgs) > 0) {
-				$img = $imgs[count($imgs) - 1];
-			}
-
-			if (!$img) {
-				$put[] = "NO IMAGE at UPC";
-				$puts[] = $put;
-
-				
-
-				die("<h3>NO IMAGE</h3><pre>" . print_r($content, 1) . "</pre>");
-				$cont++;
-				continue;
-			}
-
-			die(json_encode(array('img' => $img)));
-
-
-
-
-			
-			$put[] = "image: " . $img;
-
-			$img_title = $json->item_attributes->title;
-			
-
-			$iname = explode("/", $img);
-			$iname = $iname[count($iname) - 1];
-
-			if (!$img_title) {
-				$img_title = $iname;
-			}
-
-			$ipostname = explode(".", $iname);
-			$ext = strtolower($ipostname[count($ipostname) - 1]);
-			$ipostname = $ipostname[0];
-
-			$iloc = "2020/06/" . $iname;
-			$dest = $_SERVER['DOCUMENT_ROOT'] . "/wp-content/uploads/" . $iloc;
-			$this->getImage($img, $dest);
-
-			if (!file_exists($dest)) {
-				$put[] = "image did not download";
-				$puts[] = $put;
-				$write = array("item" => $item, "response" => $content, "url" => $endpoint . "?token=f9ef1f0279e7b37de96b&upc=" . $item['upc']);
-				$aaa = array("data" => json_encode($write), "upc" => $item['upc']);
-				$this->db->insert("jt_noimg", $aaa);
-
-				//$ct++;
-				continue;
-				die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
-			}
-			$put[] = "downloaded: $iloc";
-
-			$gurl = "https://thepaint-chip.com/wp-content/uploads/" . $iloc;
-			$mime = "";
-			if ($ext == "jpg" || $ext == "jpeg") {
-				$mime = "image/jpeg";
-			} else if ($ext == "png") {
-				$mime = "image/png";
-
-			} else if ($ext == "gif") {
-				$mime = "image/gif";
-
-			}
-
-			$sz = getimagesize($dest);
-
-			$img_meta = array(
-
-				"width" => $sz[0],
-				"height" => $sz[1],
-				"file" => $iloc,
-				"sizes" => Array
-				(
-				),
-
-				"image_meta" => Array
-				(
-					"aperture" => 0,
-					"credit" => "",
-					"camera" => "",
-					"caption" => "",
-					"created_timestamp" => 0,
-					"copyright" => "",
-					"focal_length" => 0,
-					"iso" => 0,
-					"shutter_speed" => 0,
-					"title" => $img_title,
-					"orientation" => 0,
-					"keywords" => Array
-					(
-					),
-
-				),
-			);
-			$img_meta = serialize($img_meta);
-
-			$up = array("meta_value" => $img_meta);
-			$uuup = $this->db->update("wp_postmeta", $up, array("meta_id" => $item['_wp_attachment_metadata_id']));
-			if (!$uuup) {
-				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
-			}
-
-			$up = array("meta_value" => $iloc);
-			$uuup = $this->db->update("wp_postmeta", $up, array("meta_key" => "_wp_attached_file", "post_id" => $item['image_post_id']));
-			if (!$uuup) {
-				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
-			}
-
-			$up = array("post_title" => $img_title, "post_name" => $img_title, "guid" => $gurl, "post_mime_type" => $mime);
-			$uuup = $this->db->update("wp_posts", $up, array("ID" => $item['image_post_id']));
-
-			if (!$uuup) {
-				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
-			}
-
-			$put[] = "did everything image: $iloc";
-			$puts[] = $put;
-			 
-
 		}
 
-		die("<h3>cont</h3><pre>" . print_r($cont, 1) . "</pre>");
+		if (!$img && count($imgs) > 0) {
+			$img = $imgs[count($imgs) - 1];
+		}
+
+		if (!$img) {
+			$put[] = "NO IMAGE at UPC";
+			$puts[] = $put;
+
+			die("<h3>NO IMAGE</h3><pre>" . print_r($content, 1) . "</pre>");
+			$cont++;
+		}
+
+		die(json_encode(array('img' => $img)));
 
 	}
-
-
-
-
 
 	function getscrapeMacImg($last_id = 0) {
 		$put = array();
