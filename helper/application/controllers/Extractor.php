@@ -444,16 +444,16 @@ class Extractor extends CI_Controller {
 	}
 
 	function fixd($go = 0) {
-		$q = "select * from wp_posts where post_title like '%Americana%' or post_title like '%DecoArt%'";
+		$q = "select * from wp_posts where post_title like 'Van Gogh%'";
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
 
-			$q = "select * from wp_term_relationships where object_id={$row->ID} and term_taxonomy_id=1258";
+			$q = "select * from wp_term_relationships where object_id={$row->ID} and term_taxonomy_id=1334";
 			$rr = $this->db->query($q)->result();
 			if (count($rr) > 0) {
 				continue;
 			}
-			$q = "INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$row->ID}', '1258', '0');";
+			$q = "INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$row->ID}', '1334', '0');";
 			if ($go) {
 				$done = $this->db->query($q);
 				if (!$done) {
