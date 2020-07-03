@@ -285,8 +285,11 @@ var n=0;
     $('.btn-upc').each(function() {
        dothing($(this), el, n)
         n++;
+        if (n >= $('.btn-upc').length) {
+                $('.prog').text('done, save the images below')
+
+        }
     })
-    $('.prog').text('done, save the images below')
 
 
 
@@ -346,8 +349,13 @@ var n=0;
     $('.btn-update').each(function() {
        updateimg($(this),n)
         n++;
+
+        if (n >= $('.btn-upc').length) {
+                $('.prog').text('ALL Saved!!')
+
+        }
+
     })
-    $('.prog').text('all saved!')
 
 }
 
