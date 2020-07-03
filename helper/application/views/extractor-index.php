@@ -297,6 +297,7 @@ var field = $(el).closest('div').find('.newimg')
     }).done(function(res) {
         res = JSON.parse(res)
         console.log(res);
+$(el).closest('div').find('.simg').attr('src', field.val())
 
         alert(res.msg)
 
