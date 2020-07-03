@@ -263,13 +263,14 @@ function textsearch() {
     }).done(function(res) {
         res = JSON.parse(res)
       console.log(res);
+      $('#ihtml').html('<div><button class="btn btn-xs btn-primary" onclick="findimgfromupc()">Find new images for the below products</button></div>')
 var row, html=''
       for(var x=0;x<res.length;x++) {
         row=res[x]
         html="<div>";
         html+="<a class='btn btn-link btn-xs pull-right' target='_blank' href='https://thepaint-chip.com/wp-admin/post.php?post="+row.product_post_id+"&action=edit'>edit product</a>"
         html+="<input type='text'  placeholder='' value='"+row.post_title+"' style='width:440px;' /> - <img class='simg' src='https://thepaint-chip.com/wp-content/uploads/"+row.img+"'/> ";
-        html+="<span class=''><input type='text' ";
+        html+="<span class=''> <span class='btn-upc' data-upc='"+row.upc+"' ></span><input type='text' ";
         html +=" data-product_post_id='"+row.product_post_id+"'  ";
         html +="data-_wp_attachment_metadata_id='"+row._wp_attachment_metadata_id+"' data-image_post_id='"+row.image_post_id+"' class='newimg' placeholder='New image URL here' /> <button class='btn btn-xs btn-primary' onclick='updateimg(this)'>Update</button></span>";
         html+="</div><hr style='clear:both'>"
@@ -281,6 +282,32 @@ var row, html=''
 
 }
 
+
+function findimgfromupc(el) {
+    $('.prog').text('working...')
+
+    $('.btn-upc').each(function() {
+        var upc = $(this).attr('data-upc');
+
+ $.ajax({
+        url: "/helper/extractor/findimage/"+upc,
+        context: document.body,
+        method: 'get'
+    }).done(function(res) {
+        res = JSON.parse(res)
+        console.log(res);
+$(el).closest('div').find('.simg').attr('src', res.img)
+$(el).closest('div').find('.newimg').val(res.img)
+
+       // alert(res.msg)
+
+    })
+    })
+    $('.prog').text('done, save the images below')
+
+
+
+}
 
 function updateimg(el) {
 var field = $(el).closest('div').find('.newimg')
