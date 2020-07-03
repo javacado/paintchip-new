@@ -104,12 +104,15 @@ for ($x = 1; $x < 15; $x++) {?>
 
 
 -->
+ <input class='form-control'  id='searcht' placeholder='Text to search for'/>
 
 
 
- <button class='btn btn-success btn-sm pull-right' onclick='getscrapeMacImg(0)'>GET Mac Img</button>
+ <button class='btn btn-success btn-sm pull-right' onclick='textsearch()'>Search</button>
 
 
+<div class='well' id='ihtml'></div>
+<!--
  <input class='form-control'  id='startat' placeholder='Start At what INDEX'/>
 
  <button class='btn btn-danger btn-sm pull-right' onclick='stoploop()'>Stop Image LLOOP</button>
@@ -124,7 +127,7 @@ for ($x = 1; $x < 15; $x++) {?>
  <button class='btn btn-default btn-sm' onclick='approvePrices()'>Approve Category/Prices</button>
  <button class='btn btn-default btn-sm' onclick='getNI()'>Fix/Retry Not Identified</button>
 
-
+ -->
 
 
 <div class='row approveprices' style='display: none'>
@@ -236,6 +239,35 @@ setTimeout(function() {
 }, 500);
        }
     })
+}
+
+
+
+function textsearch() {
+    var s=$('searcht').val();
+     $.ajax({
+        url: "/helper/extractor/textsearch",
+        context: document.body,
+        method: 'post',
+        data: {
+            'str' : s
+        }
+    }).done(function(res) {
+        res = JSON.parse(res)
+      console.log(res);
+var row, html=''
+      for(var x=0;x<res.length;x++) {
+        row=res[x]
+        html="<div>";
+        html+="<div class='pull-right'><input type='text' class='form-control' placeholder='New image URL here' /> <button class='btn btn-xs btn-primary; onclick='updateimg(this)'>Update</button></div>";
+        html+=res.post_title+" - <img class='simg' src='"+res.image+'/> '
+        html+="</div>"
+
+
+        $('#ihtml').append(html);
+      }
+    })
+
 }
 
 
