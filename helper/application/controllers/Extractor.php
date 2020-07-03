@@ -306,7 +306,6 @@ class Extractor extends CI_Controller {
 			$ipost_id = $t->meta_value;
 
 			$q = "SELECT * FROM `wp_postmeta`  where meta_key='_wp_attached_file' and post_id=" . $ipost_id;
-			die("<h3>Output</h3><pre>" . print_r($q, 1) . "</pre>");
 			$t = $this->db->query($q)->row();
 			$row->img = $t->meta_value;
 
