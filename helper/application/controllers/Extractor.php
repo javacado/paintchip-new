@@ -296,7 +296,7 @@ class Extractor extends CI_Controller {
 	function textsearch() {
 		$str = strtolower($this->input->post('str'));
 		$q = "SELECT * FROM wp_posts where lower(post_title) like '%{$str}%'";
-
+#ct=1;
 		$r = $this->db->query($q)->result();
 		$out = array();
 		foreach ($r as $row) {
@@ -307,12 +307,16 @@ class Extractor extends CI_Controller {
 
 			$q = "SELECT * FROM `wp_postmeta`  where meta_key='_wp_attached_file' and post_id=" . $ipost_id;
 			$t = $this->db->query($q)->row();
+			if (!$t) {
+				die("<h3>$ct</h3><pre>" . print_r($q, 1) . "</pre>");
+			}
 			$row->img = $t->meta_value;
 
 			$row->product_post_id = $row->ID;
 			$row->image_post_id = $ipost_id;
 
 			$out[] = $row;
+			$ct++;
 		}
 
 		echo json_encode($out);
