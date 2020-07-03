@@ -244,7 +244,7 @@ setTimeout(function() {
 
 
 function textsearch() {
-    var s=$('searcht').val();
+    var s=$('#searcht').val();
      $.ajax({
         url: "/helper/extractor/textsearch",
         context: document.body,
