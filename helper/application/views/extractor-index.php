@@ -260,8 +260,8 @@ var row, html=''
         row=res[x]
         html="<div>";
         html+="<div class='pull-right'><input type='text' class='form-control' placeholder='New image URL here' /> <button class='btn btn-xs btn-primary; onclick='updateimg(this)'>Update</button></div>";
-        html+=res.post_title+" - <img class='simg' src='"+res.image+'/> '
-        html+="</div>"
+        html+=row.post_title+" - <img class='simg' src='"+row.image+'/> '
+        html+="</div><hr>"
 
 
         $('#ihtml').append(html);

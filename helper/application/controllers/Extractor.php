@@ -294,11 +294,21 @@ class Extractor extends CI_Controller {
 		$q = "SELECT * FROM wp_posts where post_title like '%{$str}%'";
 
 		$r = $this->db->query($q)->result();
+		$out = array();
 		foreach ($r as $row) {
 
+			$q = "SELECT * FROM `wp_postmeta`  where meta_key='_thumbnail_id' and post_id=" . $row->ID;
+			$t = $this->db->query($q)->row();
+			$ipost_id = $t->meta_value;
+
+			$q = "SELECT * FROM `wp_postmeta`  where meta_key='_wp_attached_file' and post_id=" . $ipost_id;
+			$t = $this->db->query($q)->row();
+			$row->img = $t->meta_value;
+
+			$out[] = $row;
 		}
 
-		echo json_encode($r);
+		echo json_encode($out);
 	}
 	function getscrapeMacImg($last_id = 0) {
 		$put = array();
