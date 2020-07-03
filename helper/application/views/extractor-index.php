@@ -49,12 +49,8 @@
 
 
 <div class='container main-c'>
-<?if (!is_dir("/var/www/html/paintchip")) {?>
-<h1> LOCAL SITE</h1>
-<hr>
-<?}?>
 
-<h1>Xtractor</h1>
+<h1>Paintchip Helper</h1>
 <h2 id='title'></h2>
 <h3 id='ctr'></h3>
 
@@ -115,7 +111,7 @@ for ($x = 1; $x < 15; $x++) {?>
 </div>
 
 
-
+<div class='prog'></div>
 
 
 <div class='well' style='display:none;' id='ihtml'></div>
@@ -318,8 +314,10 @@ $(th).closest('div').find('.newimg').val(res.img)
        }, (n*3000))
 }
 
-function updateimg(el) {
-var field = $(el).closest('div').find('.newimg')
+function updateimg(el,n=0) {
+    setTimeout(function() {
+var field = $(el).closest('div').find('.newimg');
+if (field.val()=="") return;
     var data={
         "newimg" : field.val(),
         "product_post_id" : field.attr('data-product_post_id'),
@@ -339,13 +337,14 @@ $(el).closest('div').hide();
        // alert(res.msg)
 
     })
+       }, (n*3000))
 }
 
 function saveimgfromupc() {
      $('.prog').text('working... saving')
 var n=0;
     $('.btn-update').each(function() {
-       updateimg($(this))
+       updateimg($(this),n)
         n++;
     })
     $('.prog').text('all saved!')
