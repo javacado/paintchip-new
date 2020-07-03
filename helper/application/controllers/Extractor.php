@@ -288,6 +288,18 @@ class Extractor extends CI_Controller {
 		return "";
 
 	}
+
+	function textsearch() {
+		$str = $this->input->post('str');
+		$q = "SELECT * FROM wp_posts where post_title like '%{$str}%'";
+
+		$r = $this->db->query($q)->result();
+		foreach ($r as $row) {
+
+		}
+
+		echo json_encode($r);
+	}
 	function getscrapeMacImg($last_id = 0) {
 		$put = array();
 		$puts = array();
