@@ -457,7 +457,11 @@ class Extractor extends CI_Controller {
 			} else {
 				echo "<P>$up";
 			}
-
+			$q = "select * from wp_term_relationships where object_id={$row->ID} and term_taxonomy_id=1330";
+			$rr = $this->db->query($q)->result();
+			if (count($rr) > 0) {
+				continue;
+			}
 			$q = "INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$row->ID}', '1330', '0');";
 			if ($go) {
 				$done = $this->db->query($q);
