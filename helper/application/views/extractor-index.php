@@ -284,10 +284,23 @@ var row, html=''
 
 
 function findimgfromupc(el) {
-    $('.prog').text('working...')
-
+    $('.prog').text('working... find 1 image per 3 seconds')
+var n=0;
     $('.btn-upc').each(function() {
-        var upc = $(this).attr('data-upc');
+       dothing($(this), el, n)
+        n++;
+    })
+    $('.prog').text('done, save the images below')
+
+
+
+}
+
+function dothing(th, el, n) {
+    setTimeout(function() {
+
+
+     var upc = $(th).attr('data-upc');
 
  $.ajax({
         url: "/helper/extractor/findimage/"+upc,
@@ -302,11 +315,7 @@ $(el).closest('div').find('.newimg').val(res.img)
        // alert(res.msg)
 
     })
-    })
-    $('.prog').text('done, save the images below')
-
-
-
+       }, (n*3000))
 }
 
 function updateimg(el) {
