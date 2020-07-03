@@ -259,9 +259,9 @@ var row, html=''
       for(var x=0;x<res.length;x++) {
         row=res[x]
         html="<div>";
-        html+="<div class='pull-right'><input type='text'  placeholder='New image URL here' /> <button class='btn btn-xs btn-primary; onclick='updateimg(this)'>Update</button></div>";
-        html+=row.post_title+" - <img class='simg' src='https://the-paintchip.com/wp-content/uploads/"+row.image+'/> '
-        html+="</div><hr style='clear:all'>"
+        html+=row.post_title+" - <img class='simg' src='https://the-paintchip.com/wp-content/uploads/"+row.img+'/> '
+        html+="<span class=''><input type='text'  placeholder='New image URL here' /> <button class='btn btn-xs btn-primary; onclick='updateimg(this)'>Update</button></span>";
+        html+="</div><hr style='clear:both'>"
 
 
         $('#ihtml').append(html);
