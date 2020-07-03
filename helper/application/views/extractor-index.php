@@ -309,8 +309,8 @@ function dothing(th, el, n) {
     }).done(function(res) {
         res = JSON.parse(res)
         console.log(res);
-$(el).closest('div').find('.simg').attr('src', res.img)
-$(el).closest('div').find('.newimg').val(res.img)
+$(th).closest('div').find('.simg').attr('src', res.img)
+$(th).closest('div').find('.newimg').val(res.img)
 
        // alert(res.msg)
 
