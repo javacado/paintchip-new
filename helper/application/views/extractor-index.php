@@ -110,7 +110,7 @@ for ($x = 1; $x < 15; $x++) {?>
 <span class='input-group-addon'>Search for:</span>
  <input class='form-control'  id='searcht' placeholder='Text to search for'/>
 
-<span class='input-group-addon'> <button class='btn btn-success btn-sm  '' onclick='textsearch()'><i class='fa fa-search'></i> Search</button></span>
+<span class='input-group-addon'> <button class='btn btn-success  btn-xs'  onclick='textsearch()'><i class='fa fa-search'></i> Search</button></span>
 </div>
 </div>
 
