@@ -260,7 +260,7 @@ var row, html=''
         row=res[x]
         html="<div>";
         html+="<input type='text'  placeholder='' value='"+row.post_title+"' style='width:240px;' /> - <img class='simg' src='https://thepaint-chip.com/wp-content/uploads/"+row.img+"'/> ";
-        html+="<span class=''><input type='text' data-product_post_id='"+row.product_post_id+"'  data-image_post_id='"+row.image_post_id+"' class='newimg' placeholder='New image URL here' /> <button class='btn btn-xs btn-primary; onclick='updateimg(this)'>Update</button></span>";
+        html+="<span class=''><input type='text' data-product_post_id='"+row.product_post_id+"'  data-image_post_id='"+row.image_post_id+"' class='newimg' placeholder='New image URL here' /> <button class='btn btn-xs btn-primary' onclick='updateimg(this)'>Update</button></span>";
         html+="</div><hr style='clear:both'>"
 
 
