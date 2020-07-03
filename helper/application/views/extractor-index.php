@@ -298,6 +298,8 @@ var field = $(el).closest('div').find('.newimg')
         res = JSON.parse(res)
         console.log(res);
 
+        alert(res.msg)
+
     })
 }
 
