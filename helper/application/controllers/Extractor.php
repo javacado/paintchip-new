@@ -291,6 +291,119 @@ class Extractor extends CI_Controller {
 
 	function updateimg() {
 		die("<h3>Output</h3><pre>" . print_r($_POST, 1) . "</pre>");
+
+		$item = array(
+			"product_post_id" => $this->input->post('product_post_id'),
+			"image_post_id" => $this->input->post('image_post_id'),
+		);
+
+		$img_title = null;
+
+		$pp = $this->db->query('select * from wp_posts where ID=' . $item['product_post_id'])->row();
+		if ($pp) {
+			$img_title = $pp->post_title;
+		}
+		$img = $this->input->post('newimg');
+		$img = explode("?", $img);
+		$img = $img[0];
+
+		$iname = explode("/", $img);
+		$iname = $iname[count($iname) - 1];
+
+		if (!$img_title) {
+			$img_title = $iname;
+		}
+
+		$ipostname = explode(".", $iname);
+		$ext = strtolower($ipostname[count($ipostname) - 1]);
+		$ipostname = $ipostname[0];
+
+		$iloc = "2020/06/" . $iname;
+		$dest = $_SERVER['DOCUMENT_ROOT'] . "/wp-content/uploads/" . $iloc;
+		$this->getImage($img, $dest);
+
+		if (!file_exists($dest)) {
+			die(json_encode(array("msg" => "something went wrong... the image did not upload")));
+
+			//$ct++;
+			die("<h3>Output</h3><pre>" . print_r($content, 1) . "</pre>");
+		}
+		$put[] = "downloaded: $iloc";
+
+		$gurl = "https://thepaint-chip.com/wp-content/uploads/" . $iloc;
+		$mime = "";
+		if ($ext == "jpg" || $ext == "jpeg") {
+			$mime = "image/jpeg";
+		} else if ($ext == "png") {
+			$mime = "image/png";
+
+		} else if ($ext == "gif") {
+			$mime = "image/gif";
+
+		}
+
+		@$sz = getimagesize($dest);
+
+		if (!$sz) {
+			die(json_encode(array("msg" => "something went wrong... we can't get the image size")));
+
+		}
+
+		$img_meta = array(
+
+			"width" => $sz[0],
+			"height" => $sz[1],
+			"file" => $iloc,
+			"sizes" => Array
+			(
+			),
+
+			"image_meta" => Array
+			(
+				"aperture" => 0,
+				"credit" => "",
+				"camera" => "",
+				"caption" => "",
+				"created_timestamp" => 0,
+				"copyright" => "",
+				"focal_length" => 0,
+				"iso" => 0,
+				"shutter_speed" => 0,
+				"title" => $img_title,
+				"orientation" => 0,
+				"keywords" => Array
+				(
+				),
+
+			),
+		);
+		$img_meta = serialize($img_meta);
+
+		$up = array("meta_value" => $img_meta);
+		$uuup = $this->db->update("wp_postmeta", $up, array("meta_id" => $item['_wp_attachment_metadata_id']));
+		if (!$uuup) {
+			die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+		}
+
+		$up = array("meta_value" => $iloc);
+		$uuup = $this->db->update("wp_postmeta", $up, array("meta_key" => "_wp_attached_file", "post_id" => $item['image_post_id']));
+		if (!$uuup) {
+			die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+		}
+
+		$up = array("post_title" => $img_title, "post_name" => $img_title, "guid" => $gurl, "post_mime_type" => $mime);
+		$uuup = $this->db->update("wp_posts", $up, array("ID" => $item['image_post_id']));
+
+		if (!$uuup) {
+			die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+		}
+
+		$put[] = "did everything image: $iloc";
+		$puts[] = $put;
+		$this->db->update("jt_noimg", array("got" => 1), array("id" => $id));
+
+		echo json_encode(array("this_id" => $id, "put" => $put));
+
 	}
 
 	function textsearch() {
@@ -312,6 +425,11 @@ class Extractor extends CI_Controller {
 			$t = $this->db->query($q)->row();
 
 			$row->img = $t->meta_value;
+
+			$q = "SELECT * FROM `wp_postmeta`  where meta_key='_wp_attachment_metadata_id' and post_id=" . $ipost_id;
+			$t = $this->db->query($q)->row();
+
+			$row->_wp_attachment_metadata_id = $t->meta_id;
 
 			$row->product_post_id = $row->ID;
 			$row->image_post_id = $ipost_id;
