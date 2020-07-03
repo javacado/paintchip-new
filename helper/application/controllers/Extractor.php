@@ -444,25 +444,16 @@ class Extractor extends CI_Controller {
 	}
 
 	function fixd($go = 0) {
-		$q = "select * from wp_posts where post_title like 'Daniel Smith Xf%'";
+		$q = "select * from wp_posts where post_title like '%Graham%'";
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
-			$u = array("post_title" => str_replace("Xf", "Extra-Fine", $row->post_title));
-			$up = $this->db->update_string("wp_posts", $u, array("ID" => $row->ID));
-			if ($go) {
-				$done = $this->db->query($up);
-				if (!$done) {
-					die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
-				}
-			} else {
-				echo "<P>$up";
-			}
-			$q = "select * from wp_term_relationships where object_id={$row->ID} and term_taxonomy_id=1330";
+
+			$q = "select * from wp_term_relationships where object_id={$row->ID} and term_taxonomy_id=1333";
 			$rr = $this->db->query($q)->result();
 			if (count($rr) > 0) {
 				continue;
 			}
-			$q = "INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$row->ID}', '1330', '0');";
+			$q = "INSERT INTO `wp_term_relationships` (`object_id`, `term_taxonomy_id`, `term_order`) VALUES ('{$row->ID}', '1333', '0');";
 			if ($go) {
 				$done = $this->db->query($q);
 				if (!$done) {
