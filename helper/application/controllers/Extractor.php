@@ -294,8 +294,8 @@ class Extractor extends CI_Controller {
 	}
 
 	function textsearch() {
-		$str = $this->input->post('str');
-		$q = "SELECT * FROM wp_posts where post_title like '%{$str}%'";
+		$str = strtolower($this->input->post('str'));
+		$q = "SELECT * FROM wp_posts where lower(post_title) like '%{$str}%'";
 
 		$r = $this->db->query($q)->result();
 		$out = array();
