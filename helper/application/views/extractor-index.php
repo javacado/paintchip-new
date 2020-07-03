@@ -104,11 +104,18 @@ for ($x = 1; $x < 15; $x++) {?>
 
 
 -->
+<div class='form-group'>
+<div class='input-group'>
+
+<span class='input-group-addon'>Search for:</span>
  <input class='form-control'  id='searcht' placeholder='Text to search for'/>
 
+<span class='input-group-addon'> <button class='btn btn-success btn-sm pull-right' onclick='textsearch()'><i class='fa fa-search'></i> Search</button></span>
+</div>
+</div>
 
 
- <button class='btn btn-success btn-sm pull-right' onclick='textsearch()'>Search</button>
+
 
 
 <div class='well' id='ihtml'></div>
@@ -259,8 +266,10 @@ var row, html=''
       for(var x=0;x<res.length;x++) {
         row=res[x]
         html="<div>";
-        html+="<input type='text'  placeholder='' value='"+row.post_title+"' style='width:240px;' /> - <img class='simg' src='https://thepaint-chip.com/wp-content/uploads/"+row.img+"'/> ";
-        html+="<span class=''><input type='text' data-product_post_id='"+row.product_post_id+"'  data-image_post_id='"+row.image_post_id+"' class='newimg' placeholder='New image URL here' /> <button class='btn btn-xs btn-primary' onclick='updateimg(this)'>Update</button></span>";
+        html+="<input type='text'  placeholder='' value='"+row.post_title+"' style='width:540px;' /> - <img class='simg' src='https://thepaint-chip.com/wp-content/uploads/"+row.img+"'/> ";
+        html+="<span class=''><input type='text' ";
+        html +=" data-product_post_id='"+row.product_post_id+"'  ";
+        html +="data-_wp_attachment_metadata_id='"+row._wp_attachment_metadata_id+"' data-image_post_id='"+row.image_post_id+"' class='newimg' placeholder='New image URL here' /> <button class='btn btn-xs btn-primary' onclick='updateimg(this)'>Update</button></span>";
         html+="</div><hr style='clear:both'>"
 
 
@@ -276,7 +285,8 @@ var field = $(el).closest('div').find('.newimg')
     var data={
         "newimg" : field.val(),
         "product_post_id" : field.attr('data-product_post_id'),
-        "image_post_id" : field.attr('data-image_post_id')
+        "image_post_id" : field.attr('data-image_post_id'),
+        "_wp_attachment_metadata_id": field.attr('data-_wp_attachment_metadata_id')
     }
     $.ajax({
         url: "/helper/extractor/updateimg/",
