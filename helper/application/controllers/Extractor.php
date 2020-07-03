@@ -299,17 +299,18 @@ class Extractor extends CI_Controller {
 #ct=1;
 		$r = $this->db->query($q)->result();
 		$out = array();
+		$ct = 1;
 		foreach ($r as $row) {
 
 			$q = "SELECT * FROM `wp_postmeta`  where meta_key='_thumbnail_id' and post_id=" . $row->ID;
-			$t = $this->db->query($q)->row();
-			$ipost_id = $t->meta_value;
-
+			@$t = $this->db->query($q)->row();
+			@$ipost_id = $t->meta_value;
+			if (!$ipost_id) {
+				continue;
+			}
 			$q = "SELECT * FROM `wp_postmeta`  where meta_key='_wp_attached_file' and post_id=" . $ipost_id;
 			$t = $this->db->query($q)->row();
-			if (!$t) {
-				die("<h3>$ct</h3><pre>" . print_r($q, 1) . "</pre>");
-			}
+
 			$row->img = $t->meta_value;
 
 			$row->product_post_id = $row->ID;
