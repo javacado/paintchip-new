@@ -67,6 +67,23 @@ class Extractor extends CI_Controller {
 		$this->load->view('extractor-index', $data);
 	}
 
+	function emails() {
+		$q = "select * from wp_oses_emails order by email_created desc";
+		$r = $this->db->query($q);
+		$rr = $r->result();
+		$r->free_result();
+		$data = array("emails" => $rr);
+		$this->load->view('emails-viewer', $data);
+	}
+
+	function show_email($id) {
+		$q = "select * from wp_oses_emails where email_id=$id";
+		$r = $this->db->query($q);
+		$rr = $r->row();
+		$r->free_result();
+		die($rr->email_message);
+	}
+
 	function getMac() {
 		$csv = $_SERVER['DOCUMENT_ROOT'] . "/dta/inventory-mac.csv";
 		$handle = fopen($csv, "r");
