@@ -404,7 +404,7 @@ class Extractor extends CI_Controller {
 
 	function textsearch() {
 		$str = strtolower($this->input->post('str'));
-		$q = "SELECT * FROM wp_posts where lower(post_title) like '%{$str}%'";
+		$q = "SELECT * FROM wp_posts where lower(post_title) like '{$str}%'";
 #ct=1;
 		$r = $this->db->query($q)->result();
 		$out = array();
@@ -447,6 +447,7 @@ class Extractor extends CI_Controller {
 		$q = "select * from wp_posts where post_title like '%Van Gogh%'";
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
+			echo "<P>" . $row->post_title;
 
 			$q = "select * from wp_term_relationships where object_id={$row->ID} and term_taxonomy_id=1334";
 			$rr = $this->db->query($q)->result();
