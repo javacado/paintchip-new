@@ -73,6 +73,7 @@ class Extractor extends CI_Controller {
 		$rr = $r->result();
 		$r->free_result();
 		$data = array("emails" => $rr);
+		die("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
 		$this->load->view('emails-viewer', $data);
 	}
 
