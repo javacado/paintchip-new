@@ -73,30 +73,18 @@ foreach ($emails as $email) {
 	?>
 <tr>
     <td> <?php echo date('F jS, Y g:a', strtotime($email->email_created)); ?> </td>
-    <td><?php echo $email->email_subject ?></td>
-    <td><?php echo $sentto ?></td>
-    <td><?php echo $teaser ?> <a href='/helper/extractor/show_email/<?php echo $email->email_id ?>' target='_email'> Show Email</a></td>
-    <td><?php echo $email->email_status ?></td>
+    <td><?php echo $email->email_subject; ?></td>
+    <td><?php echo $sentto; ?></td>
+    <td><?php echo $teaser; ?> <a href='/helper/extractor/show_email/<?php echo $email->email_id; ?>' target='_email'> Show Email</a></td>
+    <td><?php echo $email->email_status; ?></td>
 </tr>
 
 
-        <?
-}?>
+ <?
+}
+?>
 </table>
 
-
-
-
-<style>
-.ta{
-    min-height:100px;
-}
-
-.ta-td{
-    min-height:100px;
-}
-
-</style>
 
 
 
