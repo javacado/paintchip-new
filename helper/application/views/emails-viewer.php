@@ -85,7 +85,7 @@ if (!$ok) {?>
 <?php
 for ($x = 1; $x < 15; $x++) {?>
 <label class='btn btn-xs btn-default' >
-    <input type='radio' name='csv'  class='check-csv' value='data-<?=$x?>' /> data-<?=$x?>
+    <input type='radio' name='csv'  class='check-csv' value='data-<?php echo $x ?>' /> data-<?=$x?>
 </label>
 
 <?php
@@ -129,10 +129,10 @@ for ($x = 1; $x < 15; $x++) {?>
 		?>
 <tr>
     <td> <?php echo date('F jS, Y g:a', strtotime($email->email_created)); ?> </td>
-    <td><?=$email->email_subject?></td>
-    <td><?=$sentto?></td>
-    <td><?=$teaser?> <a href='/helper/extractor/show_email/<?=$email->email_id?>' target='_email'> Show Email</a></td>
-    <td><?=$email->email_status?></td>
+    <td><?php echo $email->email_subject ?></td>
+    <td><?php echo $sentto ?></td>
+    <td><?php echo $teaser ?> <a href='/helper/extractor/show_email/<?php echo $email->email_id ?>' target='_email'> Show Email</a></td>
+    <td><?php echo $email->email_status ?></td>
 </tr>
 
 
