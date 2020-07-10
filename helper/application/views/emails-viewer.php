@@ -54,14 +54,14 @@
 
 
 
-<table class='table' id="preview-data">
-<tr><th>
+<table class='table striped' id="preview-data">
+ <tr>
     <td>Date</td>
     <td>Subject</td>
     <td>Sent to</td>
     <td>Message</td>
     <td>Status</td>
-</th></tr>
+</tr></th>
     <?php
 
 foreach ($emails as $email) {
@@ -79,13 +79,7 @@ foreach ($emails as $email) {
 	}
 
 	?>
-<tr>
-    <td> <?php echo date('F jS, Y g:a', strtotime($email->email_created)); ?> </td>
-    <td><?php echo $email->email_subject ?></td>
-    <td><?php echo $sentto ?></td>
-    <td><?php echo $teaser ?> <a href='/helper/extractor/show_email/<?php echo $email->email_id ?>' target='_email'> Show Email</a></td>
-    <td><?php echo $email->email_status ?></td>
-</tr>
+test
 
 
         <?}?>

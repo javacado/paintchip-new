@@ -1,0 +1,2 @@
+2020-07-09T00:35:04+00:00 CRITICAL Out of memory (allocated 67633152) (tried to allocate 32768 bytes) in /var/www/html/paintchip/wp-includes/assets/script-loader-packages.php on line 1
+
