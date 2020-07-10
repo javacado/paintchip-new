@@ -80,7 +80,7 @@ foreach ($emails as $email) {
 </tr>
 
 
- <?
+ <?php
 }
 ?>
 </table>
