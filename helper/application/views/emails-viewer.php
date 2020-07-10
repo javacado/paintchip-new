@@ -54,6 +54,7 @@
 
 
 <?php
+$ok = 1;
 if (!$ok) {?>
 
  <form method="POST" style='width:400px;'>
