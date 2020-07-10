@@ -128,7 +128,7 @@ for ($x = 1; $x < 15; $x++) {?>
     <td> <?php echo date('F jS, Y g:a', strtotime($email->email_created)); ?> </td>
     <td><?=$email->email_subject?></td>
     <td><?=$sentto?></td>
-    <td><?=$teaser?> <a href='/helper/extractor/show_email/<?=$email->id?>' target='_email'> Show Email</a></td>
+    <td><?=$teaser?> <a href='/helper/extractor/show_email/<?=$email->email_id?>' target='_email'> Show Email</a></td>
     <td><?=$email->email_status?></td>
 </tr>
 
