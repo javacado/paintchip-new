@@ -110,7 +110,9 @@ for ($x = 1; $x < 15; $x++) {?>
     <td>Message</td>
     <td>Status</td>
 </th></tr>
-    <?foreach ($emails as $email) {
+    <?php
+
+	foreach ($emails as $email) {
 		$sentto = "";
 		if (strpos($email->email_to, "a:") !== false) {
 			$e = unserialize($email->email_to);
