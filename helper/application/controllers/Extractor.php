@@ -75,7 +75,7 @@ class Extractor extends CI_Controller {
 			$u = array("post_title" => $newtitle);
 			$up = $this->db->update_string('wp_posts', $u, array("ID" => $row->ID));
 
-			echo "<P>$q";
+			echo "<P>$up ;";
 		}
 	}
 	function emails() {
@@ -432,7 +432,7 @@ class Extractor extends CI_Controller {
 
 	function textsearch() {
 		$str = strtolower($this->input->post('str'));
-		$q = "SELECT * FROM wp_posts where lower(post_title) like '{$str}%'";
+		$q = "SELECT * FROM wp_posts where lower(post_title) like '%{$str}%'";
 #ct=1;
 		$r = $this->db->query($q)->result();
 		$out = array();
