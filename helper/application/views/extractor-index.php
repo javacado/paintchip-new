@@ -300,6 +300,7 @@ function dothing(th, el, n) {
 
 
      var upc = $(th).attr('data-upc');
+     var product_post_id = $(th).attr('data-upc');
 
  $.ajax({
         url: "/helper/extractor/findimage/"+upc,
@@ -314,7 +315,7 @@ $(th).closest('div').find('.newimg').val(res.img)
        // alert(res.msg)
 
     })
-       }, (n*3000))
+       }, (n*4000))
 }
 
 function updateimg(el,n=0) {
