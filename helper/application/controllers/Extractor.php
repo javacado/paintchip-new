@@ -67,6 +67,17 @@ class Extractor extends CI_Controller {
 		$this->load->view('extractor-index', $data);
 	}
 
+	function rpeg($go = 0) {
+		$q = "select * from wp_posts where post_title like '%- peggable'";
+		$r = $this->db->query($q)->result();
+		foreach ($r as $row) {
+			$newtitle = str_replace(" - Peggable", "", $row->post_title);
+			$u = array("post_title" => $newtitle);
+			$up = $this->db->update_string('wp_posts', $u, array("ID" => $row->ID));
+
+			echo "<P>$q";
+		}
+	}
 	function emails() {
 		$q = "select * from wp_oses_emails order by email_created desc";
 		$r = $this->db->query($q);
@@ -484,7 +495,11 @@ class Extractor extends CI_Controller {
 		}
 
 	}
-	function findimage($upc) {
+	function findimage($upc = null) {
+		if (!$upc) {
+			die(json_encode(array('img' => "none")));
+
+		}
 
 		$url = "https://api.barcodespider.com/v1/lookup?upc=" . $upc;
 		$endpoint = "https://api.barcodespider.com/v1/lookup";
