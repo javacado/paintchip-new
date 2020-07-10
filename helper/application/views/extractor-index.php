@@ -263,12 +263,12 @@ function textsearch() {
 var row, html=''
       for(var x=0;x<res.length;x++) {
         row=res[x]
-        html="<div>";
+        html="<div> <button class='btn btn-xs btn-danger ' onclick='remove(this)'>x</button>";
         html+="<a class='btn btn-link btn-xs pull-right' target='_blank' href='https://thepaint-chip.com/wp-admin/post.php?post="+row.product_post_id+"&action=edit'>edit product</a>"
         html+="<input type='text'  placeholder='' value='"+row.post_title+"' style='width:440px;' /> - <img class='simg' src='https://thepaint-chip.com/wp-content/uploads/"+row.img+"'/> ";
         html+="<span class=''> <span class='btn-upc' data-upc='"+row.upc+"' ></span><input type='text' ";
         html +=" data-product_post_id='"+row.product_post_id+"'  ";
-        html +="data-_wp_attachment_metadata_id='"+row._wp_attachment_metadata_id+"' data-image_post_id='"+row.image_post_id+"' class='newimg' placeholder='New image URL here' /> <button class='btn btn-xs btn-primary btn-update' onclick='updateimg(this)'>Update</button></span>";
+        html +="data-_wp_attachment_metadata_id='"+row._wp_attachment_metadata_id+"' data-image_post_id='"+row.image_post_id+"' class='newimg' placeholder='New image URL here' /> <button class='btn btn-xs btn-primary btn-update' onclick='updateimg(this)'>Update</button> </span>";
         html+="</div><hr style='clear:both'>"
 
 
@@ -278,6 +278,9 @@ var row, html=''
 
 }
 
+function remove(el) {
+    $(el).closest('div').remove();
+}
 
 function findimgfromupc(el) {
     $('.prog').text('working... find 1 image per 3 seconds')
