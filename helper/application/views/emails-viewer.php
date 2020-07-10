@@ -53,54 +53,6 @@
 <h1>Email Viewer</h1>
 
 
-<?php
-$ok = 1;
-if (!$ok) {?>
-
- <form method="POST" style='width:400px;'>
-    <div class='input-group'>
-        <label class='input-group-addon'>Passphrase</label>
-        <input class='form-control input-lg' value='' name='pphrase' placeholder='Type in the Passphrase' />
-        <span class='input-group-addon'><button type='submit' class='btn btn-primary'><i class='fa fa-arrow-right'></i> Login</span>
-    </div>
-</form>
-
-
-<?php
-} else {
-	?>
-
-
-
-<!-- <div class='alert alert-info fixers' style=''>
-    </div> -->
-
-
-<!--
-
-<div class='update'>
-    </div>
-    <input type="text" class='form-control' id='delete_ids' />
-    <div class='' style='margin-bottom:10px;'>
-<?php
-for ($x = 1; $x < 15; $x++) {?>
-<label class='btn btn-xs btn-default' >
-    <input type='radio' name='csv'  class='check-csv' value='data-<?php echo $x ?>' /> data-<?=$x?>
-</label>
-
-<?php
-}?>
-</div> <button class='btn btn-info' onclick='extract()'>Load/Display CSV</button>
-<button class='btn btn-default' onclick='getfix()'>Fix/Retry Failed</button>
-<button class='btn btn-primary chks' disabled onclick='get_supplier_data(0)'>Check Supplier</button>
-
-
-
-
-
-
--->
-
 
 <table class='table' id="preview-data">
 <tr><th>
@@ -112,21 +64,21 @@ for ($x = 1; $x < 15; $x++) {?>
 </th></tr>
     <?php
 
-	foreach ($emails as $email) {
-		$sentto = "";
-		if (strpos($email->email_to, "a:") !== false) {
-			$e = unserialize($email->email_to);
-			$sentto = $e[0];
-		} else {
-			$sentto = $email->email_to;
-		}
+foreach ($emails as $email) {
+	$sentto = "";
+	if (strpos($email->email_to, "a:") !== false) {
+		$e = unserialize($email->email_to);
+		$sentto = $e[0];
+	} else {
+		$sentto = $email->email_to;
+	}
 
-		$teaser = strip_tags($email->email_message);
-		if (strlen($teaser) > 100) {
-			$teaser = substr($teaser, 0, 100) . "...";
-		}
+	$teaser = strip_tags($email->email_message);
+	if (strlen($teaser) > 100) {
+		$teaser = substr($teaser, 0, 100) . "...";
+	}
 
-		?>
+	?>
 <tr>
     <td> <?php echo date('F jS, Y g:a', strtotime($email->email_created)); ?> </td>
     <td><?php echo $email->email_subject ?></td>
@@ -143,7 +95,7 @@ for ($x = 1; $x < 15; $x++) {?>
 </div>
  -->
 
- <?}?>
+
 
 <style>
 .ta{
