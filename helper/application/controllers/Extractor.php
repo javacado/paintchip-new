@@ -4461,7 +4461,7 @@ EOT;
 	}
 
 	function fixslugs() {
-		$q = "SELECT * FROM `wp_posts` where post_name like '%-'";
+		$q = "SELECT * FROM `wp_posts` where post_name like '-%'";
 		$r = $this->db->query($q)->result();
 		foreach ($r as $row) {
 			$p = $row->post_name;
