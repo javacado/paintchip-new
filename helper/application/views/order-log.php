@@ -137,14 +137,14 @@ Order #<?php echo $row->ID ?></i>
         <td>
 
 <table class='table text-center ptable' style='border-top:0;'>
-    <tr  ><td >Product</td><td>In Store</td><td>Need to Order</td>
+    <tr  ><td style='text-align:left' >Product</td><td>In Store</td><td>Need to Order</td>
     <?php foreach ($row->products as $p) {
 			$is = 0;
 			if (isset($row->prod_data[$p->product_id])) {
 				$is = $row->prod_data[$p->product_id]['in_store'];
 			}
 			?>
-<tr rel='<?php echo $p->product_id ?>' class='prods'><td><?php echo $p->order_item_name ?></td>
+<tr  rel='<?php echo $p->product_id ?>' class='prods'><td style='text-align:left'><?php echo $p->order_item_name ?></td>
     <td class='text-center'>
             <input type='radio' class=' '   rel='' onclick="" name='in_stock_<?php echo $p->product_id ?>' <?php if ($is) {echo "checked";}?> value='1' name="in_store" />
         </td>
