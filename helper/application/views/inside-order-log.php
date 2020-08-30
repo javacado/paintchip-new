@@ -1,4 +1,4 @@
- <div id='prodstatuslist' data-logid="<?php =$row->log_id?>">
+ <div id='prodstatuslist' data-logid="<?php echo $row->log_id; ?>">
 <table class='table text-center ptable ' style='width:100%;' >
     <tr class='hdr' ><td style='text-align:left;padding-left:0'>Product</td><td class='text-center' style='width:40px'>Got</td><td class='text-center' style='width:40px;color:#c00;' >Order</td>
     <?php foreach ($row->products as $p) {
@@ -7,13 +7,13 @@
 		$is = $row->prod_data[$p->product_id]['in_store'];
 	}
 	?>
-<tr rel='<?php =$p->product_id?>' class='prods'><td style='text-align:left;padding-left:0'>
-    <span style="<?php if ($is != 1) {echo "color:#c00;";}?>"><?php =$p->order_item_name?></span></td>
+<tr rel='<?php echo $p->product_id; ?>' class='prods'><td style='text-align:left;padding-left:0'>
+    <span style="<?php if ($is != 1) {echo "color:#c00;";}?>"><?php echo $p->order_item_name; ?></span></td>
     <td class='text-center' >
-            <input type='radio' class='prod-radio' style=''  rel='<?php =$p->product_id?>' onclick="" name='in_stock_<?php =$p->product_id?>' <?php if ($is) {echo "checked";}?> value='1' name="in_store" />
+            <input type='radio' class='prod-radio' style=''  rel='<?php echo $p->product_id; ?>' onclick="" name='in_stock_<?php echo $p->product_id; ?>' <?php if ($is) {echo "checked";}?> value='1' name="in_store" />
         </td>
     <td class='text-center' >
-            <input type='radio' class='prod-radio'  style='' rel='<?php =$p->product_id?>' onclick="" <?php if (!$is) {echo "checked";}?> name='in_stock_<?php =$p->product_id?>' value='0' name="need_to_order" />
+            <input type='radio' class='prod-radio'  style='' rel='<?php echo $p->product_id; ?>' onclick="" <?php if (!$is) {echo "checked";}?> name='in_stock_<?php echo $p->product_id; ?>' value='0' name="need_to_order" />
 
     </td>
 </tr>
@@ -23,7 +23,7 @@
 <div class='srow'>
     <strong>Employee</strong>
 
-        <input class='form-control' rel='employee' type='text' value="<?php =$row->employee?>">
+        <input class='form-control' rel='employee' type='text' value="<?php echo $row->employee; ?>">
 
 </div>
 <div class='srow'>
@@ -34,14 +34,14 @@
 	echo 'checked';
 }
 ?>  onclick='std(this)' />
- <input class='form-control' rel='picked_up' style='width:75%;' readonly type='date' value="<?php =$row->picked_up?>" />
+ <input class='form-control' rel='picked_up' style='width:75%;' readonly type='date' value="<?php echo $row->picked_up; ?>" />
  </div>
 </div>
 
 <div class='srow'>
     <strong> Notes</strong>
 
-<textarea rel='notes' class='form-control'><?php =$row->notes?></textarea>
+<textarea rel='notes' class='form-control'><?php echo $row->notes; ?></textarea>
 
 
 </div>
