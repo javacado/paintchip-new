@@ -46,7 +46,7 @@
 
 
 
-<?
+<?php
 $ic = "<i class='fa fa-arrow-down'></i>";
 $bnclass = $completed == "0" ? 'btn-link' : 'btn-info';
 $bnicon = $completed == "0" ? $ic : "";
@@ -64,26 +64,26 @@ $bmicon = $completed == 'waiting' ? $ic : "";
 <h1 style='margin-bottom:25px;'>Paintchip Order Log</h1>
 
 <div style='margin-bottom:15px;'>
-<a class='btn <?=$bnclass?>' href='/helper/order_log/index/0'>Uncompleted Orders <?=$bnicon?></a> &nbsp;
-<a class='btn <?=$boclass?>' href='/helper/order_log/index/1'>Completed Orders <?=$boicon?></a> &nbsp;
-<a class='btn <?=$bmclass?>' href='/helper/order_log/index/waiting'>Waiting For... <?=$bmicon?></a>
+<a class='btn <?php echo $bnclass ?>' href='/helper/order_log/index/0'>Uncompleted Orders <?php echo $bnicon ?></a> &nbsp;
+<a class='btn <?php echo $boclass ?>' href='/helper/order_log/index/1'>Completed Orders <?php echo $boicon ?></a> &nbsp;
+<a class='btn <?php echo $bmclass ?>' href='/helper/order_log/index/waiting'>Waiting For... <?php echo $bmicon ?></a>
 
 
 </a>
 </div>
 
 
-<?if ($completed == 'waiting') {
+<?php if ($completed == 'waiting') {
 	?>
 
 
- <?
-	foreach ($log as $row) {
+ <?php
+foreach ($log as $row) {
 		?>
 
 
 
-<?foreach ($row->products as $p) {
+<?php foreach ($row->products as $p) {
 			$is = 0;
 			if (isset($row->prod_data[$p->product_id])) {
 				$is = $row->prod_data[$p->product_id]['in_store'];
@@ -94,18 +94,18 @@ $bmicon = $completed == 'waiting' ? $ic : "";
 			}
 			?>
 <div class='litem'>
-<h3><?=$p->order_item_name?></h3>
-For <?=$row->meta->_billing_first_name?> <?=$row->meta->_billing_last_name?>
+<h3><?php echo $p->order_item_name ?></h3>
+For <?php echo $row->meta->_billing_first_name ?> <?php echo $row->meta->_billing_last_name ?>
 <br /><i>
-<a href='/helper/order_log/index/0#r<?=$row->ID?>'>Order #<?=$row->ID?></i></a>
+<a href='/helper/order_log/index/0#r<?php echo $row->ID ?>'>Order #<?php echo $row->ID ?></i></a>
 
 </div>
-    <?}?>
+    <?php }?>
 
-        <?}?>
+        <?php }?>
 
 
-<?} else {
+<?php } else {
 	?>
 
 <table class='table'>
@@ -120,82 +120,82 @@ For <?=$row->meta->_billing_first_name?> <?=$row->meta->_billing_last_name?>
  </tr>
 
 
- <?
-	foreach ($log as $row) {
+ <?php
+foreach ($log as $row) {
 		?>
 
-<tr rel="<?=$row->ID?>" id="r<?=$row->ID?>" class='bbot' data-logid="<?=$row->log_id?>">
+<tr rel="<?php echo $row->ID ?>" id="r<?php echo $row->ID ?>" class='bbot' data-logid="<?php echo $row->log_id ?>">
 
         <td>
-<h3 style='margin-top:0;'><?=$row->meta->_billing_first_name?> <?=$row->meta->_billing_last_name?>
+<h3 style='margin-top:0;'><?php echo $row->meta->_billing_first_name ?> <?php echo $row->meta->_billing_last_name ?>
 </h3>
 <i>
-Order #<?=$row->ID?></i>
+Order #<?php echo $row->ID ?></i>
 
-            <div class='small'><?=date("m/d/Y", strtotime($row->post_modified))?></div>
+            <div class='small'><?php echo date("m/d/Y", strtotime($row->post_modified)) ?></div>
         </td>
         <td>
 
 <table class='table text-center ptable' style='border-top:0;'>
     <tr  ><td >Product</td><td>In Store</td><td>Need to Order</td>
-    <?foreach ($row->products as $p) {
+    <?php foreach ($row->products as $p) {
 			$is = 0;
 			if (isset($row->prod_data[$p->product_id])) {
 				$is = $row->prod_data[$p->product_id]['in_store'];
 			}
 			?>
-<tr rel='<?=$p->product_id?>' class='prods'><td><?=$p->order_item_name?></td>
+<tr rel='<?php echo $p->product_id ?>' class='prods'><td><?php echo $p->order_item_name ?></td>
     <td class='text-center'>
-            <input type='radio' class=' '   rel='' onclick="" name='in_stock_<?=$p->product_id?>' <?if ($is) {echo "checked";}?> value='1' name="in_store" />
+            <input type='radio' class=' '   rel='' onclick="" name='in_stock_<?php echo $p->product_id ?>' <?php if ($is) {echo "checked";}?> value='1' name="in_store" />
         </td>
     <td class='text-center'>
-            <input type='radio' class=''   rel='' onclick="" <?if (!$is) {echo "checked";}?> name='in_stock_<?=$p->product_id?>' value='0' name="need_to_order" />
+            <input type='radio' class=''   rel='' onclick="" <?php if (!$is) {echo "checked";}?> name='in_stock_<?php echo $p->product_id ?>' value='0' name="need_to_order" />
 
     </td>
 </tr>
 
-        <?}?>
+        <?php }?>
 </table>
         </td>
          <!-- <td>
 <div class='form-group'>
     <span class='input-group'>
         <span class='input-group-addon'>
-            <input type='checkbox' rel='fdc' <?if ($row->find_date != "") {
+            <input type='checkbox' rel='fdc' <?php if ($row->find_date != "") {
 			echo 'checked';
 		}
 		?> onclick='std(this)' />
         </span>
-<input class='form-control' rel='find_date' type='date' value="<?=$row->find_date?>">
+<input class='form-control' rel='find_date' type='date' value="<?php echo $row->find_date ?>">
 </span>
 </div>
 
 
         </td>
         <td>
-<input class='form-control' rel='need_to_order'  type='text' value="<?=$row->need_to_order?>">
+<input class='form-control' rel='need_to_order'  type='text' value="<?php echo $row->need_to_order ?>">
          </td> -->
         <td >
-            <input class='form-control' rel='employee' type='text' value="<?=$row->employee?>">
+            <input class='form-control' rel='employee' type='text' value="<?php echo $row->employee ?>">
                     </td>
-        <td><textarea rel='notes' class='form-control'><?=$row->notes?></textarea></td>
+        <td><textarea rel='notes' class='form-control'><?php echo $row->notes ?></textarea></td>
         <td>
 
             <div class='form-group'>
     <span class='input-group'>
         <span class='input-group-addon'>
-            <input type='checkbox' rel='fdc'  <?if ($row->picked_up != "") {
+            <input type='checkbox' rel='fdc'  <?php if ($row->picked_up != "") {
 			echo 'checked';
 		}
 		?>  onclick='std(this)' />
         </span>
-<input class='form-control' rel='picked_up' type='date' value="<?=$row->picked_up?>">
+<input class='form-control' rel='picked_up' type='date' value="<?php echo $row->picked_up ?>">
 </span>
 </div>
 
 </td>
         <!-- <td>
-            <input type='checkbox' rel='complete'  class='form-control' <?if ($row->complete == 1) {
+            <input type='checkbox' rel='complete'  class='form-control' <?php if ($row->complete == 1) {
 			echo 'checked';
 		}
 		?>   />
@@ -204,19 +204,19 @@ Order #<?=$row->ID?></i>
         <td><button class='btn btn-success' onclick='savethis(this)'>Save</button><div class='savemsg text-success'></div></td>
  </tr>
 
-    <?
-	}
+    <?php
+}
 	?>
 
 
 </table>
-<?}?>
+<?php }?>
 
 <script>
 
 function std(el) {
 
-    var v="<?=date('m/d/Y')?>";
+    var v="<?php echo date('m/d/Y') ?>";
     setTimeout(function() {
         if (!$(el).prop('checked')) v="";
     $(el).closest('.form-group').find('input[type="date"]').val(v);
