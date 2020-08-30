@@ -1,3 +1,5 @@
 wp-config.php
 .htaccess
 .phpintel/*
+/wp-content/uploads/wc-logs/*
+/wp-content/debug.log

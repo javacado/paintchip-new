@@ -1,2 +1,0 @@
-2020-05-02T02:25:03+00:00 CRITICAL Out of memory (allocated 52690944) (tried to allocate 8192 bytes) in /var/www/html/paintchip/wp-content/plugins/wd-facebook-feed/framework/WDFacebookFeed.php on line 113
-
