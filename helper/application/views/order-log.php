@@ -86,7 +86,7 @@ foreach ($log as $row) {
 <?php foreach ($row->products as $p) {
 			$is = 0;
 			if (isset($row->prod_data[$p->product_id])) {
-				$is = $row->prod_data[$p->product_id]['in_store'];
+				$is = $row->prod_data[$p->product_id]['in_store'] || $row->post_status == 'wc-completed';
 				if ($is == "1") {
 					continue;
 				}
