@@ -1,10 +1,13 @@
  <div id='prodstatuslist' data-logid="<?php echo $row->log_id; ?>">
 <table class='table text-center ptable ' style='width:100%;' >
+
+
     <tr class='hdr' ><td style='text-align:left;padding-left:0'>Product</td><td class='text-center' style='width:40px'>Got</td><td class='text-center' style='width:40px;color:#c00;' >Order</td>
     <?php foreach ($row->products as $p) {
 	$is = 0;
 	if (isset($row->prod_data[$p->product_id])) {
-		$is = $row->prod_data[$p->product_id]['in_store'];
+		$is = $row->prod_data[$p->product_id]['in_store'] || $row->post_status == 'wc-completed';
+
 	}
 	?>
 <tr rel='<?php echo $p->product_id; ?>' class='prods'><td style='text-align:left;padding-left:0'>
