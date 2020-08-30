@@ -24,7 +24,7 @@ class Order_log extends CI_Controller {
 
 	function getOrderLogData($post_id) {
 
-		$q = "select p.*, l.* from wp_posts p left join wp_order_log l on l.post_id=p.ID  where   post_ID=$post_id";
+		$q = "select p.*, l.* from wp_posts p left join wp_order_log l on l.post_id=p.ID  where   ID=$post_id";
 		$rq = $this->db->query($q);
 		$r = $rq->result();
 		$rq->free_result();
@@ -62,7 +62,12 @@ class Order_log extends CI_Controller {
 
 		}
 
-		$this->load->view('inside-order-log', array('row' => $row));
+		if ($row) {
+			$this->load->view('inside-order-log', array('row' => $row));
+		} else {
+			echo "";
+
+		}
 
 	}
 
