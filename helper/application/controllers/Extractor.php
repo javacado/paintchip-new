@@ -4448,6 +4448,10 @@ EOT;
 		}
 	}
 
+	function priceCheck() {
+		$this->load->view('price-check');
+	}
+
 	function fixslugs() {
 		$q = "SELECT * FROM `wp_posts` where post_name like '-%'";
 		$r = $this->db->query($q)->result();
