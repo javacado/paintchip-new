@@ -4465,7 +4465,7 @@ EOT;
 
 	}
 	function checkPriceAjax($st = 0, $lim = 10) {
-		$q = "select * from jt_price_check where id>$st order by id asc limit $lim";
+		$q = "select * from jt_price_check where vendor='SS' and  id>$st order by id asc limit $lim";
 		$rq = $this->db->query($q);
 		$r = $rq->result();
 		$rq->free_result();
@@ -4477,10 +4477,22 @@ EOT;
 				$price = $this->getMacPrice($row);
 
 			}
-			die("<h3>Output</h3><pre>" . print_r("price" . $price, 1) . "</pre>");
+
+			$price = str_replace("$", "", $price);
+			//die("<h3>Output</h3><pre>" . print_r("price" . $price, 1) . "</pre>");
 			$up = array("price_vendor" => $price, "modified" => date("Y-m-d H:i:s"));
 			$this->db->update('jt_price_check', $up, array('id' => $row->id));
 		}
+		if (count($r) < $lim) {
+			$ret = array('complete' => 1);
+		} else {
+			$ret = array("nextstart" => ($row->id));
+		}
+
+		die(json_encode($ret));
+
+	}
+	function getMacPrice($row) {
 
 	}
 
@@ -4490,7 +4502,7 @@ EOT;
 		$rq = $this->db->query($q);
 		$r = $rq->result();
 		$rq->free_result();
-
+		$price = 0;
 		if (count($r) == 0) {
 			echo "<p>Nothing for {$row->title}";
 		} else if (count($r) > 1) {
@@ -4535,12 +4547,12 @@ EOT;
 					$pricenext = true;
 				}
 
-				if (strpos($d, "$") !== false && strpos($d, "$") == 0) {
+				if ($pricenext && strpos($d, "$") !== false && strpos($d, "$") == 0) {
 					$price = $d;
 				}
 			}
 
-			die("<h3>Output</h3><pre>" . print_r("Price:$price", 1) . "</pre>");
+			return $price;
 
 		}
 
