@@ -1,5 +1,6 @@
 <?php
-$this->load->view('header', array('title' => 'Xtractor'));
+$this->load->view('header', array('title' => 'Price Check'));
+$ok = 1;
 ?>
 
     <a name='top' id='top'></a>
@@ -17,9 +18,8 @@ $this->load->view('header', array('title' => 'Xtractor'));
 
 <div class='container main-c'>
 
-<h1>Paintchip Helper</h1>
-<h2 id='title'></h2>
-<h3 id='ctr'></h3>
+<h1>Paintchip Price Check</h1>
+
 
 <?php
 if (!$ok) {?>
@@ -37,36 +37,9 @@ if (!$ok) {?>
 } else {
 	?>
 
+<button class='btn btn-info' onclick='getPricesPC()'>Lo
 
 
-<!-- <div class='alert alert-info fixers' style=''>
-    </div> -->
-
-
-<!--
-
-<div class='update'>
-    </div>
-    <input type="text" class='form-control' id='delete_ids' />
-    <div class='' style='margin-bottom:10px;'>
-<?php
-for ($x = 1; $x < 15; $x++) {?>
-<label class='btn btn-xs btn-default' >
-    <input type='radio' name='csv'  class='check-csv' value='data-<?=$x?>' /> data-<?=$x?>
-</label>
-
-<?php
-}?>
-</div> <button class='btn btn-info' onclick='extract()'>Load/Display CSV</button>
-<button class='btn btn-default' onclick='getfix()'>Fix/Retry Failed</button>
-<button class='btn btn-primary chks' disabled onclick='get_supplier_data(0)'>Check Supplier</button>
-
-
-
-
-
-
--->
 <div class='form-group'>
 <div class='input-group'>
 
@@ -82,22 +55,8 @@ for ($x = 1; $x < 15; $x++) {?>
 
 
 <div class='well' style='display:none;' id='ihtml'></div>
-<!--
- <input class='form-control'  id='startat' placeholder='Start At what INDEX'/>
-
- <button class='btn btn-danger btn-sm pull-right' onclick='stoploop()'>Stop Image LLOOP</button>
- <button class='btn btn-success btn-sm pull-right' onclick='loopimages(0)'>Get Missing Images</button>
 
 
-
-
- <button class='btn btn-success btn-sm pull-right' onclick='runMac()'>Do the MAC</button>
- <button class='btn btn-danger btn-sm pull-right' onclick='upcfix()'>Run UPC fix</button>
- <button class='btn btn-danger btn-sm pull-right' onclick='mine()'>Run Mine</button>
- <button class='btn btn-default btn-sm' onclick='approvePrices()'>Approve Category/Prices</button>
- <button class='btn btn-default btn-sm' onclick='getNI()'>Fix/Retry Not Identified</button>
-
- -->
 
 
 <div class='row approveprices' style='display: none'>
