@@ -4545,7 +4545,7 @@ EOT;
 			*/
 		$d = $html->find('#row' . $row->sku . ' td');
 		if (count($d) == 0) {
-			$ct++;
+			//$ct++;
 
 			//echo "<p>continuoing... <a href='$url' target='_blank'>$url</a>";
 

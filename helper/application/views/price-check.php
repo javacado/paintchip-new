@@ -37,7 +37,7 @@ if (!$ok) {?>
 } else {
 	?>
 
-<button class='btn btn-info' onclick='getPricesPC(0)'>Run Price Check</button>
+<button class='btn btn-info' onclick='getPricesPC(2538)'>Run Price Check</button>
 
 
 <div class='form-group'>
