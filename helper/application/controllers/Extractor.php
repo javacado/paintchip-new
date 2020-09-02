@@ -4466,6 +4466,30 @@ EOT;
 	}
 
 	function priceCheckCollect($st = 0, $lim = 10) {
+		// do third
+		$q = "select  sku from jt_supplier_data   ";
+		$rq = $this->db->query($q);
+		$r = $rq->result();
+		$rq->free_result();
+
+		foreach ($r as $row) {
+			$q = "update jt_price_check set vendor='SS' where sku='{$row->sku}'";
+			$this->db->query($q);
+		}
+
+		$q = "select  sku from jt_mac_data   ";
+		$rq = $this->db->query($q);
+		$r = $rq->result();
+		$rq->free_result();
+
+		foreach ($r as $row) {
+			$q = "update jt_price_check set vendor='MAC' where sku='{$row->sku}'";
+			$this->db->query($q);
+		}
+
+		return;
+
+		// do second
 		$q = "select  * from wp_postmeta   where meta_key='_price'  ";
 		$rq = $this->db->query($q);
 		$r = $rq->result();
@@ -4476,6 +4500,8 @@ EOT;
 		}
 
 		return;
+
+		// do first
 		$q = "select p.post_title, m.* from wp_postmeta m left join wp_posts p on m.post_id=p.ID where m.meta_key='_sku'  ";
 		$rq = $this->db->query($q);
 		$r = $rq->result();
