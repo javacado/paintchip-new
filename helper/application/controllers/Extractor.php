@@ -4556,6 +4556,7 @@ EOT;
 					$price = $d;
 				}
 			}
+			echo ("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
 
 		}
 		return $price;
