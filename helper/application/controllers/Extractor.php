@@ -4507,7 +4507,6 @@ EOT;
 			// get the cat structure
 			$struc = array();
 			$a = $html->find("a");
-			die("<h3>Output</h3><pre>" . print_r($a, 1) . "</pre>");
 			foreach ($a as $alink) {
 				$struc[] = trim(str_replace("\r\n", "", $alink->innertext));
 			}
