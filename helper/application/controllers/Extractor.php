@@ -4525,10 +4525,22 @@ EOT;
 
 				}
 			}
-			die("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
 
-			$up = array("data" => json_encode(array("struc" => $struc, "data" => $data)), "mined" => 1);
+			// update last mined
+			$up = array("data" => json_encode(array("struc" => $struc, "data" => $data)), "last_mined" => date("Y-m-d H:i:s"));
 			$this->db->update("linkys", $up, array("id" => $el->id));
+			$pricenext = false;
+			foreach ($data as $d) {
+				if (strtolower($d) == $strtolower($row->sku)) {
+					$pricenext = true;
+				}
+
+				if (strpos($d, "$") !== false && strpos($d, "$") == 0) {
+					$price = $d;
+				}
+			}
+
+			die("<h3>Output</h3><pre>" . print_r("Price:$price", 1) . "</pre>");
 
 		}
 
