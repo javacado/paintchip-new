@@ -4469,7 +4469,7 @@ EOT;
 
 	}
 	function checkPriceAjax($st = 0, $lim = 10) {
-		$q = "select * from jt_price_check where vendor='SS' and  id>$st order by id asc limit $lim";
+		$q = "select * from jt_price_check where vendor='MAC' and  id>$st order by id asc limit $lim";
 		$rq = $this->db->query($q);
 		$r = $rq->result();
 		$rq->free_result();
@@ -4498,6 +4498,66 @@ EOT;
 	}
 	function getMacPrice($row) {
 
+		$url = "https://www.macphersonart.com/cgi-bin/maclive/wam_tmpl/catalog_browse.p?site=MAC&layout=Responsive&page=catalog_browse&searchText=" . $row->sku;
+		//echo "<P> starting $ct";
+		$res = array();
+		$options = array(
+			CURLOPT_RETURNTRANSFER => true, // return web page
+			CURLOPT_HEADER => false, // do not return headers
+			CURLOPT_FOLLOWLOCATION => true, // follow redirects
+			CURLOPT_USERAGENT => "spider", // who am i
+			CURLOPT_AUTOREFERER => true, // set referer on redirect
+			CURLOPT_CONNECTTIMEOUT => 120, // timeout on connect
+			CURLOPT_TIMEOUT => 120, // timeout on response
+			CURLOPT_MAXREDIRS => 10, // stop after 10 redirects
+		);
+		$ch = curl_init($url);
+		curl_setopt_array($ch, $options);
+		$content = curl_exec($ch);
+		$err = curl_errno($ch);
+		$errmsg = curl_error($ch);
+		$header = curl_getinfo($ch);
+		curl_close($ch);
+
+		$res['content'] = $content;
+		$res['content'] = strip_tags($content, "<body>");
+		$res['url'] = $header['url'];
+
+		$newurl = str_replace('document.location.replace("', "", $res['content']);
+		$newurl = str_replace('");', "", $newurl);
+
+		if (!$newurl || strpos($newurl, "Catalog Browse | MacPherson's") != FALSE) {
+			//$item['data'] = "NO URL";
+			//$this->db->update("jt_mac_data", $item, array("id" => $row->id));
+
+			return 0;
+		}
+		$html = file_get_html($newurl);
+		//return $res;
+
+		$item = array();
+
+		//print_r(get_web_page("http://www.example.com/redirectfrom"));
+
+		/*foreach ($d as $dd) {
+					echo ("<h3>Output</h3><pre>" . print_r($dd->innerText, 1) . "</pre>");
+				}
+			*/
+		$d = $html->find('#row' . $row->sku . ' td');
+		if (count($d) == 0) {
+			$ct++;
+
+			//echo "<p>continuoing... <a href='$url' target='_blank'>$url</a>";
+
+			//die("<h3>no data</h3><pre>" . print_r($newurl, 1) . print_r($row, 1) . "</pre>");
+			return 0;
+
+		}
+
+		$tdata = $d[6]->find('div.qoRegPrice');
+		$tdata = $tdata[0];
+		$price = str_replace("$", "", $tdata->innerText);
+		return $price;
 	}
 
 	function getSLSPrice($row) {
