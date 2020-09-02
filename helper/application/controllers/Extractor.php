@@ -4506,12 +4506,12 @@ EOT;
 		$rq = $this->db->query($q);
 		$r = $rq->result();
 		$rq->free_result();
-		$price = 0
-		$msg="";
+		$price = 0;
+		$msg = "";
 		if (count($r) == 0) {
-			$msg= "<p>Nothing for {$row->title}";
+			$msg = "<p>Nothing for {$row->title}";
 		} else if (count($r) > 1) {
-			$msg= "<p>More than one found for {$row->title}";
+			$msg = "<p>More than one found for {$row->title}";
 		} else {
 			$el = $r[0];
 			$file = $el->link;
@@ -4557,9 +4557,8 @@ EOT;
 				}
 			}
 
-
 		}
-			return $price;
+		return $price;
 
 	}
 
