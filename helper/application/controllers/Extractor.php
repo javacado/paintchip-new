@@ -4464,6 +4464,76 @@ EOT;
 		}
 
 	}
+	function checkPriceAjax($st = 0, $lim = 10) {
+		$q = "select * from jt_price_check where id>$st order by id asc limit $lim";
+		$rq = $this->db->query($q);
+		$r = $rq->result();
+		$rq->free_result();
+
+		foreach ($r as $row) {
+			if ($row->vendor == "SS") {
+				$price = $this->getSLSPrice($row);
+			} else {
+				$price = $this->getMacPrice($row);
+
+			}
+			die("<h3>Output</h3><pre>" . print_r("price" . $price, 1) . "</pre>");
+			$up = array("price_vendor" => $price, "modified" => date("Y-m-d H:i:s"));
+			$this->db->update('jt_price_check', $up, array('id' => $row->id));
+		}
+
+	}
+
+	function getSLSPrice($row) {
+
+		$q = "select * from linkys where  data like '%{$row->sku}%' ";
+		$rq = $this->db->query($q);
+		$r = $rq->result();
+		$rq->free_result();
+
+		if (count($r) == 0) {
+			echo "<p>Nothing for {$row->title}";
+		} else if (count($r) > 1) {
+			echo "<p>More than one found for {$row->title}";
+		} else {
+			$el = $r[0];
+			$file = $el->link;
+			$file = str_replace(" ", "%20", $file);
+			//$file = str_replace("fright_itemlist.asp", "defaultFrame.asp", $file);
+			$u = "https://www.slsarts.com/$file";
+
+			$html = file_get_html($u);
+
+			// get the cat structure
+			$struc = array();
+			$a = $html->find("a");
+			die("<h3>Output</h3><pre>" . print_r($a, 1) . "</pre>");
+			foreach ($a as $alink) {
+				$struc[] = trim(str_replace("\r\n", "", $alink->innertext));
+			}
+
+			$data = array();
+			$cells = $html->find('table td');
+			foreach ($cells as $cell) {
+				$h = trim($cell->innertext);
+				$h = trim(str_replace("\r\n", "", strip_tags($h)));
+				if ($h != "") {
+					$data[] = $h;
+
+					if ($h == "MSRP") {
+						$data = array();
+					}
+
+				}
+			}
+			die("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
+
+			$up = array("data" => json_encode(array("struc" => $struc, "data" => $data)), "mined" => 1);
+			$this->db->update("linkys", $up, array("id" => $el->id));
+
+		}
+
+	}
 
 	function priceCheckCollect($st = 0, $lim = 10) {
 		// do third
