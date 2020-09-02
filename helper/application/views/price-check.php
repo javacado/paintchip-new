@@ -152,7 +152,7 @@ $(document).ready(function() {
 
 function getPricesPC(st) {
 
-var lim=5;
+var lim=2;
 
  $.ajax({
         url: "/helper/extractor/checkPriceAjax/"+st+"/"+lim,
