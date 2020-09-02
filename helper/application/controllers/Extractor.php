@@ -4531,7 +4531,7 @@ EOT;
 			$this->db->update("linkys", $up, array("id" => $el->id));
 			$pricenext = false;
 			foreach ($data as $d) {
-				if (strtolower($d) == $strtolower($row->sku)) {
+				if (strtolower($d) == strtolower($row->sku)) {
 					$pricenext = true;
 				}
 
