@@ -4466,6 +4466,16 @@ EOT;
 	}
 
 	function priceCheckCollect($st = 0, $lim = 10) {
+		$q = "select  * from wp_postmeta   where meta_key='_price'  ";
+		$rq = $this->db->query($q);
+		$r = $rq->result();
+		$rq->free_result();
+		foreach ($r as $row) {
+			$up = array("price_pc" => $row->meta_value);
+			$this->db->update('jt_price_check', $up, array('post_id' => $row->post_id));
+		}
+
+		return;
 		$q = "select p.post_title, m.* from wp_postmeta m left join wp_posts p on m.post_id=p.ID where m.meta_key='_sku'  ";
 		$rq = $this->db->query($q);
 		$r = $rq->result();
