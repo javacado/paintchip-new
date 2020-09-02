@@ -37,7 +37,7 @@ if (!$ok) {?>
 } else {
 	?>
 
-<button class='btn btn-info' onclick='getPricesPC()'>Lo
+<button class='btn btn-info' onclick='getPricesPC(0)'>Run Price Check</button>
 
 
 <div class='form-group'>
@@ -150,11 +150,12 @@ $(document).ready(function() {
 
 
 
-function mine() {
+function getPricesPC(st) {
 
+var lim=5;
 
  $.ajax({
-        url: "/helper/extractor/mine",
+        url: "/helper/extractor/checkPriceAjax/"+st+"/"+lim,
         context: document.body,
         method: 'get'
     }).done(function(res) {
@@ -163,7 +164,7 @@ function mine() {
 alert("DONE")
        } else {
 setTimeout(function() {
-    mine();
+    getPricesPC(res.nextstart);
 
 }, 500);
        }
