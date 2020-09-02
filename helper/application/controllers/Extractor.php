@@ -4553,10 +4553,11 @@ EOT;
 				}
 
 				if ($pricenext && strpos($d, "$") !== false && strpos($d, "$") == 0) {
-					$price = $d;
+					//$price = $d;
+					return $price;
 				}
 			}
-			echo ("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
+			//echo ("<h3>Output</h3><pre>" . print_r($data, 1) . "</pre>");
 
 		}
 		return $price;
