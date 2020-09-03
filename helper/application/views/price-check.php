@@ -112,7 +112,7 @@ function popTable(result) {
 
                 o.push(diff)
                 var btns="<button class='btn btn-default btn-xs' data-postid='"+obj.post_id+"' data-id='"+obj.id+"' onclick='updatePrice(this)'>Update $</button>";
-                btn+=" <a class='btn btn-default btn-xs' href='/wp-admin/post.php?post="+obj.post_id+"&action=edit'>Edit Product</a>"
+                btns+=" <a class='btn btn-default btn-xs' target='_blank' href='/wp-admin/post.php?post="+obj.post_id+"&action=edit'>Edit Product</a>"
                 o.push(btns)
                 itemList.push(o)
             })
