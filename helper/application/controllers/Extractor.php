@@ -4487,7 +4487,18 @@ EOT;
 
 		$q = "update wp_postmeta set meta_value='{$r->price_vendor}' where meta_key='_price' and post_id={$r->post_id}";
 
-		die("<h3>Output</h3><pre>" . print_r($q, 1) . "</pre>");
+		$done = $this->db->query($q);
+		if ($done) {
+			die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+		}
+
+		$q = "update jt_price_check set price_pc={$r->price_vendor} where id={$r->id}";
+
+		$done = $this->db->query($q);
+		if ($done) {
+			die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+		}
+		echo "OK";
 
 	}
 
