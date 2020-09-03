@@ -102,7 +102,6 @@ setTimeout(function() {
 
 
 function popTable(result) {
-    result=JSON.parse(result)
             $.each(result, function(key, obj){
                 var o = [];
                 o.push((obj.title+"<div class='small'>"+obj.vendor+" " +obj.sku+"</div>"))
