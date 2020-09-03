@@ -102,6 +102,7 @@ setTimeout(function() {
 
 
 function popTable(result) {
+    var itemList=[]
             $.each(result, function(key, obj){
                 var o = [];
                 o.push((obj.title+"<div class='small'>"+obj.vendor+" " +obj.sku+"</div>"))
@@ -111,7 +112,7 @@ function popTable(result) {
 
                 o.push(diff)
                 o.push("<button class='btn btn-default btn-xs' onclick='updatePrice(this)'>Update</button>")
-                itemList.push(obj)
+                itemList.push(o)
             })
             console.log("itemList, ", itemList);
 
