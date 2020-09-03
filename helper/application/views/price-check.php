@@ -149,11 +149,8 @@ function updatePrice(el) {
         method: 'get'
     }).done(function(res) {
         res = JSON.parse(res)
-$(el).closest('tr').fade();
-setTimeout(function() {
-$(el).closest('tr').remove();
+$(el).closest('tr').fadeOut();
 
-}, 500)
     })
 
 
