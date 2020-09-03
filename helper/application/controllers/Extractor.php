@@ -4471,7 +4471,7 @@ EOT;
 	function checkPriceAjax($st = 0, $lim = 10) {
 		$and = "";
 		if ($st == 0) {
-			$and = " and modified > '2020-02-02' ";
+			$and = " and modified < '2020-02-02' ";
 		}
 		$q = "select * from jt_price_check where vendor='MAC' and  id>$st $and order by id asc limit $lim";
 		$rq = $this->db->query($q);
