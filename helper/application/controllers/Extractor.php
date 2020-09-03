@@ -4489,14 +4489,14 @@ EOT;
 
 		$done = $this->db->query($q);
 		if ($done) {
-			die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+			die("<h3>$q</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
 		}
 
 		$q = "update jt_price_check set price_pc={$r->price_vendor} where id={$r->id}";
 
 		$done = $this->db->query($q);
 		if ($done) {
-			die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+			die("<h3>$q</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
 		}
 		echo "OK";
 
