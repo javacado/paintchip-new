@@ -4498,7 +4498,7 @@ EOT;
 		if (!$done) {
 			die("<h3>$q</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
 		}
-		echo "OK";
+		echo json_encode(array('status' => "OK"));
 
 	}
 
