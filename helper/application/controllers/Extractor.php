@@ -4468,6 +4468,14 @@ EOT;
 		}
 
 	}
+
+	function getPriceList() {
+		$q = "select *, price_pc-price_vendor as diff from js_price_check where price_vendor>price_pc order by diff asc";
+		$rq = $this->db->query($q);
+		$r = $rq->result();
+		$rq->free_result();
+		echo json_encode($r);
+	}
 	function checkPriceAjax($st = 0, $lim = 10) {
 		$and = "";
 		if ($st == 0) {
