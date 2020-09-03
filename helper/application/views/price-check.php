@@ -111,7 +111,9 @@ function popTable(result) {
                 var diff = Math.round(obj.diff * 100) /100; ;
 
                 o.push(diff)
-                o.push("<button class='btn btn-default btn-xs' onclick='updatePrice(this)'>Update</button>")
+                var btns="<button class='btn btn-default btn-xs' data-postid='"+obj.post_id+"' data-id='"+obj.id+"' onclick='updatePrice(this)'>Update $</button>";
+                btn+=" <a class='btn btn-default btn-xs' href='/wp-admin/post.php?post="+obj.post_id+"&action=edit'>Edit Product</a>"
+                o.push(btns)
                 itemList.push(o)
             })
             console.log("itemList, ", itemList);
@@ -124,8 +126,8 @@ function popTable(result) {
         columns: [
             { title: "Product/Sku" },
             { title: "PC Price" },
-            { title: "Vender Price" },
-            { title: "Diff" },
+            { title: "Vendor Price" },
+            { title: "$Diff" },
             { title: "" }
          ]
         } );
@@ -134,6 +136,29 @@ function popTable(result) {
 
 }
 
+function updatePrice(el) {
+    var id=$(el).attr('data-id')
+    var post_id=$(el).attr('data-post_id') ;
+
+
+
+
+ $.ajax({
+        url: "/helper/extractor/equalizePrice/"+id,
+        context: document.body,
+        method: 'get'
+    }).done(function(res) {
+        res = JSON.parse(res)
+$(el).closest('tr').fade();
+setTimeout(function() {
+$(el).closest('tr').remove();
+
+}, 500)
+    })
+
+
+
+}
 
         </script>
 
