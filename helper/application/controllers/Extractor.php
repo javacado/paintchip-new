@@ -4476,6 +4476,21 @@ EOT;
 		$rq->free_result();
 		echo json_encode($r);
 	}
+
+	function equalizePrice($id) {
+		// set the PC price to the  vendor price
+
+		$q = "select * from jt_price_check where id=$id";
+		$rq = $this->db->query($q);
+		$r = $rq->row();
+		$rq->free_result();
+
+		$q = "update wp_postmeta set meta_value='{$r->price_vendor}' where meta_key='_price' and post_id={$r->post_id}";
+
+		die("<h3>Output</h3><pre>" . print_r($q, 1) . "</pre>");
+
+	}
+
 	function checkPriceAjax($st = 0, $lim = 10) {
 		$and = "";
 		if ($st == 0) {
