@@ -133,8 +133,14 @@ class Order_log extends CI_Controller {
 			'notes' => $_POST['notes'],
 			'prod_data' => $prod_data,
 		);
-
-		if ($log_id = $this->input->post('log_id')) {
+// test for it
+		$q = "select * from wp_order_log where post_id=" . $_POST['post_id'];
+		$rq = $this->db->query($q);
+		$exists = $rq->result();
+		$rq->free_result();
+		if ($exists && count($exists) > 0) {
+			$exists = $exists[0];
+			$log_id = $exists->log_id;
 			$this->db->update('wp_order_log', $in, array('log_id' => $log_id));
 		} else {
 			$this->db->insert('wp_order_log', $in);
