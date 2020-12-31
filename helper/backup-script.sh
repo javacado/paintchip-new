@@ -16,7 +16,7 @@ MYSQL_PASSWORD="!pa1ntch1p"
 DATABASE_NAME="paintchip"
 
 AMAZON_S3_BUCKET="s3://paintchip/backup/mysql/"
-AMAZON_S3_BIN=""
+AMAZON_S3_BIN="aws"
 
 FOLDERS_TO_BACKUP=("/home/mkyong/bk1" "/home/mkyong/bk2")
 
