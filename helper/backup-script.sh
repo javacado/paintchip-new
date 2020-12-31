@@ -33,7 +33,7 @@ backup_mysql(){
 
 # backup any folders?
 backup_files(){
-
+echo 'hello'
        # tar -cvzf ${BACKUP_DIR}/backup-files-${NOW}.tar.gz ${FOLDERS_TO_BACKUP[@]}
 
 }
