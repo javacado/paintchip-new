@@ -57,7 +57,7 @@ class Order_log extends CI_Controller {
 				$pp->product_id = $pid->meta_value;
 
 
-				$q ="SELECT * FROM `wp_postmeta`  where meta_key='_sku' and post_id={$pp->order_item_id}";
+				$q ="SELECT * FROM `wp_postmeta`  where meta_key='_sku' and post_id={$pp->product_id}";
 				$rq = $this->db->query($q);
 				$psku = $rq->row();
 				$rq->free_result();
@@ -122,8 +122,8 @@ class Order_log extends CI_Controller {
 				$pp->product_id = $pid->meta_value;
 
 
-				$q ="SELECT * FROM `wp_postmeta`  where meta_key='_sku' and post_id={$pp->order_item_id}";
-				echo "\n\n<!-- $q -->";
+				$q ="SELECT * FROM `wp_postmeta`  where meta_key='_sku' and post_id={$pp->product_id}";
+				//echo "\n\n<!-- $q -->";
 				$rq = $this->db->query($q);
 				$psku = $rq->row();
 				$rq->free_result();
