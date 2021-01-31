@@ -123,6 +123,7 @@ class Order_log extends CI_Controller {
 
 
 				$q ="SELECT * FROM `wp_postmeta`  where meta_key='_sku' and post_id={$pp->order_item_id}";
+				echo "\n\n<!-- $q -->";
 				$rq = $this->db->query($q);
 				$psku = $rq->row();
 				$rq->free_result();
@@ -130,7 +131,7 @@ class Order_log extends CI_Controller {
 
 
 
-				
+
 				$prod[] = $pp;
 			}
 
