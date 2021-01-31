@@ -135,7 +135,13 @@ Order #<?php echo $row->ID ?></i>
             <div class='small'><?php echo date("m/d/Y", strtotime($row->post_modified)) ?></div>
         </td>
         <td>
-
+<!-- 
+    here:
+    <?php
+    print_r($row); 
+    ?>
+    
+  -->
 <table class='table text-center ptable' style='border-top:0;'>
     <tr  ><td style='text-align:left' >Product</td><td>In Store</td><td>Need to Order</td>
     <?php foreach ($row->products as $p) {
