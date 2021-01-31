@@ -138,7 +138,7 @@ Order #<?php echo $row->ID ?></i>
 <!-- 
     here:
     <?php
-    print_r($row); 
+    //print_r($row); 
     ?>
     
   -->
@@ -150,7 +150,10 @@ Order #<?php echo $row->ID ?></i>
 				$is = $row->prod_data[$p->product_id]['in_store'];
 			}
 			?>
-<tr  rel='<?php echo $p->product_id ?>' class='prods'><td style='text-align:left'><?php echo $p->order_item_name ?></td>
+<tr  rel='<?php echo $p->product_id ?>' class='prods'><td style='text-align:left'><?php echo $p->order_item_name ?>
+<br /><strong>
+<?php echo $p->sku ?>
+</strong></td>
     <td class='text-center'>
             <input type='radio' class=' '   rel='' onclick="" name='in_stock_<?php echo $p->product_id ?>' <?php if ($is) {echo "checked";}?> value='1' name="in_store" />
         </td>

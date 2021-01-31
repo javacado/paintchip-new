@@ -48,6 +48,14 @@ class Order_log extends CI_Controller {
 			$products = $rq->result();
 			$prod = array();
 			foreach ($products as $pp) {
+				$q ="SELECT * FROM `wp_postmeta`  where meta_key='_sku' and post_id={$pp->product_id}";
+				//$q = "select * from wp_woocommerce_order_itemmeta where order_item_id={$pp->order_item_id} and meta_key='_product_id'";
+				$rq = $this->db->query($q);
+				$psku = $rq->row();
+				$rq->free_result();
+				$pp->sku = $psku->meta_value;
+
+
 
 				$q = "select * from wp_woocommerce_order_itemmeta where order_item_id={$pp->order_item_id} and meta_key='_product_id'";
 				$rq = $this->db->query($q);
