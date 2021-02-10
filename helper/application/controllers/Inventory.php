@@ -152,7 +152,14 @@ class Inventory extends CI_Controller
 		}
 		$r = $rq->row();
 		$curexec = json_decode($r->exec);
+		if (!$r->exec) {
+			$curexec = array();
+		}
+
 		$curerrors = json_decode($r->errors);
+		if (!$r->errors) {
+			$curerrors = array();
+		}
 
 		$invID = $r->id;
 		$rq->free_result();
@@ -218,7 +225,7 @@ class Inventory extends CI_Controller
 
 		$curerrors = array_merge($curerrors, $errors);
 		$curexec = array_merge($curexec, $exec);
-		$u = array('errors' => json_encode($errors), 'exec' => json_encode($exec));
+		$u = array('errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
 
 		$this->db->update('jt_inv_holder', $u, array("id" => $invID));
 	}
