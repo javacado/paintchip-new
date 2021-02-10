@@ -218,7 +218,11 @@ class Inventory extends CI_Controller
 
 			foreach ($newdata as $d) {
 				if ($curstock[$d->post_id] != $d->qoh) {
-					$d->curq=$curstock[$d->post_id];
+					$curq = 0;
+					if (isset($curstock[$d->post_id])) {
+						$curq=$curstock[$d->post_id];
+					}
+					$d->curq=$curq;
 					$exec[]=$d;
 				}
 			}
