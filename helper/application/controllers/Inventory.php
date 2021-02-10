@@ -225,7 +225,7 @@ class Inventory extends CI_Controller
 
 		$curerrors = array_merge($curerrors, $errors);
 		$curexec = array_merge($curexec, $exec);
-		$u = array('errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
+		$u = array('last_num'=>($r->last_num + $len), 'errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
 
 		$this->db->update('jt_inv_holder', $u, array("id" => $invID));
 	}
