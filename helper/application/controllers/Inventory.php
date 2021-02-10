@@ -161,7 +161,7 @@ class Inventory extends CI_Controller
 		$exec = array();
 		$len = 500;
 
-		if (count($data)>=$r->last_num) {
+		if (count($data)<=$r->last_num) {
 			$u = array('ready' => 1);
 
 		$this->db->update('jt_inv_holder', $u, array("id" => $invID));
