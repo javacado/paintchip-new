@@ -162,13 +162,14 @@ class Inventory extends CI_Controller
 		}
 
 		$invID = $r->id;
+		$last_num = $r->last_num;
 		$rq->free_result();
 		$data = json_decode($r->data);
 		$errors = array();
 		$exec = array();
 		$len = 500;
 
-		if (count($data)<=$r->last_num) {
+		if (count($data)<=$last_num) {
 			$u = array('ready' => 1);
 
 		$this->db->update('jt_inv_holder', $u, array("id" => $invID));
@@ -176,7 +177,7 @@ class Inventory extends CI_Controller
 
 		}
 
-		$newdata = array_slice($data, $r->last_num, $len);
+		$newdata = array_slice($data, $last_num, $len);
 		echo("<h3>Output</h3><pre>".print_r($newdata,1)."</pre>");
 
 		$postids = array();
@@ -225,7 +226,7 @@ class Inventory extends CI_Controller
 
 		$curerrors = array_merge($curerrors, $errors);
 		$curexec = array_merge($curexec, $exec);
-		$u = array('last_num'=>($r->last_num + $len), 'errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
+		$u = array('last_num'=>($last_num + $len), 'errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
 
 		$this->db->update('jt_inv_holder', $u, array("id" => $invID));
 	}
