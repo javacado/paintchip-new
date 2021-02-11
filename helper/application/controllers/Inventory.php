@@ -208,7 +208,7 @@ class Inventory extends CI_Controller
 			$rq->free_result();
 			$titles = array();
 			foreach ($r as $row) {
-				$titles[$row->post_id] = $row->post_title;
+				$titles[$row->ID] = $row->post_title;
 			}
 
 
@@ -220,6 +220,7 @@ class Inventory extends CI_Controller
 						$curq = $curstock[$d->post_id];
 					
 					$d->curq = $curq;
+					$d->title = $titles[$d->post_id];
 					$exec[] = $d;
 				
 				}
