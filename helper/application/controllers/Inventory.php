@@ -215,14 +215,13 @@ class Inventory extends CI_Controller
 
 
 			foreach ($newdata as $d) {
-				if ($curstock[$d->post_id] != $d->qoh) {
-					$curq = 0;
-					if (isset($curstock[$d->post_id])) {
+					if (isset($curstock[$d->post_id]) && $curstock[$d->post_id] != $d->qoh) {
+					//$curq = 0;
 						$curq = $curstock[$d->post_id];
 					
 					$d->curq = $curq;
 					$exec[] = $d;
-				}
+				
 				}
 			}
 		}
@@ -234,6 +233,8 @@ class Inventory extends CI_Controller
 		$this->db->update('jt_inv_holder', $u, array("id" => $invID));
 	}
 
+
+	// UPDATE `jt_inv_holder` SET `exec` = '', `errors` = '', `last_num` = '0' WHERE `jt_inv_holder`.`id` = 1;
 
 
 
