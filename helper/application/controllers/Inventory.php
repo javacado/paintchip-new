@@ -215,14 +215,20 @@ class Inventory extends CI_Controller
 
 
 			foreach ($newdata as $d) {
-					if (isset($curstock[$d->post_id]) && $curstock[$d->post_id] != $d->qoh) {
+				$curq = 0;
+				if (isset($curstock[$d->post_id])) {
+					$curq = $curstock[$d->post_id];
+				}
+				if ($curq != $d->qoh) {
 					//$curq = 0;
-						$curq = $curstock[$d->post_id];
-					
+
+
 					$d->curq = $curq;
 					$d->title = $titles[$d->post_id];
 					$exec[] = $d;
-				
+				} else {
+					$errors[] = 'The item: ' . $d->sku . ' did not change currently set to ' . $curq;
+					continue;
 				}
 			}
 		}
