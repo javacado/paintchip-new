@@ -169,16 +169,14 @@ class Inventory extends CI_Controller
 		$exec = array();
 		$len = 500;
 
-		if (count($data)<=$last_num) {
+		if (count($data) <= $last_num) {
 			$u = array('ready' => 1);
-
-		$this->db->update('jt_inv_holder', $u, array("id" => $invID));
-		die(json_encode(array('status' => 'complete')));
-
+			$this->db->update('jt_inv_holder', $u, array("id" => $invID));
+			die(json_encode(array('status' => 'complete')));
 		}
 
 		$newdata = array_slice($data, $last_num, $len);
-		echo("<h3>Output</h3><pre>".print_r($newdata,1)."</pre>");
+		echo ("<h3>Output</h3><pre>" . print_r($newdata, 1) . "</pre>");
 
 		$postids = array();
 		foreach ($newdata as $d) {
@@ -220,17 +218,18 @@ class Inventory extends CI_Controller
 				if ($curstock[$d->post_id] != $d->qoh) {
 					$curq = 0;
 					if (isset($curstock[$d->post_id])) {
-						$curq=$curstock[$d->post_id];
-					}
-					$d->curq=$curq;
-					$exec[]=$d;
+						$curq = $curstock[$d->post_id];
+					
+					$d->curq = $curq;
+					$exec[] = $d;
+				}
 				}
 			}
 		}
 
 		$curerrors = array_merge($curerrors, $errors);
 		$curexec = array_merge($curexec, $exec);
-		$u = array('last_num'=>($last_num + $len), 'errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
+		$u = array('last_num' => ($last_num + $len), 'errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
 
 		$this->db->update('jt_inv_holder', $u, array("id" => $invID));
 	}
@@ -240,18 +239,19 @@ class Inventory extends CI_Controller
 
 
 
-	function getUpdateData(){
+	function getUpdateData()
+	{
 		$q = "select * from jt_inv_holder where complete = 0 order by date_created desc limit 1";
 		$rq = $this->db->query($q);
 		if ($rq->num_rows() == 0) {
 			die(json_encode(array('error' => 'no data found')));
 		}
 		$r = $rq->row();
-		die(json_encode(array('id'=>$r->id,'exec' => $r->exec)));
-		
+		die(json_encode(array('id' => $r->id, 'exec' => $r->exec)));
 	}
 
-	function runUpdateData($id){
+	function runUpdateData($id)
+	{
 		die('running');
 	}
 
