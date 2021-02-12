@@ -571,7 +571,7 @@ foreach ($h1s as $h1) {
 		if (!$avail) {
 			//get post id -set to draft
 
-			$q = "select post_id wp_postmeta where meta_key='_sku' and meta_value='$sku'";
+			$q = "select post_id from wp_postmeta where meta_key='_sku' and meta_value='$sku'";
 		$rq = $this->db->query($q);
 		$r = $rq->row();
 		$rq->free_result();
