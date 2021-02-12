@@ -326,11 +326,11 @@ class Inventory extends CI_Controller
 				$exec[] = $d;
 
 				if ($curp != $d->price) {
-					$diff = ( floatval($d->price) - floatval($curp) ) ;
-					if (abs($diff)>5) {
-						$diff = "<b style='color:#c00'>".$diff . "</b>";
+					$diff = (floatval($d->price) - floatval($curp));
+					if (abs($diff) > 5) {
+						$diff = "<b style='color:#c00'>" . $diff . "</b>";
 					}
-					echo '<p>The item: ' . $d->sku . ' real price: $' . $d->price . ' // existing price: $'.$curp  . '  ('. $diff .')';
+					echo '<p>The item: ' . $d->sku . ' real price: $' . $d->price . ' // existing price: $' . $curp  . '  (' . $diff . ')';
 					//continue;
 				}
 
@@ -380,9 +380,54 @@ class Inventory extends CI_Controller
 		die(json_encode(array('id' => $r->id, 'exec' => $r->exec)));
 	}
 
-	function runUpdateData($id)
+	function initInv($go = 0)
 	{
-		die('running');
+		// get post ids
+		$q = "SELECT * FROM `wp_postmeta`  where meta_key='_sku' and meta_value!=''";
+		$rq = $this->db->query($q);
+		$psku = $rq->result();
+		$rq->free_result();
+		$postids = array();
+		foreach ($psku as $p) {
+			$postids[] = $p->post_id;
+		}
+echo "<p>".count($postids)." products to update</p>";
+		$postids  = implode(",", $postids);
+
+
+
+		$q = "update wp_postmeta set meta_value='yes' where meta_key='_manage_stock' and post_id in (" . $postids . ')';
+		if (!$go) {
+			echo "<P>$q</P>";
+		} else {
+			$uuup = $this->db->query($q);
+			if (!$uuup) {
+				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+			}
+		}
+
+
+
+		$q = "update wp_postmeta set meta_value='0' where meta_key='_stock' and post_id in (" . $postids . ')';
+		if (!$go) {
+			echo "<P>$q</P>";
+		} else {
+			$uuup = $this->db->query($q);
+			if (!$uuup) {
+				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+			}
+		}
+
+
+		$q = "update wp_postmeta set meta_value='notify' where meta_key='_backorders' and post_id in (" . $postids . ')';
+		if (!$go) {
+			echo "<P>$q</P>";
+		} else {
+			$uuup = $this->db->query($q);
+			if (!$uuup) {
+				die("<h3>Output</h3><pre>" . print_r($this->db->error(), 1) . "</pre>");
+			}
+		}
 	}
 
 
@@ -395,19 +440,36 @@ class Inventory extends CI_Controller
 
 
 
-	function applyInventory()
+	function applyInventory($id, $go = 0)
 	{
 		// first set manage stock and stock #'s 0 and backorders to 'notify' 
-		$q = "SELECT * FROM `wp_postmeta`  where meta_key='_sku' and meta_value!=''";
+		$q = "SELECT * FROM `jt_inv_holder`  where id=$id";
 		$rq = $this->db->query($q);
-		$psku = $rq->result();
+		$r = $rq->row();
 		$rq->free_result();
-		$dbskus = array();
-		foreach ($psku as $p) {
-			$dbskus[] = $p->meta_value;
-			if (!in_array($p->meta_value, $incoming)) {
-				$not_here[] = $p->meta_value;
+		$exec = json_decode($r->exec);
+		foreach ($exec as $row) {
+			$up = array("meta_value" => $row->price);
+			$uuup = $this->db->update_string("wp_postmeta", $up, array("meta_key" => "_price", "post_id" => $row->post_id));
+			if (!$go) {
+				echo ("<P>" . $uuup);
+			} else {
+				$this->db->query($uuup);
 			}
+
+
+
+
+			$up = array("meta_value" => $row->qoh);
+			$uuup = $this->db->update_string("wp_postmeta", $up, array("meta_key" => "_stock", "post_id" => $row->post_id));
+			if (!$go) {
+				echo ("<P>" . $uuup);
+			} else {
+				$this->db->query($uuup);
+			}
+
+
+
 		}
 	}
 
@@ -449,8 +511,7 @@ class Inventory extends CI_Controller
 			$a = $start;
 		}
 
-		echo json_encode(array('next'=>$a));
-
+		echo json_encode(array('next' => $a));
 	}
 
 
