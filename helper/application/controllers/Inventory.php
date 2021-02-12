@@ -289,7 +289,7 @@ class Inventory extends CI_Controller
 
 			// get all inventory quantity and price in memory...
 
-			$q = "select post_id, meta_key, meta_value from wp_postmeta where (meta_key='_stock' or meta_key='_price' )and post_id in ($postids)";
+			$q = "select post_id, meta_key, meta_value from wp_postmeta where (meta_key='_stock' or meta_key='_price' ) and post_id in ($postids)";
 			$rq = $this->db->query($q);
 			$r = $rq->result();
 			$rq->free_result();
@@ -337,6 +337,7 @@ class Inventory extends CI_Controller
 					die('<p>no price for '. $curp);
 				}
 
+				$d->curp = $curp;
 				$d->curq = $curq;
 				$d->title = $titles[$d->post_id];
 				$exec[] = $d;
