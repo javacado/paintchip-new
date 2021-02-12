@@ -51,15 +51,15 @@ class Inventory extends CI_Controller
 		{
 			$first = false;
 
-			
+
 
 
 			$parts = preg_split('/  +/', $row[0]);
-if (strpos($row[0],'VA10105')!==false) {
- 				 //die("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
-				
-			} 
-			  
+			if (strpos($row[0], 'VA10105') !== false) {
+				//die("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
+
+			}
+
 			//echo ("<h3>".count($parts)."</h3><pre>" . print_r($parts, 1) . "</pre>");
 			$numparts = count($parts);
 			$first = $second = false;
@@ -69,7 +69,7 @@ if (strpos($row[0],'VA10105')!==false) {
 
 				$test = trim($parts[0]);
 				if ($test != "SS" && $test != "MA") {
-				// echo "<P>cont FROM...   $test</P>";
+					// echo "<P>cont FROM...   $test</P>";
 					continue;
 				}
 			} else if ($numparts == 11 || $numparts == 12 || $numparts == 13) {
@@ -83,7 +83,7 @@ if (strpos($row[0],'VA10105')!==false) {
 			}
 
 
-			
+
 			//if ($octr > 80) break;
 			$id = $sku = $title = $price = '';
 			if ($first) {
@@ -115,8 +115,8 @@ if (strpos($row[0],'VA10105')!==false) {
 				preg_match_all('!\d+\.*\d*!', $parts[5], $matches);
 				$prod['price'] = $matches[0][0]; //preg_replace("/[^A-Za-z ]/", '', $parts[5]);
 				$carries = $prod['carries']; //
-				
-				 
+
+
 				//echo("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
 
 				$prod['qoh'] = $parts[9];
@@ -134,7 +134,7 @@ if (strpos($row[0],'VA10105')!==false) {
 				/* $prod['sku'] = $subarr[1];
 				$prod['upc'] = $subarr[2];
 				$prod['qoh'] = $subarr[9]; */
-				if (!$carries&& intval($prod['qoh'])==0) {
+				if (!$carries && intval($prod['qoh']) == 0) {
 					continue;
 				}
 				if (!isset($skus[$prod['sku']])) {
@@ -179,7 +179,7 @@ if (strpos($row[0],'VA10105')!==false) {
 	function sku_not_in()
 	{
 
-	
+
 
 		$q = "select * from jt_inv_holder where complete = 0 order by date_created desc";
 		$rq = $this->db->query($q);
@@ -188,13 +188,12 @@ if (strpos($row[0],'VA10105')!==false) {
 		}
 		$r = $rq->row();
 		$curexec = json_decode($r->exec);
-		$incoming=array();
-		foreach ($curexec as $p){
-			$incoming[]=$p->sku;
-
+		$incoming = array();
+		foreach ($curexec as $p) {
+			$incoming[] = $p->sku;
 		}
 
-$not_here=array();
+		$not_here = array();
 
 		$q = "SELECT * FROM `wp_postmeta`  where meta_key='_sku' and meta_value!=''";
 		$rq = $this->db->query($q);
@@ -204,20 +203,20 @@ $not_here=array();
 		foreach ($psku as $p) {
 			$dbskus[] = $p->meta_value;
 			if (!in_array($p->meta_value, $incoming)) {
-				$not_here[]=$p->meta_value;
+				$not_here[] = $p->meta_value;
 			}
 		}
 
 
 
-		echo("dbskus:".count($dbskus). " /// " . " incoming:".count($incoming). " /// " . " not_here:".count($not_here));
-		die("<h3>Output</h3><pre>".implode($not_here,",")."</pre>");
-		
+		echo ("dbskus:" . count($dbskus) . " /// " . " incoming:" . count($incoming) . " /// " . " not_here:" . count($not_here));
+		die("<h3>Output</h3><pre>" . implode($not_here, ",") . "</pre>");
 	}
 
 
 
-	function applyInventory() {
+	function applyInventory()
+	{
 		// first set manage stock and stock #'s 0 and backorders to 'notify' 
 		$q = "SELECT * FROM `wp_postmeta`  where meta_key='_sku' and meta_value!=''";
 		$rq = $this->db->query($q);
@@ -227,11 +226,9 @@ $not_here=array();
 		foreach ($psku as $p) {
 			$dbskus[] = $p->meta_value;
 			if (!in_array($p->meta_value, $incoming)) {
-				$not_here[]=$p->meta_value;
+				$not_here[] = $p->meta_value;
 			}
 		}
-
-		
 	}
 
 
@@ -263,8 +260,9 @@ $not_here=array();
 		$rq->free_result();
 		$data = json_decode($r->data);
 		$errors = array();
+		$curprice = array();
 		$exec = array();
-		$len = 5500;
+		$len = 8500;
 
 		if (count($data) <= $last_num) {
 			$u = array('ready' => 1);
@@ -291,13 +289,24 @@ $not_here=array();
 
 			// get all inventory quantity and price in memory...
 
-			$q = "select post_id, meta_value from wp_postmeta where meta_key='_stock' and post_id in ($postids)";
+			$q = "select post_id, meta_key, meta_value from wp_postmeta where (meta_key='_stock' or meta_key='_price' )and post_id in ($postids)";
 			$rq = $this->db->query($q);
 			$r = $rq->result();
 			$rq->free_result();
 			$curstock = array();
 			foreach ($r as $row) {
-				$curstock[$row->post_id] = $row->meta_value;
+				if ($r->meta_key == '_price') {
+					if (isset($curprice[$row->post_id])) {
+						die('<p>price already set for '. $row->post_id);
+					}
+					$curprice[$row->post_id] = $row->meta_value;
+
+				} else {
+					if (isset($curstock[$row->post_id])) {
+						die('<p>stock already set for '. $row->post_id);
+					}
+					$curstock[$row->post_id] = $row->meta_value;
+				}
 			}
 
 
@@ -319,16 +328,23 @@ $not_here=array();
 				if (isset($curstock[$d->post_id])) {
 					$curq = $curstock[$d->post_id];
 				}
+				$curp = 0;
+
+				if (isset($curprice[$d->post_id])) {
+					$curp = $curprice[$d->post_id];
+				}
+				if (!$curp) {
+					die('<p>no price for '. $curp);
+				}
+
+				$d->curq = $curq;
+				$d->title = $titles[$d->post_id];
+				$exec[] = $d;
 				if ($curq != $d->qoh) {
 					//$curq = 0;
-
-
-					$d->curq = $curq;
-					$d->title = $titles[$d->post_id];
-					$exec[] = $d;
 				} else {
 					$errors[] = 'The item: ' . $d->sku . ' did not change currently set to ' . $curq;
-					continue;
+					//continue;
 				}
 			}
 		}
@@ -338,7 +354,6 @@ $not_here=array();
 		if ($show_missing) {
 
 			foreach ($curerrors as $n) {
-				echo "<br> " . $n->supplier . " - " . $n->title . " SKU: " . $n->sku . " / $" . $n->price . " (q: " . $n->qoh . ")";
 			}
 
 
@@ -444,7 +459,7 @@ $not_here=array();
 
 
 
-	
+
 
 	function index2($completed = 0)
 	{
