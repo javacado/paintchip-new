@@ -602,7 +602,7 @@ $out='';
 			{
 					$error = array('error' => $this->upload->display_errors());
 
-					die("<h3>Output</h3><pre>".print_r($error,1)."</pre>");
+					die("<h3>Output</h3><pre>".print_r($error,1).print_r($_FILES,1)."</pre>");
 					
 			}
 			else
