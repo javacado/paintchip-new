@@ -327,7 +327,7 @@ class Inventory extends CI_Controller
 
 				if ($curp != $d->price) {
 					
-					echo '<p>The item: ' . $d->sku . ' cur price: $' . $d->price . ' // new price: $'.$curp;
+					echo '<p>The item: ' . $d->sku . ' real price: $' . $d->price . ' // existing price: $'.$curp  . '  ('. ( floatval($d->price) - floatval($curp) ).')';
 					//continue;
 				}
 
