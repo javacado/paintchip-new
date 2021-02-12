@@ -326,8 +326,11 @@ class Inventory extends CI_Controller
 				$exec[] = $d;
 
 				if ($curp != $d->price) {
-					
-					echo '<p>The item: ' . $d->sku . ' real price: $' . $d->price . ' // existing price: $'.$curp  . '  ('. ( floatval($d->price) - floatval($curp) ).')';
+					$diff = ( floatval($d->price) - floatval($curp) ) ;
+					if (abs($diff)>5) {
+						$diff = "<b style='color:#c00'>".$diff . "</b>";
+					}
+					echo '<p>The item: ' . $d->sku . ' real price: $' . $d->price . ' // existing price: $'.$curp  . '  ('. $diff .')';
 					//continue;
 				}
 
