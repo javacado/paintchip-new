@@ -167,7 +167,7 @@ class Inventory extends CI_Controller
 		$data = json_decode($r->data);
 		$errors = array();
 		$exec = array();
-		$len = 500;
+		$len = 5500;
 
 		if (count($data) <= $last_num) {
 			$u = array('ready' => 1);
@@ -235,7 +235,9 @@ class Inventory extends CI_Controller
 
 		$curerrors = array_merge($curerrors, $errors);
 		$curexec = array_merge($curexec, $exec);
-		$u = array('last_num' => ($last_num + $len), 'errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
+
+		die("<h3>Output</h3><pre>".print_r(count($curerrors),1)."</pre>");
+ 		$u = array('last_num' => ($last_num + $len), 'errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
 
 		$this->db->update('jt_inv_holder', $u, array("id" => $invID));
 	}
