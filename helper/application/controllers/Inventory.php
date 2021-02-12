@@ -80,7 +80,8 @@ class Inventory extends CI_Controller
 			$id = $sku = $title = $price = '';
 			if ($first) {
 				$prod['supplier'] = $parts[0] == "SS"? "SLS" : "MAC";
-				if ($parts[0] != "SS" && $parts[0] != "MA") {
+				$testit = trim($parts[0]);
+				if ($testit != "SS" && $testit != "MA") {
 					echo("<h3>OutputNOT</h3><pre>".print_r($parts,1)."</pre>");
 					
 				}
