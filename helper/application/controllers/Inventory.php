@@ -72,7 +72,7 @@ if (strpos($row[0],'VA10105')!==false) {
 				// echo "<P>cont FROM...   $test</P>";
 					continue;
 				}
-			} else if ($numparts == 12 || $numparts == 13) {
+			} else if ($numparts == 11 || $numparts == 12 || $numparts == 13) {
 				$second = true;
 				if (!isset($prod['title'])) {
 					//echo "<P>continueing $octr</P>";
