@@ -56,10 +56,7 @@ class Inventory extends CI_Controller
 
 			$parts = preg_split('/  +/', $row[0]);
 
-			  if (strpos($row[0],'VA10105')!==false) {
-				die("<h3>Output</h3><pre>".print_r($prod,1)."</pre>");
-				
-			} 
+			  
 			//echo ("<h3>".count($parts)."</h3><pre>" . print_r($parts, 1) . "</pre>");
 			$numparts = count($parts);
 			$first = $second = false;
@@ -82,6 +79,12 @@ class Inventory extends CI_Controller
 				continue;
 			}
 
+
+			if (strpos($row[0],'VA10105')!==false) {
+				echo("<h3>Output</h3><pre>".print_r($prod,1)."</pre>");
+				die("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
+				
+			} 
 			//if ($octr > 80) break;
 			$id = $sku = $title = $price = '';
 			if ($first) {
