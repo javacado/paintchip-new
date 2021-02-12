@@ -295,7 +295,7 @@ class Inventory extends CI_Controller
 			$rq->free_result();
 			$curstock = array();
 			foreach ($r as $row) {
-				if ($r->meta_key == '_price') {
+				if ($row->meta_key == '_price') {
 					if (isset($curprice[$row->post_id])) {
 						die('<p>price already set for '. $row->post_id);
 					}
