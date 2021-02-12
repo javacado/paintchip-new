@@ -87,7 +87,8 @@ class Inventory extends CI_Controller
 					
 				}
 				$prod['title'] = ucwords(strtolower($parts[2]));
-
+				$prod['carries'] = intval($parts[7]) != 0;
+				echo("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
 				if ($prod['title'] == '0' || $prod['title'] == '1') {
 					$t = explode(" ", $parts[1]);
 					unset($t[0]);
@@ -107,8 +108,8 @@ class Inventory extends CI_Controller
 				$prod['sku'] = $parts[2];
 				preg_match_all('!\d+\.*\d*!', $parts[5], $matches);
 				$prod['price'] = $matches[0][0]; //preg_replace("/[^A-Za-z ]/", '', $parts[5]);
-				$carries = intval($parts[8]) != 0;
-echo("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
+				$carries = $prod['carries'];//intval($parts[8]) != 0;
+//echo("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
 
 				$prod['qoh'] = $parts[9];
 
