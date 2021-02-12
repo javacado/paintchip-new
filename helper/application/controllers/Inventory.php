@@ -52,7 +52,7 @@ class Inventory extends CI_Controller
 			$first = false;
 
 			if (strpos($row[0],'VA10105')!==false) {
- 				die("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
+ 				//die("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
 				
 			} 
 
@@ -69,7 +69,7 @@ class Inventory extends CI_Controller
 
 				$test = trim($parts[0]);
 				if ($test != "SS" && $test != "MA") {
-					//echo "<P>cont...$test</P>";
+				 echo "<P>cont FROM...   $test</P>";
 					continue;
 				}
 			} else if ($numparts == 12 || $numparts == 13) {
