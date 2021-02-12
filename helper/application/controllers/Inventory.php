@@ -27,7 +27,7 @@ class Inventory extends CI_Controller
 	}
 	function parseData($test = 0)
 	{
-		$nothave=array();
+		$nothave = array();
 		$csv = $_SERVER['DOCUMENT_ROOT'] . "/dta/thedata.txt";
 		$handle = fopen($csv, "r");
 		$octr = 0;
@@ -80,15 +80,14 @@ class Inventory extends CI_Controller
 			//if ($octr > 80) break;
 			$id = $sku = $title = $price = '';
 			if ($first) {
-				$prod['supplier'] = $parts[0] == "SS"? "SLS" : "MAC";
+				$prod['supplier'] = $parts[0] == "SS" ? "SLS" : "MAC";
 				$testit = trim($parts[0]);
 				if ($testit != "SS" && $testit != "MA") {
-					echo("<h3>OutputNOT</h3><pre>".print_r($parts,1)."</pre>");
-					
+					echo ("<h3>OutputNOT</h3><pre>" . print_r($parts, 1) . "</pre>");
 				}
 				$prod['title'] = ucwords(strtolower($parts[2]));
 				$prod['carries'] = intval($parts[5]) != 0;
-			//	echo("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
+				//	echo("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
 				if ($prod['title'] == '0' || $prod['title'] == '1') {
 					$t = explode(" ", $parts[1]);
 					unset($t[0]);
@@ -108,8 +107,8 @@ class Inventory extends CI_Controller
 				$prod['sku'] = $parts[2];
 				preg_match_all('!\d+\.*\d*!', $parts[5], $matches);
 				$prod['price'] = $matches[0][0]; //preg_replace("/[^A-Za-z ]/", '', $parts[5]);
-				$carries = $prod['carries'];//intval($parts[8]) != 0;
-//echo("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
+				$carries = $prod['carries']; //intval($parts[8]) != 0;
+				//echo("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
 
 				$prod['qoh'] = $parts[9];
 
@@ -126,11 +125,11 @@ class Inventory extends CI_Controller
 				/* $prod['sku'] = $subarr[1];
 				$prod['upc'] = $subarr[2];
 				$prod['qoh'] = $subarr[9]; */
- 				if (!$carries) {
+				if (!$carries) {
 					continue;
 				}
 				if (!isset($skus[$prod['sku']])) {
-					$nothave[]=$prod;
+					$nothave[] = $prod;
 					continue;
 				}
 				@$prod['post_id'] = $skus[$prod['sku']];
@@ -159,11 +158,45 @@ class Inventory extends CI_Controller
 		$this->db->insert('jt_inv_holder', $i);
 		echo json_encode(array('status' => 'ok', 'message' => count($prods) . " products uploaded"));
 
-//echo "<h3>".count($nothave)." Missing Items</h3>";
+		//echo "<h3>".count($nothave)." Missing Items</h3>";
 		//foreach($nothave as $n) {
 		//	echo "<br> ". $n['supplier'] . " - " . $n['title']. " SKU: ".$n['sku']." / $" . $n['price'] . " (q: ".$n['qoh'].")";
 		//}
 	}
+
+
+
+
+	function sku_not_in()
+	{
+
+		$q = "SELECT * FROM `wp_postmeta`  where meta_key='_sku' and post_id={$pp->product_id}";
+		$rq = $this->db->query($q);
+		$psku = $rq->row();
+		$rq->free_result();
+		$dbskus = array();
+		foreach ($psku as $p) {
+			$dbskus[] = $p->meta_value;
+		}
+
+
+		$q = "select * from jt_inv_holder where complete = 0 order by date_created desc";
+		$rq = $this->db->query($q);
+		if ($rq->num_rows() == 0) {
+			die(json_encode(array('error' => 'no data found')));
+		}
+		$r = $rq->row();
+		$curexec = json_decode($r->exec);
+		$incoming=array();
+		foreach ($curexec as $p){
+			$incoming[]=$curexec->sku;
+
+		}
+
+		die("dbskus:".count($dbskus). " /// " . " incoming:".count($incoming));
+	}
+
+
 
 
 	function checkInventory()
@@ -216,7 +249,7 @@ class Inventory extends CI_Controller
 		}
 
 		//die("<h3>Output</h3><pre> post ids ".print_r(count($postids),1)."</pre>");
-		
+
 		if (count($postids) > 0) {
 			$postids = implode(",", $postids);
 
@@ -266,19 +299,19 @@ class Inventory extends CI_Controller
 
 		$curerrors = array_merge($curerrors, $errors);
 		$curexec = array_merge($curexec, $exec);
-if ($show_missing) {
+		if ($show_missing) {
 
-	foreach($curerrors as $n) {
-			echo "<br> ". $n->supplier . " - " . $n->title. " SKU: ".$n->sku." / $" . $n->price . " (q: ".$n->qoh.")";
+			foreach ($curerrors as $n) {
+				echo "<br> " . $n->supplier . " - " . $n->title . " SKU: " . $n->sku . " / $" . $n->price . " (q: " . $n->qoh . ")";
+			}
+
+
+			//die('doneeee');
+			//die("<h3>Output</h3><pre>".print_r(,1)."</pre>");
+
 		}
-
-
-	//die('doneeee');
-	//die("<h3>Output</h3><pre>".print_r(,1)."</pre>");
-	
-}
 		//die("<h3>Output</h3><pre>Exec:".print_r(count($curexec),1)."  /// Ertrros:  ".print_r(count($curerrors),1)." </pre>");
- 		$u = array('last_num' => ($last_num + $len), 'errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
+		$u = array('last_num' => ($last_num + $len), 'errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
 
 		$this->db->update('jt_inv_holder', $u, array("id" => $invID));
 	}
@@ -373,6 +406,9 @@ if ($show_missing) {
 		}
 	}
 
+
+
+	
 
 	function index2($completed = 0)
 	{
