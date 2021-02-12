@@ -556,8 +556,7 @@ foreach ($h1s as $h1) {
 	}
 }
 
-echo "Avail:".$avail;
-		
+ 		
 
 		if ($start > count($unknowns)) {
 			$a = 'done';
@@ -565,7 +564,7 @@ echo "Avail:".$avail;
 			$a = $start+1;
 		}
 
-		echo json_encode(array('next' => $a));
+		echo json_encode(array('avail' => $avail, 'next' => $a));
 	}
 
 
