@@ -172,7 +172,7 @@ class Inventory extends CI_Controller
 
 		$q = "SELECT * FROM `wp_postmeta`  where meta_key='_sku' and meta_value!=''";
 		$rq = $this->db->query($q);
-		$psku = $rq->row();
+		$psku = $rq->result();
 		$rq->free_result();
 		$dbskus = array();
 		foreach ($psku as $p) {
@@ -189,7 +189,7 @@ class Inventory extends CI_Controller
 		$curexec = json_decode($r->exec);
 		$incoming=array();
 		foreach ($curexec as $p){
-			$incoming[]=$curexec->sku;
+			$incoming[]=$p->sku;
 
 		}
 
