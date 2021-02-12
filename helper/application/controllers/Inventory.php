@@ -249,7 +249,8 @@ class Inventory extends CI_Controller
 		$curerrors = array_merge($curerrors, $errors);
 		$curexec = array_merge($curexec, $exec);
 if ($show_missing) {
-	die("<h3>Output</h3><pre>".print_r(,1)."</pre>");
+	die('doneeee');
+	//die("<h3>Output</h3><pre>".print_r(,1)."</pre>");
 	
 }
 		//die("<h3>Output</h3><pre>Exec:".print_r(count($curexec),1)."  /// Ertrros:  ".print_r(count($curerrors),1)." </pre>");
