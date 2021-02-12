@@ -546,7 +546,7 @@ echo "<p>".count($postids)." products to update</p>";
 			$machad = false ;
 			//die("<h3>Output</h3><pre>" . print_r("no url", 1) . "</pre>");
 
-		}
+		} else {
 		$html = file_get_html($newurl);
 
 $h1s = $html->find('h1');
@@ -557,6 +557,7 @@ foreach ($h1s as $h1) {
 	}
 }
 
+	}
  		
 
 		if ($start > count($unknowns)) {
@@ -564,6 +565,7 @@ foreach ($h1s as $h1) {
 		} else {
 			$a = $start+1;
 		}
+
 
 		echo json_encode(array('avail' => $avail, 'machad' => $machad,  'sku' => $sku,  'url' => $url, 'next' => $a));
 	}
