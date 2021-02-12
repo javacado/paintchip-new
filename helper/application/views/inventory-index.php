@@ -1,5 +1,5 @@
 <?php
-$this->load->view('header', array('title' => 'Xtractor'));
+$this->load->view('header', array('title' => 'Inventory'));
 ?>
 
     <a name='top' id='top'></a>
