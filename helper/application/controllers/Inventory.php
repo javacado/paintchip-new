@@ -532,7 +532,7 @@ echo "<p>".count($postids)." products to update</p>";
 		$header = curl_getinfo($ch);
 		curl_close($ch);
 
-		
+		$machad = true;
 		$res['content'] = $content;
 		$res['content'] = strip_tags($content, "<body>");
 		$res['url'] = $header['url'];
@@ -543,7 +543,8 @@ echo "<p>".count($postids)." products to update</p>";
 		if (!$newurl || strpos($newurl, "Catalog Browse | MacPherson's") != FALSE) {
 			$item['data'] = "NO URL";
 			//$this->db->update("jt_mac_data", $item, array("id" => $row->id));
-			die("<h3>Output</h3><pre>" . print_r("no url", 1) . "</pre>");
+			$machad = false ;
+			//die("<h3>Output</h3><pre>" . print_r("no url", 1) . "</pre>");
 
 		}
 		$html = file_get_html($newurl);
@@ -551,7 +552,7 @@ echo "<p>".count($postids)." products to update</p>";
 $h1s = $html->find('h1');
 $avail = true;
 foreach ($h1s as $h1) {
-	if (strtolower($h1) == 'product not found') {
+	if (strtolower(trim($h1->innerText)) == 'product not found') {
 		$avail = false ;
 	}
 }
@@ -564,7 +565,7 @@ foreach ($h1s as $h1) {
 			$a = $start+1;
 		}
 
-		echo json_encode(array('avail' => $avail, 'sku' => $sku,  'url' => $url, 'next' => $a));
+		echo json_encode(array('avail' => $avail, 'machad' => $machad,  'sku' => $sku,  'url' => $url, 'next' => $a));
 	}
 
 
