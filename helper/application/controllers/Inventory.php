@@ -204,7 +204,7 @@ class Inventory extends CI_Controller
 		}
 
 		$newdata = array_slice($data, $last_num, $len);
-		echo ("<h3>Output</h3><pre>" . print_r($newdata, 1) . "</pre>");
+		//echo ("<h3>Output</h3><pre>" . print_r($newdata, 1) . "</pre>");
 
 		$postids = array();
 		foreach ($newdata as $d) {
@@ -267,7 +267,13 @@ class Inventory extends CI_Controller
 		$curerrors = array_merge($curerrors, $errors);
 		$curexec = array_merge($curexec, $exec);
 if ($show_missing) {
-	die('doneeee');
+
+	foreach($curerrors as $n) {
+			echo "<br> ". $n->supplier . " - " . $n->title. " SKU: ".$n->sku." / $" . $n->price . " (q: ".$n->qoh.")";
+		}
+
+
+	//die('doneeee');
 	//die("<h3>Output</h3><pre>".print_r(,1)."</pre>");
 	
 }
