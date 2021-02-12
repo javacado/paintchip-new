@@ -51,7 +51,10 @@ class Inventory extends CI_Controller
 		{
 			$first = false;
 
-
+			if (strpos($row[0],'VA10105')!==false) {
+ 				die("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
+				
+			} 
 
 
 			$parts = preg_split('/  +/', $row[0]);
@@ -80,11 +83,7 @@ class Inventory extends CI_Controller
 			}
 
 
-			if (strpos($row[0],'VA10105')!==false) {
-				echo("<h3>Output</h3><pre>".print_r($prod,1)."</pre>");
-				die("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
-				
-			} 
+			
 			//if ($octr > 80) break;
 			$id = $sku = $title = $price = '';
 			if ($first) {
