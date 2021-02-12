@@ -1,4 +1,4 @@
-<?php
+<?php 
 $this->load->view('header', array('title' => 'Inventory'));
 ?>
 
@@ -24,7 +24,7 @@ $this->load->view('header', array('title' => 'Inventory'));
 <button class='btn btn-primary' onclick='runChecker()'>
 Run checker
 </button> -->
-<?php
+<?php 
 if (!$ok) {?>
 
  <form method="POST" style='width:400px;'>
@@ -36,7 +36,7 @@ if (!$ok) {?>
 </form>
 
 
-<?php
+<?php 
 } else {
 	?>
 
@@ -52,13 +52,13 @@ if (!$ok) {?>
     </div>
     <input type="text" class='form-control' id='delete_ids' />
     <div class='' style='margin-bottom:10px;'>
-<?php
+<?php 
 for ($x = 1; $x < 15; $x++) {?>
 <label class='btn btn-xs btn-default' >
-    <input type='radio' name='csv'  class='check-csv' value='data-<?=$x?>' /> data-<?=$x?>
+    <input type='radio' name='csv'  class='check-csv' value='data-<?php echo $x?>' /> data-<?php echo $x?>
 </label>
 
-<?php
+<?php 
 }?>
 </div> <button class='btn btn-info' onclick='extract()'>Load/Display CSV</button>
 <button class='btn btn-default' onclick='getfix()'>Fix/Retry Failed</button>
@@ -96,26 +96,25 @@ for ($x = 1; $x < 15; $x++) {?>
 <td>Status</td>
 <td>Who</td>
 </tr> 
-<? 
-die("<h3>Output</h3><pre>".print_r($data,1)."</pre>");
+<?php  
 
 foreach ($data as $da) {
     ?>
 <tr>
-<td><?=date('F jS g:ia', strtotime($da->date_created))?></td>
-<td><div id='status_<?=$da->id?>'><?
+<td><?php echo date('F jS g:ia', strtotime($da->date_created))?></td>
+<td><div id='status_<?php echo $da->id?>'><?php 
 if ($da->complete==1) {
     echo date('F jS g:ia', strtotime($da->date_approved));
 } else if ($da->ready==1) {?>
 
-<?} else {?>
+<?php } else {?>
 There was an error, upload a new file
-<?}
+<?php }
 ?></div></td>
-<td><?=$da->approved_by?></td>
+<td><?php echo $da->approved_by?></td>
 
 </tr>
-<?}?>
+<?php }?>
 </table>
 </div>
 <div class='col-md-4'>
@@ -148,10 +147,10 @@ There was an error, upload a new file
 
 <script>
 $(document).ready(function() {
-    <? if ($parsed) {?>
-        $('#status_<?=$parsed?>').html("<i class='fa fa-refresh fa-spin'></i> Processing");
-    readyInventory(<?=$parsed?>);
-    <?}?>
+    <?php  if ($parsed) {?>
+        $('#status_<?php echo $parsed?>').html("<i class='fa fa-refresh fa-spin'></i> Processing");
+    readyInventory(<?php echo $parsed?>);
+    <?php }?>
 })
 
 function readyInventory(id) {
@@ -1368,8 +1367,8 @@ function popPreview(result) {
 
         </script>
 
-        <?php
+        <?php 
 }?>
-<?php
+<?php 
 $this->load->view('footer', array());
 ?>
