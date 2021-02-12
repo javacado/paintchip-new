@@ -568,6 +568,19 @@ foreach ($h1s as $h1) {
 		}
 
 
+		if (!$avail) {
+			//get post id -set to draft
+
+			$q = "select post_id wp_postmeta where meta_key='_sku' and meta_value='$sku'";
+		$rq = $this->db->query($q);
+		$r = $rq->row();
+		$rq->free_result();
+$post_id=$r->post_id;
+echo "FOUNS $pos_id   =======  ";
+/* $u=array('post_status' => 'draft');
+$this->db->update('wp_posts', $u, array("ID" => $post_id));
+ */}
+
 		echo json_encode(array('avail' => $avail, 'machad' => $machad,  'sku' => $sku,  'url' => $url, 'next' => $a));
 	}
 
