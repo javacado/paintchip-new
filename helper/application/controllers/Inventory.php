@@ -154,7 +154,7 @@ class Inventory extends CI_Controller
 
 
 		foreach($nothave as $n) {
-			echo "<br> ". $n['supplier'] . " - " . $n['title']. " /  $" . $n['price'] . " (q: ".$prod['qoh'].")";
+			echo "<br> ". $n['supplier'] . " - " . $n['title']. " / $" . $n['price'] . " (q: ".$n['qoh'].")";
 		}
 	}
 
