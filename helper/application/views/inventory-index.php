@@ -20,7 +20,8 @@ $this->load->view('header', array('title' => 'Xtractor'));
 <h1>Paintchip Website Inventory Tool</h1>
 <h2 id='title'></h2>
 <h3 id='ctr'></h3>
-<button class='btn btn-primary' onclick='runChecker(0)'>
+<input id='startat' />
+<button class='btn btn-primary' onclick='runChecker()'>
 Run checker
 </button>
 <?php
@@ -194,7 +195,7 @@ $(document).ready(function() {
 
 
 function runChecker(n) {
-
+if (!n ) n=$('#startat').val();
 
  $.ajax({
         url: "/helper/inventory/rununknowns/" + n,
