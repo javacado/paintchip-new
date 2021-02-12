@@ -186,6 +186,9 @@ class Inventory extends CI_Controller
 			}
 			$postids[] = $d->post_id;
 		}
+
+		die("<h3>Output</h3><pre> post ids ".print_r(count($postids),1)."</pre>");
+		
 		if (count($postids) > 0) {
 			$postids = implode(",", $postids);
 
