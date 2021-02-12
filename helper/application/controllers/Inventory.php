@@ -107,6 +107,8 @@ class Inventory extends CI_Controller
 				$prod['sku'] = $parts[2];
 				preg_match_all('!\d+\.*\d*!', $parts[5], $matches);
 				$prod['price'] = $matches[0][0]; //preg_replace("/[^A-Za-z ]/", '', $parts[5]);
+				$carries = $parts[8] !== 0;
+				
 				$prod['qoh'] = $parts[9];
 
 
@@ -122,6 +124,10 @@ class Inventory extends CI_Controller
 				/* $prod['sku'] = $subarr[1];
 				$prod['upc'] = $subarr[2];
 				$prod['qoh'] = $subarr[9]; */
+
+				if (!$carries) {
+					continue;
+				}
 				if (!isset($skus[$prod['sku']])) {
 					$nothave[]=$prod;
 					continue;
