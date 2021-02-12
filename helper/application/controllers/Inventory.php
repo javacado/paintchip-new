@@ -152,9 +152,9 @@ class Inventory extends CI_Controller
 		$this->db->insert('jt_inv_holder', $i);
 		echo json_encode(array('status' => 'ok', 'message' => count($prods) . " products uploaded"));
 
-
+echo "<h3>".count($nothave)." Missing Items</h3>";
 		foreach($nothave as $n) {
-			echo "<br> ". $n['supplier'] . " - " . $n['title']. " / $" . $n['price'] . " (q: ".$n['qoh'].")";
+			echo "<br> ". $n['supplier'] . " - " . $n['title']. " SKU: ".$n['sku']." / $" . $n['price'] . " (q: ".$n['qoh'].")";
 		}
 	}
 
