@@ -195,7 +195,7 @@ $(document).ready(function() {
 
 
 function runChecker(n) {
-if (!n ) n=$('#startat').val();
+if (!n ) n=parseInt($('#startat').val());
 
  $.ajax({
         url: "/helper/inventory/rununknowns/" + n,
