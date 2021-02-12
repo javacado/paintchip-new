@@ -56,7 +56,7 @@ class Inventory extends CI_Controller
 
 			$parts = preg_split('/  +/', $row[0]);
 if (strpos($row[0],'VA10105')!==false) {
- 				 die("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
+ 				 //die("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
 				
 			} 
 			  
