@@ -114,7 +114,9 @@ if (strpos($row[0],'VA10105')!==false) {
 				$prod['sku'] = $parts[2];
 				preg_match_all('!\d+\.*\d*!', $parts[5], $matches);
 				$prod['price'] = $matches[0][0]; //preg_replace("/[^A-Za-z ]/", '', $parts[5]);
-				$carries = $prod['carries']; //intval($parts[8]) != 0;
+				$carries = $prod['carries']; //
+				
+				 
 				//echo("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
 
 				$prod['qoh'] = $parts[9];
@@ -132,7 +134,7 @@ if (strpos($row[0],'VA10105')!==false) {
 				/* $prod['sku'] = $subarr[1];
 				$prod['upc'] = $subarr[2];
 				$prod['qoh'] = $subarr[9]; */
-				if (!$carries) {
+				if (!$carries&& intval($prod['qoh'])==0) {
 					continue;
 				}
 				if (!isset($skus[$prod['sku']])) {
@@ -214,6 +216,23 @@ $not_here=array();
 	}
 
 
+
+	function applyInventory() {
+		// first set manage stock and stock #'s 0 and backorders to 'notify' 
+		$q = "SELECT * FROM `wp_postmeta`  where meta_key='_sku' and meta_value!=''";
+		$rq = $this->db->query($q);
+		$psku = $rq->result();
+		$rq->free_result();
+		$dbskus = array();
+		foreach ($psku as $p) {
+			$dbskus[] = $p->meta_value;
+			if (!in_array($p->meta_value, $incoming)) {
+				$not_here[]=$p->meta_value;
+			}
+		}
+
+		
+	}
 
 
 	function checkInventory()
