@@ -87,8 +87,8 @@ class Inventory extends CI_Controller
 					
 				}
 				$prod['title'] = ucwords(strtolower($parts[2]));
-				$prod['carries'] = intval($parts[7]) != 0;
-				echo("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
+				$prod['carries'] = intval($parts[5]) != 0;
+			//	echo("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
 				if ($prod['title'] == '0' || $prod['title'] == '1') {
 					$t = explode(" ", $parts[1]);
 					unset($t[0]);
