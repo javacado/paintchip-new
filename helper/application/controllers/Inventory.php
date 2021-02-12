@@ -170,15 +170,7 @@ class Inventory extends CI_Controller
 	function sku_not_in()
 	{
 
-		$q = "SELECT * FROM `wp_postmeta`  where meta_key='_sku' and meta_value!=''";
-		$rq = $this->db->query($q);
-		$psku = $rq->result();
-		$rq->free_result();
-		$dbskus = array();
-		foreach ($psku as $p) {
-			$dbskus[] = $p->meta_value;
-		}
-
+	
 
 		$q = "select * from jt_inv_holder where complete = 0 order by date_created desc";
 		$rq = $this->db->query($q);
@@ -193,7 +185,25 @@ class Inventory extends CI_Controller
 
 		}
 
-		die("dbskus:".count($dbskus). " /// " . " incoming:".count($incoming));
+$not_here=array();
+
+		$q = "SELECT * FROM `wp_postmeta`  where meta_key='_sku' and meta_value!=''";
+		$rq = $this->db->query($q);
+		$psku = $rq->result();
+		$rq->free_result();
+		$dbskus = array();
+		foreach ($psku as $p) {
+			$dbskus[] = $p->meta_value;
+			if (!in_array($p->meta_value, $incoming)) {
+				$not_here[]=$p->meta_value;
+			}
+		}
+
+
+
+		echo("dbskus:".count($dbskus). " /// " . " incoming:".count($incoming). " /// " . " not_here:".count($not_here));
+		die("<h3>Output</h3><pre>".implode($not_here,",")."</pre>");
+		
 	}
 
 
