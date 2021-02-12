@@ -170,7 +170,7 @@ class Inventory extends CI_Controller
 	function sku_not_in()
 	{
 
-		$q = "SELECT * FROM `wp_postmeta`  where meta_key='_sku' and post_id={$pp->product_id}";
+		$q = "SELECT * FROM `wp_postmeta`  where meta_key='_sku' and meta_value!=''";
 		$rq = $this->db->query($q);
 		$psku = $rq->row();
 		$rq->free_result();
