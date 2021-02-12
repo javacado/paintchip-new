@@ -544,7 +544,8 @@ echo "<p>".count($postids)." products to update</p>";
 			$item['data'] = "NO URL";
 			//$this->db->update("jt_mac_data", $item, array("id" => $row->id));
 			$machad = false ;
-			//die("<h3>Output</h3><pre>" . print_r("no url", 1) . "</pre>");
+$avail = false;
+//die("<h3>Output</h3><pre>" . print_r("no url", 1) . "</pre>");
 
 		} else {
 		$html = file_get_html($newurl);
