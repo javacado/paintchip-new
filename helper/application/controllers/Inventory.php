@@ -124,7 +124,7 @@ class Inventory extends CI_Controller
 				/* $prod['sku'] = $subarr[1];
 				$prod['upc'] = $subarr[2];
 				$prod['qoh'] = $subarr[9]; */
-
+echo "<P>qfloor:".$parts[8]. "</P>";
 				if (!$carries) {
 					continue;
 				}
