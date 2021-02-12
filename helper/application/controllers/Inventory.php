@@ -108,7 +108,8 @@ class Inventory extends CI_Controller
 				preg_match_all('!\d+\.*\d*!', $parts[5], $matches);
 				$prod['price'] = $matches[0][0]; //preg_replace("/[^A-Za-z ]/", '', $parts[5]);
 				$carries = intval($parts[8]) != 0;
-				
+				echo "<p> p: " . $parts[8] . "</p>" ;
+
 				$prod['qoh'] = $parts[9];
 
 
@@ -157,10 +158,10 @@ class Inventory extends CI_Controller
 		$this->db->insert('jt_inv_holder', $i);
 		echo json_encode(array('status' => 'ok', 'message' => count($prods) . " products uploaded"));
 
-echo "<h3>".count($nothave)." Missing Items</h3>";
-		foreach($nothave as $n) {
-			echo "<br> ". $n['supplier'] . " - " . $n['title']. " SKU: ".$n['sku']." / $" . $n['price'] . " (q: ".$n['qoh'].")";
-		}
+//echo "<h3>".count($nothave)." Missing Items</h3>";
+		//foreach($nothave as $n) {
+		//	echo "<br> ". $n['supplier'] . " - " . $n['title']. " SKU: ".$n['sku']." / $" . $n['price'] . " (q: ".$n['qoh'].")";
+		//}
 	}
 
 
