@@ -17,12 +17,13 @@ class Inventory extends CI_Controller
 		}
 		$this->load->library('AdvancedHtmlBase');
 
+		$this->load->helper(array('form', 'url'));
 		$this->load->helper('cookie');
 		$this->load->helper('file');
 		parse_str($_SERVER['QUERY_STRING'], $this->get);
 	}
 
-	function index()
+	function index($dta=null)
 	{
 
 
@@ -37,20 +38,23 @@ class Inventory extends CI_Controller
 		}
 
 		$data = array("ok" => $ok);
+if ($dta) $data = array_merge($data, $dta);
 
 
-
-		$q = "select * from jt_inv_holder where complete = 0 order by date_created desc";
+		$q = "select * from jt_inv_holder order by date_created desc, complete asc ";
 		$rq = $this->db->query($q);
 		$r = $rq->result();
 		$rq->free_result();
 		$data['data'] = $r;
 		$this->load->view('inventory-index', $data);
 	}
-	function parseData($test = 0)
+	function parseData($file)
 	{
 		$nothave = array();
-		$csv = $_SERVER['DOCUMENT_ROOT'] . "/dta/thedata.txt";
+		$csv =  $file;
+		if (strpos($file, '/tmp/') === false) {
+			die('incorrect file');
+		}
 		$handle = fopen($csv, "r");
 		$octr = 0;
 		$ct = 0;
@@ -135,7 +139,7 @@ class Inventory extends CI_Controller
 
 				$prod['sku'] = $parts[2];
 				preg_match_all('!\d+\.*\d*!', $parts[5], $matches);
-				$prod['price'] = $matches[0][0]; //preg_replace("/[^A-Za-z ]/", '', $parts[5]);
+				@$prod['price'] = $matches[0][0]; //preg_replace("/[^A-Za-z ]/", '', $parts[5]);
 				$carries = $prod['carries']; //
 
 
@@ -180,15 +184,15 @@ class Inventory extends CI_Controller
 			//here you can manipulate the values by accessing the array
 
 		}
-		if ($test == 1) die("<h3>Output</h3><pre>" . print_r($prods, 1) . "</pre>");
+		//if ($test == 1) die("<h3>Output</h3><pre>" . print_r($prods, 1) . "</pre>");
 
 
 		$q = "update jt_inv_holder set complete =1 where id>0";
 		$this->db->query($q);
 		$i = array('date_created' => date("Y-m-d H:i:s"), 'data' => json_encode($prods));
 		$this->db->insert('jt_inv_holder', $i);
-		echo json_encode(array('status' => 'ok', 'message' => count($prods) . " products uploaded"));
-
+		//echo json_encode(array('status' => 'ok', 'message' => count($prods) . " products uploaded"));
+ $this->index(array('parsed' => $this->db->insert_id() ));
 		//echo "<h3>".count($nothave)." Missing Items</h3>";
 		//foreach($nothave as $n) {
 		//	echo "<br> ". $n['supplier'] . " - " . $n['title']. " SKU: ".$n['sku']." / $" . $n['price'] . " (q: ".$n['qoh'].")";
@@ -238,14 +242,14 @@ class Inventory extends CI_Controller
 	}
 
 
-	function checkInventory()
+	function checkInventory($id)
 	{
 
 
 		$show_missing = true;
 
 
-		$q = "select * from jt_inv_holder where complete = 0 order by date_created desc";
+		$q = "select * from jt_inv_holder where id=$id";
 		$rq = $this->db->query($q);
 		if ($rq->num_rows() == 0) {
 			die(json_encode(array('error' => 'no data found')));
@@ -273,7 +277,7 @@ class Inventory extends CI_Controller
 		if (count($data) <= $last_num) {
 			$u = array('ready' => 1);
 			$this->db->update('jt_inv_holder', $u, array("id" => $invID));
-			die(json_encode(array('status' => 'complete')));
+			//die(json_encode(array('status' => 'complete')));
 		}
 
 		$newdata = array_slice($data, $last_num, $len);
@@ -326,7 +330,7 @@ class Inventory extends CI_Controller
 			}
 
 
-
+$out='';
 
 			foreach ($newdata as $d) {
 				$curq = 0;
@@ -352,7 +356,7 @@ class Inventory extends CI_Controller
 					if (abs($diff) > 5) {
 						$diff = "<b style='color:#c00'>" . $diff . "</b>";
 					}
-					echo '<p>The item: ' . $d->sku . ' real price: $' . $d->price . ' // existing price: $' . $curp  . '  (' . $diff . ')';
+					$out.= '<p>Item # ' . $d->sku . ' real price: $' . $d->price . ' // website price: $' . $curp  . '  (' . $diff . ')';
 					//continue;
 				}
 
@@ -382,6 +386,8 @@ class Inventory extends CI_Controller
 		$u = array('last_num' => ($last_num + $len), 'errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
 
 		$this->db->update('jt_inv_holder', $u, array("id" => $invID));
+
+		echo json_encode(array('out' => $out));
 	}
 
 
@@ -577,6 +583,41 @@ class Inventory extends CI_Controller
 
 		echo json_encode(array('avail' => $avail, 'machad' => $machad,  'sku' => $sku,  'url' => $url, 'next' => $a));
 	}
+
+
+
+
+
+
+	public function uploadFile()
+	{
+			$config['upload_path']          = '/tmp/';
+			$config['allowed_types']        = 'txt|csv';
+			$config['max_size']             = 5048;
+			
+ 
+			$this->load->library('upload', $config);
+
+			if ( ! $this->upload->do_upload('invfile'))
+			{
+					$error = array('error' => $this->upload->display_errors());
+
+					die("<h3>Output</h3><pre>".print_r($error,1)."</pre>");
+					
+			}
+			else
+			{
+
+				$u = $this->upload->data();
+				$this->parseData($u['full_path']);
+					
+			}
+	}
+
+
+
+
+
 
 
 

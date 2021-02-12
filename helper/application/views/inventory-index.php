@@ -15,15 +15,15 @@ $this->load->view('header', array('title' => 'Xtractor'));
 
 
 
-<div class='container main-c'>
+<div class='container main-c' style='max-width:900px'>
 
 <h1>Paintchip Website Inventory Tool</h1>
 <h2 id='title'></h2>
 <h3 id='ctr'></h3>
-<input id='startat' />
+<!-- <input id='startat' />
 <button class='btn btn-primary' onclick='runChecker()'>
 Run checker
-</button>
+</button> -->
 <?php
 if (!$ok) {?>
 
@@ -70,16 +70,58 @@ for ($x = 1; $x < 15; $x++) {?>
 
 
 -->
-<div class='form-group'>
-<div class='input-group'>
+<button class='btn btn-primary pull-right btn-sm' onclick='$("#up").show(); $(this).hide()'><i class='fa fa-plus'></i> Upload new file</button>
+<h4>Inventory Updates</h4>
+<form action="/helper/inventory/uploadFile" id='up' method='POST' style='display:none;' enctype="multipart/form-data">
+<div class="form-group">
+		<div class="input-group input-file">
+        <input type="file" class="form-control" name="invfile" placeholder='Choose a file...' />
+			
+    		<span class="input-group-btn">
+       			 <button class="btn btn-warning " type="submit">Upload</button>
+    		</span>
+		</div>
+	</div>
+    
+    </form>
 
-<span class='input-group-addon'>Search for:</span>
- <input class='form-control'  id='searcht' placeholder='Text to search for'/>
 
-<span class='input-group-addon'> <button class='btn btn-success  btn-xs'  onclick='textsearch()'><i class='fa fa-search'></i> Search</button></span>
+    <div class='row ' >
+
+<div class='col-md-8 ' >
+
+<table class='table' style='clear:both;margin-top:15px;'>
+ <tr>
+<td>Started</td>
+<td>Status</td>
+<td>Who</td>
+</tr> 
+<? 
+
+foreach ($data as $da) {
+    ?>
+<tr>
+<td><?=date('F jS g:ia', strtotime($da->date_created))?></td>
+<td><div id='status_<?=$da->id?>'><?
+if ($da->complete==1) {
+    echo date('F jS g:ia', strtotime($da->date_approved));
+} else if ($da->ready==1) {?>
+
+<?} else {?>
+There was an error, upload a new file
+<?}
+?></div></td>
+<td><?=$da->approved_by?></td>
+
+</tr>
+<?}?>
+</table>
+</div>
+<div class='col-md-4'>
+
+<div id='review'></div>
 </div>
 </div>
-
 
 <div class='prog'></div>
 
@@ -102,6 +144,32 @@ for ($x = 1; $x < 15; $x++) {?>
 
  -->
 
+
+<script>
+$(document).ready(function() {
+    <? if ($parsed) {?>
+        $('#status_<?=$parsed?>').html("<i class='fa fa-refresh fa-spin'></i> Processing");
+    readyInventory(<?=$parsed?>);
+    <?}?>
+})
+
+function readyInventory(id) {
+    
+ $.ajax({
+        url: "/helper/inventory/checkInventory/" + id,
+        context: document.body,
+        method: 'get'
+    }).done(function(res) {
+        el='#status_'+id ;
+        $('#review').html(res.out)
+        $(el).html("Data uploaded - Review, then <button class='btn btn-danger btn-sm' onclick='finishInv("+id+")'>Finish</button>");
+        
+    })
+}
+ 
+
+ 
+</script>
 
 <div class='row approveprices' style='display: none'>
 
