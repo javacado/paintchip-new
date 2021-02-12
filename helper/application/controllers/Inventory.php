@@ -27,6 +27,7 @@ class Inventory extends CI_Controller
 	}
 	function parseData($test = 0)
 	{
+		$nothave=array();
 		$csv = $_SERVER['DOCUMENT_ROOT'] . "/dta/thedata.txt";
 		$handle = fopen($csv, "r");
 		$octr = 0;
@@ -121,6 +122,10 @@ class Inventory extends CI_Controller
 				/* $prod['sku'] = $subarr[1];
 				$prod['upc'] = $subarr[2];
 				$prod['qoh'] = $subarr[9]; */
+				if (!isset($skus[$prod['sku']])) {
+					$nothave[]=$prod;
+					continue;
+				}
 				@$prod['post_id'] = $skus[$prod['sku']];
 				$prods[] = $prod;
 			}
@@ -146,6 +151,11 @@ class Inventory extends CI_Controller
 		$i = array('date_created' => date("Y-m-d H:i:s"), 'data' => json_encode($prods));
 		$this->db->insert('jt_inv_holder', $i);
 		echo json_encode(array('status' => 'ok', 'message' => count($prods) . " products uploaded"));
+
+
+		foreach($nothave as $n) {
+			echo "<br> ". $n['supplier'] . " - " . $n['title']. " /  $" . $n['price'] . " (q: ".$prod['qoh'].")";
+		}
 	}
 
 
