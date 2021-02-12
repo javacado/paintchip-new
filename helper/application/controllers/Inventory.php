@@ -564,7 +564,7 @@ foreach ($h1s as $h1) {
 			$a = $start+1;
 		}
 
-		echo json_encode(array('avail' => $avail, 'next' => $a));
+		echo json_encode(array('avail' => $avail, 'sku' => $sku,  'url' => $url, 'next' => $a));
 	}
 
 
