@@ -97,6 +97,7 @@ for ($x = 1; $x < 15; $x++) {?>
 <td>Who</td>
 </tr> 
 <? 
+die("<h3>Output</h3><pre>".print_r($data,1)."</pre>");
 
 foreach ($data as $da) {
     ?>
