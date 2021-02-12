@@ -108,7 +108,7 @@ class Inventory extends CI_Controller
 				preg_match_all('!\d+\.*\d*!', $parts[5], $matches);
 				$prod['price'] = $matches[0][0]; //preg_replace("/[^A-Za-z ]/", '', $parts[5]);
 				$carries = intval($parts[8]) != 0;
-				echo "<p> p: " . $parts[8] . "</p>" ;
+echo("<h3>Output</h3><pre>".print_r($parts,1)."</pre>");
 
 				$prod['qoh'] = $parts[9];
 
