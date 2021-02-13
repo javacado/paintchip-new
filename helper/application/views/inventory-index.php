@@ -160,6 +160,7 @@ function readyInventory(id) {
         context: document.body,
         method: 'get'
     }).done(function(res) {
+        res = JSON.parse(res);
         el='#status_'+id ;
         $('#reviewInventory').html(res.out)
         $(el).html("Data uploaded - Review, then <button class='btn btn-danger btn-sm' onclick='finishInv("+id+")'>Finish</button>");
