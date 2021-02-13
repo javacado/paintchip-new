@@ -119,7 +119,7 @@ There was an error, upload a new file
 </div>
 <div class='col-md-4'>
 
-<div id='review'></div>
+<div id='reviewInventory'></div>
 </div>
 </div>
 
@@ -161,7 +161,7 @@ function readyInventory(id) {
         method: 'get'
     }).done(function(res) {
         el='#status_'+id ;
-        $('#review').html(res.out)
+        $('#reviewInventory').html(res.out)
         $(el).html("Data uploaded - Review, then <button class='btn btn-danger btn-sm' onclick='finishInv("+id+")'>Finish</button>");
         
     })
