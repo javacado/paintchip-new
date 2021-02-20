@@ -48,8 +48,12 @@ if ($dta) $data = array_merge($data, $dta);
 		$data['data'] = $r;
 		$this->load->view('inventory-index', $data);
 	}
-	function parseData($file)
+	function parseData($theid)
 	{
+
+		$q="select * from jt_inv_holder where id=$theid";
+		$therow=$this->db->query($q)->row();
+		$file = $therow->file;
 		$nothave = array();
 		$csv =  $file;
 		if (strpos($file, '/tmp/') === false) {
@@ -71,8 +75,7 @@ if ($dta) $data = array_merge($data, $dta);
 		foreach ($r as $row) {
 			$skus[$row->meta_value] = $row->post_id;
 		}
-		//die("<h3>Output</h3><pre>".print_r($rq,1)."</pre>");
-
+ 
 		while (($row = fgetcsv($handle, 10000, ",")) != FALSE) //get row vales
 		{
 			$first = false;
@@ -187,12 +190,11 @@ if ($dta) $data = array_merge($data, $dta);
 		//if ($test == 1) die("<h3>Output</h3><pre>" . print_r($prods, 1) . "</pre>");
 
 
-		$q = "update jt_inv_holder set complete =1 where id>0";
-		$this->db->query($q);
+		
 		$i = array('date_created' => date("Y-m-d H:i:s"), 'data' => json_encode($prods));
-		$this->db->insert('jt_inv_holder', $i);
+		$this->db->update('jt_inv_holder', $i, array("id" => $theid));
 		//echo json_encode(array('status' => 'ok', 'message' => count($prods) . " products uploaded"));
- $this->index(array('parsed' => $this->db->insert_id() ));
+ $this->index(array('parsed' => $theid ));
 		//echo "<h3>".count($nothave)." Missing Items</h3>";
 		//foreach($nothave as $n) {
 		//	echo "<br> ". $n['supplier'] . " - " . $n['title']. " SKU: ".$n['sku']." / $" . $n['price'] . " (q: ".$n['qoh'].")";
@@ -272,15 +274,15 @@ if ($dta) $data = array_merge($data, $dta);
 		$errors = array();
 		$curprice = array();
 		$exec = array();
-		$len = 8500;
+		$len = 15500;
 
-		if (count($data) <= $last_num) {
+		//if (count($data) <= $last_num) {
 			$u = array('ready' => 1);
 			$this->db->update('jt_inv_holder', $u, array("id" => $invID));
 			//die(json_encode(array('status' => 'complete')));
-		}
+		//}
 
-		$newdata = array_slice($data, $last_num, $len);
+		$newdata = $data;///rray_slice($data, $last_num, $len);
 		//echo ("<h3>Output</h3><pre>" . print_r($newdata, 1) . "</pre>");
 
 		$postids = array();
@@ -291,8 +293,7 @@ if ($dta) $data = array_merge($data, $dta);
 			}
 			$postids[] = $d->post_id;
 		}
-
-		//die("<h3>Output</h3><pre> post ids ".print_r(count($postids),1)."</pre>");
+$out='';
 
 		if (count($postids) > 0) {
 			$postids = implode(",", $postids);
@@ -330,7 +331,6 @@ if ($dta) $data = array_merge($data, $dta);
 			}
 
 
-$out='';
 
 			foreach ($newdata as $d) {
 				$curq = 0;
@@ -350,25 +350,47 @@ $out='';
 				$d->curq = $curq;
 				$d->title = $titles[$d->post_id];
 				$exec[] = $d;
-
+				if ($curp != $d->price || $curq != $d->qoh) {
+					$out.= '<div class="resi">Item # ' . $d->sku;
 				if ($curp != $d->price) {
 					$diff = (floatval($d->price) - floatval($curp));
+					
 					if (abs($diff) > 5) {
 						$diff = "<b style='color:#c00'>" . $diff . "</b>";
 					}
-					$out.= '<p>Item # ' . $d->sku . ' real price: $' . $d->price . ' // website price: $' . $curp  . '  (' . $diff . ')';
+					$out.= '<div class="smi">Updating price from $' . $curp  . ' to $' . $d->price . ' <br ><i>($$ diff: ' . $diff . ')</i></div> ';
 					//continue;
 				}
 
 
 				if ($curq != $d->qoh) {
 					//$curq = 0;
+					$out .='<div class="smi">Updating quantity from '.$curq.' to <strong>'.$d->qoh.'</strong></div>';
 				} else {
 					$errors[] = 'The item: ' . $d->sku . ' did not change currently set to ' . $curq;
 					//continue;
 				}
+				$out.="</div>";
 			}
-		}
+
+
+			}
+
+	 
+		} 
+		
+		if (!$out) {
+			$out='<h4 class="text-danger">Completed</h4>';
+			$out .="<p>No items needed to by updated...</p>";
+			$da = date("Y-m-d H:i:s");
+
+			$q = "update jt_inv_holder set approved_by='-', complete=1, date_approved='$da' where id=$id";
+			$this->db->query($q);
+			$xtra='done';
+		} else {
+			$out='<h4 class="text-danger">Items to be updated</h4>' . $out;
+$xtra='';
+	
 
 		$curerrors = array_merge($curerrors, $errors);
 		$curexec = array_merge($curexec, $exec);
@@ -386,8 +408,8 @@ $out='';
 		$u = array('last_num' => ($last_num + $len), 'errors' => json_encode($curerrors), 'exec' => json_encode($curexec));
 
 		$this->db->update('jt_inv_holder', $u, array("id" => $invID));
-
-		echo json_encode(array('out' => $out));
+	}
+		echo json_encode(array('out' => $out,'xtra' => $xtra));
 	}
 
 
@@ -470,6 +492,8 @@ $out='';
 
 	function applyInventory($id, $go = 0)
 	{
+
+		$name = $this->get['name'];
 		// first set manage stock and stock #'s 0 and backorders to 'notify' 
 		$q = "SELECT * FROM `jt_inv_holder`  where id=$id";
 		$rq = $this->db->query($q);
@@ -498,10 +522,13 @@ $out='';
 		}
 
 
-		if ($go) {
 			$da = date("Y-m-d H:i:s");
-			$q = "update jt_inv_holder set complete=1, date_approved='$da' where id=$id";
+			$name = preg_replace("/[^A-Za-z0-9 ]/", '', $name);
+			$q = "update jt_inv_holder set approved_by='$name', complete=1, date_approved='$da' where id=$id";
+		if ($go) {
 			$this->db->query($q);
+		}else {
+			echo "<P>$q</P>";
 		}
 	}
 
@@ -602,14 +629,24 @@ $out='';
 			{
 					$error = array('error' => $this->upload->display_errors());
 
-					die("<h3>Output</h3><pre>".print_r($error,1).print_r($_FILES,1)."</pre>");
+					die("<h1>Ooops</h1>".$this->upload->display_errors()." <p>Click the back button and try again.</p>");
 					
 			}
 			else
 			{
 
 				$u = $this->upload->data();
-				$this->parseData($u['full_path']);
+				$q = "update jt_inv_holder set complete =1 where id>0";
+				$this->db->query($q);
+				$uu=array('file'=>$u['full_path']);
+				$this->db->insert('jt_inv_holder', $uu);
+				?>
+<html><head>
+<script>
+window.location="/helper/inventory/parseData/<?=$this->db->insert_id()?>"
+</script></head></html>
+				<?
+die();				
 					
 			}
 	}
