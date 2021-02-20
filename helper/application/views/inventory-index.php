@@ -128,7 +128,7 @@ foreach ($data as $da) {
 <td><div id='status_<?php echo $da->id?>'><?php 
 if ($da->complete==1) {?>
     <i class='fa fa-check text-success'></i> Finished on <?=date('M jS @ g:ia', strtotime($da->date_approved))?>
-<?} else if ($da->ready==1) {?>
+<?php } else if ($da->ready==1) {?>
 
 <?php } else {?>
 There was an error, upload a new file
