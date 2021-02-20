@@ -643,9 +643,9 @@ $xtra='';
 				?>
 <html><head>
 <script>
-window.location="/helper/inventory/parseData/<?=$this->db->insert_id()?>"
+window.location="/helper/inventory/parseData/<?php echo $this->db->insert_id()?>"
 </script></head></html>
-				<?
+				<?php
 die();				
 					
 			}
