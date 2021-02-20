@@ -12,7 +12,28 @@ $this->load->view('header', array('title' => 'Inventory'));
         -->
 
 
+<style>
 
+.smi{
+    font-size:.8em;
+
+}
+
+.resi{
+    margin-bottom:8px;
+    padding-top:8px;
+    border-top:1px dashed #ccc;
+}
+.reviewcol{
+    display:none;
+    background:#f5eded;
+    border-radius:8px;
+    padding:0 15px;
+    margin-top:10px;
+    border:1px dotted #ccc;
+
+}
+</style>
 
 
 <div class='container main-c' style='max-width:900px'>
@@ -70,16 +91,18 @@ for ($x = 1; $x < 15; $x++) {?>
 
 
 -->
-<button class='btn btn-primary pull-right btn-sm' onclick='$("#up").show(); $(this).hide()'><i class='fa fa-plus'></i> Upload new file</button>
-<h4>Inventory Updates</h4>
+<button class='btn btn-primary ' onclick='$("#up").show(); $("#upp").trigger("click"); $(this).hide()'><i class='fa fa-plus'></i> Upload new inventory file</button>
+
 <form action="/helper/inventory/uploadFile" id='up' method='POST' style='display:none;' enctype="multipart/form-data">
 <div class="form-group">
 		<div class="input-group input-file">
-        <input type="file" class="form-control" name="invfile" placeholder='Choose a file...' />
+       <label for='invfile' id='upp'>            </label>
+         <span class="input-group-btn">
+       			 <button class="btn btn-warning " type="submit">Upload and Process</button>
+    		</span>   <input type="file" class="form-control" id='invfile' name="invfile" placeholder='Choose a file (txt)...' />
+
 			
-    		<span class="input-group-btn">
-       			 <button class="btn btn-warning " type="submit">Upload</button>
-    		</span>
+    		
 		</div>
 	</div>
     
@@ -101,11 +124,11 @@ for ($x = 1; $x < 15; $x++) {?>
 foreach ($data as $da) {
     ?>
 <tr>
-<td><?php echo date('F jS g:ia', strtotime($da->date_created))?></td>
+<td><?php echo date('M jS g:ia', strtotime($da->date_created))?></td>
 <td><div id='status_<?php echo $da->id?>'><?php 
-if ($da->complete==1) {
-    echo date('F jS g:ia', strtotime($da->date_approved));
-} else if ($da->ready==1) {?>
+if ($da->complete==1) {?>
+    <i class='fa fa-check text-success'></i> Finished on <?=date('M jS @ g:ia', strtotime($da->date_approved))?>
+<?} else if ($da->ready==1) {?>
 
 <?php } else {?>
 There was an error, upload a new file
@@ -118,8 +141,9 @@ There was an error, upload a new file
 </table>
 </div>
 <div class='col-md-4'>
+    
 
-<div id='reviewInventory'></div>
+<div id='reviewInventory' class='reviewcol'></div>
 </div>
 </div>
 
@@ -152,6 +176,25 @@ $(document).ready(function() {
     readyInventory(<?php echo $parsed?>);
     <?php }?>
 })
+function finishInv(id) {
+var name =  prompt("Type in your name or initials");
+if (!name) {
+    alert('Please try again using your name');
+    return;
+
+}
+ 
+$.ajax({
+        url: "/helper/inventory/applyInventory/" + id + "/1?name="+name,
+        context: document.body,
+        method: 'get'
+        
+    }).done(function(res) {
+window.location.href="/helper/inventory"
+    })
+
+
+}
 
 function readyInventory(id) {
     
@@ -162,8 +205,15 @@ function readyInventory(id) {
     }).done(function(res) {
         res = JSON.parse(res);
         el='#status_'+id ;
-        $('#reviewInventory').html(res.out)
-        $(el).html("Data uploaded - Review, then <button class='btn btn-danger btn-sm' onclick='finishInv("+id+")'>Finish</button>");
+        $('#reviewInventory').html(res.out).show()
+
+        if (res.xtra=='done'){
+            $(el).html("Complete (Nothing to be updated)");
+
+        } else {
+            $(el).html("Inventory uploaded <br /> First: review the changes on the right <br /> <button class='btn btn-success btn-sm' onclick='finishInv("+id+")'>Then Click This </button>");
+
+        }
         
     })
 }
