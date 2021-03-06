@@ -506,7 +506,11 @@ $xtra='';
 			if (!$go) {
 				echo ("<P>" . $uuup);
 			} else {
-				$this->db->query($uuup);
+				$done = $this->db->query($uuup);
+				if (!$done) {
+					die("<h3>Output</h3><pre>".print_r($uuup,1)."</pre>");
+					
+				}
 			}
 
 
@@ -517,7 +521,11 @@ $xtra='';
 			if (!$go) {
 				echo ("<P>" . $uuup);
 			} else {
-				$this->db->query($uuup);
+				$done = $this->db->query($uuup);
+				if (!$done) {
+					die("<h3>Output</h3><pre>".print_r($uuup,1)."</pre>");
+					
+				}
 			}
 		}
 
