@@ -185,12 +185,13 @@ if (!name) {
 }
  
 $.ajax({
-        url: "/helper/inventory/applyInventory/" + id + "/1?name="+name,
+        url: "/helper/inventory/applyInventory/" + id + "/0?name="+name,
         context: document.body,
         method: 'get'
         
     }).done(function(res) {
-window.location.href="/helper/inventory"
+
+//window.location.href="/helper/inventory"
     })
 
 
