@@ -492,6 +492,7 @@ $xtra='';
 
 	function applyInventory($id, $go = 0)
 	{
+		ini_set("memory_limit", "500M");
 
 		$name = $this->get['name'];
 		// first set manage stock and stock #'s 0 and backorders to 'notify' 
@@ -538,6 +539,8 @@ $xtra='';
 		}else {
 			echo "<P>$q</P>";
 		}
+
+		echo json_encode(array('status' => 'ok')) ;
 	}
 
 	function rununknowns($start)
