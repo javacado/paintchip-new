@@ -498,7 +498,7 @@ function checkPriceReg() {
 	$rqp->free_result();
 	if ($reg->meta_value != $row->meta_value) {
 		//echo "<P><i>_price: ".$row->meta_value." // _regular_price: ".$reg->meta_value." for POST ID: ".$reg->post_id."</i></P>";
-		$qq = "update wp_postmeta set meta_value=" . $row->meta_value ." where meta_key='_regular_price' and id=". $row->meta_id;
+		$qq = "update wp_postmeta set meta_value=" . $row->meta_value ." where meta_key='_regular_price' and meta_id=". $row->meta_id;
 		$this->db->query($qq);
 		//echo "<P>$qq</P><hr>";
 	}
