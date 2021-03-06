@@ -484,7 +484,26 @@ $xtra='';
 
 
 
+function checkPriceReg() {
+	$q="select * from `wp_postmeta` where meta_key='_price'";
+	$rq=$this->db->query($q);
+	$r = $rq->result();
+	$rq->free_result();
 
+	foreach ($r as $row) {
+		$q="select * from `wp_postmeta` where meta_key='_regular_price' and post_id=". $row->post_id;
+	$rqp=$this->db->query($q);
+	$reg = $rqp->row();
+	$rqp->free_result();
+	if ($reg->meta_value != $row->meta_value) {
+		echo "<P><i>_price: ".$row->meta_value." // _regular_price: ".$reg->meta_value." for POST ID: ".$reg->post_id."</i></P>";
+		$qq = "update wp_postmeta set meta_value=" . $row->meta_value ." where meta_key='_regular_price' and id=". $row->meta_id;
+		echo "<P>$qq</P><hr>";
+	}
+
+	}
+
+}
 
 
 
