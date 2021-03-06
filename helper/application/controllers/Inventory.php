@@ -493,12 +493,14 @@ function checkPriceReg() {
 	foreach ($r as $row) {
 		$q="select * from `wp_postmeta` where meta_key='_regular_price' and post_id=". $row->post_id;
 	$rqp=$this->db->query($q);
+	if ($rqp->num_rows() == 0) continue;
 	$reg = $rqp->row();
 	$rqp->free_result();
 	if ($reg->meta_value != $row->meta_value) {
-		echo "<P><i>_price: ".$row->meta_value." // _regular_price: ".$reg->meta_value." for POST ID: ".$reg->post_id."</i></P>";
+		//echo "<P><i>_price: ".$row->meta_value." // _regular_price: ".$reg->meta_value." for POST ID: ".$reg->post_id."</i></P>";
 		$qq = "update wp_postmeta set meta_value=" . $row->meta_value ." where meta_key='_regular_price' and id=". $row->meta_id;
-		echo "<P>$qq</P><hr>";
+		$this->db->query($qq);
+		//echo "<P>$qq</P><hr>";
 	}
 
 	}
@@ -523,6 +525,17 @@ function checkPriceReg() {
 		foreach ($exec as $row) {
 			$up = array("meta_value" => $row->price);
 			$uuup = $this->db->update_string("wp_postmeta", $up, array("meta_key" => "_price", "post_id" => $row->post_id));
+			if (!$go) {
+				echo ("<P>" . $uuup);
+			} else {
+				$done = $this->db->query($uuup);
+				if (!$done) {
+					die("<h3>Output</h3><pre>".print_r($uuup,1)."</pre>");
+					
+				}
+			}
+
+			$uuup = $this->db->update_string("wp_postmeta", $up, array("meta_key" => "_regular_price", "post_id" => $row->post_id));
 			if (!$go) {
 				echo ("<P>" . $uuup);
 			} else {
