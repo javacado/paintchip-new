@@ -185,7 +185,7 @@ if (!name) {
 }
  
 $.ajax({
-        url: "/helper/inventory/applyInventory/" + id + "/1?name="+name,
+        url: "/helper/inventory/applyInventory/" + id + "/0?name="+name,
         context: document.body,
         method: 'get'
         
