@@ -141,6 +141,7 @@ There was an error, upload a new file
 </table>
 </div>
 <div class='col-md-4'>
+<strong>Instructions</strong>
     <ol><li>
     Click 'Upload new inventory file'</li>
     <li>Choose the file, click 'Upload and process'</li>
