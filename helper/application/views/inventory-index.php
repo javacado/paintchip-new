@@ -141,7 +141,14 @@ There was an error, upload a new file
 </table>
 </div>
 <div class='col-md-4'>
-    
+    <ol><li>
+    Click 'Upload new inventory file'</li>
+    <li>Choose the file, click 'Upload and process'</li>
+    <li>Wait for a moment, then review the changes if desired</li>
+    <li>Finally, click the green button labled 'Then click this' </li>
+    <li>Type in your name or initials and click OK</li>
+    <li>You're done!</li></ol>
+    <hr size='2'>
 
 <div id='reviewInventory' class='reviewcol'></div>
 </div>
@@ -185,7 +192,7 @@ if (!name) {
 }
  
 $.ajax({
-        url: "/helper/inventory/applyInventory/" + id + "/0?name="+name,
+        url: "/helper/inventory/applyInventory/" + id + "/1?name="+name,
         context: document.body,
         method: 'get'
         
