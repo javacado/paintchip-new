@@ -1,4 +1,6 @@
 <?php 
+
+die(date("Y-m-d H:i:s"));
 $this->load->view('header', array('title' => 'Inventory'));
 ?>
 
@@ -199,7 +201,7 @@ $.ajax({
         
     }).done(function(res) {
 
-//window.location.href="/helper/inventory"
+window.location.href="/helper/inventory"
     })
 
 
