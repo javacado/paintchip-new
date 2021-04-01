@@ -1,6 +1,6 @@
 <?php 
 
-die(date("Y-m-d H:i:s"));
+// die(date("Y-m-d H:i:s"));
 $this->load->view('header', array('title' => 'Inventory'));
 ?>
 
