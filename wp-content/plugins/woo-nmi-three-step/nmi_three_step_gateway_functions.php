@@ -1634,11 +1634,28 @@ function nmi701_stepOne() {
     $security = sanitize_text_field($_POST['security']);
     check_ajax_referer( 'checkout-nonce', 'security', false );
 
-    die("<h3>Output</h3><pre>".print_r($_POST,1)."</pre>");
+
+    // test the captcha against google
+
     
 
     //catch variables passed in and define them
-    $captcha_response = sanitize_text_field($_POST['g-recaptcha-response']);
+    $captcha_response = sanitize_text_field($_POST['g_recaptcha_response']);
+
+
+    $respcaptcha = wp_remote_post(
+        'https://www.google.com/recaptcha/api/siteverify',
+        array(
+            'body' => array(
+                'secret'   => '6LfrYY0aAAAAAP2-MzwBCeMAnQukQcmmyHONhivt',
+                'response'     => $captcha_response
+            )
+        )
+    );
+
+
+    die("<h3>Output respcaptcha</h3><pre>".print_r($respcaptcha,1)."</pre>");
+    
     //die("R::".$captcha_response);
     
     $orderid = sanitize_text_field($_POST['orderid']);
