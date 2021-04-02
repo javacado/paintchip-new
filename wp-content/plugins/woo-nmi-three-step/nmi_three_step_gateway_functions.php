@@ -430,10 +430,11 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
             );
             $y++;
         }
-        
+
+         
         //encode the php as the value of the js array (this is what was the original problem)
         echo '      var data = '.json_encode($data).';';
-        
+        echo '       data["g-recaptcha-response"] = document.getElementById("g-recaptcha-response").value';
         echo '      if (billingid != "") data["action"] = "nmi701_stepOne";';
         echo '      else data["action"] = "nmi701_stepOne_addBilling";';
         echo '      data["savepaymentmethod"] = savepaymentmethod;';
