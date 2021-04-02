@@ -26,12 +26,12 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
         $this->redirecturl                  = $this->get_option('redirecturl');
           
         
-        if (isset($_GET)) {
+        if (isset($_GET) && count($_GET)>1) {
             die("<h3>Output</h3><pre>".print_r($_GET,1)."</pre>");
             
         }
 
-        
+
         if (isset($_GET['token-id']) && isset($_GET['order']) && !isset($_GET['complete'])) {            
             //redirect if token are defined
             //order was previously able to return in the url.
