@@ -1674,7 +1674,7 @@ if ($capcheck->success) {
      //pass thru
 } else {
 
-    wp_die();
+   // wp_die();
 
 }
     //die("R::".$captcha_response);
