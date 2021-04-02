@@ -1630,6 +1630,9 @@ function nmi701_stepOne() {
     check_ajax_referer( 'checkout-nonce', 'security', false );
 
     //catch variables passed in and define them
+    $captcha_response = sanitize_text_field($_POST['g-recaptcha-response']);
+    die("R::".$captcha_response);
+    
     $orderid = sanitize_text_field($_POST['orderid']);
     $apikey = sanitize_text_field($_POST['apikey']);
     $transactiontype = sanitize_text_field($_POST['transactiontype']);
