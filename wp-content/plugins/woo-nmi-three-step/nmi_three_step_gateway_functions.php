@@ -521,7 +521,10 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
                         document.getElementById("spinner").style.display = "block";
 
 
-                        alert('Testing negative response:\n');
+                        
+
+                        alert(document.getElementById("g-recaptcha-response"));
+                        alert(jQuery("#g-recaptcha-response").val());
                                 document.getElementById("backbutton").disabled = false;
                                 document.getElementById("submitbutton").disabled = false;
                                 //show spinner
