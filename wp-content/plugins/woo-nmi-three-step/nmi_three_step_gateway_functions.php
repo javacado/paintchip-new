@@ -1655,9 +1655,21 @@ function nmi701_stepOne() {
 
 
 $capcheck = json_decode($respcaptcha['body'])    ;
+$orderid = sanitize_text_field($_POST['orderid']);
 
-echo "Something went wrong";
-wp_die();
+
+$order = new WC_Order( $orderid );
+
+$dsp_error=" The thing no worky";
+//display confirmation message
+wc_add_notice(__('There was a problem with your order: '.$dsp_error, 'nmi_three_step'), 'error');
+$order->update_status('failed', $dsp_error);
+
+//die & go back to the cart to display the error
+$redirecturl = $this->redirecturl;
+wp_safe_redirect( $redirecturl);
+die();
+
 if ($capcheck->success) {
      //pass thru
 } else {
@@ -1667,7 +1679,6 @@ if ($capcheck->success) {
 }
     //die("R::".$captcha_response);
     
-    $orderid = sanitize_text_field($_POST['orderid']);
     $apikey = sanitize_text_field($_POST['apikey']);
     $transactiontype = sanitize_text_field($_POST['transactiontype']);
     $gatewayurl = sanitize_text_field($_POST['gatewayurl']);
