@@ -434,7 +434,7 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
          
         //encode the php as the value of the js array (this is what was the original problem)
         echo '      var data = '.json_encode($data).';';
-        echo '       data["g-recaptcha-response"] = document.getElementById("g-recaptcha-response").value;';
+    echo '       data["g-recaptcha-response"] = document.getElementById("g-recaptcha-response").value;';
         echo '      if (billingid != "") data["action"] = "nmi701_stepOne";';
         echo '      else data["action"] = "nmi701_stepOne_addBilling";';
         echo '      data["savepaymentmethod"] = savepaymentmethod;';
@@ -443,6 +443,9 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
         echo '      data["last4"] = last4;';
         echo '      data["expiry"] = expiry;';
         echo '      data["itemcount"] = '.$y.';';
+        echo ' alert("checkiut");';
+        echo ' alert(data);';
+        
         echo '      return nmi701_stepOne(data, "'.plugin_dir_url(__FILE__).'");';
         echo '}';
         echo '</script>';     
@@ -1632,7 +1635,7 @@ function nmi701_stepOne() {
 
     //catch variables passed in and define them
     $captcha_response = sanitize_text_field($_POST['g-recaptcha-response']);
-    die("R::".$captcha_response);
+    //die("R::".$captcha_response);
     
     $orderid = sanitize_text_field($_POST['orderid']);
     $apikey = sanitize_text_field($_POST['apikey']);
