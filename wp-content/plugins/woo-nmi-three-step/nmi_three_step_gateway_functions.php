@@ -40,10 +40,13 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
             else {
                 $action = "";
             }
-            
+            if (isset($_GET)) {
+                die("<h3>Output</h3><pre>".print_r($_GET,1)."</pre>");
+                
+            }
             //if ($thisid == $this->id
             if (isset($_GET['action']) && $action == 'addbilling' && $thisid == $this->id) {
-                die("attempt".print_r($_GET,1));
+                //die("attempt".print_r($_GET,1));
                 $this->successful_request(sanitize_text_field(''), sanitize_text_field($_GET['order']), $details);
             }
             elseif (isset($_GET['rc']) && isset($_GET['tid'])) {
