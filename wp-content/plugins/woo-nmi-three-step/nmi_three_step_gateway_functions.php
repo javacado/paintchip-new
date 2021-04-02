@@ -434,7 +434,7 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
          
         //encode the php as the value of the js array (this is what was the original problem)
         echo '      var data = '.json_encode($data).';';
-    echo '       data["g-recaptcha-response"] = document.getElementById("g-recaptcha-response").value;';
+    echo '       data["g_recaptcha_response"] = document.getElementById("g-recaptcha-response").value;';
         echo '      if (billingid != "") data["action"] = "nmi701_stepOne";';
         echo '      else data["action"] = "nmi701_stepOne_addBilling";';
         echo '      data["savepaymentmethod"] = savepaymentmethod;';
@@ -443,7 +443,7 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
         echo '      data["last4"] = last4;';
         echo '      data["expiry"] = expiry;';
         echo '      data["itemcount"] = '.$y.';';
-        echo '  console.log(data);';
+        echo '  console.log(data.g_recaptcha_response);';
         echo ' alert("checkiut2");';
         
         echo '      return nmi701_stepOne(data, "'.plugin_dir_url(__FILE__).'");';
@@ -745,7 +745,7 @@ echo $this->getCaptchaThing();
      */
 
      function getCaptchaThing() {
-         $v='<tr><td>Captcha</td><td>';
+         $v='<tr><td id="finalpaymentpage">Captcha</td><td>';
          $v.= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
          $v.='<div class="g-recaptcha" data-sitekey="6LfrYY0aAAAAADEgrZFDsl3IhO911wIEk3E0ic42"></div>';
          $v.='</td></tr>';
