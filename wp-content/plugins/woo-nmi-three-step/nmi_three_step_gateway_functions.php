@@ -1654,8 +1654,12 @@ function nmi701_stepOne() {
     );
 
 
-    die("<h3>Output respcaptcha</h3><pre>".print_r($respcaptcha,1)."</pre>");
-    
+$capcheck = json_decode($respcaptcha['body'])    ;
+if ($capcheck->success) {
+    die("GOT THROUGH");
+} else {
+    die("FAILESD");
+}
     //die("R::".$captcha_response);
     
     $orderid = sanitize_text_field($_POST['orderid']);
