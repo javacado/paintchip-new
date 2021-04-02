@@ -1657,7 +1657,7 @@ function nmi701_stepOne() {
 $capcheck = json_decode($respcaptcha['body'])    ;
 $orderid = sanitize_text_field($_POST['orderid']);
 
-
+/* 
 $order = new WC_Order( $orderid );
 
 $dsp_error=" The thing no worky";
@@ -1668,7 +1668,7 @@ $order->update_status('failed', $dsp_error);
 //die & go back to the cart to display the error
 $redirecturl = $this->redirecturl;
 wp_safe_redirect( $redirecturl);
-die();
+die(); */
 
 if ($capcheck->success) {
      //pass thru
