@@ -1655,8 +1655,11 @@ function nmi701_stepOne() {
 
 
 $capcheck = json_decode($respcaptcha['body'])    ;
+
+echo "Something went wrong";
+wp_die();
 if ($capcheck->success) {
-     
+     //pass thru
 } else {
 
     wp_die();
@@ -1795,7 +1798,7 @@ if ($capcheck->success) {
         $json = json_encode($xml);
         $full_response = json_decode($json, TRUE);
 
-        die("<h3>Output!</h3><pre>".print_r($full_response,1)."</pre>");
+        //die("<h3>Output!</h3><pre>".print_r($full_response,1)."</pre>");
         
 
         if ( 1 == 2 ) {
