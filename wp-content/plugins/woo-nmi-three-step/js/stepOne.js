@@ -113,8 +113,7 @@ function nmi701_stepOne(data, path) {
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                alert(textStatus);
-                alert(errorThrown);
+               alert("There was an error with your order. Please review the form fields and make sure they're correct");
             }
         });
     }
@@ -183,8 +182,7 @@ function nmi701_stepOne(data, path) {
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                alert(textStatus);
-                alert(errorThrown);
+               alert("There was an error with your order. Please review the form fields and make sure they're correct");
             }
         });
     }
