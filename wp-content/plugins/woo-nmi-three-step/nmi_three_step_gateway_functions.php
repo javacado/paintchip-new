@@ -24,7 +24,14 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
 	$this->transactiontype              = sanitize_text_field($this->get_option('transactiontype'));
         $this->finalorderstatus             = $this->get_option('finalorderstatus');
         $this->redirecturl                  = $this->get_option('redirecturl');
-                
+          
+        
+        if (isset($_GET)) {
+            die("<h3>Output</h3><pre>".print_r($_GET,1)."</pre>");
+            
+        }
+
+        
         if (isset($_GET['token-id']) && isset($_GET['order']) && !isset($_GET['complete'])) {            
             //redirect if token are defined
             //order was previously able to return in the url.
@@ -40,10 +47,7 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
             else {
                 $action = "";
             }
-            if (isset($_GET)) {
-                die("<h3>Output</h3><pre>".print_r($_GET,1)."</pre>");
-                
-            }
+           
             //if ($thisid == $this->id
             if (isset($_GET['action']) && $action == 'addbilling' && $thisid == $this->id) {
                 //die("attempt".print_r($_GET,1));
