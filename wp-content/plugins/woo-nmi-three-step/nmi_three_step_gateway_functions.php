@@ -519,6 +519,17 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
                         document.getElementById("submitbutton").disabled = true;
                         //show spinner
                         document.getElementById("spinner").style.display = "block";
+
+
+                        alert('Testing negative response:\n');
+                                document.getElementById("backbutton").disabled = false;
+                                document.getElementById("submitbutton").disabled = false;
+                                //show spinner
+                                document.getElementById("spinner").style.display = "none";
+                                return false;
+
+
+
                         
                         //only do this if the new cc number option is checked
                         if (document.getElementById('paymentmethodnew').checked) {
