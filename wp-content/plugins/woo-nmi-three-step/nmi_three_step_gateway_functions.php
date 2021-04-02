@@ -1658,6 +1658,7 @@ $capcheck = json_decode($respcaptcha['body'])    ;
 if ($capcheck->success) {
      
 } else {
+
     wp_die();
 
 }
@@ -1793,6 +1794,9 @@ if ($capcheck->success) {
         $xml = simplexml_load_string($response['body'], "SimpleXMLElement", LIBXML_NOCDATA);
         $json = json_encode($xml);
         $full_response = json_decode($json, TRUE);
+
+        die("<h3>Output!</h3><pre>".print_r($full_response,1)."</pre>");
+        
 
         if ( 1 == 2 ) {
            //$error_message = $response->get_error_message();
