@@ -371,6 +371,7 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
         echo '      var customervaultid = document.getElementById("customervaultid").value;';
         echo '      var last4 = document.getElementById("billingccnumber").value.slice(-4);';
         echo '      var expiry = document.getElementById("billingccexp").value;';
+        echo '      var gcaptcha = document.getElementById("g-recaptcha-response").value;';
         
         $order_shipping =     get_post_meta( $order->get_id(), '_order_shipping', true);
         $order_discount =     get_post_meta( $order->get_id(), '_cart_discount', true);
@@ -434,7 +435,7 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
          
         //encode the php as the value of the js array (this is what was the original problem)
         echo '      var data = '.json_encode($data).';';
-    echo '       data["g_recaptcha_response"] = document.getElementById("g-recaptcha-response").value;';
+    echo '       data["g_recaptcha_response"] = gcaptcha;';
         echo '      if (billingid != "") data["action"] = "nmi701_stepOne";';
         echo '      else data["action"] = "nmi701_stepOne_addBilling";';
         echo '      data["savepaymentmethod"] = savepaymentmethod;';
@@ -443,8 +444,8 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
         echo '      data["last4"] = last4;';
         echo '      data["expiry"] = expiry;';
         echo '      data["itemcount"] = '.$y.';';
-        //echo '  console.log(data.g_recaptcha_response);';
-       // echo ' alert("checkiut2");';
+       echo '  console.log(data.g_recaptcha_response);';
+        echo ' alert("checkiut2");';
         
         echo '      return nmi701_stepOne(data, "'.plugin_dir_url(__FILE__).'");';
         echo '}';
@@ -1635,6 +1636,7 @@ function nmi701_stepOne() {
 
     die("<h3>Output</h3><pre>".print_r($_POST,1)."</pre>");
     
+
     //catch variables passed in and define them
     $captcha_response = sanitize_text_field($_POST['g-recaptcha-response']);
     //die("R::".$captcha_response);
