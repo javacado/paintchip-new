@@ -43,6 +43,7 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
             
             //if ($thisid == $this->id
             if (isset($_GET['action']) && $action == 'addbilling' && $thisid == $this->id) {
+                die("attempt".print_r($_GET,1));
                 $this->successful_request(sanitize_text_field(''), sanitize_text_field($_GET['order']), $details);
             }
             elseif (isset($_GET['rc']) && isset($_GET['tid'])) {
@@ -523,13 +524,15 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
 
                         
 
-                        alert(document.getElementById("g-recaptcha-response"));
-                        alert(jQuery("#g-recaptcha-response").val());
-                                document.getElementById("backbutton").disabled = false;
+                        if(jQuery("#g-recaptcha-response").val() ==''){
+                            alert("Please click the Captcha");
+                            document.getElementById("backbutton").disabled = false;
                                 document.getElementById("submitbutton").disabled = false;
                                 //show spinner
                                 document.getElementById("spinner").style.display = "none";
                                 return false;
+                        }
+                               
 
 
 
