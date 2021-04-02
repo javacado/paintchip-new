@@ -13,8 +13,6 @@
  *
  * @since 2.1.0
  */
-die("<h3>Output</h3><pre>".print_r($_GET,1)."</pre>");
-
 define( 'DOING_AJAX', true );
 if ( ! defined( 'WP_ADMIN' ) ) {
 	define( 'WP_ADMIN', true );
