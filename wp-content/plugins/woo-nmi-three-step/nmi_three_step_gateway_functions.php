@@ -680,7 +680,7 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
                             <input type="hidden" name="billing-cc-exp" id="billingccexp" value="">
                         </td></tr>
                         <tr><td>CVV</td><td><INPUT type ="text" name="cvv" id="cvv" value="" onclick="nmi701_toggleState(\'new\',\''.esc_html($customervaultid).'\','.count($paymentmethods).', event);"> </td></tr>';
-
+echo $this->getCaptchaThing();
             if ( ngfw_fs()->is_plan('Premium') ) {
                 if (is_user_logged_in() && $this->settings['savepaymentmethodstoggle'] == 'on') echo '        <tr><td colspan="2"><label for="savepaymentmethod"><input type="checkbox" name="savepaymentmethod" id="savepaymentmethod" value="Y"> Save this payment method for later?</label></td></tr>';
             }
@@ -714,7 +714,19 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
             <?php
         }
     }
-    
+
+    /**
+     * Get Captcha thing
+     */
+
+     function getCaptchaThing() {
+         $v='<tr><td>Captcha</td><td>';
+         $v.= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
+         $v.='<div class="g-recaptcha" data-sitekey="6LfrYY0aAAAAADEgrZFDsl3IhO911wIEk3E0ic42"></div>';
+         $v.='</td></tr>';
+         return $v;
+     }
+
     /**
      * Successful Payment!
      **/
