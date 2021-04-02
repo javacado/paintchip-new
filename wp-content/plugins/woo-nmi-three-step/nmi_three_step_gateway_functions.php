@@ -444,8 +444,8 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
         echo '      data["last4"] = last4;';
         echo '      data["expiry"] = expiry;';
         echo '      data["itemcount"] = '.$y.';';
-       echo '  console.log(data.g_recaptcha_response);';
-        echo ' alert("checkiut2");';
+      // echo '  console.log(data.g_recaptcha_response);';
+      //  echo ' alert("checkiut2");';
         
         echo '      return nmi701_stepOne(data, "'.plugin_dir_url(__FILE__).'");';
         echo '}';
