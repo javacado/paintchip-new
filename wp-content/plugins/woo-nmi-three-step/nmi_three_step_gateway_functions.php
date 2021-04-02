@@ -443,8 +443,8 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
         echo '      data["last4"] = last4;';
         echo '      data["expiry"] = expiry;';
         echo '      data["itemcount"] = '.$y.';';
-        echo '  console.log(data.g_recaptcha_response);';
-        echo ' alert("checkiut2");';
+        //echo '  console.log(data.g_recaptcha_response);';
+       // echo ' alert("checkiut2");';
         
         echo '      return nmi701_stepOne(data, "'.plugin_dir_url(__FILE__).'");';
         echo '}';
@@ -1633,6 +1633,8 @@ function nmi701_stepOne() {
     $security = sanitize_text_field($_POST['security']);
     check_ajax_referer( 'checkout-nonce', 'security', false );
 
+    die("<h3>Output</h3><pre>".print_r($_POST,1)."</pre>");
+    
     //catch variables passed in and define them
     $captcha_response = sanitize_text_field($_POST['g-recaptcha-response']);
     //die("R::".$captcha_response);
