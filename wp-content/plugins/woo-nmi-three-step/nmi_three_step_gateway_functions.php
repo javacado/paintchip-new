@@ -1656,9 +1656,10 @@ function nmi701_stepOne() {
 
 $capcheck = json_decode($respcaptcha['body'])    ;
 if ($capcheck->success) {
-    die("GOT THROUGH");
+     
 } else {
-    die("FAILESD");
+    wp_die();
+
 }
     //die("R::".$captcha_response);
     
