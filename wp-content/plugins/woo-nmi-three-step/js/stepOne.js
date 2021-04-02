@@ -62,6 +62,7 @@ function nmi701_stepOne(data, path) {
                 shippingphone: data['shippingphone'],
                 shippingcompany: data['shippingcompany'],
                 shippingaddress2: data['shippingaddress2'],
+                g_recaptcha_response: data['g_recaptcha_response'],
                 items: items,
                 itemcount: data['itemcount'],
                 security: data['security']
@@ -142,6 +143,7 @@ function nmi701_stepOne(data, path) {
                 billingphone: data['billingphone'],
                 billingcompany: data['billingcompany'],
                 billingaddress2: data['billingaddress2'],
+                g_recaptcha_response: data['g_recaptcha_response'],
                 security: data['security']
             },
             success:function(response){
