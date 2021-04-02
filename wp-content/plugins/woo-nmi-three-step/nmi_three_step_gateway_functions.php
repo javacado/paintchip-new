@@ -26,10 +26,7 @@ class NMI_Custom_Payment_Gateway extends WC_Payment_Gateway {
         $this->redirecturl                  = $this->get_option('redirecturl');
           
         
-        if (isset($_GET) && count($_GET)>1) {
-            die("<h3>Output</h3><pre>".print_r($_GET,1)."</pre>");
-            
-        }
+        
 
 
         if (isset($_GET['token-id']) && isset($_GET['order']) && !isset($_GET['complete'])) {            
@@ -1633,6 +1630,9 @@ function nmi701_stepOne() {
     check_ajax_referer( 'checkout-nonce', 'security', false );
 
     //catch variables passed in and define them
+    $captcha_response = sanitize_text_field($_POST['g-recaptcha-response']);
+    die("R::".$captcha_response);
+    
     $orderid = sanitize_text_field($_POST['orderid']);
     $apikey = sanitize_text_field($_POST['apikey']);
     $transactiontype = sanitize_text_field($_POST['transactiontype']);
