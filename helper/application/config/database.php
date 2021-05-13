@@ -76,7 +76,7 @@ $u = "root";
 $p = "";
 if (is_dir("/var/www/html/paintchip")) {
 	$u = "root";
-	$p = "!pa1ntch1p";
+	$p = "f@tG1rl!";
 }
 $db['default'] = array(
 	'dsn' => '',

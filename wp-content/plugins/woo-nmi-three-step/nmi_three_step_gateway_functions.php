@@ -723,7 +723,8 @@ echo $this->getCaptchaThing();
             ?>
                 <script type="text/javascript">
                     function checkJS() {
-                        var buttons = "<INPUT type =\"button\" id=\"backbutton\" value=\"Back to Cart\" onclick=\"nmi701_backToCheckout('<?php echo $order_id; ?>', '');\" style=\"float:left;\">&nbsp;<INPUT type=\"button\" id=\"submitbutton\" value=\"Submit\" style=\"float:left;margin-left:15px;\" onclick=\"nmi701_cc_validate();\"><img src=\"<?php echo plugins_url( 'img/spinner.gif', __FILE__ ); ?>\" id=\"spinner\" style=\"display:none;float:left;padding-top:10px;margin-left:15px;\">";
+                        //nmi701_backToCheckout('<?php echo $order_id; ?>', '')
+                        var buttons = "<INPUT type =\"button\" id=\"backbutton\" value=\"Back to Cart\" onclick=\"window.location='/cart/';\" style=\"float:left;\">&nbsp;<INPUT type=\"button\" id=\"submitbutton\" value=\"Submit\" style=\"float:left;margin-left:15px;\" onclick=\"nmi701_cc_validate();\"><img src=\"<?php echo plugins_url( 'img/spinner.gif', __FILE__ ); ?>\" id=\"spinner\" style=\"display:none;float:left;padding-top:10px;margin-left:15px;\">";
                         document.getElementById('buttons').innerHTML = buttons;
                     }
                     checkJS();
