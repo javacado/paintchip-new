@@ -12,7 +12,7 @@ BACKUP_DIR="/tmp"
 MYSQL_HOST="localhost"
 MYSQL_PORT="3306"
 MYSQL_USER="root"
-MYSQL_PASSWORD="!pa1ntch1p"
+MYSQL_PASSWORD="f@tG1rl!" 
 DATABASE_NAME="paintchip"
 
 AMAZON_S3_BUCKET="s3://paintchip/backup/mysql/"
