@@ -17,7 +17,7 @@ class Wp_auth_model extends CI_Model
 
         // Path (absolute or relative) to where your WP core is running
         require($_SERVER['DOCUMENT_ROOT'] . "/wp-load.php");
-
+die("H");
         if (is_user_logged_in()) {
             
             $user = wp_get_current_user();
