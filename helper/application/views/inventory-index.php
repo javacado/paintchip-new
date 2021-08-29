@@ -48,7 +48,7 @@ $this->load->view('header', array('title' => 'Inventory'));
 Run checker
 </button> -->
 <?php 
-if ($NOTUSING) {?>
+if (!$ok) {?>
 
  <form method="POST" style='width:400px;'>
     <div class='input-group'>
