@@ -7,6 +7,7 @@ class Inventory extends CI_Controller
 	{
 
 		parent::__construct();
+		$this->load->model('wp_auth_model');
 		$this->base_url = "http://paintchip.local/";
 		$this->local_image_path = "2020/06/";
 		$this->img_dir = "wp-content/uploads/" . $this->local_image_path;

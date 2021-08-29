@@ -5,7 +5,8 @@ class Extractor extends CI_Controller {
 	function __construct() {
 
 		parent::__construct();
-		$this->base_url = "http://paintchip.local/";
+			$this->load->model('wp_auth_model');
+	$this->base_url = "http://paintchip.local/";
 		$this->local_image_path = "2020/06/";
 		$this->img_dir = "wp-content/uploads/" . $this->local_image_path;
 		$this->temp_img_dir = $_SERVER['DOCUMENT_ROOT'] . "/helper/uploads/";
