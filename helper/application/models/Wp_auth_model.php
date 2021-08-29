@@ -17,14 +17,15 @@ class Wp_auth_model extends CI_Model
 
         // Path (absolute or relative) to where your WP core is running
         require($_SERVER['DOCUMENT_ROOT'] . "/wp-load.php");
-die("H");
         if (is_user_logged_in()) {
             
             $user = wp_get_current_user();
- //;);            die("<h3>Output</h3><pre>".print_r($user,1)."</pre>");
+            //die("<h3>Output</h3><pre>".print_r($user,1)."</pre>");
             
-            $this->session->set_userdata('user', $user);
-        } else {
+     //$this->session->set_userdata('user', $user);
+      } else {
+           
+          die('<script>window.location="/wp-admin";</script>');
             /* die("<html><head><script>window.location='/wp-admin'</script></head></html>");
            return ; *///redirect('/wp-admin');
             $creds                  = array();
@@ -48,7 +49,7 @@ die("H");
                 $this->load->view('login', $data);
                 die();
             } else {
-                wp_set_auth_cookie($user->ID, true);
+  wp_set_auth_cookie($user->ID, true);
             }
         }
 
