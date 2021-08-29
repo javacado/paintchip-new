@@ -1,15 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-ini_set('display_errors', 1);
-		ini_set('display_startup_errors', 1);
-		error_reporting(E_ALL);
+
 class Inventory extends CI_Controller
 {
 	function __construct()
 	{
 
 		parent::__construct();
-		$this->load->model('wp_auth_model');
+		//$this->load->model('wp_auth_model');
 		$this->base_url = "http://paintchip.local/";
 		$this->local_image_path = "2020/06/";
 		$this->img_dir = "wp-content/uploads/" . $this->local_image_path;
