@@ -16,6 +16,7 @@ class Inventory extends CI_Controller
 			$this->base_url = "https://thepaint-chip.com/";
 		}
 		$this->load->library('AdvancedHtmlBase');
+		$this->load->model('wp_auth_model');
 
 		$this->load->helper(array('form', 'url'));
 		$this->load->helper('cookie');
