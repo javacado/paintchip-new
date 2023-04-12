@@ -41,6 +41,7 @@ class WPSEO_Admin_Init {
 		add_action( 'admin_init', [ $this, 'show_hook_deprecation_warnings' ] );
 		add_action( 'admin_init', [ 'WPSEO_Plugin_Conflict', 'hook_check_for_plugin_conflicts' ] );
 		add_action( 'admin_notices', [ $this, 'permalink_settings_notice' ] );
+		add_action( 'post_submitbox_misc_actions', [ $this, 'add_publish_box_section' ] );
 
 		/*
 		 * The `admin_notices` hook fires on single site admin pages vs.
@@ -55,7 +56,7 @@ class WPSEO_Admin_Init {
 			new WPSEO_Health_Check_Default_Tagline(),
 			new WPSEO_Health_Check_Postname_Permalink(),
 			new WPSEO_Health_Check_Curl_Version(),
-			new WPSEO_Health_Check_Link_Table_Not_Accessible,
+			new WPSEO_Health_Check_Link_Table_Not_Accessible(),
 		];
 
 		foreach ( $health_checks as $health_check ) {
@@ -252,7 +253,7 @@ class WPSEO_Admin_Init {
 	 * @return void
 	 */
 	private function register_premium_upsell_admin_block() {
-		if ( ! WPSEO_Utils::is_yoast_seo_premium() ) {
+		if ( ! YoastSEO()->helpers->product->is_premium() ) {
 			$upsell_block = new WPSEO_Premium_Upsell_Admin_Block( 'wpseo_admin_promo_footer' );
 			$upsell_block->register_hooks();
 		}
@@ -333,25 +334,33 @@ class WPSEO_Admin_Init {
 				'version'     => '9.4',
 				'alternative' => null,
 			],
-			'wpseo_opengraph'                       => [
+			'wpseo_opengraph' => [
 				'version'     => '14.0',
 				'alternative' => null,
 			],
-			'wpseo_twitter'                         => [
+			'wpseo_twitter' => [
 				'version'     => '14.0',
 				'alternative' => null,
 			],
-			'wpseo_twitter_taxonomy_image'          => [
+			'wpseo_twitter_taxonomy_image' => [
 				'version'     => '14.0',
 				'alternative' => null,
 			],
-			'wpseo_twitter_metatag_key'             => [
+			'wpseo_twitter_metatag_key' => [
 				'version'     => '14.0',
 				'alternative' => null,
 			],
-			'wp_seo_get_bc_ancestors'               => [
+			'wp_seo_get_bc_ancestors' => [
 				'version'     => '14.0',
 				'alternative' => 'wpseo_breadcrumb_links',
+			],
+			'validate_facebook_app_id_api_response_code' => [
+				'version'     => '15.5',
+				'alternative' => null,
+			],
+			'validate_facebook_app_id_api_response_body' => [
+				'version'     => '15.5',
+				'alternative' => null,
 			],
 		];
 
@@ -364,13 +373,13 @@ class WPSEO_Admin_Init {
 		// Show notice for each deprecated filter or action that has been registered.
 		foreach ( $deprecated_notices as $deprecated_filter ) {
 			$deprecation_info = $deprecated_filters[ $deprecated_filter ];
-			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- only uses the hardcoded values from above.
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Only uses the hardcoded values from above.
 			_deprecated_hook(
 				$deprecated_filter,
 				'WPSEO ' . $deprecation_info['version'],
 				$deprecation_info['alternative']
 			);
-			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped.
+			// phpcs:enable
 		}
 	}
 
@@ -412,17 +421,19 @@ class WPSEO_Admin_Init {
 	 * @return bool Whether the "search engines discouraged" admin notice should be displayed.
 	 */
 	private function should_display_search_engines_discouraged_notice() {
+		$discouraged_pages = [
+			'index.php',
+			'plugins.php',
+			'update-core.php',
+		];
+
 		return (
 			$this->are_search_engines_discouraged()
 			&& WPSEO_Capability_Utils::current_user_can( 'manage_options' )
 			&& WPSEO_Options::get( 'ignore_search_engines_discouraged_notice', false ) === false
 			&& (
 				$this->on_wpseo_admin_page()
-				|| in_array( $this->pagenow, [
-					'index.php',
-					'plugins.php',
-					'update-core.php',
-				], true )
+				|| in_array( $this->pagenow, $discouraged_pages, true )
 			)
 		);
 	}
@@ -451,65 +462,28 @@ class WPSEO_Admin_Init {
 		);
 	}
 
-	/* ********************* DEPRECATED METHODS ********************* */
-
 	/**
-	 * Add an alert if outdated versions of Yoast SEO plugins are running.
+	 * Adds a custom Yoast section within the Classic Editor publish box.
 	 *
-	 * @deprecated 12.3
-	 * @codeCoverageIgnore
-	 */
-	public function yoast_plugin_compatibility_notification() {
-		_deprecated_function( __METHOD__, 'WPSEO 12.3' );
-	}
-
-	/**
-	 * Creates a WordPress upgrade notification in the notification center.
-	 *
-	 * @deprecated 12.5
-	 * @codeCoverageIgnore
+	 * @param \WP_Post $post The current post object.
 	 *
 	 * @return void
 	 */
-	public function wordpress_upgrade_notice() {
-		_deprecated_function( __METHOD__, 'WPSEO 12.5' );
+	public function add_publish_box_section( $post ) {
+		if ( in_array( $this->pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
+			?>
+			<div id="yoast-seo-publishbox-section"></div>
+			<?php
+			/**
+			 * Fires after the post time/date setting in the Publish meta box.
+			 *
+			 * @api \WP_Post The current post object.
+			 */
+			do_action( 'wpseo_publishbox_misc_actions', $post );
+		}
 	}
 
-	/**
-	 * Shows a notice to the user if they have Google Analytics for WordPress 5.4.3 installed because it causes an error
-	 * on the google search console page.
-	 *
-	 * @deprecated 12.5
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public function ga_compatibility_notice() {
-		_deprecated_function( __METHOD__, 'WPSEO 12.5' );
-	}
-
-	/**
-	 * Display notice to disable comment pagination.
-	 *
-	 * @deprecated 12.8
-	 * @codeCoverageIgnore
-	 */
-	public function page_comments_notice() {
-		_deprecated_function( __METHOD__, 'WPSEO 12.8' );
-	}
-
-	/**
-	 * Are page comments enabled.
-	 *
-	 * @deprecated 12.8
-	 * @codeCoverageIgnore
-	 *
-	 * @return bool
-	 */
-	public function has_page_comments() {
-		_deprecated_function( __METHOD__, 'WPSEO 12.8' );
-
-		return get_option( 'page_comments' ) === '1';
-	}
+	/* ********************* DEPRECATED METHODS ********************* */
 
 	/**
 	 * Notify about the default tagline if the user hasn't changed it.
@@ -535,8 +509,7 @@ class WPSEO_Admin_Init {
 		$blog_description         = get_bloginfo( 'description' );
 		$default_blog_description = 'Just another WordPress site';
 
-		// We are checking against the WordPress internal translation.
-		// @codingStandardsIgnoreLine
+		// We are using the WordPress internal translation.
 		$translated_blog_description = __( 'Just another WordPress site', 'default' );
 
 		return $translated_blog_description === $blog_description || $default_blog_description === $blog_description;

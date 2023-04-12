@@ -14,13 +14,12 @@ class FFWDControllerMain {
   ////////////////////////////////////////////////////////////////////////////////////////
   // Constructor & Destructor                                                           //
   ////////////////////////////////////////////////////////////////////////////////////////
-  public function __construct($params = array(), $from_shortcode = 0, $ffwd = 0, $view) {
+  public function __construct($params = array(), $from_shortcode = 0, $ffwd = 0, $view = "") {
+    $this->view = $view;
+    wd_fb_update(1);
+    $this->display($params, $from_shortcode, $ffwd);
 
-		$this->view = $view;
-        wd_fb_update(1);
-		$this->display($params, $from_shortcode, $ffwd);
-
-	}
+  }
   ////////////////////////////////////////////////////////////////////////////////////////
   // Public Methods                                                                     //
   ////////////////////////////////////////////////////////////////////////////////////////

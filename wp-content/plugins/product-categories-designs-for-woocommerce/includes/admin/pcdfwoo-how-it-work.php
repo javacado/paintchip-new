@@ -6,8 +6,9 @@
  * @since 1.0.0
  */
 
-// Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
 
 // Action to add menu
 add_action('admin_menu', 'pcdfwoo_register_design_page');
@@ -28,111 +29,9 @@ function pcdfwoo_register_design_page() {
  * @package Product Categories Designs for WooCommerce
  * @since 1.0.0
  */
-function pcdfwoo_designs_page() {
+function pcdfwoo_designs_page() { ?>
 
-	$wpos_feed_tabs = pcdfwoo_help_tabs();
-	$active_tab 	= isset($_GET['tab']) ? $_GET['tab'] : 'how-it-work';
-?>
-
-	<div class="wrap pcdfwoo-wrap">
-
-		<h2 class="nav-tab-wrapper">
-			<?php
-			foreach ($wpos_feed_tabs as $tab_key => $tab_val) {
-				$tab_name	= $tab_val['name'];
-				$active_cls = ($tab_key == $active_tab) ? 'nav-tab-active' : '';
-				$tab_link 	= add_query_arg( array( 'post_type' => PCDFWOO_PRODUCT_POST_TYPE, 'page' => 'pcdfwoo-designs', 'tab' => $tab_key), admin_url('edit.php') );
-			?>
-
-			<a class="nav-tab <?php echo $active_cls; ?>" href="<?php echo $tab_link; ?>"><?php echo $tab_name; ?></a>
-
-			<?php } ?>
-		</h2>
-
-		<div class="pcdfwoo-tab-cnt-wrp">
-		<?php
-			if( isset($active_tab) && $active_tab == 'how-it-work' ) {
-				pcdfwoo_howitwork_page();
-			}
-			else if( isset($active_tab) && $active_tab == 'plugins-feed' ) {
-				echo pcdfwoo_get_plugin_design( 'plugins-feed' );
-			}
-		?>
-		</div><!-- end .pcdfwoo-tab-cnt-wrp -->
-
-	</div><!-- end .pcdfwoo-wrap -->
-
-<?php
-}
-
-/**
- * Gets the plugin design part feed
- *
- * @package Product Categories Designs for WooCommerce
- * @since 1.0.0
- */
-function pcdfwoo_get_plugin_design( $feed_type = '' ) {
-
-	$active_tab = isset($_GET['tab']) ? $_GET['tab'] : '';
-
-	// If tab is not set then return
-	if( empty($active_tab) ) {
-		return false;
-	}
-
-	// Taking some variables
-	$wpos_feed_tabs = pcdfwoo_help_tabs();
-	$transient_key 	= isset($wpos_feed_tabs[$active_tab]['transient_key']) 	? $wpos_feed_tabs[$active_tab]['transient_key'] 	: 'pcdfwoo_' . $active_tab;
-	$url 			= isset($wpos_feed_tabs[$active_tab]['url']) 			? $wpos_feed_tabs[$active_tab]['url'] 				: '';
-	$transient_time = isset($wpos_feed_tabs[$active_tab]['transient_time']) ? $wpos_feed_tabs[$active_tab]['transient_time'] 	: 172800;
-	$cache 			= get_transient( $transient_key );
-
-	if ( false === $cache ) {
-
-		$feed 			= wp_remote_get( esc_url_raw( $url ), array( 'timeout' => 120, 'sslverify' => false ) );
-		$response_code 	= wp_remote_retrieve_response_code( $feed );
-
-		if ( ! is_wp_error( $feed ) && $response_code == 200 ) {
-			if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
-				$cache = wp_remote_retrieve_body( $feed );
-				set_transient( $transient_key, $cache, $transient_time );
-			}
-		} else {
-			$cache = '<div class="error"><p>' . __( 'There was an error retrieving the data from the server. Please try again later.', 'product-categories-designs-for-woocommerce' ) . '</div>';
-		}
-	}
-	return $cache;
-}
-
-/**
- * Function to get plugin feed tabs
- *
- * @package Product Categories Designs for WooCommerce
- * @since 1.0.0
- */
-function pcdfwoo_help_tabs() {
-	$wpos_feed_tabs = array(
-						'how-it-work' 	=> array(
-													'name' => __('How It Works', 'product-categories-designs-for-woocommerce'),
-												),
-						'plugins-feed' 	=> array(
-													'name' 				=> __('Our Plugins', 'product-categories-designs-for-woocommerce'),
-													'url'				=> 'http://wponlinesupport.com/plugin-data-api/plugins-data.php',
-													'transient_key'		=> 'wpos_plugins_feed',
-													'transient_time'	=> 172800
-												),
-					);
-	return $wpos_feed_tabs;
-}
-
-/**
- * Function to get 'How It Works' HTML
- *
- * @package Product Categories Designs for WooCommerce
- * @since 1.0.0
- */
-function pcdfwoo_howitwork_page() { ?>
-
+<div class="wrap pcdfwoo-wrap">
 	<style type="text/css">
 		.wpos-pro-box .hndle{background-color:#0073AA; color:#fff;}
 		.wpos-pro-box.postbox{background:#dbf0fa none repeat scroll 0 0; border:1px solid #0073aa; color:#191e23;}
@@ -140,8 +39,11 @@ function pcdfwoo_howitwork_page() { ?>
 		.pcdfwoo-shortcode-preview{background-color: #e7e7e7; font-weight: bold; padding: 2px 5px; display: inline-block; margin:0 0 2px 0;}
 		.postbox-container .wpos-list li:before{font-family: dashicons; content: "\f139"; font-size:20px; color: #0073aa; vertical-align: middle;}
 		.upgrade-to-pro{font-size:18px; text-align:center; margin-bottom:15px;}
+		.wpos-copy-clipboard{-webkit-touch-callout: all; -webkit-user-select: all; -khtml-user-select: all; -moz-user-select: all; -ms-user-select: all; user-select: all;}
+		.wpos-new-feature{ font-size: 10px; margin-left:3px; color: #fff; font-weight: bold; background-color: #03aa29; padding:1px 4px; font-style: normal; }
+		.button-orange{background: #ff2700 !important;border-color: #ff2700 !important; font-weight: 600;}
 	</style>
-
+	<h2><?php _e( 'How It Works', 'product-categories-designs-for-woocommerce' ); ?></h2>
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-2">
 
@@ -150,17 +52,37 @@ function pcdfwoo_howitwork_page() { ?>
 				<div class="meta-box-sortables">
 
 					<div class="postbox">
+						<div class="postbox-header">
+							<h2 class="hndle">
+								<span><?php _e( 'Need Support & Solutions?', 'product-categories-designs-for-woocommerce' ); ?></span>
+							</h2>
+						</div>
+						<div class="inside">
+							<table class="form-table">
+								<tbody>
+									<tr>
+										<td>
+											<p><?php _e('Boost design and best solution for your website.', 'product-categories-designs-for-woocommerce'); ?></p> <br/>
+											<a class="button button-primary button-orange" href="<?php echo PCDFWOO_SITE_LINK; ?>/essential-bundle/?utm_source=WP&utm_medium=Product-Category&utm_campaign=Check-Designs-Solutions" target="_blank"><?php _e('Join 0$ 14 Days Pro Bundle Trial', 'product-categories-designs-for-woocommerce'); ?></a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div><!-- .inside -->
+					</div><!-- #general -->
 
-						<h3 class="hndle">
-							<span><?php _e( 'How It Works - Display and shortcode', 'product-categories-designs-for-woocommerce' ); ?></span>
-						</h3>
-
+					<div class="postbox">
+						<div class="postbox-header">
+							<h3 class="hndle">
+								<span><?php _e( 'How It Works - Display and Shortcode', 'product-categories-designs-for-woocommerce' ); ?></span>
+							</h3>
+						</div>
 						<div class="inside">
 							<table class="form-table">
 								<tbody>
 									<tr>
 										<th>
-											<label><?php _e('Geeting Started', 'product-categories-designs-for-woocommerce'); ?>:</label>
+											<label><?php _e('Getting Started', 'product-categories-designs-for-woocommerce'); ?>:</label>
 										</th>
 										<td>
 											<ul>
@@ -187,23 +109,30 @@ function pcdfwoo_howitwork_page() { ?>
 											<label><?php _e('All Shortcodes', 'product-categories-designs-for-woocommerce'); ?>:</label>
 										</th>
 										<td>
-											<span class="pcdfwoo-shortcode-preview">[wpos_product_categories]</span> – <?php _e('Product categories in grid Shortcode', 'product-categories-designs-for-woocommerce'); ?> <br />
-											<span class="pcdfwoo-shortcode-preview">[wpos_product_categories_slider]</span> – <?php _e('Product categories in slider / carousel Shortcode', 'product-categories-designs-for-woocommerce'); ?>
+											<span class="wpos-copy-clipboard pcdfwoo-shortcode-preview">[wpos_product_categories]</span> – <?php _e('Product categories in grid Shortcode', 'product-categories-designs-for-woocommerce'); ?> <br />
+											<span class="wpos-copy-clipboard pcdfwoo-shortcode-preview">[wpos_product_categories_slider]</span> – <?php _e('Product categories in slider / carousel Shortcode', 'product-categories-designs-for-woocommerce'); ?>
 										</td>
 									</tr>
 
 									<tr>
 										<th>
-											<label><?php _e('Need Support?', 'product-categories-designs-for-woocommerce'); ?></label>
+											<label><?php _e('Documentation', 'product-categories-designs-for-woocommerce'); ?>:</label>
 										</th>
 										<td>
-											<p><?php _e('Check plugin document for shortcode parameters and demo for designs.', 'product-categories-designs-for-woocommerce'); ?></p> <br/>
-											<a class="button button-primary" href="https://docs.wponlinesupport.com/product-categories-designs-for-woocommerce/" target="_blank"><?php _e('Documentation', 'product-categories-designs-for-woocommerce'); ?></a>
-											<a class="button button-primary" href="https://demo.wponlinesupport.com/product-categories-designs-for-woocommerce-demo/" target="_blank"><?php _e('Demo for Designs', 'product-categories-designs-for-woocommerce'); ?></a>
+											<a class="button button-primary" href="https://docs.essentialplugin.com/product-categories-designs-for-woocommerce/" target="_blank"><?php _e('Check Documentation', 'product-categories-designs-for-woocommerce'); ?></a>
 										</td>
 									</tr>
 								</tbody>
 							</table>
+						</div><!-- .inside -->
+					</div><!-- #general -->
+
+					<div class="postbox">
+						<h3 class="hndle">
+							<span><?php _e( 'Help to improve this plugin!', 'product-categories-designs-for-woocommerce' ); ?></span>
+						</h3>
+						<div class="inside">
+							<p>Enjoyed this plugin? You can help by rate this plugin <a href="https://wordpress.org/support/plugin/product-categories-designs-for-woocommerce/reviews/" target="_blank">5 stars!</a></p>
 						</div><!-- .inside -->
 					</div><!-- #general -->
 
@@ -225,8 +154,11 @@ function pcdfwoo_howitwork_page() { ?>
 								<li>Slider</li>
 								<li>1 Widgets</li>
 								<li>Wp Template Feature Support</li>
-								<li>Visual Composer/ WPBakery Support</li>
 								<li>Shortcode Generator </li>
+								<li>Visual Composer/ WPBakery Support</li>
+								<li>Gutenberg, Elementor, Beaver and SiteOrigin Page Builder Support. <span class="wpos-new-feature">New</span></li>
+								<li>Divi Page Builder Native Support. <span class="wpos-new-feature">New</span></li>
+								<li>Fusion Page Builder (Avada) native support. <span class="wpos-new-feature">New</span></li>
 								<li>Awesome Touch-Swipe Enabled</li>
 								<li>Display category title and description.</li>
 								<li>Display product count.</li>
@@ -242,22 +174,13 @@ function pcdfwoo_howitwork_page() { ?>
 								<li>Fully responsive</li>
 							</ul>
 							<div class="upgrade-to-pro">Gain access to <strong>Product Categories Designs for WooCommerce</strong> included in <br /><strong>Essential Plugin Bundle</div>
-							<a class="button button-primary wpos-button-full" href="https://www.wponlinesupport.com/wp-plugin/product-categories-designs-woocommerce/?ref=WposPratik&utm_source=WP&utm_medium=WP-Plugins&utm_campaign=Upgrade-PRO" target="_blank"><?php _e('Go Premium ', 'product-categories-designs-for-woocommerce'); ?></a>
-							<p><a class="button button-primary wpos-button-full" href="https://demo.wponlinesupport.com/prodemo/product-categories-designs-for-woo-pro/" target="_blank"><?php _e('View PRO Demo ', 'product-categories-designs-for-woocommerce'); ?></a></p>
-						</div><!-- .inside -->
-					</div><!-- #general -->
-
-					<div class="postbox">
-						<h3 class="hndle">
-							<span><?php _e( 'Help to improve this plugin!', 'product-categories-designs-for-woocommerce' ); ?></span>
-						</h3>
-						<div class="inside">
-							<p>Enjoyed this plugin? You can help by rate this plugin <a href="https://wordpress.org/support/plugin/product-categories-designs-for-woocommerce/reviews/?filter=5#new-post" target="_blank">5 stars!</a></p>
+							<a class="button button-primary wpos-button-full button-orange" href="<?php echo PCDFWOO_SITE_LINK; ?>/essential-bundle/?utm_source=WP&utm_medium=Product-Category&utm_campaign=Check-Designs-Solutions" target="_blank"><?php _e('Join 0$ 14 Days Pro Bundle Trial', 'product-categories-designs-for-woocommerce'); ?></a>
 						</div><!-- .inside -->
 					</div><!-- #general -->
 				</div><!-- .meta-box-sortables -->
 			</div><!-- #post-container-1 -->
-
 		</div><!-- #post-body -->
 	</div><!-- #poststuff -->
+</div><!-- end .pcdfwoo-wrap -->
+
 <?php }

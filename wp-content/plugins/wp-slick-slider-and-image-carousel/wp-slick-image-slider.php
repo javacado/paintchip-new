@@ -4,36 +4,36 @@
  * Plugin URI: https://www.wponlinesupport.com/plugins
  * Text Domain: wp-slick-slider-and-image-carousel
  * Domain Path: /languages/
- * Description: Easy to add and display wp slick image slider and carousel. Also added Gutenberg block support.  
+ * Description: Easy to add and display wp slick image slider and carousel. Also added Gutenberg block support.
  * Author: WP OnlineSupport
- * Version: 2.0
+ * Version: 2.4
  * Author URI: https://www.wponlinesupport.com
  *
  * @package WordPress
  * @author WP OnlineSupport
  */
 
-if ( !defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-if( !defined('WPSISAC_VERSION') ) {
-	define( 'WPSISAC_VERSION', '2.0' ); // Plugin version
+if( ! defined('WPSISAC_VERSION') ) {
+	define( 'WPSISAC_VERSION', '2.4' ); // Plugin version
 }
-if( !defined( 'WPSISAC_DIR' ) ) {
+if( ! defined( 'WPSISAC_DIR' ) ) {
 	define( 'WPSISAC_DIR', dirname( __FILE__ ) ); // Plugin dir
 }
-if( !defined( 'WPSISAC_URL' ) ) {
+if( ! defined( 'WPSISAC_URL' ) ) {
 	define( 'WPSISAC_URL', plugin_dir_url( __FILE__ ) ); // Plugin url
 }
-if( !defined( 'WPSISAC_POST_TYPE' ) ) {
+if( ! defined( 'WPSISAC_POST_TYPE' ) ) {
 	define( 'WPSISAC_POST_TYPE', 'slick_slider' ); // Plugin post type
 }
-if( !defined( 'WPSISAC_META_PREFIX' ) ) {
+if( ! defined( 'WPSISAC_META_PREFIX' ) ) {
 	define( 'WPSISAC_META_PREFIX', '_wpsisac_' ); // Plugin post type
 }
-if(!defined( 'WPSISAC_PRO_LINK' ) ) {
-	define( 'WPSISAC_PRO_LINK', 'https://www.wponlinesupport.com/wp-plugin/wp-slick-slider-and-image-carousel/?utm_source=WP&utm_medium=WP-Plugins&utm_campaign=Features-PRO#fndtn-lifetime' ); // Plugin link
+if(! defined( 'WPSISAC_PRO_LINK' ) ) {
+	define( 'WPSISAC_PRO_LINK', 'https://www.wponlinesupport.com/wp-plugin/wp-slick-slider-and-image-carousel/?utm_source=WP&utm_medium=Slickslider&utm_campaign=Features-PRO' ); // Plugin link
 }
 
 /**
@@ -50,7 +50,7 @@ function wpsisac_get_load_textdomain() {
 	// Set filter for plugin's languages directory
 	$wpsisac_lang_dir = dirname( plugin_basename( __FILE__ ) ) . '/languages/';
 	$wpsisac_lang_dir = apply_filters( 'wpsisac_languages_directory', $wpsisac_lang_dir );
-	
+
 	// Traditional WordPress plugin locale filter.
 	$get_locale = get_locale();
 
@@ -80,7 +80,7 @@ function wpsisac_get_load_textdomain() {
  */
 function wpsisac_get_plugins_loaded() {
 	wpsisac_get_load_textdomain();
-} 
+}
 add_action('plugins_loaded', 'wpsisac_get_plugins_loaded');
 
 /**
@@ -125,7 +125,6 @@ function free_wpsisac_install_premium_version(){
 	}
 }
 
-
 /**
  * Plugin Setup (On Deactivation)
  * 
@@ -135,7 +134,7 @@ function free_wpsisac_install_premium_version(){
  * @since 1.0.0
  */
 function wpsisac_uninstall() {
-	
+
 	// IMP need to flush rules for custom registered post type
 	flush_rewrite_rules();
 }
@@ -162,7 +161,7 @@ function wpsisac_get_admin_notice() {
 	$notice_link        = add_query_arg( array('message' => 'wpsisac-plugin-notice'), admin_url('plugins.php') );
 	$notice_transient   = get_transient( 'wpsisac_install_notice' );
 
-	if( $notice_transient == false && $pagenow == 'plugins.php' && file_exists( $dir ) && current_user_can( 'install_plugins' ) ) {        
+	if( $notice_transient == false && $pagenow == 'plugins.php' && file_exists( $dir ) && current_user_can( 'install_plugins' ) ) {
 		echo '<div class="updated notice" style="position:relative;">
 			<p>
 				<strong>'.sprintf( __('Thank you for activating %s', 'wp-slick-slider-and-image-carousel'), 'WP Slick Slider and Image Carousel').'</strong>.<br/>
@@ -195,10 +194,16 @@ if ( function_exists( 'register_block_type' ) ) {
 	require_once( WPSISAC_DIR . '/includes/admin/supports/gutenberg-block.php' );
 }
 
-// How it work file, Load admin files
-if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-	require_once( WPSISAC_DIR . '/includes/admin/wpsisac-how-it-work.php' );	
+/* Recommended Plugins Starts */
+if ( is_admin() ) {
+	require_once( WPSISAC_DIR . '/wpos-plugins/wpos-recommendation.php' );
+
+	wpos_espbw_init_module( array(
+							'prefix'	=> 'wpsisac',
+							'menu'		=> 'edit.php?post_type='.WPSISAC_POST_TYPE,
+						));
 }
+/* Recommended Plugins Ends */
 
 /* Plugin Wpos Analytics Data Starts */
 function wpos_analytics_anl25_load() {
@@ -213,20 +218,6 @@ function wpos_analytics_anl25_load() {
 							'type'			=> 'plugin',
 							'menu'			=> 'edit.php?post_type=slick_slider',
 							'text_domain'	=> 'wp-slick-slider-and-image-carousel',
-							'promotion'		=> array(
-													'bundle' => array(
-															'name'	=> 'Download FREE 50+ Plugins, 10+ Themes and Dashboard Plugin',
-															'desc'	=> 'Download FREE 50+ Plugins, 10+ Themes and Dashboard Plugin',
-															'file'	=> 'https://www.wponlinesupport.com/latest/wpos-free-50-plugins-plus-12-themes.zip'
-														)
-													),
-							'offers'		=> array(
-													'trial_premium' => array(
-														'image'	=> 'http://analytics.wponlinesupport.com/?anylc_img=25',
-														'link'	=> 'http://analytics.wponlinesupport.com/?anylc_redirect=25',
-														'desc'	=> 'Or start using the plugin from admin menu',
-													)
-												),
 						));
 
 	return $wpos_analytics;

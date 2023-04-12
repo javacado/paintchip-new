@@ -1,7 +1,8 @@
 .wpfFilterWrapper label{
 	font-weight: normal;
 }
-.wpfPriceRangeField#wpfMinPrice, .wpfPriceRangeField#wpfMaxPrice{
+.wpfPriceRangeField#wpfMinPrice,
+.wpfPriceRangeField#wpfMaxPrice {
 	background-color: #f9f9f9;
 	border: 1px solid #6e6666;
 	color: black;
@@ -10,6 +11,7 @@
 	border-radius: 5px;
 	height: 26px;
 	padding: 5px;
+	-moz-appearance: textfield;
 }
 .wpfFilterWrapper .wfpTitle{
 	font-size: 16px;
@@ -69,6 +71,9 @@
 	-webkit-appearance: none;
 	outline: none;
 	cursor: pointer;
+}
+.wpfFilterWrapper[data-filter-type="wpfCategory"] .wpfFilterContent .wpfCheckboxHier .ms-options input {
+	border-radius: 0;
 }
 .wpfFilterWrapper[data-filter-type="wpfCategory"] .wpfCheckboxHier input:checked,
 .wpfFilterWrapper[data-filter-type="wpfRating"] .wpfCheckboxHier input:checked,
@@ -137,6 +142,8 @@
 	padding: 0;
 	font-size: 16px;
 	line-height: 16px;
+	min-height: 20px;
+	cursor: pointer;
 }
 .wpfFilterWrapper .ms-options input[type=checkbox]:checked:before, input[type=radio]:checked:before {
 	float: left;

@@ -61,7 +61,7 @@ if ( ! function_exists( 'custom_sidebars_replace_not_allowed' ) ) {
 		);
 		echo '</ul>';
 		echo '</p>';
-		$url = esc_url( CSB_IMG_URL . 'metabox/' . $img . '?version=3.2.3' );
+		$url = esc_url( CSB_IMG_URL . 'metabox/' . $img . '?version=3.2.4' );
 		printf(
 			'<a href="%s" target="_blank"><img src="%s" style="width:100%%" /></a>',
 			esc_url( $url ),

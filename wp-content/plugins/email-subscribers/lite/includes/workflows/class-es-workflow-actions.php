@@ -5,22 +5,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Class to load workflow actions
+ * 
  * @class ES_Workflow_Actions
  * @since 4.4.1
  */
 class ES_Workflow_Actions extends ES_Workflow_Registry {
 
-	/** @var array */
-	static $includes;
-
-	/** @var array  */
-	static $loaded = array();
-
+	/**
+	 * Registered include classes
+	 *
+	 * @since 4.4.1
+	 * @var array
+	 */
+	public static $includes;
 
 	/**
+	 * Loaded registered class objects
+	 *
+	 * @var array
+	 */
+	public static $loaded = array();
+
+	/**
+	 *
+	 * Implement this method in sub classes
+	 *
+	 * @since 4.4.1
 	 * @return array
 	 */
-	static function load_includes() {
+	public static function load_includes() {
 
 		$includes = array(
 			'ig_es_add_to_list'    => 'ES_Action_Add_To_List',
@@ -33,10 +47,15 @@ class ES_Workflow_Actions extends ES_Workflow_Registry {
 
 
 	/**
+	 * Get object of specific action class.
+	 *
 	 * @param $action_name string
-	 * @return Action|false
+	 * 
+	 * @return ES_Workflow_Action|false
+	 * 
+	 * @since 4.4.1
 	 */
-	static function get( $action_name ) {
+	public static function get( $action_name ) {
 		static::load( $action_name );
 
 		if ( ! isset( static::$loaded[ $action_name ] ) ) {
@@ -48,9 +67,13 @@ class ES_Workflow_Actions extends ES_Workflow_Registry {
 
 
 	/**
+	 * Get all registered workflow actions
+	 * 
 	 * @return ES_Workflow_Action[]
+	 * 
+	 * @since 4.4.1
 	 */
-	static function get_all() {
+	public static function get_all() {
 		foreach ( static::get_includes() as $name => $path ) {
 			static::load( $name );
 		}
@@ -60,9 +83,13 @@ class ES_Workflow_Actions extends ES_Workflow_Registry {
 
 
 	/**
+	 * Load action class object by action name
+	 * 
 	 * @param $action_name
+	 * 
+	 * @since 4.4.1
 	 */
-	static function load( $action_name ) {
+	public static function load( $action_name ) {
 		if ( static::is_loaded( $action_name ) ) {
 			return;
 		}
@@ -72,9 +99,17 @@ class ES_Workflow_Actions extends ES_Workflow_Registry {
 
 		if ( ! empty( $includes[ $action_name ] ) ) {
 
-			/** @var ES_Workflow_Action $action */
-			$action = new $includes[ $action_name ]();
-			$action->set_name( $action_name );
+			/**
+			* Registered include classes
+			*
+			* @since 4.4.1
+			* @var ES_Workflow_Action $action
+			*/ 
+			$action_class = $includes[ $action_name ];
+			if ( class_exists( $action_class ) ) {
+				$action = new $action_class();
+				$action->set_name( $action_name );
+			}
 		}
 
 		static::$loaded[ $action_name ] = $action;

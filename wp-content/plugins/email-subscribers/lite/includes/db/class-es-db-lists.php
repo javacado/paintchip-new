@@ -5,19 +5,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class ES_DB_Lists extends ES_DB {
+	
 	/**
+	 * Table name
+	 * 
 	 * @since 4.0.0
 	 * @var $table_name
 	 *
 	 */
 	public $table_name;
+	
 	/**
+	 * Table DB version
+	 * 
 	 * @since 4.0.0
 	 * @var $version
 	 *
 	 */
 	public $version;
+	
 	/**
+	 * Table primary key column name
+	 * 
 	 * @since 4.0.0
 	 * @var $primary_key
 	 *
@@ -55,9 +64,10 @@ class ES_DB_Lists extends ES_DB {
 			'id'         => '%d',
 			'slug'       => '%s',
 			'name'       => '%s',
+			'hash'       => '%s',
 			'created_at' => '%s',
 			'updated_at' => '%s',
-			'deleted_at' => '%s'
+			'deleted_at' => '%s',
 		);
 	}
 
@@ -70,9 +80,10 @@ class ES_DB_Lists extends ES_DB {
 		return array(
 			'slug'       => null,
 			'name'       => null,
+			'hash'       => null,
 			'created_at' => ig_get_current_date_time(),
 			'updated_at' => null,
-			'deleted_at' => null
+			'deleted_at' => null,
 		);
 	}
 
@@ -184,6 +195,35 @@ class ES_DB_Lists extends ES_DB {
 	}
 
 	/**
+	 * Get list by id
+	 *
+	 * @param array $list_ids List IDs.
+	 *
+	 * @return bool/array Returns lists array if list exists else false.
+	 *
+	 * @since 4.6.12
+	 */
+	public function get_lists_by_id( $list_ids = array() ) {
+		
+		global $wpdb;
+		
+		if ( empty( $list_ids ) ) {
+			return array();
+		}
+
+		// Check if we have got array of list ids.
+		if ( is_array( $list_ids ) ) {
+			$list_ids_str = implode( ',', $list_ids );
+		} else {
+			$list_ids_str = $list_ids;
+		}
+
+		$where = "id IN ({$list_ids_str})";
+
+		return $this->get_by_conditions( $where );
+	}
+
+	/**
 	 * Get all lists name by contact_id
 	 *
 	 * @param $id
@@ -197,10 +237,12 @@ class ES_DB_Lists extends ES_DB {
 	public function get_all_lists_name_by_contact( $id ) {
 		global $wpdb;
 
-		$lists_contact_table = IG_LISTS_CONTACTS_TABLE;
-
-		$sSql = $wpdb->prepare( "SELECT `name` FROM {$this->table_name} WHERE id IN ( SELECT list_id FROM {$lists_contact_table} WHERE contact_id = %d )", $id );
-		$res  = $wpdb->get_col( $sSql );
+		$res  = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT `name` FROM {$wpdb->prefix}ig_lists WHERE id IN ( SELECT list_id FROM {$wpdb->prefix}ig_lists_contacts WHERE contact_id = %d )",
+				$id
+			)			
+		);
 
 		return $res;
 	}
@@ -271,7 +313,8 @@ class ES_DB_Lists extends ES_DB {
 
 		$data = array(
 			'slug' => ! empty( $slug ) ? $slug : sanitize_title( $list ),
-			'name' => $list
+			'name' => $list,
+			'hash' => ES_Common::generate_hash( 12 ),
 		);
 
 		return $this->insert( $data );
@@ -313,7 +356,7 @@ class ES_DB_Lists extends ES_DB {
 	 *
 	 * @since 4.2.1
 	 */
-	public function update_list( $row_id = 0, $name ) {
+	public function update_list( $row_id, $name ) {
 
 		if ( empty( $row_id ) ) {
 			return;
@@ -397,6 +440,33 @@ class ES_DB_Lists extends ES_DB {
 			}
 		}
 
+	}
+
+	/**
+	 * Get list id hash map
+	 *
+	 * @param array $list_ids
+	 *
+	 * @return array $list_hash_map
+	 *
+	 * @since 4.6.12.1
+	 */
+	public function get_list_id_hash_map( $list_ids = array() ) {
+
+		$list_hash_map = array();
+
+		if ( ! empty( $list_ids ) ) {
+			$lists = ES()->lists_db->get_lists_by_id( $list_ids );
+			if ( ! empty( $lists ) ) {
+				foreach ( $lists as $list ) {
+					if ( ! empty( $list ) && ! empty( $list['id'] ) ) {
+						$list_hash_map[ $list['id'] ] = $list['hash'];
+					}
+				}
+			}
+		}
+
+		return $list_hash_map;
 	}
 
 

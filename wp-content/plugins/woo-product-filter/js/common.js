@@ -25,13 +25,18 @@ jQuery.fn.clearForm = function() {
 	});
 }
 jQuery.fn.tagName = function() {
-    return this.get(0).tagName;
+	var name = '';
+	if ( this.get(0) && this.get(0).tagName) {
+		name = this.get(0).tagName;
+	}
+
+	return name;
 }
 jQuery.fn.exists = function(){
-    return (jQuery(this).size() > 0 ? true : false);
+	return (jQuery(this).length > 0 ? true : false);
 }
 function isNumber(val) {
-    return /^\d+/.test(val);
+	return /^\d+/.test(val);
 }
 function pushDataToParam(data, pref) {
 	pref = pref ? pref : '';
@@ -52,7 +57,7 @@ jQuery.fn.serializeAnythingWpf = function(addData, returnArray) {
     jQuery.each(els, function() {
     	var filter = jQuery(this).closest('#row-tab-filters'); 
         if ((typeof(filter) == 'undefined' || filter.length == 0) &&
-        	 this.name && !this.disabled && (/select|textarea/i.test(this.nodeName) || /checkbox|text|hidden|password/i.test(this.type))) {
+        	 this.name && !this.disabled && (/select|textarea/i.test(this.nodeName) || /checkbox|text|number|hidden|password/i.test(this.type))) {
             var val = jQuery(this).val();
         	if(this.type == 'checkbox' && !this.checked) {
         		val = 0;
@@ -162,7 +167,7 @@ function toeReload(url) {
 }
 jQuery.fn.toeRebuildSelect = function(data, useIdAsValue, val) {
     if(jQuery(this).tagName() == 'SELECT' && typeof(data) == 'object') {
-        if(jQuery(data).size() > 0) {
+        if(jQuery(data).length > 0) {
             if(typeof(val) == 'undefined')
                 val = false;
             if(jQuery(this).children('option').length) {
@@ -357,7 +362,7 @@ function toeListableWpf(params) {
 			var newRow = exampleRow.clone();
 			for(var key in list[i]) {
 				var element = newRow.find('.'+ key);
-				if(element.size()) {
+				if(element.length) {
 					var valueTo = element.attr('valueTo');
 					if(valueTo) {
 						var newValue = list[i][key];
@@ -457,42 +462,6 @@ function callUserFuncArray(cb, parameters) {
 
 	return (typeof cb[0] === 'string') ? func.apply(eval(cb[0]), parameters) : (typeof cb[0] !== 'object') ? func.apply(null, parameters) : func.apply(cb[0], parameters);
 }
-jQuery.fn.zoom = function(level, origin) {
-	origin = origin ? origin : 'center center';
-	jQuery(this).data('zoom', level);
-	return jQuery(this).css({
-	/*	'zoom': level	// Didn't worked correctly for mobiles
-	,*/	'-moz-transform': 'scale('+ level+ ')'
-	,	'-moz-transform-origin': origin
-	,	'-o-transform': 'scale('+ level+ ')'
-	,	'-o-transform-origin': origin
-	,	'-webkit-transform': 'scale('+ level+ ')'
-	,	'-webkit-transform-origin': origin
-	,	'transform': 'scale('+ level+ ')'
-	,	'transform-origin': origin
-	});
-};
-/*
- * Duplicate our jQuery.fn.zoom method - as other themes or plugins can use same method name - and re-define our method in wrong way
- * @param {type} level
- * @param {type} origin
- * @returns {jQuery}
- */
-jQuery.fn.wpfZoom = function(level, origin) {
-	origin = origin ? origin : 'center center';
-	jQuery(this).data('zoom', level);
-	return jQuery(this).css({
-	/*	'zoom': level	// Didn't worked correctly for mobiles
-	,*/	'-moz-transform': 'scale('+ level+ ')'
-	,	'-moz-transform-origin': origin
-	,	'-o-transform': 'scale('+ level+ ')'
-	,	'-o-transform-origin': origin
-	,	'-webkit-transform': 'scale('+ level+ ')'
-	,	'-webkit-transform-origin': origin
-	,	'transform': 'scale('+ level+ ')'
-	,	'transform-origin': origin
-	});
-};
 jQuery.fn.scrollWidth = function() {
 	var inner = document.createElement('p');
 	inner.style.width = "100%";

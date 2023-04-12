@@ -5,7 +5,7 @@
  * Text Domain: WCDFE_translation
  * Domain Path: /languages
  * Description: A simple and easy way to change the from email address and from email name that appear on emails sent from WordPress.
- * Version: 1.1.2
+ * Version: 1.1.3
  * Author: Subodh Ghulaxe
  * Author URI: http://www.subodhghulaxe.com
  */
@@ -162,7 +162,7 @@ if ( !class_exists( 'WCDFE' ) ) {
 			if ( plugin_basename( __FILE__ ) == $plugin_file )
 				$plugin_meta[] = sprintf(
 					'&hearts; <a href="%s" target="_blank">%s</a>',
-					'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=9SDYCPQW2HH4Q&lc=IN&item_name=Subodh%20Ghulaxe&item_number=WP%20Change%20Default%20From%20Email&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted',
+					'https://www.patreon.com/subodhghulaxe',
 					__( 'Donate', WCDFE_TEXTDOMAIN )
 			);
 			

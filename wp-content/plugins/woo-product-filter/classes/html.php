@@ -3,6 +3,7 @@ class HtmlWpf {
 	public static $categoriesOptions = array();
 	public static $productsOptions = array();
 	public static function echoEscapedHtml( $html ) {
+		remove_all_filters( 'esc_html');
 		add_filter('esc_html', array('HtmlWpf', 'skipHtmlEscape'), 99, 2);
 		echo esc_html($html);
 		remove_filter('esc_html', array('HtmlWpf', 'skipHtmlEscape'), 99, 2);
@@ -366,30 +367,14 @@ class HtmlWpf {
 	}
 	public static function checkboxHiddenVal( $name, $params = array('attrs' => '', 'value' => '', 'checked' => '') ) {
 		$params['attrs'] = isset($params['attrs']) ? $params['attrs'] : '';
-		$checkId = self::nameToClassId($name, $params);
-		if (strpos($params['attrs'], 'id="') === false) {
-			$checkId .= '_check';
-		}
-		$hideId = self::nameToClassId($name, $params) . '_text';
 		$paramsCheck = $params;
 		$paramsHidden = $params;
-		if (strpos($params['attrs'], 'id="') === false) {
-			$paramsCheck['attrs'] .= ' id="' . esc_attr($checkId) . '"';
-		}
-		$paramsCheck['attrs'] .= ' data-hideid="' . esc_attr($hideId) . '"';
-		$paramsHidden['attrs'] = ' id="' . esc_attr($hideId) . '"';
+
+		$paramsCheck['attrs'] .= ' data-hiden-input=1';
 		$paramsCheck['value'] = isset($paramsCheck['value']) ? $paramsCheck['value'] : '';
 		$paramsCheck['checked'] = $paramsCheck['value'] ? '1' : '0';
 		self::checkbox(self::nameToClassId($name), $paramsCheck);
 		self::hidden($name, $paramsHidden);
-		$js = '<script type="text/javascript">//<!--
-			jQuery(function(){
-				jQuery("#' . $checkId . '").change(function(){
-					jQuery("#' . $hideId . '").val( (jQuery(this).attr("checked") ? 1 : 0) );
-				});
-			});
-			//--></script>';
-		self::echoEscapedHtml($js);
 	}
 	public static function checkedOpt( $arr, $key, $value = true, $default = false ) {
 		if (!isset($arr[ $key ])) {

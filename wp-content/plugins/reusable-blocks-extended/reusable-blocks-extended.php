@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name:    Reusable Blocks Extended
- * Plugin URI:     https://jeanbaptisteaudras.com/en/2019/09/reusable-block-extended-a-cool-wordpress-plugin-to-extend-gutenberg-reusable-block-feature/
- * Description:    Extend Gutenberg Reusable Blocks feature with a complete admin panel, widgets, shortcodes and PHP functions.
- * Version:		   0.5.1
- * Author:         audrasjb
- * Author URI:     https://jeanbaptisteaudras.com/en
- * License:        GPL-2.0+
- * License URI:    http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:    reusable-blocks-extended
+ * Plugin Name:	Reusable Blocks Extended
+ * Plugin URI:	https://jeanbaptisteaudras.com/en/2019/09/reusable-block-extended-a-cool-wordpress-plugin-to-extend-gutenberg-reusable-block-feature/
+ * Description:	Extend Gutenberg Reusable Blocks feature with a complete admin panel, widgets, shortcodes and PHP functions.
+ * Version:		0.6.2
+ * Author:		audrasjb
+ * Author URI:	https://jeanbaptisteaudras.com/en
+ * License:		GPL-2.0+
+ * License URI:	http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain:	reusable-blocks-extended
  */
 
 // If this file is called directly, abort.
@@ -16,12 +16,16 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-if ( is_admin() ) {
-	add_action( 'registered_post_type', 'reblex_reusable_menu_display', 10, 2 );
+function reblex_admin_init() {
 	/* Polylang compatibility */
 	if ( function_exists( 'pll__' ) ) {
 		add_action( 'pre_get_posts', 'reblex_reusable_menu_polylang_all_langs', 10, 2 );
 	}
+}
+add_action( 'admin_init', 'reblex_admin_init' );
+
+if ( is_admin() ) {
+	add_action( 'registered_post_type', 'reblex_reusable_menu_display', 10, 2 );
 	add_filter( 'manage_wp_block_posts_columns', 'reblex_reusable_screen_add_column' );
 	add_action( 'manage_wp_block_posts_custom_column' , 'reblex_reusable_screen_fill_column', 1000, 2);
 	add_action( 'admin_enqueue_scripts', 'reblex_reusable_screen_enqueues' );
@@ -29,7 +33,6 @@ if ( is_admin() ) {
 	// Force Block editor for Reusable Blocks even when Classic editor plugin is activated
 	add_filter( 'use_block_editor_for_post', 'reblex_enable_gutenberg_post', 1000, 2 );
 	add_filter( 'use_block_editor_for_post_type', 'reblex_enable_gutenberg_post_type', 1000, 2 );
-
 }
 
 /**
@@ -94,15 +97,47 @@ function reblex_reusable_menu_display( $type, $args ) {
  * @return void
  */
 function reblex_reusable_menu_polylang_all_langs( $query ) {
-	global $pagenow;
-	if ( $pagenow === 'edit.php' && $_GET['post_type'] == 'wp_block' ) {
-		if ( function_exists( 'pll__') && is_admin() && $query->is_main_query() ) {
+	$screen = get_current_screen();
+	if ( is_object( $screen ) ) {
+		if ( $screen->post_type == 'wp_block' ) {
 			$query->set( 'lang', '' );
 			$query->set( 'tax_query', '' );
-			$_GET['lang'] = 'all';
 		}
 	}
+	return $query;
 }
+
+/**
+ * reblex_reusable_screen_block_pattern_registration function.
+ * 
+ */
+function reblex_reusable_screen_block_pattern_registration() {
+	$screen = get_current_screen();
+ 
+	if ( 'wp_block' !== $screen->post_type ) {
+		return;
+	}
+
+	if ( isset( $_GET['create_pattern'] ) && intval( $_GET['create_pattern'] ) > 0 ) :
+		update_post_meta( intval( $_GET['create_pattern'] ), 'transformed_into_pattern', true );
+		?>
+		<div class="notice notice-success is-dismissible">
+			<p><?php esc_html_e( 'Reusable block successfully converted to a new block pattern. It is now available in the block editor.', 'reusable-blocks-extended' ); ?></p>
+		</div>
+	<?php
+	endif;
+
+	if ( isset( $_GET['delete_pattern'] ) && intval( $_GET['delete_pattern'] ) > 0 ) :
+		update_post_meta( intval( $_GET['delete_pattern'] ), 'transformed_into_pattern', false );
+		?>
+			<div class="notice notice-warning is-dismissible">
+				<p><?php esc_html_e( 'Block pattern successfully deleted.', 'reusable-blocks-extended' ); ?></p>
+			</div>
+	<?php
+	endif;
+}
+add_action( 'admin_notices', 'reblex_reusable_screen_block_pattern_registration' );
+
 /**
  * reblex_reusable_screen_add_column function.
  * 
@@ -115,10 +150,12 @@ function reblex_reusable_screen_add_column( $columns ) {
 		'title' => esc_html__( 'Reusable block title' ),
 		'reblex-reusable-instances' => esc_html__( 'Used in', 'reusable-blocks-extended' ),
 		'reblex-reusable-preview' => esc_html__( 'Usage', 'reusable-blocks-extended' ),
+		'reblex-reusable-conversion' => esc_html__( 'Pattern conversion', 'reusable-blocks-extended' ),
 		'reblex-date-modified' => esc_html__( 'Last modified', 'reusable-blocks-extended' )
 	);
 	return $columns;
 }
+
 /**
  * reblex_reusable_screen_fill_column function.
  * 
@@ -129,7 +166,9 @@ function reblex_reusable_screen_add_column( $columns ) {
 function reblex_reusable_screen_fill_column( $column, $ID ) {
 	global $post;
 	switch( $column ) {
+
 		case 'reblex-reusable-instances' :
+
 			global $wpdb;
 			$tag = '<!-- wp:block {"ref":' . $ID . '}';
 			$search = '%' . $wpdb->esc_like($tag) . '%';
@@ -170,20 +209,31 @@ function reblex_reusable_screen_fill_column( $column, $ID ) {
 				}
 			}
 			break;
+
 		case 'reblex-reusable-preview' :
 
 			echo '<p>' . esc_html__( 'Shortcode:', 'reusable-blocks-extended' ) . ' <code>[reblex id=\'' . $ID . '\']</code></p>';
 			echo '<p>' . esc_html__( 'PHP function:', 'reusable-blocks-extended' ) . ' <code>reblex_display_block(' . $ID . ')</code></p>';
 
-			/*
-			echo '<p>' . esc_html__( 'Shortcode:', 'reusable-blocks-extended' ) . ' <input size="25" type="text" value="[reusable-block id=\'' . $ID . '\']" disabled /></p>';
-			echo '<p>' . esc_html__( 'PHP function:', 'reusable-blocks-extended' ) . ' <input size="25" type="text" value="reblex_display_block(' . $ID . ')" disabled /></p>';
-			*/
-
 			reblex_display_modal( $ID );
 
 			break;
+
+		case 'reblex-reusable-conversion' :
+
+			if ( true === reblex_check_wordpress_version_55() ) {
+				if ( true == get_post_meta( $ID, 'transformed_into_pattern', true ) ) {
+					echo '<p>' . esc_html__( 'Converted to a block pattern.', 'reusable-blocks-extended' ) . '</p>';
+					echo '<p class="reblex-delete-pattern"><a href="' . admin_url( 'edit.php?post_type=wp_block&delete_pattern=' . $ID ) . '">' . esc_html__( 'Delete existing pattern', 'reusable-blocks-extended' ) . '</a></p>';
+				} else {
+					echo '<a class="button button-primary" href="' . admin_url( 'edit.php?post_type=wp_block&create_pattern=' . $ID ) . '">' . esc_html__( 'Convert to block pattern', 'reusable-blocks-extended' ) . '</a>';
+				}
+			}
+
+			break;
+
 		case 'reblex-date-modified' :
+
 			$d = get_date_from_gmt( $post->post_modified, 'Y-m-d H:i:s' );
 			echo sprintf(
 				/* translators: %1$s: Date the block was last modified %2$s Time the block was last modified %3$s Author */
@@ -196,6 +246,7 @@ function reblex_reusable_screen_fill_column( $column, $ID ) {
 				echo ' ' . esc_html__( 'by', 'reusable-blocks-extended' ) . ' ' . $last_user->display_name;
 			}
 			break;
+
 		default :
 			break;
 	}
@@ -386,13 +437,13 @@ class Reblex_Widget extends WP_Widget {
 	}
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
-		$instance['title']    = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		$instance['title']	= ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
 		$instance['block_id'] = ( ! empty( $new_instance['block_id'] ) ) ? $new_instance['block_id'] : '';
 		return $instance;
 	}
 }
 $reblex_widget = new Reblex_Widget();
- 
+
 /**
  * custom_glance_items function.
  * 
@@ -419,3 +470,61 @@ function reblex_add_reusables_to_dashboard( $items = array() ) {
 	return $items;
 }
 add_filter( 'dashboard_glance_items', 'reblex_add_reusables_to_dashboard', 10, 1 );
+
+/**
+ * custom_glance_items function. Register user generated patterns.
+ */
+function reblex_register_block_patterns() {
+	if ( ! function_exists( 'register_block_type' ) || ! function_exists( 'register_block_pattern' ) ) {
+		return;
+	}
+
+	register_block_pattern_category(
+		'converted',
+		array(
+			'label' => __( 'Converted from reusable blocks', 'reusable-blocks-extended' ),
+		)
+	);
+
+	$args = array(
+		'post_type'      => 'wp_block',
+		'posts_per_page' => -1,
+		'post_status'    => 'publish',
+		'meta_query'     => array(
+			array(
+				'key'   => 'transformed_into_pattern',
+				'value' => 1,
+			)
+		)
+	);
+	$query_patterns = new WP_Query( $args );
+	if ( $query_patterns->have_posts() ) {
+		while ( $query_patterns->have_posts() ) {
+			$query_patterns->the_post();
+
+			$pattern_id      = get_the_ID();
+			$pattern_title   = get_the_title();
+			$pattern_slug    = get_post_field( 'post_name', $pattern_id );
+			$pattern_content = get_the_content();
+
+			register_block_pattern(
+				'reblex/' . $pattern_slug,
+				array(
+					'title'      => $pattern_title,
+					'content'    => $pattern_content,
+					'categories' => array( 'converted' ),
+				)
+			);
+		}
+	}
+	wp_reset_postdata();
+}
+add_action( 'admin_init', 'reblex_register_block_patterns' );
+
+function reblex_check_wordpress_version_55() {
+	if ( function_exists( 'wp_is_auto_update_enabled_for_type' ) ) {
+		return true;
+	} else {
+		return false;
+	}
+}

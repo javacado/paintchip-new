@@ -2,7 +2,6 @@
 /**
  * Show workflows list in admin dashboard.
  *
- * @author      Icegram
  * @since       4.4.1
  * @version     1.0
  * @package     Email Subscribers
@@ -24,7 +23,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  *
  * @since  4.4.1
  */
-class ES_Workflows_Table extends WP_List_Table {
+class ES_Workflows_Table extends ES_List_Table {
 
 	/**
 	 * Number of workflows to show at once.
@@ -85,11 +84,12 @@ class ES_Workflows_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Render Workflows table
+	 * Render Workflows list | Save/Edit Workflow page
 	 *
 	 * @since 4.4.1
 	 */
 	public function render() {
+
 		$action      = ig_es_get_request_data( 'action' );
 		$workflow_id = ig_es_get_request_data( 'id' );
 
@@ -99,6 +99,9 @@ class ES_Workflows_Table extends WP_List_Table {
 		if ( ! empty( $action_status ) ) {
 			if ( ! empty( $workflow_id ) ) {
 				$workflow_edit_url = ES_Workflow_Admin_Edit::get_edit_url( $workflow_id );
+				if ( ! empty( $workflow_edit_url ) ) {
+					$workflow_edit_url = esc_url( $workflow_edit_url );
+				}
 				if ( 'added' === $action_status ) {
 					/* translators: %s: Workflow edit URL */
 					$message = sprintf( __( 'Workflow added. <a href="%s" class="text-indigo-600">Edit workflow</a>', 'email-subscribers' ), $workflow_edit_url );
@@ -124,7 +127,7 @@ class ES_Workflows_Table extends WP_List_Table {
 			ES_Common::show_message( $message, $status );
 		}
 		?>
-		<div class="wrap">
+		<div class="wrap pt-4 font-sans">
 			<?php
 			if ( 'new' === $action ) {
 				ES_Workflow_Admin_Edit::load_workflow();
@@ -147,29 +150,43 @@ class ES_Workflows_Table extends WP_List_Table {
 	 */
 	public function load_workflow_list() {
 		?>
-		<h1 class=" wp-heading-inline"><span class="text-2xl font-medium leading-7 text-gray-900 sm:leading-9 sm:truncate"><?php esc_html_e( 'Workflows', 'email-subscribers' ); ?>
-		</span>
-		<a href="admin.php?page=es_workflows&action=new"
-		class="px-2 py-2 pt-2 mx-2 ig-es-title-button"><?php esc_html_e( 'Add New', 'email-subscribers' ); ?></a>
-		<?php do_action( 'ig_es_after_workflow_type_buttons' ); ?>
-	</h1>
-	<div id="poststuff" class="es-items-lists">
-		<div id="post-body" class="metabox-holder column-1">
-			<div id="post-body-content">
-				<div class="meta-box-sortables ui-sortable">
-					<form method="post">
-						<?php
-						$this->prepare_items();
-						$this->display();
-						?>
-					</form>
-				</div>
+		<div class="flex">
+			<div>
+				<h2 class="wp-heading-inline text-3xl pb-1 font-bold text-gray-700 sm:leading-9 sm:truncate pr-4">
+					<?php esc_html_e( 'Workflows', 'email-subscribers' ); ?>
+				</h2>
+			</div>
+			<div class="mt-1">
+			<a href="admin.php?page=es_workflows&action=new" class="px-3 py-1 ml-2 leading-5 align-middle ig-es-title-button">
+				<?php esc_html_e( 'Add New', 'email-subscribers' ); ?></a>
+				<?php do_action( 'ig_es_after_workflow_type_buttons' ); ?>
 			</div>
 		</div>
-		<br class="clear">
-	</div>
-	<?php
-}
+		<div><hr class="wp-header-end"></div>
+		<div id="poststuff" class="es-items-lists">
+			<div id="post-body" class="metabox-holder column-1">
+				<div id="post-body-content">
+					<div class="meta-box-sortables ui-sortable">
+						<form method="get">
+							<input type="hidden" name="page" value="es_workflows" />
+							<?php
+							// Display search field and other available filter fields.
+							$this->prepare_items();
+							?>
+						</form>
+						<form method="post">
+							<?php
+							// Display bulk action fields, pagination and list items.
+							$this->display();
+							?>
+						</form>
+					</div>
+				</div>
+			</div>
+			<br class="clear">
+		</div>
+		<?php
+	}
 
 	/**
 	 * Retrieve lists data from the database
@@ -180,7 +197,7 @@ class ES_Workflows_Table extends WP_List_Table {
 	 *
 	 * @return mixed
 	 */
-	public static function get_lists( $per_page = 5, $page_number = 1, $do_count_only = false ) {
+	public function get_lists( $per_page = 5, $page_number = 1, $do_count_only = false ) {
 
 		$order_by = sanitize_sql_orderby( ig_es_get_request_data( 'orderby' ) );
 		$order    = ig_es_get_request_data( 'order' );
@@ -223,10 +240,10 @@ class ES_Workflows_Table extends WP_List_Table {
 		switch ( $column_name ) {
 
 			case 'created_at':
-			$output = ig_es_format_date_time( $item[ $column_name ] );
-			break;
+				$output = ig_es_format_date_time( $item[ $column_name ] );
+				break;
 			default:
-			$output = $item[ $column_name ];
+				$output = $item[ $column_name ];
 		}
 
 		return $output;
@@ -358,6 +375,7 @@ class ES_Workflows_Table extends WP_List_Table {
 
 		// Note: Disable Search box for now.
 		$search = ig_es_get_request_data( 's' );
+
 		$this->search_box( $search, 'workflow-search-input' );
 
 		$per_page = $this->get_items_per_page( self::$option_per_page, 25 );
@@ -392,7 +410,7 @@ class ES_Workflows_Table extends WP_List_Table {
 				$workflow_id = ig_es_get_request_data( 'id' );
 
 				$this->db->delete_workflows( $workflow_id );
-				$message = __( 'Workflow has been deleted successfully!', 'email-subscribers' );
+				$message = __( 'Workflow deleted successfully!', 'email-subscribers' );
 				$status  = 'success';
 			}
 
@@ -409,11 +427,11 @@ class ES_Workflows_Table extends WP_List_Table {
 				// Delete multiple Workflows.
 				$this->db->delete_workflows( $ids );
 
-				$message = __( 'Workflow(s) have been deleted successfully!', 'email-subscribers' );
+				$message = __( 'Workflow(s) deleted successfully!', 'email-subscribers' );
 				ES_Common::show_message( $message );
 			} else {
 
-				$message = __( 'Please check workflow(s) to delete.', 'email-subscribers' );
+				$message = __( 'Please select workflow(s) to delete.', 'email-subscribers' );
 				ES_Common::show_message( $message, 'error' );
 			}
 		} elseif ( 'bulk_activate' === $action || 'bulk_deactivate' === $action ) {
@@ -430,7 +448,7 @@ class ES_Workflows_Table extends WP_List_Table {
 				$workflow_action = 'bulk_activate' === $action ? __( 'activated', 'email-subscribers' ) : __( 'deactivated', 'email-subscribers' );
 
 				/* translators: %s: Workflow action */
-				$message = sprintf( __( 'Workflow(s) have been %s successfully!', 'email-subscribers' ), $workflow_action );
+				$message = sprintf( __( 'Workflow(s) %s successfully!', 'email-subscribers' ), $workflow_action );
 
 				ES_Common::show_message( $message );
 			} else {
@@ -438,10 +456,11 @@ class ES_Workflows_Table extends WP_List_Table {
 				$workflow_action = 'bulk_activate' === $action ? __( 'activate', 'email-subscribers' ) : __( 'deactivate', 'email-subscribers' );
 
 				/* translators: %s: Workflow action */
-				$message = sprintf( __( 'Please check workflow(s) to %s.', 'email-subscribers' ), $workflow_action );
+				$message = sprintf( __( 'Please select workflow(s) to %s.', 'email-subscribers' ), $workflow_action );
 
 				ES_Common::show_message( $message, 'error' );
 			}
 		}
 	}
+
 }

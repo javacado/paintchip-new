@@ -28,8 +28,13 @@ class FFWDControllerOptions_ffwd {
     }
 
     if(isset($_GET['ffwd_code']) && !empty($_GET['ffwd_code'])){
-      WDFacebookFeed::save_pages(sanitize_text_field($_GET['ffwd_code']));
-      die('<script>window.location.href="admin.php?page=options_ffwd"</script>');
+	 $save_pages = WDFacebookFeed::save_pages(sanitize_text_field($_GET['ffwd_code']));
+	 if ( $save_pages ) {
+	   die('<script>window.location.href="admin.php?page=options_ffwd&success=1"</script>');
+	 }
+	 else{
+	   die('<script>window.location.href="admin.php?page=options_ffwd&success=0"</script>');
+	 }
     }
 
     if (method_exists($this, $task)) {

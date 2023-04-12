@@ -3,7 +3,7 @@ Contributors: hk1993, bitofwp
 Tags: hide dashboard notifications, hide backend notifications, hide updates nags, hide wordpress plugin update, disable update nags, hide nags, disable admin notices, remove notices and warnings, dashboard spam
 Requires at least: 3.0
 Tested up to: 5.4.1
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 Donate link: 
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -73,13 +73,11 @@ If you have installed the Hide WordPress DashBoard Notifications plugin then go 
 
 == Changelog ==
 
-= 1.0 =
-Launched
-
-== Upgrade Notice ==
-
-= 1.0 (11 March 2019)=
-Launched with basic requirements
+= 1.2 (22 November 2020) =
+* Bug Fix with other plugins compatibility.
+* NEW: Hide the WordPress PHP Update Required Notice.
+* NEW: Hiding notices individually by admin.
+* NEW: Added the "Notifications" option on the WordPress Dashboard Top Toolbar for easier acces.
 
 = 1.1 (30 April 2020) =
 * NEW: Added option for Hiding Notifications only for Admins(Default action) or All Backend Users.
@@ -92,6 +90,9 @@ Launched with basic requirements
 * Bug fix for output error(typo).
 * Bug fix for not showing the post/page update notice once the Hide Notification option is enabled.
 * WordPress 5.4.1 compatibility.
+
+= 1.0 (11 March 2019) =
+Launched with basic requirements
 
 == Contribute ==
 

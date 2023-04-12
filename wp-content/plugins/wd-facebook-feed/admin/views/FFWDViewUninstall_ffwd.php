@@ -104,6 +104,10 @@ class FFWDViewUninstall_ffwd {
       <p><strong><a href="<?php echo $deactivate_url; ?>" class="ffwd_deactivate_link" data-uninstall="1">Click Here</a> To Finish the Uninstallation and Facebook Feed by 10Web will be Deactivated Automatically.</strong></p>
       <input id="task" name="task" type="hidden" value="" />
     </div>
+    <script>
+      jQuery("#toplevel_page_info_ffwd ul").remove()
+      jQuery("#toplevel_page_info_ffwd a").attr("href", "admin.php?page=options_ffwd")
+    </script>
   <?php
   }
   

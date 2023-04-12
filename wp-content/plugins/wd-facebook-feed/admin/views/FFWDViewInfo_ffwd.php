@@ -1981,7 +1981,7 @@ class FFWDViewInfo_ffwd
 
                 jQuery('.ffwd_view').removeClass('ffwd_view_s');
                 jQuery(that).addClass('ffwd_view_s');
-                jQuery(that).find('input[type="radio"]').attr('checked', 'checked');
+                jQuery(that).find('input[type="radio"]').prop('checked', true);
                 // Thumbnails, Masonry.
                 jQuery("#" + wd_fb_prefix + "_tr_masonry_hor_ver").css('display', 'none');
                 ffwd_change_label("col_num_label", 'Max. number of image columns');

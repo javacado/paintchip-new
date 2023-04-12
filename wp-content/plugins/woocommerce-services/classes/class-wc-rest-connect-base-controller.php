@@ -33,29 +33,63 @@ abstract class WC_REST_Connect_Base_Controller extends WP_REST_Controller {
 	protected $logger;
 
 	public function __construct( WC_Connect_API_Client $api_client, WC_Connect_Service_Settings_Store $settings_store, WC_Connect_Logger $logger ) {
-		$this->api_client = $api_client;
+		$this->api_client     = $api_client;
 		$this->settings_store = $settings_store;
-		$this->logger = $logger;
+		$this->logger         = $logger;
 	}
 
 	public function register_routes() {
 		if ( method_exists( $this, 'get' ) ) {
-			register_rest_route( $this->namespace, '/' . $this->rest_base, array(
+			register_rest_route(
+				$this->namespace,
+				'/' . $this->rest_base,
 				array(
-					'methods'             => 'GET',
-					'callback'            => array( $this, 'get_internal' ),
-					'permission_callback' => array( $this, 'check_permission' ),
-				),
-			) );
+					array(
+						'methods'             => 'GET',
+						'callback'            => array( $this, 'get_internal' ),
+						'permission_callback' => array( $this, 'check_permission' ),
+					),
+				)
+			);
 		}
 		if ( method_exists( $this, 'post' ) ) {
-			register_rest_route( $this->namespace, '/' . $this->rest_base, array(
+			register_rest_route(
+				$this->namespace,
+				'/' . $this->rest_base,
 				array(
-					'methods'             => 'POST',
-					'callback'            => array( $this, 'post_internal' ),
-					'permission_callback' => array( $this, 'check_permission' ),
-				),
-			) );
+					array(
+						'methods'             => 'POST',
+						'callback'            => array( $this, 'post_internal' ),
+						'permission_callback' => array( $this, 'check_permission' ),
+					),
+				)
+			);
+		}
+		if ( method_exists( $this, 'put' ) ) {
+			register_rest_route(
+				$this->namespace,
+				'/' . $this->rest_base,
+				array(
+					array(
+						'methods'             => 'PUT',
+						'callback'            => array( $this, 'put_internal' ),
+						'permission_callback' => array( $this, 'check_permission' ),
+					),
+				)
+			);
+		}
+		if ( method_exists( $this, 'delete' ) ) {
+			register_rest_route(
+				$this->namespace,
+				'/' . $this->rest_base,
+				array(
+					array(
+						'methods'             => 'DELETE',
+						'callback'            => array( $this, 'delete_internal' ),
+						'permission_callback' => array( $this, 'check_permission' ),
+					),
+				)
+			);
 		}
 	}
 
@@ -78,7 +112,7 @@ abstract class WC_REST_Connect_Base_Controller extends WP_REST_Controller {
 	 * See: https://pantheon.io/docs/cache-control/
 	 *
 	 * @param WP_REST_Response $response
-	 * @param WP_REST_Server $server
+	 * @param WP_REST_Server   $server
 	 *
 	 * @return WP_REST_Response passthrough $response parameter
 	 */
@@ -100,6 +134,17 @@ abstract class WC_REST_Connect_Base_Controller extends WP_REST_Controller {
 		return $this->post( $request );
 	}
 
+	public function put_internal( $request ) {
+		$this->prevent_route_caching();
+
+		return $this->put( $request );
+	}
+
+	public function delete_internal( $request ) {
+		$this->prevent_route_caching();
+
+		return $this->delete( $request );
+	}
 	/**
 	 * Validate the requester's permissions
 	 */

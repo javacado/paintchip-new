@@ -44,6 +44,11 @@ class Media extends AC\ListScreenPost {
 		// Author column depends on this global to be set.
 		global $authordata;
 
+		// Title for some columns can only be retrieved when post is set globally
+		if ( ! isset( $GLOBALS['post'] ) ) {
+			$GLOBALS['post'] = get_post( $id );
+		}
+
 		$authordata = get_userdata( get_post_field( 'post_author', $id ) );
 
 		return parent::get_single_row( $id );
@@ -66,6 +71,7 @@ class Media extends AC\ListScreenPost {
 		parent::register_column_types();
 
 		$this->register_column_types_from_dir( 'AC\Column\Media' );
+		$this->register_column_type( new AC\Column\Post\TitleRaw );
 	}
 
 }

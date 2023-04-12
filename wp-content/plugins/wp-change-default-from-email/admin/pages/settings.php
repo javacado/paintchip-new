@@ -63,7 +63,7 @@
 				</div>
 				<div class="last-feature">
 					<h4><?php echo __( 'Do you offer support?', WCDFE_TEXTDOMAIN ); ?></h4>
-					<p><?php echo __( 'You can contact me at my email address', WCDFE_TEXTDOMAIN ); ?> <code><a href="http://www.google.com/recaptcha/mailhide/d?k=0136qbakbr7_ceyXoPHsmVVQ==&amp;c=60v3eLAIgOrXwFfGeOGB0QlS6nvCSU4NYwHHs2w0JuQ=" onclick="window.open('http://www.google.com/recaptcha/mailhide/d?k\0750136qbakbr7_ceyXoPHsmVVQ\75\75\46c\07560v3eLAIgOrXwFfGeOGB0QlS6nvCSU4NYwHHs2w0JuQ\075', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300'); return false;" title="Reveal this e-mail address">su...@gmail.com</a></code></p>
+					<p><?php echo __( 'You can contact me using', WCDFE_TEXTDOMAIN ); ?> <code><a href="https://forms.gle/TTdwYUsJpvu8No186" onclick="window.open('https://forms.gle/TTdwYUsJpvu8No186', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0'); return false;" title="Contact me">Contact Form</a></code></p>
 				</div>
 			</div>
 

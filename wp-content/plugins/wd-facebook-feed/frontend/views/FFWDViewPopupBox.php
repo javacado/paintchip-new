@@ -1395,19 +1395,6 @@ if ($theme_row->lightbox_ctrl_btn_pos == 'top') {
                             <?php
                           }
                         }
-                        elseif(strpos($type, "video") !== false) {  /*Videos*/
-                          ?>
-                          <span class="ffwd_video">
-                              <?php
-                              if($ffwd_info->content_type != 'timeline'):
-                                if($status_type == 'shared_story') { ?>
-                                  <iframe class="ffwd_popup_iframe" src="<?php echo $source. '&enablejsapi=1&wmode=transparent'; ?>" style="width: inherit; height: inherit; margin:0;" frameborder="0" scrolling="no" allowtransparency="false" allowfullscreen></iframe>
-                                <?php } else { ?>
-                                  <video class="ffwd_popup_image" src="<?php echo $source; ?>" controls autoplay="autoplay"></video>
-                                <?php } endif; ?>
-														</span>
-                          <?php
-                        }
                         ?>
                       </span>
                     </span>
@@ -1756,24 +1743,6 @@ if ($theme_row->lightbox_ctrl_btn_pos == 'top') {
                 innhtml = '<span class="ffwd_popup_image_spun1" style="display: table; width: inherit; height: inherit;"><span class="ffwd_popup_image_spun2" style="display: table-cell; vertical-align: middle; text-align: center;">';
             if (!is_video) {
               innhtml += '<img style="max-height: ' + cur_height + 'px; max-width: ' + cur_width + 'px;" class="ffwd_popup_image" src="'+ jQuery('<div />').html(data[key]["main_url"]).text() + '" alt="' + data[key]["alt"] + '" />';
-            }
-            else { /*videos*/
-              innhtml += '<span style="height: ' + cur_height + 'px; width: ' + cur_width + 'px;" class="ffwd_video">';
-              if(data[key]['status_type'] == 'shared_story') {
-                innhtml += '<iframe src="'+data[key]['source']+'&enablejsapi=1&wmode=transparent"' +
-                    'style="'+
-                    'max-width:'+'100%'+" !important; "+
-                    'max-height:'+'100%'+" !important; "+
-                    'width:'+'100%; '+
-                    'height:'+ '100%; ' +
-                    'margin:0; '+
-                    'display:table-cell; vertical-align:middle;"'+
-                    'frameborder="0" scrolling="no" allowtransparency="false" allowfullscreen'+
-                    ' class="ffwd_popup_iframe"></iframe>';
-              }else {
-                innhtml += '<video class="ffwd_popup_image" src="'+data[key]['source']+'" controls autoplay="autoplay"></video>';
-              }
-              innhtml += "</span>";
             }
             innhtml += '</span></span>';
             jQuery(next_image_class).html(innhtml);

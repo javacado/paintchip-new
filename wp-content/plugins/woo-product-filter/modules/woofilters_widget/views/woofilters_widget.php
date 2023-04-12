@@ -3,9 +3,10 @@ class Woofilters_WidgetViewWpf extends ViewWpf {
 	public function displayWidget( $instance, $args ) {
 		if ( isset($instance['id']) && $instance['id'] ) {
 			// now disabled rule: if is_shop() or is_product_category() or is_product_tag() or is_customize_preview()
-			HtmlWpf::echoEscapedHtml($args['before_widget']);
-			echo do_shortcode('[' . WPF_SHORTCODE . ' id=' . $instance['id'] . ' mode="widget"]');
-			HtmlWpf::echoEscapedHtml($args['after_widget']);
+			$widget = do_shortcode( '[' . WPF_SHORTCODE . ' id=' . $instance['id'] . ' mode="widget"]' );
+			if ( '' !== $widget ) {
+				HtmlWpf::echoEscapedHtml( $args['before_widget'] . $widget . $args['after_widget'] );
+			}
 		}
 	}
 	public function displayForm( $data, $widget ) {

@@ -2,7 +2,6 @@
 /**
  * Workflow data type form data
  *
- * @author      Icegram
  * @since       4.4.6
  * @version     1.0
  * @package     Email Subscribers

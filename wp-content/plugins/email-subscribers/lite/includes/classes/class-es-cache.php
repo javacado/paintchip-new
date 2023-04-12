@@ -1,5 +1,13 @@
 <?php
-/**
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/** 
+ * Cache implementation of the plugin
+ *
  * @credit - Inspired by the WooCommerce Cache implementation.
  */
 if ( ! class_exists( 'ES_Cache' ) ) {
@@ -10,24 +18,34 @@ if ( ! class_exists( 'ES_Cache' ) ) {
 	 */
 	class ES_Cache {
 
-		/** @var bool */
-		static $enabled = true;
+		/**
+		 * Cache enabled/disabled 
+		 *
+		 * @var bool
+		 *
+		 */
+		public static $enabled = true;
 
 		/**
+		 * Get default transient expiration
+		 *
 		 * @return mixed|void
+		 *
 		 */
-		static function get_default_transient_expiration() {
+		public static function get_default_transient_expiration() {
 			return apply_filters( 'ig_es_cache_default_expiration', 10 );
 		}
 
 		/**
+		 * Set the transient
+		 *
 		 * @param $key
 		 * @param $value
-		 * @param bool $expiration
+		 * @param bool  $expiration
 		 *
 		 * @return bool
 		 */
-		static function set_transient( $key, $value, $expiration = false ) {
+		public static function set_transient( $key, $value, $expiration = false ) {
 			if ( ! self::$enabled ) {
 				return false;
 			}
@@ -39,13 +57,15 @@ if ( ! class_exists( 'ES_Cache' ) ) {
 		}
 
 		/**
+		 * Get the transient
+		 *
 		 * @param string $key
 		 *
 		 * @return bool|mixed
 		 *
 		 * @since 4.4.0
 		 */
-		static function get_transient( $key ) {
+		public static function get_transient( $key ) {
 			if ( ! self::$enabled ) {
 				return false;
 			}
@@ -54,11 +74,13 @@ if ( ! class_exists( 'ES_Cache' ) ) {
 		}
 
 		/**
+		 * Transient delete
+		 *
 		 * @param $key
 		 *
 		 * @since 4.4.0
 		 */
-		static function delete_transient( $key ) {
+		public static function delete_transient( $key ) {
 			delete_transient( 'ig_es_cache_' . $key );
 		}
 
@@ -66,12 +88,12 @@ if ( ! class_exists( 'ES_Cache' ) ) {
 		 * Only sets if key is not falsy
 		 *
 		 * @param string $key
-		 * @param mixed $value
+		 * @param mixed  $value
 		 * @param string $group
 		 *
 		 * @since 4.4.0
 		 */
-		static function set( $key, $value, $group ) {
+		public static function set( $key, $value, $group ) {
 			if ( ! $key ) {
 				return;
 			}
@@ -89,7 +111,7 @@ if ( ! class_exists( 'ES_Cache' ) ) {
 		 *
 		 * @since 4.4.0
 		 */
-		static function get( $key, $group ) {
+		public static function get( $key, $group ) {
 			if ( ! $key ) {
 				return false;
 			}
@@ -98,6 +120,8 @@ if ( ! class_exists( 'ES_Cache' ) ) {
 		}
 
 		/**
+		 * Checks if key is found in the cache or not
+		 *
 		 * @param string $key
 		 * @param string $group
 		 *
@@ -105,7 +129,7 @@ if ( ! class_exists( 'ES_Cache' ) ) {
 		 *
 		 * @since 4.4.0
 		 */
-		static function exists( $key, $group ) {
+		public static function exists( $key, $group ) {
 			if ( ! $key ) {
 				return false;
 			}
@@ -124,7 +148,7 @@ if ( ! class_exists( 'ES_Cache' ) ) {
 		 *
 		 * @since 4.4.0
 		 */
-		static function delete( $key, $group ) {
+		public static function delete( $key, $group ) {
 			if ( ! $key ) {
 				return;
 			}

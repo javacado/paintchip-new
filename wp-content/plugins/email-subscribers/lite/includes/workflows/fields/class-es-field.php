@@ -2,7 +2,6 @@
 /**
  * Email Subscribers' field abstract class
  *
- * @author      Icegram
  * @since       4.4.1
  * @version     1.0
  * @package     Email Subscribers
@@ -305,19 +304,18 @@ abstract class ES_Field {
 	 * Outputs the extra field attrs in HTML attribute format.
 	 *
 	 * @since 4.4.1
+	 * 
+	 * @modified 4.5.4 Removed echo to allow escaping of attribute.
 	 */
 	public function output_extra_attrs() {
-		$string = '';
 
 		foreach ( $this->extra_attrs as $name => $value ) {
 			if ( is_null( $value ) ) {
-				$string .= esc_attr( $name ) . ' ';
+				echo esc_attr( $name ) . ' ';
 			} else {
-				$string .= esc_attr( $name ) . '="' . esc_attr( $value ) . '" ';
+				echo esc_attr( $name ) . '="' . esc_attr( $value ) . '" ';
 			}
 		}
-
-		echo $string; // phpcs:ignore
 	}
 
 

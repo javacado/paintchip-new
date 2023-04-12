@@ -2,7 +2,6 @@
 /**
  * Workflow Queue Runner
  *
- * @author      Icegram
  * @since       4.4.1
  * @version     1.0
  * @package     Email Subscribers
@@ -35,8 +34,8 @@ class ES_Workflow_Queue_Runner {
 	 * Init queue runner to process workflow queue
 	 */
 	public static function init() {
-		add_action( 'wp_ajax_ig_es_init_queue_runner', array( __CLASS__, 'init_queue_runner' ) );
-		add_action( 'wp_ajax_nopriv_ig_es_init_queue_runner', array( __CLASS__, 'init_queue_runner' ) );
+		add_action( 'wp_ajax_ig_es_trigger_workflow_queue_processing', array( __CLASS__, 'init_queue_runner' ) );
+		add_action( 'wp_ajax_nopriv_ig_es_trigger_workflow_queue_processing', array( __CLASS__, 'init_queue_runner' ) );
 	}
 
 	/**

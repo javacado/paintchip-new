@@ -176,6 +176,7 @@ class FFWDViewBlog_style {
 				box-shadow: <?php echo $theme_row->blog_style_box_shadow; ?>;
 				margin: 0;
 				box-sizing: border-box;
+        border-radius: <?php  echo $theme_row->blog_style_border_radius; ?>px;
 				border-width: <?php  echo $theme_row->blog_style_border_width; ?>px;
 				border-<?php  echo ($theme_row->blog_style_border_type != 'all') ? $theme_row->blog_style_border_type . '-' : ''; ?>style: <?php  echo $theme_row->blog_style_border_style; ?>;
 				border-color: #<?php  echo $theme_row->blog_style_border_color; ?>;
@@ -1042,7 +1043,7 @@ class FFWDViewBlog_style {
 				client_server_date_difference = (Date.parse(client_side_today) / 1000) - <?php echo time(); ?>,
 				owner_info_<?php echo $ffwd; ?> = JSON.parse('<?php echo addslashes($this->model->page_user_group); ?>');
 			ffwd_options = JSON.parse('<?php echo stripslashes($this->model->get_option_json_data()); ?>');
-			ffwd_params_<?php echo $ffwd; ?> = JSON.parse('<?php echo json_encode($ffwd_info); ?>');
+					ffwd_params_<?php echo $ffwd; ?> = JSON.parse('<?php echo addslashes(json_encode($ffwd_info)); ?>');
 		</script>
 		<div id="fb-root"></div>
 		<script>(function(d, s, id) {
@@ -1323,11 +1324,12 @@ class FFWDViewBlog_style {
 									}
 									?>
 									<script>
-
+                    jQuery(document).ready(function() {
 										var id_object_id_<?php echo $ffwd; ?> = '<?php echo addslashes(json_encode($this->model->id_object_id_json)); ?>',
 											graph_url_<?php echo $ffwd; ?> = '<?php echo $this->model->graph_url; ?>';
 										ffwd_fill_likes_blog_style(JSON.parse(id_object_id_<?php echo $ffwd; ?>), '<?php echo $ffwd; ?>', owner_info_<?php echo $ffwd; ?>, ffwd_params_<?php echo $ffwd; ?>, graph_url_<?php echo $ffwd; ?>);
-									</script>
+                    });
+                  </script>
 								</div>
 							</div>
 							<?php

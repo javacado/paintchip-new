@@ -31,6 +31,10 @@ class Taxonomy {
 	}
 
 	public function get_term_url( $term, $post_type = null ) {
+		if ( is_numeric( $term ) ) {
+			$term = get_term_by( 'term_taxonomy_id', $term );
+		}
+
 		$args = [
 			'post_type' => $post_type,
 			'taxonomy'  => $term->taxonomy,
@@ -62,20 +66,11 @@ class Taxonomy {
 	 * @return bool
 	 */
 	public function is_taxonomy_registered( $object_type, $taxonomy = '' ) {
-		if ( ! $object_type ) {
-			return false;
-		}
-		$taxonomies = get_object_taxonomies( $object_type );
-
-		if ( ! $taxonomies ) {
+		if ( ! $object_type || ! $taxonomy ) {
 			return false;
 		}
 
-		if ( $taxonomy ) {
-			return in_array( $taxonomy, $taxonomies );
-		}
-
-		return true;
+		return is_object_in_taxonomy( $object_type, $taxonomy );
 	}
 
 	/**

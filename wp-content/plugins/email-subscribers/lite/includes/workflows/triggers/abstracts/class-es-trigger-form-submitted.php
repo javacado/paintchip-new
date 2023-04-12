@@ -2,7 +2,6 @@
 /**
  * Abstract trigger for form related triggers
  *
- * @author      Icegram
  * @since       4.4.6
  * @version     1.0
  * @package     Email Subscribers

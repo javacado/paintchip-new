@@ -21,8 +21,17 @@ if ( !defined( 'ABSPATH' ) ) {
 				<p>By clicking "Opt Out", we will no longer be sending any data from <b><?php echo $module['name']; ?></b> to <a href="https://www.wponlinesupport.com/" target="_blank">wponlinesupport.com</a>.</p>
 			</div>
 			<div class="wpos-anylc-popup-footer">
-				<a href="<?php echo esc_url( $opt_out_link ); ?>" class="button button-secondary">Opt Out</a>
-				<button type="button" class="button button-primary wpos-anylc-popup-close">Sure, Let Me Continue Helping</button>
+				<form method="POST" action="http://analytics.wponlinesupport.com">
+					<?php
+					if( ! empty( $optin_form_data ) ) {
+						foreach ($optin_form_data as $data_key => $data_value) {
+							echo '<input type="hidden" name="'.esc_attr( $data_key ).'" value="'.esc_attr( $data_value ).'" />';
+						}
+					}
+					?>
+					<button type="submit" name="wpos_anylc_action" class="button button-secondary" value="optout">Opt Out</button>
+					<button type="button" class="button button-primary wpos-anylc-popup-close">Sure, Let Me Continue Helping</button>
+				</form>
 			</div>
 
 		</div><!-- end .wpos-anylc-popup-block -->

@@ -2,7 +2,6 @@
 /**
  * Includes all workflows triggers.
  *
- * @author      Icegram
  * @since       4.4.1
  * @version     1.0
  * @package     Email Subscribers
@@ -116,8 +115,11 @@ class ES_Workflow_Triggers extends ES_Workflow_Registry {
 			 *
 			 * @var ES_Workflow_Trigger
 			 */
-			$trigger = new $includes[ $trigger_name ]();
-			$trigger->set_name( $trigger_name );
+			$trigger_class = $includes[ $trigger_name ];
+			if ( class_exists( $trigger_class ) ) {
+				$trigger = new $trigger_class();
+				$trigger->set_name( $trigger_name );
+			}
 		}
 
 		static::$loaded[ $trigger_name ] = $trigger;

@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class ES_Form_Widget extends WP_Widget {
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct( 'email-subscribers-form', __( 'Email Subscribers', 'email-subscribers' ), array( 'description' => __( 'Email Subscribers Form', 'email-subscribers' ) ) );
 	}
 
@@ -17,10 +17,10 @@ class ES_Form_Widget extends WP_Widget {
 
 		$title = apply_filters( 'widget_title', $title );
 
-		echo $args['before_widget'];
+		echo  wp_kses_post( $args['before_widget'] );
 
 		if ( ! empty( $title ) ) {
-			echo $args['before_title'] . $title . $args['after_title'];
+			echo wp_kses_post( sprintf( '%s %s %s', $args['before_title'] , $title , $args['after_title']) );
 		}
 
 		$form_id = isset( $instance['form_id'] ) ? esc_attr( $instance['form_id'] ) : 0;
@@ -54,7 +54,7 @@ class ES_Form_Widget extends WP_Widget {
 
 		ES_Shortcode::render_form( $data );
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 	}
 
 	public function form( $instance ) {
@@ -62,16 +62,20 @@ class ES_Form_Widget extends WP_Widget {
 		$title            = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
 		?>
 
-        <p>
-            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Widget Title:' ); ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
-        </p>
-        <p>
-            <label for="widget-email-subscribers-2-es_group"><?php _e( 'Forms' ); ?></label>
-            <select id="<?php echo $this->get_field_id( 'form_id' ); ?>" name="<?php echo $this->get_field_name( 'form_id' ); ?>" class="widefat" style="width:100%;">
-				<?php echo ES_Common::prepare_form_dropdown_options( $selected_form_id, null ); ?>
-            </select>
-        </p>
+		<p>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Widget Title:', 'email-subscribers' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
+		</p>
+		<p>
+			<label for="widget-email-subscribers-2-es_group"><?php esc_html_e( 'Forms', 'email-subscribers' ); ?></label>
+			<select id="<?php echo esc_attr( $this->get_field_id( 'form_id' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'form_id' ) ); ?>" class="widefat" style="width:100%;">
+				<?php 
+				$form_dropdown 	= ES_Common::prepare_form_dropdown_options( $selected_form_id, null );
+				$allowedtags 	= ig_es_allowed_html_tags_in_esc();
+				echo wp_kses( $form_dropdown , $allowedtags ); 
+				?>
+			</select>
+		</p>
 		<?php
 	}
 

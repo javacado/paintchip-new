@@ -5,8 +5,8 @@ jQuery(document).ready(function(){
 		return;
 	}
 	var tblId = 'wpfTableTbl',
-		tableObj = jQuery('#'+ tblId);
-	tableObj.jqGrid({
+		tableObj = jQuery('#'+ tblId),
+		grid = tableObj.jqGrid({
 		url: wpfTblDataUrl,
 		datatype: 'json',
 		autowidth: true,
@@ -42,14 +42,15 @@ jQuery(document).ready(function(){
 				jQuery('#wpfTableRemoveGroupBtn').removeAttr('disabled');
 				if(totalRowsSelected == totalRows) {
 					jQuery('#cb_'+ tblId).prop('indeterminate', false);
-					jQuery('#cb_'+ tblId).attr('checked', 'checked');
+					jQuery('#cb_'+ tblId).prop('checked', true);
 				} else {
 					jQuery('#cb_'+ tblId).prop('indeterminate', true);
+					jQuery('#cb_'+ tblId).prop('checked', false);
 				}
 			} else {
 				jQuery('#wpfTableRemoveGroupBtn').attr('disabled', 'disabled');
 				jQuery('#cb_'+ tblId).prop('indeterminate', false);
-				jQuery('#cb_'+ tblId).removeAttr('checked');
+				jQuery('#cb_'+ tblId).prop('checked', false);
 			}
 			wpfCheckUpdate(jQuery(this).find('tr:eq('+rowid+')').find('input[type=checkbox].cbox'));
 			wpfCheckUpdate('#cb_'+ tblId);
@@ -61,7 +62,7 @@ jQuery(document).ready(function(){
 			var tblId = jQuery(this).attr('id');
 			jQuery('#wpfTableRemoveGroupBtn').attr('disabled', 'disabled');
 			jQuery('#cb_'+ tblId).prop('indeterminate', false);
-			jQuery('#cb_'+ tblId).removeAttr('checked');
+			jQuery('#cb_'+ tblId).prop('checked', false);
 			// Custom checkbox manipulation
 			wpfInitCustomCheckRadio('#'+ jQuery(this).attr('id') );
 			wpfCheckUpdate('#cb_'+ jQuery(this).attr('id'));
@@ -102,9 +103,22 @@ jQuery(document).ready(function(){
 	jQuery('#'+ tblId+ 'EmptyMsg').insertAfter(jQuery('#'+ tblId+ '').parent());
 	jQuery('#'+ tblId+ '').jqGrid('navGrid', '#'+ tblId+ 'Nav', {edit: false, add: false, del: false});
 	jQuery('#cb_'+ tblId+ '').change(function(){
-		jQuery(this).attr('checked')
-			? jQuery('#wpfTableRemoveGroupBtn').removeAttr('disabled')
-			: jQuery('#wpfTableRemoveGroupBtn').attr('disabled', 'disabled');
+		if (jQuery(this).is(':checked')) {
+			jQuery('#wpfTableRemoveGroupBtn').removeAttr('disabled');
+			grid.jqGrid('resetSelection');
+    		var ids = grid.getDataIDs();
+    		for (var i=0, il=ids.length; i < il; i++) {
+        		grid.jqGrid('setSelection',ids[i], true);
+    		}
+		} else {
+			jQuery('#wpfTableRemoveGroupBtn').attr('disabled', 'disabled');
+			grid.jqGrid('resetSelection');
+			wpfCheckUpdate(tableObj.find('input[type=checkbox].cbox'));
+		}
+	});
+	tableObj.on('change', 'td input[type=checkbox].cbox', function(){
+		var cbox = jQuery(this);
+		grid.jqGrid('setSelection',cbox.closest('tr').index(), cbox.is(':checked'));
 	});
 
 	jQuery('#wpfTableRemoveGroupBtn').click(function(){
@@ -125,7 +139,7 @@ jQuery(document).ready(function(){
 		if(confirm(confirmMsg)) {
 			jQuery.sendFormWpf({
 				btn: this,
-				data: {mod: 'woofilters', action: 'removeGroup', listIds: listIds},
+				data: {mod: 'woofilters', action: 'removeGroup', listIds: listIds, wpfNonce: window.wpfNonce},
 				onSuccess: function(res) {
 					if(!res.error) {
 						jQuery('#wpfTableTbl').trigger( 'reloadGrid' );

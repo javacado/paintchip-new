@@ -38,6 +38,8 @@
     margin: 0;
     min-height: auto;
     max-height: none;
+    min-width: auto;
+    max-width: none;
     opacity: 1;
     outline: none;
     overflow: visible;
@@ -670,6 +672,10 @@
                     font-weight: $panel_second_level_font_weight_hover;
                     text-decoration: $panel_second_level_text_decoration_hover;
                     @include background($panel_second_level_background_hover_from, $panel_second_level_background_hover_to);
+
+                    > span.mega-title-below {
+                        text-decoration: $panel_second_level_text_decoration_hover;
+                    }
                 }
 
                 li.mega-menu-item {
@@ -873,6 +879,10 @@
                         a.mega-menu-link {
                             padding-left: 20px;
                         }
+
+                        ul.mega-sub-menu a.mega-menu-link {
+                            padding-left: 30px;
+                        }
                     }
                 }
             }
@@ -1035,11 +1045,7 @@
         line-height: $toggle_bar_height;
         height: $toggle_bar_height;
         text-align: left;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
+        user-select: none;
         -webkit-tap-highlight-color: transparent;
         outline: none;
         white-space: nowrap;
@@ -1086,6 +1092,10 @@
 
             .mega-toggle-block {
                 margin-left: 6px;
+
+                &:only-child {
+                    margin-right: 6px;
+                }
             }
         }
 
@@ -1113,6 +1123,10 @@
 
             .mega-toggle-block {
                 margin-right: 6px;
+
+                &:only-child {
+                    margin-left: 6px;
+                }
             }
         }
 
@@ -1174,6 +1188,7 @@
                     transition: left $effect_speed_mobile ease-in-out, right $effect_speed_mobile ease-in-out;
                     overflow: auto;
                     z-index: 9999999999;
+                    overscroll-behavior: contain;
                 }
 
                 @if ($effect_mobile == slide_right ) {

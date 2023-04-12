@@ -1,3 +1,9 @@
+.pr-0 {
+	padding-right: 0!important;
+}
+.pl-0 {
+	padding-left: 0!important;
+}
 .wpfShortcodeAdm i.fa-question {
 	margin-left: 12px;
 }
@@ -95,7 +101,33 @@
 	border: 1px solid #d8dfe3;
 	border-top: none;
 	padding: 15px;
+	margin: 0 -15px;
+	overflow: auto;
 	visibility: hidden;
+}
+.wpfFiltersBlockPreview .wpfPriceRangeField#wpfMinPrice,
+.wpfFiltersBlockPreview .wpfPriceRangeField#wpfMaxPrice {
+	max-width: 50px;
+}
+.woobewoo-content .no-lr-padding {
+	padding-left: 0!important;
+	padding-right: 0!important;
+}
+.woobewoo-content .no-l-padding {
+	padding-left: 0!important;
+}
+.woobewoo-content .no-r-padding {
+	padding-right: 0!important;
+}
+.wpfPreviewTitle {
+	padding: 14px 32px 0 20px;
+	border-bottom: 1px solid #d8dfe3;
+	font-size: 16px;
+	min-height: 30px;
+	line-height: 30px;
+	margin: 0;
+	text-align: center;
+	font-weight: bold;
 }
 .sub-tab {
     position: relative;
@@ -109,6 +141,18 @@
     min-height: 22px !important;
     font-size: 13px !important;
     padding: 0 8px;
+}
+@media (min-width: 992px) {
+	.woobewoo-content .no-md-lr-padding {
+		padding-left: 0!important;
+		padding-right: 0!important;
+	}
+	.woobewoo-content .no-md-l-padding {
+		padding-left: 0!important;
+	}
+	.woobewoo-content .no-md-r-padding {
+		padding-right: 0!important;
+	}
 }
 @media (max-width: 992px) {
 	.wpfFiltersTabContents {
@@ -159,6 +203,11 @@
 	margin-right: 5px;
 	padding-right: 15px;
 	text-align: right;
+}
+.settings-label-left{
+	margin-left: 5px;
+	padding-left: 15px;
+	text-align: left;
 }
 .settings-label-after{
 	margin-left: 5px;
@@ -491,7 +540,7 @@ input.wpfSmallInput{
 	height: 28px;
 }
 #wpfAddDialog{
-	display: inline-block;
+	/*display: inline-block;*/
 	width: 100%!important;
 	margin-top: 10px;
 	min-height: 32px!important;
@@ -542,10 +591,6 @@ input.wpfSmallInput{
     color: #03a9f4;
 }
 
-.input-buffer-min, .input-buffer-max {
-	width:70px;
-}
-
 .wpfFiltersBlock .wpfFilter:after, .wpfFiltersBlock .wpfHeaders:after, .sub-block-values .inner-float:after {
 	content: " ";
 	display: table;
@@ -566,4 +611,16 @@ input.wpfSmallInput{
     clear: both;
     content: " ";
     display: table;
+}
+#buttonDelete {
+	background-color: #f43b03;
+}
+#wpfTableTblNav table {
+	max-height: 100px;
+}
+
+@media (max-width: 585px) {
+	select.woobewoo-flat-input[name="shortcode_example"] {
+		max-width: 80%;
+	}
 }

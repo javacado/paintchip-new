@@ -1,8 +1,7 @@
 "use strict";
 jQuery(document).ready(function(){
 	var $deactivateLnk = jQuery('#the-list tr[data-plugin="'+ wpfPluginsData.plugName+ '"] .row-actions .deactivate a');
-	//console.log($deactivateLnk);
-	if($deactivateLnk && $deactivateLnk.size()) {
+	if($deactivateLnk && $deactivateLnk.length) {
 		var $deactivateForm = jQuery('#wpfDeactivateForm');
 		var $deactivateWnd = jQuery('#wpfDeactivateWnd').dialog({
 			modal:    true
@@ -42,7 +41,7 @@ jQuery(document).ready(function(){
 			jQuery('.wpfDeactivateDescShell').slideUp( g_wpfAnimationSpeed );
 			if(jQuery(this).prop('checked')) {
 				var $descShell = jQuery(this).parents('.wpfDeactivateReasonShell:first').find('.wpfDeactivateDescShell');
-				if($descShell && $descShell.size()) {
+				if($descShell && $descShell.length) {
 					$descShell.slideDown( g_wpfAnimationSpeed );
 				}
 			}

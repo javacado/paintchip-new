@@ -45,6 +45,7 @@ class OptionsViewWpf extends ViewWpf {
 
 		FrameWpf::_()->addScript('adminCreateTableWpf', FrameWpf::_()->getModule('woofilters')->getModPath() . 'js/create-filter.js', array(), false, true);
 		FrameWpf::_()->addJSVar('adminCreateTableWpf', 'url', admin_url('admin-ajax.php'));
+		FrameWpf::_()->addJSVar('adminCreateTableWpf', 'wpfNonce', wp_create_nonce('wpf-save-nonce'));
 
 		parent::display('optionsAdminPage');
 	}
@@ -84,8 +85,10 @@ class OptionsViewWpf extends ViewWpf {
 		FrameWpf::_()->addScript('admin.settings', $this->getModule()->getModPath() . 'js/admin.settings.js');
 		FrameWpf::_()->addStyle('admin.settings.css', $this->getModule()->getModPath() . 'css/admin.settings.css');
 		FrameWpf::_()->getModule('templates')->loadJqueryUi();
+		FrameWpf::_()->addScript('notify-js', WPF_JS_PATH . 'notify.js', array(), false, true);
 		if (FrameWpf::_()->isPro()) {
-			FrameWpf::_()->addScript('admin.wp.colorpicker.alhpa.js', FrameWpf::_()->getModule('woofilters')->getModPath() . 'js/admin.wp.colorpicker.alpha.js');
+			FrameWpf::_()->addJSVar('wp-color-picker', 'wpColorPickerL10n', array());
+			FrameWpf::_()->addScript('admin.wp.colorpicker.alhpa.js', WPF_JS_PATH . 'admin.wp.colorpicker.alpha.js');
 			FrameWpf::_()->addStyle('loaders', FrameWpf::_()->getModule('woofilters')->getModPath() . 'css/loaders.css');
 		}
 		

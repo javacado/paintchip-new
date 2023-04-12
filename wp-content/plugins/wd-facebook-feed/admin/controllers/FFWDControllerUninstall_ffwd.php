@@ -37,12 +37,6 @@ class FFWDControllerUninstall_ffwd
     public function execute()
     {
         $task = ((isset($_POST['task'])) ? sanitize_text_field(stripslashes($_POST['task'])) : '');
-        $ffwd_uninstall = get_option("ffwd_uninstall");
-        if(isset($ffwd_uninstall) && $ffwd_uninstall ==="1"){
-          $task = 'uninstall';
-          $this->$task();
-          return;
-        }
         if ($task != '') {
             if (!WDW_FFWD_Library::verify_nonce('uninstall_ffwd')) {
                 die('Sorry, your nonce did not verify.');

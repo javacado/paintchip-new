@@ -293,10 +293,11 @@
 .uninstall_icon {
     background-image: url("../images/uninstall-icon.png");
     background-repeat: no-repeat;
+    background-size: contain;
     border: none;
     float: left;
-    height: 32px;
-    margin: 7px 8px 0 0;
+    height: 25px;
+    margin: 0;
     width: 32px;
 }
 
@@ -1217,4 +1218,23 @@ div.ffwd_error {
 
 #wpbody-content>div:not(.wrap):not(.wd_topic), .wrap .notice:not(.wd-notice) {
     display: none;
+}
+#wpbody-content .notice.notice-error,
+#wpbody-content .notice.notice-success{
+    display: block !important;
+}
+
+#toplevel_page_options_ffwd.current a div img { /*conflict with single item menu*/
+	opacity: 1;
+}
+
+.ffwd-access-token-missing {
+    margin: 10px 0 50px 0;
+    line-height: 17px;
+    font-size: 13px;
+    color: rgba(50, 58, 69, 1);
+}
+
+.ffwd-access-token-missing p {
+    margin: 0;
 }

@@ -1,31 +1,29 @@
-=== WooCommerce Services ===
-Contributors: automattic, woothemes, allendav, kellychoffman, jkudish, jeffstieler, nabsul, robobot3000, danreylop, mikeyarce, shaunkuschel, orangesareorange, pauldechov, dappermountain, radogeorgiev, bor0, royho, cshultz88, bartoszbudzanowski, harriswong, ferdev, superdav42
-Tags: shipping, stamps, usps, woocommerce, taxes, payment, stripe
+=== WooCommerce Shipping & Tax ===
+Contributors: woocommerce, automattic, woothemes, allendav, kellychoffman, jkudish, jeffstieler, nabsul, robobot3000, danreylop, mikeyarce, shaunkuschel, orangesareorange, pauldechov, dappermountain, radogeorgiev, bor0, royho, cshultz88, bartoszbudzanowski, harriswong, ferdev, superdav42
+Tags: shipping, stamps, usps, woocommerce, taxes, payment, dhl, labels
 Requires at least: 4.6
 Requires PHP: 5.3
-Tested up to: 5.4
-Stable tag: 1.23.0
+Tested up to: 5.6
+Stable tag: 1.25.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Hosted services for WooCommerce including automated tax calculation, shipping label printing, and smoother payment setup.
+WooCommerce Shipping & Tax offers automated tax calculation, shipping label printing, smoother payment setup, and other hosted services for WooCommerce.
 
 == Description ==
 
-WooCommerce Services makes basic eCommerce features like shipping more reliable by taking the burden off of your site’s infrastructure.
+WooCommerce Shipping & Tax makes basic eCommerce features like shipping more reliable by taking the burden off of your site’s infrastructure.
 
-With WooCommerce Services, critical services are hosted on Automattic’s best-in-class infrastructure, rather than relying on your store’s hosting. That means your store will be more stable and faster.
+With WooCommerce Shipping & Tax, critical services are hosted on Automattic’s best-in-class infrastructure, rather than relying on your store’s hosting. That means your store will be more stable and faster.
+To use the features, simply install this plugin and activate the ones you want directly in your dashboard. As we add more services, you’ll see more features available directly in WooCommerce – making setup simpler.
 
-To use the features, simply install this plugin and activate the ones you want directly in your dashboard. As we add more services, you’ll see more features available directly in WooCommerce - making setup simpler.
+NOTE: This extension was previously referred to as WooCommerce Services.
 
-= Print shipping labels for USPS at a discounted rate =
-Give customers lower rates on their shipping. Create ready-to-print shipping labels for USPS directly in WooCommerce and take advantage of our special discount rate.
+= Print USPS and DHL shipping labels and save up to 90% =
+Ship domestically and internationally right from your WooCommerce dashboard. Print USPS and DHL labels and instantly save up to 90%.
 
 = Collect accurate taxes at checkout =
 We've got taxes for you - no need to enter tax rates manually.
-
-= Be ready to accept payments instantly =
-Have a Stripe account created on your behalf or accept PayPal Checkout payments without having to setup an account.
 
 == Installation ==
 
@@ -42,14 +40,13 @@ This section describes how to install the plugin and get it working.
 
 = What services are included? =
 
-* USPS label purchase/printing
+* USPS and DHL label purchase/printing
 * Automated tax calculation
-* Stripe account provisioning (through WooCommerce setup wizard)
 * PayPal Checkout payment authorization
 
 = Can I buy and print shipping labels for US domestic and international packages? =
 
-Yes! You can buy and print USPS shipping labels for domestic and international destinations.
+Yes! You can buy and print USPS shipping labels for domestic destinations and USPS and DHL shipping labels for international destinations. Shipments need to originate from the U.S.
 
 = This works with WooCommerce, right? =
 
@@ -67,9 +64,6 @@ Absolutely! You can read our Terms of Service [here](https://en.wordpress.com/to
 
 The source code is freely available [in GitHub](https://github.com/Automattic/woocommerce-services).
 
-= Can I show shipping rates at checkout? =
-
-As of the WooCommerce 3.5 release, WooCommerce Services no longer provides shipping rates for new stores. If you're already using shipping rates in WooCommerce Services, they will continue to work.
 
 == Screenshots ==
 
@@ -77,68 +71,100 @@ As of the WooCommerce 3.5 release, WooCommerce Services no longer provides shipp
 2. Setting up custom packages
 3. Selecting your preferred payment method
 4. Enabling automated taxes
-5. Creating a Stripe account from the setup wizard
-6. Checking on the health of WooCommerce Services
-7. Checking and exporting the label purchase reports
+5. Checking on the health of WooCommerce Shipping & Tax
+6. Checking and exporting the label purchase reports
 
 == Changelog ==
 
-= 1.23.0 - 2020-04-08 =
-* Fix   - Hide paper selection until valid payment method is selected.
-* Tweak - Shipping banner wording improvements.
-* Add   - Link to carrier's schedule pickup page.
-* Add   - Improved shipping service feature descriptions.
-* Add   - Option to mark order complete when label is printed.
+= 1.25.11 - 2021-04-06 =
+* Fix	- Ensure status page is displayed on new WC navigation menu.
+* Add   - Run phpcbf as a pre-commit rule.
+* Fix   - Fix PHPUnit tests. Rename `test_` to `test-` to match our phpcs rules. Remove travis and move to github action.
+* Tweak - Updated .nvmrc to use 10.16.0
+* Tweak - Update the shipping label status endpoint to accept and return multiple ids.
+* Tweak	- Display spinner icon during service data refresh.
+* Add	- Adds Dockerized E2E tests with GitHub Action integration.
+* Fix   - Handle DHL live rates notice creation and deletion errors.
 
-= 1.22.5 - 2020-03-17 =
-* Add   - Admin asset API endpoint.
-* Fix   - GB support for WC 4.0.
-* Fix   - Jetpack staging check for PHP 5.3.
-* Tweak - Bump WP tested version to 5.4.
+= 1.25.10 - 2021-03-24 =
+* Add   - Add an endpoint for shipping label creation eligibility and share code for store eligibility.
+* Fix   - Shipping validation notice shown when no address entered.
+* Tweak - Stop retrying to fetch /services when authentication fails on connect server.
 
-= 1.22.4 - 2020-03-02 =
-* Fix   - Stop using deprecated method Jetpack::is_staging_site() when Jetpack
-8.1 is installed.
+= 1.25.9 - 2021-03-17 =
+* Add   - WC Admin notice about DHL live rates.
+* Add	- Live rates section in settings page.
+* Tweak - Cleanup stripe functionality.
+* Tweak - Display better errors on checkout page when address fields are missing / invalid.
+* Tweak - Refresh on status page does not reload page.
+* Fix   - UPS invoice number allows numbers and letters.
+* Add 	- Tracks shipping services used at checkout.
+* Add   - Update the existing endpoint `POST /connect/packages` to create shipping label packages, and add an endpoint `PUT /connect/packages` to update shipping label packages.
+* Fix   - Only display shipping validation errors on the cart or checkout pages.
+* Tweak - Removes deprecated Jetpack constant JETPACK_MASTER_USER
+* Fix   - Revert radio button dot offset in the "Create shipping label" modal.
 
-= 1.22.3 - 2020-01-22 =
-* Add   - Preselect rate when there is only one rate available for given shipping configuration.
-* Add   - Paper size selection into purchase modal sidebar and reprint modal which was previously removed.
-* Add   - Show notice when WooCommerce is not installed or activated.
-* Fix   - Use correct URL for variation products in Packages section.
+= 1.25.8 - 2021-03-02 =
+* Tweak - Add support for new Jetpack 9.5 data connection.
+* Tweak - Change minimum Jetpack version support to Jetpack 7.5.
 
-= 1.22.2 - 2019-12-10 =
-* Fix   - Packages weight total value formatting.
-* Fix   - Allow fulfillment flow redo.
+= 1.25.7 - 2021-02-09 =
+* Fix   - Prevent error notices on checkout page load.
+* Tweak - Highlight rate call usage over limit on WooCommerce Shipping settings page.
+* Fix   - Connect carrier account link broken on subdirectory installs.
+* Fix   - Position dot in the center of radio buttons in "Create shipping label".
+* Fix   - Adjust radio button dot style in "Create shipping label" in high contrast mode on Windows.
 
-= 1.22.1 =
-* Fix   - Remove nuisance admin notification.
+= 1.25.6 - 2021-01-26 =
+* Fix 	- Refreshes shipping methods after registering or removing carrier accounts.
+* Tweak	- Changed rates response caching method from cache to transient.
 
-= 1.22.0 =
+= 1.25.5 - 2021-01-11 =
+* Fix	- Redux DevTools usage update.
+* Add	- Display subscriptions usage.
+* Add	- Subscription activation.
+* Add 	- Uses same DHL logo for all registered DHL accounts.
+* Tweak - Adds WCCom access token and site ID to connect server request headers.
 
-* Add   - Display notices when base country/currency mismatches.
-* Add   - Friendlier error codes when the API service is down.
-* Add   - Introduce custom package setting on the label screen.
-* Add   - Shipping Summary to the sidebar on the label screen.
-* Add   - Shipping rates additional data - tracking, delivery time, signatures.
-* Add   - Tracking modal.
-* Add   - Ability to recreate labels for individual packages that have been refunded in a multi-label package scenario.
-* Fix   - Deprecation notices for PHP 7.4.
-* Fix   - Quantity is not being taken into account for the notice "n items are ready for shipment".
-* Tweak - Credit card no longer required to configure shipping label.
-* Tweak - Moved "Create Shipping Label" button from sidebar to the top of the order screen.
-* Tweak - Preselect last used package on the label screen.
-* Tweak - Remove rates from the dropdown and list them on the page after a package is selected.
-* Tweak - Remove redundant "Paper Size" from the label screen since it's configurable from the Settings screen.
-* Tweak - Show create label button in 'busy' state until data loads.
-* Tweak - UX improvements for the label screen.
+= 1.25.4 - 2020-12-08 =
+* Tweak - Remove Stripe connect functionality.
+* Tweak - Remove unused method in shipping settings view.
+* Fix	- Breaking behavior on account registration page.
+* Add	- Allows registration of additional accounts.
+* Tweak - Carrier description on dynamic carrier registration form.
+* Fix   - Adjust documentation links.
 
-= 1.21.1 =
+= 1.25.3 - 2020-11-24 =
+* Add   - Initial code for WooCommerce.com subscriptions API.
+* Add   - Dynamic carrier registration form.
+* Fix   - When adding "signature required" to some packages, prices were not updating.
+* Add   - DHL Schedule Pickup link within order notes.
+* Fix   - UI fix for input validation for package dimensions and weights.
+* Fix   - Correct validation for UPS fields in Carrier Account connect form.
+* Tweak - Add message to explain automated tax requires tax-exclusive product pricing.
+* Fix   - Disable USPS refunds for untracked labels only.
 
-* Update WooCommerce compatibility to 3.7
-* Support namespaced Jetpack methods
+= 1.25.2 - 2020-11-10 =
+* Tweak - Add ZIP code validation to UPS(beta) signup form.
+* Fix   - Issue with printing labels in some iOS devices through Safari.
+* Fix   - Prevents warning when using PHP 5.5 or lesser
+* Add   - Add new API end point to retrieve carrier registration requirements.
+* Add   - Add composer command to run PHPUnit.
+* Tweak - Update readme with DHL information.
 
-= 1.21.0 =
+= 1.25.1 - 2020-10-28 =
+* Tweak - DHL refund days copy adjustment
+* Tweak - Stop using deprecated Jetpack method is_development_mode().
+* Fix   - Update carrier name in tracking notification email
+* Add   - Add pre-commit and pre-push git hooks for linting and unit tests.
+* Add   - Disable refunds for USPS letters.
 
-* Update WordPress compatibility to 5.2
-* When there's only one credit card available, select it as the default for purchases
-* Add ability to specify payment method during label purchase to enable choosing a credit card during purchase in the future
+= 1.25.0 - 2020-10-13 =
+* Fix   - UPS connect redirect prompt
+* Fix   - Allow UPS label purchase without payment method
+* Fix   - PHP implode arguments order
+* Fix   - Validate insurance value as both string and number
+* Tweak - Adjusted messaging on label pointers
+* Tweak - Update carrier logo
+* Tweak - Plugin rename
+* Add   - Link to print the customs form for all shipments that need it

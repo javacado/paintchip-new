@@ -3,7 +3,6 @@
  * Action to add contact to the selected list
  *
  * @since       4.4.1
- * @author      Icegram
  * @version     1.0
  * @package     Email Subscribers
  */
@@ -48,7 +47,11 @@ class ES_Action_Delete_Contact extends ES_Workflow_Action {
 					continue;
 				}
 
-				$data  = $data_type->get_data( $data_item );
+				$data = array();
+				if ( is_callable( array( $data_type, 'get_data' ) ) ) {
+					$data  = $data_type->get_data( $data_item );
+				}
+				
 				$email = ! empty( $data['email'] ) ? $data['email'] : '';
 
 				if ( ! empty( $email ) ) {

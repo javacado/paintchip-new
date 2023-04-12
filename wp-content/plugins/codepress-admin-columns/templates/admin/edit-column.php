@@ -30,7 +30,7 @@ $column = $this->column;
 							<?php
 
 							foreach ( $column->get_settings() as $setting ) {
-								if ( $setting instanceof \AC\Settings\Header ) {
+								if ( $setting instanceof \AC\Settings\Column ) {
 									echo $setting->render_header() . "\n";
 								}
 							}
@@ -49,7 +49,7 @@ $column = $this->column;
 						<a class="toggle" data-toggle="column">
 							<?= $column->get_setting( 'label' )->get_value(); ?>
 						</a>
-						<small class="column-id"><?= sprintf( '%s: %s', __( 'ID', 'codepress-admin-columns' ), $column->get_name() ); ?></small>
+						<small class="column-id"><?= sprintf( '%s: %s', __( 'Name', 'codepress-admin-columns' ), $column->get_name() ); ?></small>
 						<small class="column-type"><?= sprintf( '%s: %s', __( 'Type', 'codepress-admin-columns' ), $column->get_type() ); ?></small>
 						<a class="edit-button" data-toggle="column"><?php _e( 'Edit', 'codepress-admin-columns' ); ?></a>
 						<a class="close-button" data-toggle="column"><?php _e( 'Close', 'codepress-admin-columns' ); ?></a>

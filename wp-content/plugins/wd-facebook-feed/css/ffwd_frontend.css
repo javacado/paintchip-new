@@ -21,14 +21,6 @@ div[class^="ffwd_title_spun"] a {
   text-decoration:none !important;
 }
 
-div[id^="bwg_container"] a {
-  border: none;
-  outline: none;
-  font-size: 0;
-  cursor: pointer;
-  text-decoration: none;
-}
-
 .spider_popup_loading,
 .footer-list-block .bwp_gallery .spider_popup_loading,
 .footer-list-block .bwp_gallery_tags .spider_popup_loading {
@@ -255,4 +247,22 @@ div[id^="bwg_container"] a {
   text-decoration: none;
   word-wrap: break-word;
   z-index: 11;
+}
+.ffwd_load_more{
+  display: block;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+}
+.ffwd_load_more.loading:after{
+  content: "";
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background-image: url("../images/loader.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: relative;
+  top: 18px;
 }

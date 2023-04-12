@@ -2,7 +2,6 @@
 /**
  * Triggers when a user gets deleted
  *
- * @author      Icegram
  * @since       4.4.1
  * @version     1.0
  * @package     Email Subscribers
@@ -29,7 +28,7 @@ class ES_Trigger_User_Deleted extends ES_Workflow_Trigger {
 	 */
 	public function load_admin_details() {
 		$this->title       = __( 'User Deleted', 'email-subscribers' );
-		$this->description = __( 'Fires when user deleted from WordPress .', 'email-subscribers' );
+		$this->description = __( 'Fires when user deleted from WordPress.', 'email-subscribers' );
 		$this->group       = __( 'User', 'email-subscribers' );
 	}
 

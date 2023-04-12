@@ -47,7 +47,7 @@ function _wpfOpenPointerAndPopupTab(tourId, pointId, tab) {
 function _wpfOpenPointer(tourId, pointId) {
 	var pointer = wpfAdminTourData.tour[ tourId ].points[ pointId ];
 	var $content = wpfAdminTourData._$.find('#woobewoo-'+ tourId+ '-'+ pointId);
-	if(!jQuery(pointer.target) || !jQuery(pointer.target).size())
+	if(!jQuery(pointer.target) || !jQuery(pointer.target).length)
 		return;
 	if(g_wpfCurrTour) {
 		_wpfTourSendNext(g_wpfCurrTour._tourId, g_wpfCurrTour._pointId);
@@ -71,7 +71,7 @@ function _wpfOpenPointer(tourId, pointId) {
 			,	$closeBtn = $btnsShell.find('.close')
 			,	$finishBtn = $btnsShell.find('.woobewoo-tour-finish-btn');
 
-			if($finishBtn && $finishBtn.size()) {
+			if($finishBtn && $finishBtn.length) {
 				$finishBtn.click(function(e){
 					e.preventDefault();
 					jQuery.sendFormWpf({
@@ -81,7 +81,7 @@ function _wpfOpenPointer(tourId, pointId) {
 					g_wpfCurrTour.element.pointer('close');
 				});
 			}
-			if($closeBtn && $closeBtn.size()) {
+			if($closeBtn && $closeBtn.length) {
 				$closeBtn.bind( 'click.pointer', function(e) {
 					e.preventDefault();
 					jQuery.sendFormWpf({

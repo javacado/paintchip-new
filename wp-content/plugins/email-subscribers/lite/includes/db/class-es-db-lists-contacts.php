@@ -5,7 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class ES_DB_Lists_Contacts extends ES_DB {
+	
 	/**
+	 * Table name
+	 * 
 	 * @since 4.3.5
 	 *
 	 * @var $table_name
@@ -13,6 +16,8 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	public $table_name;
 
 	/**
+	 * Table DB version
+	 * 
 	 * @since 4.3.5
 	 *
 	 * @var $version
@@ -20,6 +25,8 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	public $version;
 
 	/**
+	 * Table primary key column name
+	 * 
 	 * @since 4.3.5
 	 *
 	 * @var $primary_key
@@ -100,6 +107,8 @@ class ES_DB_Lists_Contacts extends ES_DB {
 
 		if ( is_array( $list_ids ) && count( $list_ids ) > 0 ) {
 
+			$contact_data = apply_filters( 'ig_es_get_subscriber_ip', $contact_data, 'subscribed_ip' ); 
+
 			// Remove entry if it's already there in a list
 			$contact_id = ! empty( $contact_data['contact_id'] ) ? $contact_data['contact_id'] : 0;
 			$this->remove_contacts_from_lists( $contact_id, $list_ids );
@@ -125,7 +134,7 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	 *
 	 * @since 4.3.5
 	 */
-	public function prepare_contact_data( $contact_ids = array(), $list_id ) {
+	public function prepare_contact_data( $contact_ids, $list_id ) {
 
 		if ( empty( $contact_ids ) || empty( $list_id ) ) {
 			return array();
@@ -224,6 +233,8 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	}
 
 	/**
+	 * Get list ids by contact id
+	 * 
 	 * @param $id
 	 * @param string $status
 	 *
@@ -239,20 +250,18 @@ class ES_DB_Lists_Contacts extends ES_DB {
 			return array();
 		}
 
-		$where  = "contact_id = %d";
-		$args[] = esc_sql( $contact_id );
+		$where = $wpdb->prepare( 'contact_id = %d', esc_sql( $contact_id ) );
 
 		if ( ! empty( $status ) ) {
-			$where  .= " AND status = %s";
-			$args[] = esc_sql( $status );
+			$where .= $wpdb->prepare( ' AND status = %s', esc_sql( $status ) );
 		}
-
-		$where = $wpdb->prepare( $where, $args );
 
 		return $this->get_column_by_condition( 'list_id', $where );
 	}
 
 	/**
+	 * Get mapping of contact status with list
+	 * 
 	 * @param int $contact_id
 	 *
 	 * @return array
@@ -268,8 +277,7 @@ class ES_DB_Lists_Contacts extends ES_DB {
 			return array();
 		}
 
-		$where = "contact_id = %d";
-		$where = $wpdb->prepare( $where, $contact_id );
+		$where = $wpdb->prepare( 'contact_id = %d', $contact_id );
 
 		return $this->get_columns_map( 'list_id', 'status', $where );
 	}
@@ -360,7 +368,7 @@ class ES_DB_Lists_Contacts extends ES_DB {
 			$list_ids_str = $this->prepare_for_in_query( $list_ids );
 
 			if ( ! empty( $where ) ) {
-				$where .= " AND ";
+				$where .= ' AND ';
 			}
 
 			$where .= "list_id IN ($list_ids_str)";
@@ -415,26 +423,26 @@ class ES_DB_Lists_Contacts extends ES_DB {
 					continue;
 				}
 
-				$contact[ $key ]['contact_id'] = $email_id_map[ $contact['email'] ];
+				$contacts[ $key ]['contact_id'] = $email_id_map[ $contact['email'] ];
 				$status                        = 'subscribed';
 				$optin_type                    = IG_SINGLE_OPTIN;
-				if ( $contact['status'] === 'Single Opt In' ) {
+				if ( 'Single Opt In' === $contact['status'] ) {
 					$optin_type = IG_SINGLE_OPTIN;
-				} elseif ( $contact['status'] === 'Confirmed' ) {
+				} elseif ( 'Confirmed' === $contact['status'] ) {
 					$optin_type = IG_DOUBLE_OPTIN;
-				} elseif ( $contact['status'] === 'Unconfirmed' ) {
+				} elseif ( 'Unconfirmed' === $contact['status'] ) {
 					$optin_type = IG_DOUBLE_OPTIN;
 					$status     = 'Unconfirmed';
-				} elseif ( $contact['status'] === 'Unsubscribed' ) {
+				} elseif ( 'Unsubscribed' === $contact['status'] ) {
 					$optin_type = IG_DOUBLE_OPTIN;
 					$status     = 'unsubscribed';
 				}
 
-				$contact[ $key ]['list_id']       = $list_id;
-				$contact[ $key ]['contact_id']    = $email_id_map[ $contact['email'] ];
-				$contact[ $key ]['status']        = $status;
-				$contact[ $key ]['optin_type']    = $optin_type;
-				$contact[ $key ]['subscribed_at'] = $contact['subscribed_at'];
+				$contacts[ $key ]['list_id']       = $list_id;
+				$contacts[ $key ]['contact_id']    = $email_id_map[ $contact['email'] ];
+				$contacts[ $key ]['status']        = $status;
+				$contacts[ $key ]['optin_type']    = $optin_type;
+				$contacts[ $key ]['subscribed_at'] = $contact['subscribed_at'];
 			}
 
 			return $this->bulk_insert( $contacts );
@@ -446,7 +454,7 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	/**
 	 * Add contacts into lists_contacts table
 	 *
-	 * @param int $list_id
+	 * @param array $list_ids
 	 * @param array $contacts
 	 * @param string $status
 	 * @param int $optin_type
@@ -459,24 +467,32 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	 *
 	 * @since 4.0.0
 	 * @since 4.3.5 Used bulk_insert method
+	 * @since 4.6.4 Added support for multiple lists.
 	 */
-	public function do_import_contacts_into_list( $list_id = 0, $contacts = array(), $status = 'subscribed', $optin_type = 1, $subscribed_at = null, $subscribed_ip = null, $unsubscribed_at = null, $unsubscribed_ip = null ) {
+	public function do_import_contacts_into_list( $list_ids = array(), $contacts = array(), $status = 'subscribed', $optin_type = 1, $subscribed_at = null, $subscribed_ip = null, $unsubscribed_at = null, $unsubscribed_ip = null ) {
 		if ( count( $contacts ) > 0 ) {
 			$values = array();
 
+			if ( ! is_array( $list_ids ) ) {
+				$list_ids = array( absint( $list_ids ) );
+			}
+			
 			$key = 0;
 			foreach ( $contacts as $contact_id ) {
 
-				$values[ $key ]['contact_id']      = $contact_id;
-				$values[ $key ]['list_id']         = $list_id;
-				$values[ $key ]['status']          = $status;
-				$values[ $key ]['optin_type']      = $optin_type;
-				$values[ $key ]['subscribed_at']   = $subscribed_at;
-				$values[ $key ]['subscribed_ip']   = $subscribed_ip;
-				$values[ $key ]['unsubscribed_at'] = $unsubscribed_at;
-				$values[ $key ]['unsubscribed_ip'] = $unsubscribed_ip;
+				foreach ( $list_ids as $list_id ) {
 
-				$key ++;
+					$values[ $key ]['contact_id']      = $contact_id;
+					$values[ $key ]['list_id']         = $list_id;
+					$values[ $key ]['status']          = $status;
+					$values[ $key ]['optin_type']      = $optin_type;
+					$values[ $key ]['subscribed_at']   = $subscribed_at;
+					$values[ $key ]['subscribed_ip']   = $subscribed_ip;
+					$values[ $key ]['unsubscribed_at'] = $unsubscribed_at;
+					$values[ $key ]['unsubscribed_ip'] = $unsubscribed_ip;
+	
+					$key ++;
+				}
 			}
 
 			return $this->bulk_insert( $values );
@@ -497,7 +513,11 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	 * @since 4.3.5 Removed static call
 	 */
 	public function get_total_count_by_list( $list_id = 0, $status = 'subscribed' ) {
-		$list_id = absint( $list_id );
+
+		// Convert to integer only if it a numberic value and not an array.
+		if ( is_numeric( $list_id ) ) {
+			$list_id = absint( $list_id );
+		}
 
 		if ( empty( $list_id ) ) {
 			return 0;
@@ -517,7 +537,7 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	 * @since 4.3.6 Added $distinct
 	 */
 	public function get_total_contacts( $where = '', $distinct = true ) {
-		global $wpdb;
+		global $wpbd;
 
 		if ( $distinct ) {
 			$query = "SELECT count(DISTINCT(contact_id)) FROM $this->table_name";
@@ -528,8 +548,8 @@ class ES_DB_Lists_Contacts extends ES_DB {
 		if ( ! empty( $where ) ) {
 			$query .= " WHERE $where";
 		}
-		
-		return $wpdb->get_var( $query );
+
+		return $wpbd->get_var( $query );
 	}
 
 	/**
@@ -582,34 +602,69 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	 * @since 4.1.14
 	 * @since 4.3.5 Removed static call
 	 */
-	public function edit_subscriber_status( $ids = array(), $status = '' ) {
-		global $wpdb;
+	public function edit_subscriber_status( $ids = array(), $status = '', $list_ids = array() ) {
+		global $wpbd;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
+		}
+		if ( ! empty( $list_ids ) && ! is_array( $list_ids ) ) {
+			$list_ids = array( $list_ids );
 		}
 
 		$ids    = array_map( 'absint', $ids );
 		$status = esc_sql( $status );
 
-		$ids = $this->prepare_for_in_query( $ids );
-
+		$ids_str 	  = implode( ',', $ids );
+		
 		$current_date = ig_get_current_date_time();
-
+		
 		$query = '';
 		if ( 'subscribed' === $status ) {
-			$sql   = "UPDATE $this->table_name SET status = %s, subscribed_at = %s WHERE contact_id IN ($ids)";
-			$query = $wpdb->prepare( $sql, array( $status, $current_date ) );
+			if ( ! empty ( $list_ids ) ) {
+				
+				$list_ids_str = implode( ',', $list_ids );
+				$result = $wpbd->query(
+				$wpbd->prepare(
+					"UPDATE {$wpbd->prefix}ig_lists_contacts SET status = %s, subscribed_at = %s WHERE contact_id IN( {$ids_str} ) AND list_id IN( {$list_ids_str} )",
+					array(
+						$status,
+						$current_date,
+						)
+					)
+				);
+			} else { 
+				$result = $wpbd->query(
+					$wpbd->prepare(
+						"UPDATE {$wpbd->prefix}ig_lists_contacts SET status = %s, subscribed_at = %s WHERE contact_id IN( {$ids_str} )",
+						array(
+							$status,
+							$current_date,
+						)
+					)
+				);
+			}
+			return $result;
 		} elseif ( 'unsubscribed' === $status ) {
-			$sql   = "UPDATE $this->table_name SET status = %s, unsubscribed_at = %s WHERE contact_id IN ($ids)";
-			$query = $wpdb->prepare( $sql, array( $status, $current_date ) );
+			return $wpbd->query(
+				$wpbd->prepare(
+					"UPDATE {$wpbd->prefix}ig_lists_contacts SET status = %s, unsubscribed_at = %s WHERE contact_id IN( {$ids_str} )",
+					array(
+						$status,
+						$current_date,
+					)
+				)
+				);
 		} elseif ( 'unconfirmed' === $status ) {
-			$sql   = "UPDATE $this->table_name SET status = %s, optin_type = %d, subscribed_at = NULL, unsubscribed_at = NULL WHERE contact_id IN ($ids)";
-			$query = $wpdb->prepare( $sql, array( $status, IG_DOUBLE_OPTIN ) );
-		}
-
-		if ( $query ) {
-			return $wpdb->query( $query );
+			return $wpbd->query(
+				$wpbd->prepare( 
+					"UPDATE {$wpbd->prefix}ig_lists_contacts SET status = %s, optin_type = %d, subscribed_at = NULL, unsubscribed_at = NULL WHERE contact_id IN( {$ids_str} )",
+					array(
+						$status,
+						IG_DOUBLE_OPTIN,
+					)
+				)
+			);
 		}
 
 		return false;
@@ -628,17 +683,16 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	 * @since 4.3.5 Removed static call
 	 */
 	public function is_status_update_required( $ids = array(), $status = '' ) {
-		global $wpdb;
+		global $wpbd;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}
 
-		$ids = array_map( 'absint', $ids );
-
-		$ids = $this->prepare_for_in_query( $ids );
-
-		$where = $wpdb->prepare( "contact_id IN ($ids) && status != %s", $status );
+		$ids     = array_map( 'absint', $ids );
+		$ids_str = implode( ',', $ids );
+		
+		$where = $wpbd->prepare( "contact_id IN($ids_str) && status != %s", $status );
 
 		if ( $this->count( $where ) ) {
 			return true;
@@ -733,7 +787,7 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	 * @since 4.3.6
 	 */
 	public function get_contacts( $status = 'all', $list_id = 0, $days = 0, $count_only = false, $distinct = true ) {
-		global $wpdb;
+		global $wpdb, $wpbd;
 
 		$expected_statuses = array( 'subscribed', 'unsubscribed', 'unconfirmed', 'confirmed', 'all' );
 
@@ -741,35 +795,47 @@ class ES_DB_Lists_Contacts extends ES_DB {
 			return array();
 		}
 
-		$status  = esc_sql( $status );
-		$list_id = esc_sql( $list_id );
+		$status = esc_sql( $status );
+		if ( is_array( $list_id ) ) {
+			$list_id = array_map( 'esc_sql', $list_id );
+		} else {
+			$list_id = esc_sql( $list_id );
+		}
 
-		$where[] = "1 = %d";
+		$where[] = '1 = %d';
 		$args[]  = 1;
 		if ( ! empty( $status ) ) {
 			switch ( $status ) {
 				case 'subscribed':
 				case 'unsubscribed':
 				case 'unconfirmed':
-					$where[] = "status = %s";
+					$where[] = 'status = %s';
 					$args[]  = $status;
 					break;
 				case 'confirmed':
-					$where[] = "status = %s AND optin_type = %d";
+					$where[] = 'status = %s AND optin_type = %d';
 					$args[]  = $status;
 					$args[]  = IG_DOUBLE_OPTIN;
 					break;
 				default:
-					$where[] = "1 = 1";
+					$where[] = '1 = 1';
 					break;
 			}
 		}
 
-		$list_id = absint( $list_id );
-		if ( ! empty( $list_id ) ) {
-			$list_id = esc_sql( $list_id );
-			$where[] = "list_id = %d";
-			$args[]  = $list_id;
+		if ( is_array( $list_id ) ) {
+			$ids_count        = count( $list_id );
+			$ids_placeholders = array_fill( 0, $ids_count, '%d' );
+			$ids_query        = ' list_id IN( ' . implode( ',', $ids_placeholders ) . ' )';
+			$where[]		  = $ids_query;
+			$args    		  = array_merge( $args, $list_id );
+		} else {
+			$list_id = absint( $list_id );
+			if ( ! empty( $list_id ) ) {
+				$list_id = esc_sql( $list_id );
+				$where[] = 'list_id = %d';
+				$args[]  = $list_id;
+			}
 		}
 
 		$days = absint( $days );
@@ -777,17 +843,20 @@ class ES_DB_Lists_Contacts extends ES_DB {
 			$days = esc_sql( $days );
 
 			if ( 'unsubscribed' === $status ) {
-				$where[] = "unsubscribed_at >= DATE_SUB(NOW(), INTERVAL %d DAY)";
+				$where[] = 'unsubscribed_at >= DATE_SUB(NOW(), INTERVAL %d DAY)';
 				$args[]  = $days;
 			} elseif ( 'subscribed' === $status ) {
-				$where[] = "subscribed_at >= DATE_SUB(NOW(), INTERVAL %d DAY)";
+				$where[] = 'subscribed_at >= DATE_SUB(NOW(), INTERVAL %d DAY)';
+				$args[]  = $days;
+			} elseif ( 'unconfirmed' === $status ) {
+				$where[] = "contact_id IN( SELECT id FROM `{$wpdb->prefix}ig_contacts` WHERE status = 'verified' && created_at >= DATE_SUB(NOW(), INTERVAL %d DAY) )";
 				$args[]  = $days;
 			}
 		}
 
 		if ( count( $where ) > 0 ) {
-			$where = implode( " AND ", $where );
-			$where = $wpdb->prepare( $where, $args );
+			$where = implode( ' AND ', $where );
+			$where = $wpbd->prepare( $where, $args );
 		}
 		
 		if ( $count_only ) {
@@ -809,7 +878,6 @@ class ES_DB_Lists_Contacts extends ES_DB {
 	 */
 	public function get_contacts_from_list( $status = 'all', $list_id = 0 ) {
 		$list_id = absint( $list_id );
-
 		if ( empty( $list_id ) ) {
 			return array();
 		}

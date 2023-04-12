@@ -72,7 +72,7 @@ jQuery.fn.sendFormWpf = function(params) {
 		sentFromForm = true;
 	}
 	if(sentFromForm && form) {
-        jQuery(form).find('*').removeClass('wpfInputError');
+        jQuery(form).find('.wpfInputError').removeClass('wpfInputError');
     }
 	if(msgEl && !params.btn) {
 		jQuery(msgEl)
@@ -85,8 +85,8 @@ jQuery.fn.sendFormWpf = function(params) {
 	if(params.btn) {
 		jQuery(params.btn).attr('disabled', 'disabled');
 		// Font awesome usage
-		params.btnIconElement = jQuery(params.btn).find('.fa').size() ? jQuery(params.btn).find('.fa') : jQuery(params.btn);
-		if(jQuery(params.btn).find('.fa').size()) {
+		params.btnIconElement = jQuery(params.btn).find('.fa').length ? jQuery(params.btn).find('.fa') : jQuery(params.btn);
+		if(jQuery(params.btn).find('.fa').length) {
 			params.btnIconElement
 				.data('prev-class', params.btnIconElement.attr('class'))
 				.attr('class', 'fa fa-spinner fa-spin');
@@ -245,7 +245,7 @@ function toeOptTimeoutHideDescriptionWpf() {
  */
 function toeOptShowDescriptionWpf(description, x, y, moveToLeft) {
     if(typeof(description) != 'undefined' && description != '') {
-        if(!jQuery('#wpfOptDescription').size()) {
+        if(!jQuery('#wpfOptDescription').length) {
             jQuery('body').append('<div id="wpfOptDescription"></div>');
         }
 		if(moveToLeft)

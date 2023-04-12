@@ -2,7 +2,6 @@
 /**
  * Triggers when a user gets registered
  *
- * @author      Icegram
  * @since       4.4.1
  * @version     1.0
  * @package     Email Subscribers

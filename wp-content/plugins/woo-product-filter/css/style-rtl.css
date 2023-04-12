@@ -53,7 +53,7 @@
 .settings-value-label {
 	margin-left: 5px;
 }
-.wpfFilterWrapper i {
+.wpfFilterWrapper i, .wpfFilterWrapper svg{
     float: left !important;
 }
 

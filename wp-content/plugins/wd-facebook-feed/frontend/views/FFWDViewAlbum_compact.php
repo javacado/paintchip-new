@@ -37,7 +37,7 @@ class FFWDViewAlbum_compact {
       $ffwd_info['objects_per_page'] = $params['objects_per_page'];
       $ffwd_info['theme'] = $params['theme_id'];
       $ffwd_info['album_image_thumb_width'] = $params['thumb_width'];
-      $ffwd_info['thumb_height'] = $params['album_image_thumb_height'];
+      $ffwd_info['album_image_thumb_height']= $params['thumb_height'];
     }
 
     $theme_row = $this->model->get_theme_row_data($ffwd_info['theme']);
@@ -45,7 +45,7 @@ class FFWDViewAlbum_compact {
       echo WDW_FFWD_Library::message(__('There is no theme selected or the theme was deleted.', 'ffwd'), 'error');
       return;
     }
-    $ffwd_data = $this->model->get_ffwd_data($params['fb_id'], $ffwd_info['objects_per_page'], '', $ffwd, ' ASC', $ffwd_info['pagination_type']);
+    $ffwd_data = $this->model->get_ffwd_data($params['fb_id'], $ffwd_info['objects_per_page'], '', $ffwd, $ffwd_info['pagination_type'], ' ASC');
     if ($ffwd_info == NULL) {
       echo WDW_FFWD_Library::message(__('There is no facebook feed selected or it was deleted.', 'ffwd'), 'error');
       return;
@@ -664,10 +664,12 @@ class FFWDViewAlbum_compact {
                 }
 								?>
 								<script>
-									var id_object_id_<?php echo $ffwd; ?> = '<?php echo json_encode($this->model->id_object_id_json); ?>',
+                  jQuery(document).ready(function() {
+                    var id_object_id_<?php echo $ffwd; ?> = '<?php echo addslashes(json_encode($this->model->id_object_id_json)); ?>',
 											graph_url_album_compact_<?php echo $ffwd; ?> = '<?php echo $this->model->graph_url; ?>';
 											ffwd_fill_thum_srs_likes_compact_album(JSON.parse(id_object_id_<?php echo $ffwd; ?>), '<?php echo $ffwd; ?>', graph_url_album_compact_<?php echo $ffwd; ?>, ffwd_album_info_<?php echo $ffwd; ?>);
-								</script>
+                  });
+                </script>
 								<?php
               }
               elseif ($type == 'gallery') {

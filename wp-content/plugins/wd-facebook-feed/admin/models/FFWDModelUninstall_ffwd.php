@@ -28,6 +28,7 @@ class FFWDModelUninstall_ffwd
         $wpdb->query("DROP TABLE " . $wpdb->prefix . "wd_fb_option");
         $wpdb->query("DROP TABLE " . $wpdb->prefix . "wd_fb_theme");
         $wpdb->query("DROP TABLE " . $wpdb->prefix . "wd_fb_shortcode");
+        $wpdb->query("DROP TABLE " . $wpdb->prefix . "wd_fb_shortcode");
         delete_option('tenweb_notice_status');
         delete_option('ffwd_admin_notice');
         delete_option("ffwd_version");
@@ -35,8 +36,6 @@ class FFWDModelUninstall_ffwd
         delete_option('wds_bk_notice_status');
         delete_option('ffwd_old_version');
         delete_option('ffwd_pages_list');
-        add_option('ffwd_uninstall', '1');
-
     }
     ////////////////////////////////////////////////////////////////////////////////////////
     // Getters & Setters                                                                  //

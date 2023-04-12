@@ -1,1351 +1,1398 @@
 <?php
 
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; // disable direct access
+	exit; // disable direct access
 }
 
-if ( ! class_exists('Mega_Menu_Widget_Manager') ) :
-
-/**
- * Processes AJAX requests from the Mega Menu panel editor.
- * Also registers our widget sidebar.
- *
- * There is very little in WordPress core to help with listing, editing, saving,
- * deleting widgets etc so this class implements that functionality.
- */
-class Mega_Menu_Widget_Manager {
-
-    /**
-     * Constructor
-     *
-     * @since 1.0
-     */
-    public function __construct() {
-
-        add_action( 'init', array( $this, 'register_sidebar' ) );
-
-        add_action( 'wp_ajax_mm_edit_widget', array( $this, 'ajax_show_widget_form' ) );
-        add_action( 'wp_ajax_mm_edit_menu_item', array( $this, 'ajax_show_menu_item_form' ) );
-        add_action( 'wp_ajax_mm_save_widget', array( $this, 'ajax_save_widget' ) );
-        add_action( 'wp_ajax_mm_save_menu_item', array( $this, 'ajax_save_menu_item' ) );
-        add_action( 'wp_ajax_mm_update_widget_columns', array( $this, 'ajax_update_widget_columns' ) );
-        add_action( 'wp_ajax_mm_update_menu_item_columns', array( $this, 'ajax_update_menu_item_columns' ) );
-        add_action( 'wp_ajax_mm_delete_widget', array( $this, 'ajax_delete_widget' ) );
-        add_action( 'wp_ajax_mm_add_widget', array( $this, 'ajax_add_widget' ) );
-        add_action( 'wp_ajax_mm_reorder_items', array( $this, 'ajax_reorder_items' ) );
-        add_action( 'wp_ajax_mm_save_grid_data', array( $this, 'ajax_save_grid_data' ) );
-
-        add_filter( 'widget_update_callback', array( $this, 'persist_mega_menu_widget_settings'), 10, 4 );
-
-        add_action( 'megamenu_after_widget_add', array( $this, 'clear_caches' ) );
-        add_action( 'megamenu_after_widget_save', array( $this, 'clear_caches' ) );
-        add_action( 'megamenu_after_widget_delete', array( $this, 'clear_caches' ) );
-
-    }
-
-
-    /**
-     * Depending on how a widget has been written, it may not necessarily base the new widget settings on
-     * a copy the old settings. If this is the case, the mega menu data will be lost. This function
-     * checks to make sure widgets persist the mega menu data when they're saved.
-     *
-     * @since 1.0
-     */
-    public function persist_mega_menu_widget_settings( $instance, $new_instance, $old_instance, $that ) {
-
-        if ( isset( $old_instance["mega_menu_columns"] ) && ! isset( $new_instance["mega_menu_columns"] ) ) {
-            $instance["mega_menu_columns"] = $old_instance["mega_menu_columns"];
-        }
-
-        if ( isset( $old_instance["mega_menu_order"] ) && ! isset( $new_instance["mega_menu_order"] ) ) {
-            $instance["mega_menu_order"] = $old_instance["mega_menu_order"];
-        }
-
-        if ( isset( $old_instance["mega_menu_parent_menu_id"] ) && ! isset( $new_instance["mega_menu_parent_menu_id"] ) ) {
-            $instance["mega_menu_parent_menu_id"] = $old_instance["mega_menu_parent_menu_id"];
-        }
-
-        return $instance;
-    }
-
-
-    /**
-     * Create our own widget area to store all mega menu widgets.
-     * All widgets from all menus are stored here, they are filtered later
-     * to ensure the correct widgets show under the correct menu item.
-     *
-     * @since 1.0
-     */
-    public function register_sidebar() {
-
-        register_sidebar(
-            array(
-                'id' => 'mega-menu',
-                'name' => __("Max Mega Menu Widgets", "megamenu"),
-                'description'   => __("This is where Max Mega Menu stores widgets that you have added to sub menus using the mega menu builder. You can edit existing widgets here, but new widgets must be added through the Mega Menu interface (under Appearance > Menus).", "megamenu")
-            )
-        );
-    }
-
-
-    /**
-     * Display a widget settings form
-     *
-     * @since 1.0
-     */
-    public function ajax_show_widget_form() {
-
-        check_ajax_referer( 'megamenu_edit' );
-
-        $widget_id = sanitize_text_field( $_POST['widget_id'] );
-
-        if ( ob_get_contents() ) ob_clean(); // remove any warnings or output from other plugins which may corrupt the response
-
-        wp_die( trim( $this->show_widget_form( $widget_id ) ) );
+if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
+
+	/**
+	 * Processes AJAX requests from the Mega Menu panel editor.
+	 * Also registers our widget sidebar.
+	 *
+	 * There is very little in WordPress core to help with listing, editing, saving,
+	 * deleting widgets etc so this class implements that functionality.
+	 */
+	class Mega_Menu_Widget_Manager {
 
-    }
+		/**
+		 * Constructor
+		 *
+		 * @since 1.0
+		 */
+		public function __construct() {
 
-    /**
-     * Display a menu item settings form
-     *
-     * @since 2.7
-     */
-    public function ajax_show_menu_item_form() {
+			add_action( 'wp_ajax_mm_edit_widget', array( $this, 'ajax_show_widget_form' ) );
+			add_action( 'wp_ajax_mm_edit_menu_item', array( $this, 'ajax_show_menu_item_form' ) );
+			add_action( 'wp_ajax_mm_save_widget', array( $this, 'ajax_save_widget' ) );
+			add_action( 'wp_ajax_mm_save_menu_item', array( $this, 'ajax_save_menu_item' ) );
+			add_action( 'wp_ajax_mm_update_widget_columns', array( $this, 'ajax_update_widget_columns' ) );
+			add_action( 'wp_ajax_mm_update_menu_item_columns', array( $this, 'ajax_update_menu_item_columns' ) );
+			add_action( 'wp_ajax_mm_delete_widget', array( $this, 'ajax_delete_widget' ) );
+			add_action( 'wp_ajax_mm_add_widget', array( $this, 'ajax_add_widget' ) );
+			add_action( 'wp_ajax_mm_reorder_items', array( $this, 'ajax_reorder_items' ) );
+			add_action( 'wp_ajax_mm_save_grid_data', array( $this, 'ajax_save_grid_data' ) );
 
-        check_ajax_referer( 'megamenu_edit' );
+			add_filter( 'widget_update_callback', array( $this, 'persist_mega_menu_widget_settings' ), 10, 4 );
+
+			add_action( 'megamenu_after_widget_add', array( $this, 'clear_caches' ) );
+			add_action( 'megamenu_after_widget_save', array( $this, 'clear_caches' ) );
+			add_action( 'megamenu_after_widget_delete', array( $this, 'clear_caches' ) );
 
-        $menu_item_id = sanitize_text_field( $_POST['widget_id'] );
+		}
 
-        $nonce = wp_create_nonce('megamenu_save_menu_item_' . $menu_item_id);
 
-        $saved_settings = array_filter( (array) get_post_meta( $menu_item_id, '_megamenu', true ) );
-        $menu_item_meta = array_merge( Mega_Menu_Nav_Menus::get_menu_item_defaults(), $saved_settings );
+		/**
+		 * Depending on how a widget has been written, it may not necessarily base the new widget settings on
+		 * a copy the old settings. If this is the case, the mega menu data will be lost. This function
+		 * checks to make sure widgets persist the mega menu data when they're saved.
+		 *
+		 * @since 1.0
+		 */
+		public function persist_mega_menu_widget_settings( $instance, $new_instance, $old_instance, $that ) {
+
+			if ( isset( $old_instance['mega_menu_columns'] ) && ! isset( $new_instance['mega_menu_columns'] ) ) {
+				$instance['mega_menu_columns'] = $old_instance['mega_menu_columns'];
+			}
+
+			if ( isset( $old_instance['mega_menu_order'] ) && ! isset( $new_instance['mega_menu_order'] ) ) {
+				$instance['mega_menu_order'] = $old_instance['mega_menu_order'];
+			}
+
+			if ( isset( $old_instance['mega_menu_parent_menu_id'] ) && ! isset( $new_instance['mega_menu_parent_menu_id'] ) ) {
+				$instance['mega_menu_parent_menu_id'] = $old_instance['mega_menu_parent_menu_id'];
+			}
+
+			return $instance;
+		}
+
+
+		/**
+		 * Display a widget settings form
+		 *
+		 * @since 1.0
+		 */
+		public function ajax_show_widget_form() {
+
+			check_ajax_referer( 'megamenu_edit' );
+
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
+
+			$widget_id = sanitize_text_field( $_POST['widget_id'] );
+
+			if ( ob_get_contents() ) {
+				ob_clean(); // remove any warnings or output from other plugins which may corrupt the response
+			}
 
-        if ( ob_get_contents() ) ob_clean(); // remove any warnings or output from other plugins which may corrupt the response
-        ?>
+			wp_die( trim( $this->show_widget_form( $widget_id ) ) );
 
-        <form method='post'>
-            <input type='hidden' name='action' value='mm_save_menu_item' />
-            <input type='hidden' name='menu_item_id' value='<?php echo esc_attr( $menu_item_id ) ?>' />
-            <input type='hidden' name='_wpnonce'  value='<?php echo esc_attr( $nonce ) ?>' />
-            <div class='widget-content'>
-                <?php
-                
-                $css_version = get_transient("megamenu_css_version");
+		}
 
-                if ( $css_version && version_compare( $css_version, '2.6.1', '<' ) ) {
-                    $link = "<a href='" . esc_attr( admin_url( 'admin.php?page=maxmegamenu_tools' ) ) . "'>" . __("Mega Menu") . " > " . __("Tools") . "</a>";
-                    $notice = "<div class='notice notice-success'><p>";
-                    $notice .= sprintf( __("Your menu CSS needs to be updated before you can use the following setting. Please go to %s and Clear the CSS Cache (you will only need to do this once).", "megamenu") , $link);
-                    $notice .= "</p></div>";
-                    $notice .= "</div>";
+		/**
+		 * Display a menu item settings form
+		 *
+		 * @since 2.7
+		 */
+		public function ajax_show_menu_item_form() {
 
-                    echo $notice;
-                }
+			check_ajax_referer( 'megamenu_edit' );
 
-                ?>
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
 
-                <p>
-                    <label><?php _e("Sub menu columns", "megamenu"); ?></label>
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
-                    <select name="settings[submenu_columns]">
-                        <option value='1' <?php selected( $menu_item_meta['submenu_columns'], 1, true ) ?> >1 <?php __("column", "megamenu") ?></option>
-                        <option value='2' <?php selected( $menu_item_meta['submenu_columns'], 2, true ) ?> >2 <?php __("columns", "megamenu") ?></option>
-                        <option value='3' <?php selected( $menu_item_meta['submenu_columns'], 3, true ) ?> >3 <?php __("columns", "megamenu") ?></option>
-                        <option value='4' <?php selected( $menu_item_meta['submenu_columns'], 4, true ) ?> >4 <?php __("columns", "megamenu") ?></option>
-                        <option value='5' <?php selected( $menu_item_meta['submenu_columns'], 5, true ) ?> >5 <?php __("columns", "megamenu") ?></option>
-                        <option value='6' <?php selected( $menu_item_meta['submenu_columns'], 6, true ) ?> >6 <?php __("columns", "megamenu") ?></option>
-                    </select>
-                </p>
-                <p>
-                    <div class='widget-controls'>
-                        <a class='close' href='#close'><?php _e("Close", "megamenu"); ?></a>
-                    </div>
+			$menu_item_id = sanitize_text_field( $_POST['widget_id'] );
 
-                    <?php
-                        submit_button( __( 'Save' ), 'button-primary alignright', 'savewidget', false );
-                    ?>
-                </p>
-            </div>
-        </form>
+			$nonce = wp_create_nonce( 'megamenu_save_menu_item_' . $menu_item_id );
 
-        <?php
+			$saved_settings = array_filter( (array) get_post_meta( $menu_item_id, '_megamenu', true ) );
+			$menu_item_meta = array_merge( Mega_Menu_Nav_Menus::get_menu_item_defaults(), $saved_settings );
 
-    }
+			if ( ob_get_contents() ) {
+				ob_clean(); // remove any warnings or output from other plugins which may corrupt the response
+			}
+			?>
 
-    /**
-     * Save a menu item
-     *
-     * @since 2.7
-     */
-    public function ajax_save_menu_item() {
+		<form method='post'>
+			<input type='hidden' name='action' value='mm_save_menu_item' />
+			<input type='hidden' name='menu_item_id' value='<?php echo esc_attr( $menu_item_id ); ?>' />
+			<input type='hidden' name='_wpnonce'  value='<?php echo esc_attr( $nonce ); ?>' />
+			<div class='widget-content'>
+				<?php
 
-        $menu_item_id = absint(sanitize_text_field( $_POST['menu_item_id'] ));
+				$css_version = get_transient( 'megamenu_css_version' );
 
-        check_ajax_referer( 'megamenu_save_menu_item_' . $menu_item_id );
+				if ( $css_version && version_compare( $css_version, '2.6.1', '<' ) ) {
+					$link    = "<a href='" . esc_attr( admin_url( 'admin.php?page=maxmegamenu_tools' ) ) . "'>" . __( 'Mega Menu' ) . ' > ' . __( 'Tools' ) . '</a>';
+					$notice  = "<div class='notice notice-success'><p>";
+					$notice .= sprintf( __( 'Your menu CSS needs to be updated before you can use the following setting. Please go to %s and Clear the CSS Cache (you will only need to do this once).', 'megamenu' ), $link );
+					$notice .= '</p></div>';
+					$notice .= '</div>';
 
-        $submitted_settings = isset( $_POST['settings'] ) ? $_POST['settings'] : array();
+					echo $notice;
+				}
 
-        if ( $menu_item_id > 0 && is_array( $submitted_settings ) ) {
+				?>
 
-            $existing_settings = get_post_meta( $menu_item_id, '_megamenu', true);
+				<p>
+					<label><?php _e( 'Sub menu columns', 'megamenu' ); ?></label>
 
-            if ( is_array( $existing_settings ) ) {
-                $submitted_settings = array_merge( $existing_settings, $submitted_settings );
-            }
+					<select name="settings[submenu_columns]">
+						<option value='1' <?php selected( $menu_item_meta['submenu_columns'], 1, true ); ?> >1 <?php __( 'column', 'megamenu' ); ?></option>
+						<option value='2' <?php selected( $menu_item_meta['submenu_columns'], 2, true ); ?> >2 <?php __( 'columns', 'megamenu' ); ?></option>
+						<option value='3' <?php selected( $menu_item_meta['submenu_columns'], 3, true ); ?> >3 <?php __( 'columns', 'megamenu' ); ?></option>
+						<option value='4' <?php selected( $menu_item_meta['submenu_columns'], 4, true ); ?> >4 <?php __( 'columns', 'megamenu' ); ?></option>
+						<option value='5' <?php selected( $menu_item_meta['submenu_columns'], 5, true ); ?> >5 <?php __( 'columns', 'megamenu' ); ?></option>
+						<option value='6' <?php selected( $menu_item_meta['submenu_columns'], 6, true ); ?> >6 <?php __( 'columns', 'megamenu' ); ?></option>
+					</select>
+				</p>
+				<p>
+					<div class='widget-controls'>
+						<a class='close' href='#close'><?php _e( 'Close', 'megamenu' ); ?></a>
+					</div>
 
-            update_post_meta( $menu_item_id, '_megamenu', $submitted_settings );
-        }
+					<?php
+						submit_button( __( 'Save' ), 'button-primary alignright', 'savewidget', false );
+					?>
+				</p>
+			</div>
+		</form>
 
-        $this->send_json_success( sprintf( __("Saved %s", "megamenu"), $id_base ) );
+			<?php
 
-    }
+		}
 
+		/**
+		 * Save a menu item
+		 *
+		 * @since 2.7
+		 */
+		public function ajax_save_menu_item() {
 
-    /**
-     * Save a widget
-     *
-     * @since 1.0
-     */
-    public function ajax_save_widget() {
+			$menu_item_id = absint( sanitize_text_field( $_POST['menu_item_id'] ) );
 
-        $widget_id = sanitize_text_field( $_POST['widget_id'] );
-        $id_base = sanitize_text_field( $_POST['id_base'] );
+			check_ajax_referer( 'megamenu_save_menu_item_' . $menu_item_id );
 
-        check_ajax_referer( 'megamenu_save_widget_' . $widget_id );
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
 
-        $saved = $this->save_widget( $id_base );
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
-        if ( $saved ) {
-            $this->send_json_success( sprintf( __("Saved %s", "megamenu"), $id_base ) );
-        } else {
-            $this->send_json_error( sprintf( __("Failed to save %s", "megamenu"), $id_base ) );
-        }
+			$submitted_settings = isset( $_POST['settings'] ) ? $_POST['settings'] : array();
 
-    }
+			if ( $menu_item_id > 0 && is_array( $submitted_settings ) ) {
 
+				$existing_settings = get_post_meta( $menu_item_id, '_megamenu', true );
 
-    /**
-     * Update the number of mega columns for a widget
-     *
-     * @since 1.0
-     */
-    public function ajax_update_widget_columns() {
+				if ( is_array( $existing_settings ) ) {
+					$submitted_settings = array_merge( $existing_settings, $submitted_settings );
+				}
 
-        check_ajax_referer( 'megamenu_edit' );
+				update_post_meta( $menu_item_id, '_megamenu', $submitted_settings );
+			}
 
-        $widget_id = sanitize_text_field( $_POST['id'] );
-        $columns = absint( $_POST['columns'] );
+			$this->send_json_success( sprintf( __( 'Saved %s', 'megamenu' ), $id_base ) );
 
-        $updated = $this->update_widget_columns( $widget_id, $columns );
+		}
 
-        if ( $updated ) {
-            $this->send_json_success( sprintf( __( "Updated %s (new columns: %d)", "megamenu"), $widget_id, $columns ) );
-        } else {
-            $this->send_json_error( sprintf( __( "Failed to update %s", "megamenu"), $widget_id ) );
-        }
 
-    }
+		/**
+		 * Save a widget
+		 *
+		 * @since 1.0
+		 */
+		public function ajax_save_widget() {
 
+			$widget_id = sanitize_text_field( $_POST['widget_id'] );
+			$id_base   = sanitize_text_field( $_POST['id_base'] );
 
-    /**
-     * Update the number of mega columns for a widget
-     *
-     * @since 1.0
-     */
-    public function ajax_update_menu_item_columns() {
+			check_ajax_referer( 'megamenu_save_widget_' . $widget_id );
 
-        check_ajax_referer( 'megamenu_edit' );
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
 
-        $id = absint( $_POST['id'] );
-        $columns = absint( $_POST['columns'] );
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
-        $updated = $this->update_menu_item_columns( $id, $columns );
+			$saved = $this->save_widget( $id_base );
 
-        if ( $updated ) {
-            $this->send_json_success( sprintf( __( "Updated %s (new columns: %d)", "megamenu"), $id, $columns ) );
-        } else {
-            $this->send_json_error( sprintf( __( "Failed to update %s", "megamenu"), $id ) );
-        }
+			if ( $saved ) {
+				$this->send_json_success( sprintf( __( 'Saved %s', 'megamenu' ), $id_base ) );
+			} else {
+				$this->send_json_error( sprintf( __( 'Failed to save %s', 'megamenu' ), $id_base ) );
+			}
 
-    }
+		}
 
 
-    /**
-     * Add a widget to the panel
-     *
-     * @since 1.0
-     */
-    public function ajax_add_widget() {
+		/**
+		 * Update the number of mega columns for a widget
+		 *
+		 * @since 1.0
+		 */
+		public function ajax_update_widget_columns() {
 
-        check_ajax_referer( 'megamenu_edit' );
+			check_ajax_referer( 'megamenu_edit' );
 
-        $id_base = sanitize_text_field( $_POST['id_base'] );
-        $menu_item_id = absint( $_POST['menu_item_id'] );
-        $title = sanitize_text_field( $_POST['title'] );
-        $is_grid_widget = isset( $_POST['is_grid_widget'] ) && $_POST['is_grid_widget'] == 'true';
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
 
-        $added = $this->add_widget( $id_base, $menu_item_id, $title, $is_grid_widget );
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
-        if ( $added ) {
-            $this->send_json_success( $added );
-        } else {
-            $this->send_json_error( sprintf( __("Failed to add %s to %d", "megamenu"), $id_base, $menu_item_id ) );
-        }
+			$widget_id = sanitize_text_field( $_POST['id'] );
+			$columns   = absint( $_POST['columns'] );
 
-    }
+			$updated = $this->update_widget_columns( $widget_id, $columns );
 
+			if ( $updated ) {
+				$this->send_json_success( sprintf( __( 'Updated %1$s (new columns: %2$d)', 'megamenu' ), $widget_id, $columns ) );
+			} else {
+				$this->send_json_error( sprintf( __( 'Failed to update %s', 'megamenu' ), $widget_id ) );
+			}
 
-    /**
-     * Deletes a widget
-     *
-     * @since 1.0
-     */
-    public function ajax_delete_widget() {
+		}
 
-        check_ajax_referer( 'megamenu_edit' );
 
-        $widget_id = sanitize_text_field( $_POST['widget_id'] );
+		/**
+		 * Update the number of mega columns for a widget
+		 *
+		 * @since 1.0
+		 */
+		public function ajax_update_menu_item_columns() {
 
-        $deleted = $this->delete_widget( $widget_id );
+			check_ajax_referer( 'megamenu_edit' );
 
-        if ( $deleted ) {
-            $this->send_json_success( sprintf( __( "Deleted %s", "megamenu"), $widget_id ) );
-        } else {
-            $this->send_json_error( sprintf( __( "Failed to delete %s", "megamenu"), $widget_id ) );
-        }
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
 
-    }
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
+			$id      = absint( $_POST['id'] );
+			$columns = absint( $_POST['columns'] );
 
-    /**
-     * Moves a widget to a new position
-     *
-     * @since 1.0
-     */
-    public function ajax_reorder_items() {
+			$updated = $this->update_menu_item_columns( $id, $columns );
 
-        check_ajax_referer( 'megamenu_edit' );
+			if ( $updated ) {
+				$this->send_json_success( sprintf( __( 'Updated %1$s (new columns: %2$d)', 'megamenu' ), $id, $columns ) );
+			} else {
+				$this->send_json_error( sprintf( __( 'Failed to update %s', 'megamenu' ), $id ) );
+			}
 
-        $items = isset( $_POST['items'] ) ? $_POST['items'] : false;
+		}
 
-        $saved = false;
 
-        if ( $items ) {
-            $moved = $this->reorder_items( $items );
-        }
+		/**
+		 * Add a widget to the panel
+		 *
+		 * @since 1.0
+		 */
+		public function ajax_add_widget() {
 
-        if ( $moved ) {
-            $this->send_json_success( sprintf( __( "Moved (%s)", "megamenu"), json_encode( $items ) ) );
-        } else {
-            $this->send_json_error( sprintf( __( "Didn't move items", "megamenu"), json_encode( $items ) ) );
-        }
+			check_ajax_referer( 'megamenu_edit' );
 
-    }
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
 
-    /**
-     * Moves a widget to a new position
-     *
-     * @since 2.4
-     */
-    public function ajax_save_grid_data() {
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
-        check_ajax_referer( 'megamenu_edit' );
+			$id_base        = sanitize_text_field( $_POST['id_base'] );
+			$menu_item_id   = absint( $_POST['menu_item_id'] );
+			$title          = sanitize_text_field( $_POST['title'] );
+			$is_grid_widget = isset( $_POST['is_grid_widget'] ) && $_POST['is_grid_widget'] == 'true';
 
-        $grid = isset( $_POST['grid'] ) ? $_POST['grid'] : false;
-        $parent_menu_item_id = absint( $_POST['parent_menu_item'] );
+			$added = $this->add_widget( $id_base, $menu_item_id, $title, $is_grid_widget );
 
-        $saved = true;
+			if ( $added ) {
+				$this->send_json_success( $added );
+			} else {
+				$this->send_json_error( sprintf( __( 'Failed to add %1$s to %2$d', 'megamenu' ), $id_base, $menu_item_id ) );
+			}
 
-        $existing_settings = get_post_meta( $parent_menu_item_id, '_megamenu', true);
+		}
 
-        if ( is_array( $grid ) ) {
 
-            $submitted_settings = array_merge( $existing_settings, array('grid' => $grid ) );
+		/**
+		 * Deletes a widget
+		 *
+		 * @since 1.0
+		 */
+		public function ajax_delete_widget() {
 
-        }
+			check_ajax_referer( 'megamenu_edit' );
 
-        update_post_meta( $parent_menu_item_id, '_megamenu', $submitted_settings );
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
 
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
-        if ( $saved ) {
-            $this->send_json_success( sprintf( __( "Saved (%s)", "megamenu"), json_encode( $grid ) ) );
-        } else {
-            $this->send_json_error( sprintf( __( "Didn't save", "megamenu"), json_encode( $grid ) ) );
-        }
+			$widget_id = sanitize_text_field( $_POST['widget_id'] );
 
-    }
+			$deleted = $this->delete_widget( $widget_id );
 
+			if ( $deleted ) {
+				$this->send_json_success( sprintf( __( 'Deleted %s', 'megamenu' ), $widget_id ) );
+			} else {
+				$this->send_json_error( sprintf( __( 'Failed to delete %s', 'megamenu' ), $widget_id ) );
+			}
 
-    /**
-     * Returns an object representing all widgets registered in WordPress
-     *
-     * @since 1.0
-     */
-    public function get_available_widgets() {
-        global $wp_widget_factory;
+		}
 
-        $widgets = array();
 
-        foreach( $wp_widget_factory->widgets as $widget ) {
+		/**
+		 * Moves a widget to a new position
+		 *
+		 * @since 1.0
+		 */
+		public function ajax_reorder_items() {
 
-            $disabled_widgets = array('maxmegamenu');
+			check_ajax_referer( 'megamenu_edit' );
 
-            $disabled_widgets = apply_filters( "megamenu_incompatible_widgets", $disabled_widgets );
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
 
-            if ( ! in_array( $widget->id_base, $disabled_widgets ) ) {
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
-                $widgets[] = array(
-                    'text' => $widget->name,
-                    'value' => $widget->id_base
-                );
+			$items = isset( $_POST['items'] ) ? $_POST['items'] : false;
 
-            }
+			$saved = false;
 
-        }
+			if ( $items ) {
+				$moved = $this->reorder_items( $items );
+			}
 
-        uasort( $widgets, array( $this, 'sort_by_text' ) );
+			if ( $moved ) {
+				$this->send_json_success( sprintf( __( 'Moved (%s)', 'megamenu' ), json_encode( $items ) ) );
+			} else {
+				$this->send_json_error( sprintf( __( "Didn't move items", 'megamenu' ), json_encode( $items ) ) );
+			}
 
-        return $widgets;
+		}
 
-    }
+		/**
+		 * Moves a widget to a new position
+		 *
+		 * @since 2.4
+		 */
+		public function ajax_save_grid_data() {
 
+			check_ajax_referer( 'megamenu_edit' );
 
-    /**
-     * Sorts a 2d array by the 'text' key
-     *
-     * @since 1.2
-     * @param array $a
-     * @param array $b
-     */
-    function sort_by_text( $a, $b ) {
-        return strcmp( $a['text'], $b['text'] );
-    }
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
 
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
-    /**
-     * Sorts a 2d array by the 'order' key
-     *
-     * @since 2.0
-     * @param array $a
-     * @param array $b
-     */
-    function sort_by_order( $a, $b ) {
+			$grid                = isset( $_POST['grid'] ) ? $_POST['grid'] : false;
+			$parent_menu_item_id = absint( $_POST['parent_menu_item'] );
 
-        if ($a['order'] == $b['order']) {
-            return 1;
-        }
-        return ($a['order'] < $b['order']) ? -1 : 1;
+			$saved = true;
 
-    }
+			$existing_settings = get_post_meta( $parent_menu_item_id, '_megamenu', true );
 
+			if ( is_array( $grid ) ) {
 
-    /**
-     * Returns an array of immediate child menu items for the current item
-     *
-     * @since 1.5
-     * @return array
-     */
-    private function get_second_level_menu_items( $parent_menu_item_id, $menu_id, $menu_items = false ) {
+				$submitted_settings = array_merge( $existing_settings, array( 'grid' => $grid ) );
 
-        $second_level_items = array();
+			}
 
-        // check we're using a valid menu ID
-        if ( ! is_nav_menu( $menu_id ) ) {
-            return $second_level_items;
-        }
+			update_post_meta( $parent_menu_item_id, '_megamenu', $submitted_settings );
 
-        if ( ! $menu_items ) {
-            $menu_items = wp_get_nav_menu_items( $menu_id );
-        }
+			if ( $saved ) {
+				$this->send_json_success( sprintf( __( 'Saved (%s)', 'megamenu' ), json_encode( $grid ) ) );
+			} else {
+				$this->send_json_error( sprintf( __( "Didn't save", 'megamenu' ), json_encode( $grid ) ) );
+			}
 
-        if ( count( $menu_items ) ) {
+		}
 
-            foreach ( $menu_items as $item ) {
 
-                // find the child menu items
-                if ( $item->menu_item_parent == $parent_menu_item_id ) {
+		/**
+		 * Returns an object representing all widgets registered in WordPress
+		 *
+		 * @since 1.0
+		 */
+		public function get_available_widgets() {
+			global $wp_widget_factory;
 
-                    $saved_settings = array_filter( (array) get_post_meta( $item->ID, '_megamenu', true ) );
+			$widgets = array();
 
-                    $settings = array_merge( Mega_Menu_Nav_Menus::get_menu_item_defaults(), $saved_settings );
+			foreach ( $wp_widget_factory->widgets as $widget ) {
 
-                    $second_level_items[ $item->ID ] = array(
-                        'id' => $item->ID,
-                        'type' => 'menu_item',
-                        'title' => $item->title,
-                        'columns' => $settings['mega_menu_columns'],
-                        'order' => isset( $settings['mega_menu_order'][ $parent_menu_item_id ] ) ? $settings['mega_menu_order'][ $parent_menu_item_id ] : 0
-                    );
+				$disabled_widgets = array( 'maxmegamenu' );
 
-                }
+				$disabled_widgets = apply_filters( 'megamenu_incompatible_widgets', $disabled_widgets );
 
-            }
+				if ( ! in_array( $widget->id_base, $disabled_widgets ) ) {
 
-        }
+					$widgets[] = array(
+						'text'  => $widget->name,
+						'value' => $widget->id_base,
+					);
 
-        return $second_level_items;
-    }
+				}
+			}
 
-    /**
-     * Returns an array of all widgets belonging to a specified menu item ID.
-     *
-     * @since 1.0
-     * @param int $menu_item_id
-     */
-    public function get_widgets_for_menu_id( $parent_menu_item_id, $menu_id ) {
+			uasort( $widgets, array( $this, 'sort_by_text' ) );
 
-        $widgets = array();
+			return $widgets;
 
-        if ( $mega_menu_widgets = $this->get_mega_menu_sidebar_widgets() ) {
+		}
 
-            foreach ( $mega_menu_widgets as $widget_id ) {
 
-                $settings = $this->get_settings_for_widget_id( $widget_id );
+		/**
+		 * Sorts a 2d array by the 'text' key
+		 *
+		 * @since 1.2
+		 * @param array $a
+		 * @param array $b
+		 */
+		function sort_by_text( $a, $b ) {
+			return strcmp( $a['text'], $b['text'] );
+		}
 
-                if ( ! isset( $settings['mega_menu_is_grid_widget'] ) && isset( $settings['mega_menu_parent_menu_id'] ) && $settings['mega_menu_parent_menu_id'] == $parent_menu_item_id ) {
 
-                    $name = $this->get_name_for_widget_id( $widget_id );
+		/**
+		 * Sorts a 2d array by the 'order' key
+		 *
+		 * @since 2.0
+		 * @param array $a
+		 * @param array $b
+		 */
+		function sort_by_order( $a, $b ) {
 
-                    $widgets[ $widget_id ] = array(
-                        'id' => $widget_id,
-                        'type' => 'widget',
-                        'title' => $name,
-                        'columns' => $settings['mega_menu_columns'],
-                        'order' => isset( $settings['mega_menu_order'][ $parent_menu_item_id ] ) ? $settings['mega_menu_order'][ $parent_menu_item_id ] : 0
-                    );
+			if ( $a['order'] == $b['order'] ) {
+				return 1;
+			}
+			return ( $a['order'] < $b['order'] ) ? -1 : 1;
 
-                }
+		}
 
-            }
 
-        }
+		/**
+		 * Returns an array of immediate child menu items for the current item
+		 *
+		 * @since 1.5
+		 * @return array
+		 */
+		private function get_second_level_menu_items( $parent_menu_item_id, $menu_id, $menu_items = false ) {
 
-        return $widgets;
+			$second_level_items = array();
 
-    }
+			// check we're using a valid menu ID
+			if ( ! is_nav_menu( $menu_id ) ) {
+				return $second_level_items;
+			}
 
+			if ( ! $menu_items ) {
+				$menu_items = wp_get_nav_menu_items( $menu_id );
+			}
 
-    /**
-     * Returns an array of widgets and second level menu items for a specified parent menu item.
-     * Used to display the widgets/menu items in the mega menu builder.
-     *
-     * @since 2.0
-     * @param int $parent_menu_item_id
-     * @param int $menu_id
-     * @return array
-     */
-    public function get_widgets_and_menu_items_for_menu_id( $parent_menu_item_id, $menu_id ) {
+			if ( count( $menu_items ) ) {
 
-        $menu_items = $this->get_second_level_menu_items( $parent_menu_item_id, $menu_id );
+				foreach ( $menu_items as $item ) {
 
-        $widgets = $this->get_widgets_for_menu_id( $parent_menu_item_id, $menu_id );
+					// find the child menu items
+					if ( $item->menu_item_parent == $parent_menu_item_id ) {
 
-        $items = array_merge( $menu_items, $widgets );
+						$saved_settings = array_filter( (array) get_post_meta( $item->ID, '_megamenu', true ) );
 
-        $parent_settings = get_post_meta( $parent_menu_item_id, '_megamenu', true );
+						$settings = array_merge( Mega_Menu_Nav_Menus::get_menu_item_defaults(), $saved_settings );
 
-        $ordering = isset( $parent_settings['submenu_ordering'] ) ? $parent_settings['submenu_ordering'] : 'natural';
+						$second_level_items[ $item->ID ] = array(
+							'id'      => $item->ID,
+							'type'    => 'menu_item',
+							'title'   => $item->title,
+							'columns' => $settings['mega_menu_columns'],
+							'order'   => isset( $settings['mega_menu_order'][ $parent_menu_item_id ] ) ? $settings['mega_menu_order'][ $parent_menu_item_id ] : 0,
+						);
 
-        if ( $ordering == 'forced' ) {
+					}
+				}
+			}
 
-            uasort( $items, array( $this, 'sort_by_order' ) );
+			return $second_level_items;
+		}
 
-            $new_items = $items;
-            $end_items = array();
+		/**
+		 * Returns an array of all widgets belonging to a specified menu item ID.
+		 *
+		 * @since 1.0
+		 * @param int $menu_item_id
+		 */
+		public function get_widgets_for_menu_id( $parent_menu_item_id, $menu_id ) {
 
-            foreach ( $items as $key => $value ) {
-                if ( $value['order'] == 0 ) {
-                    unset( $new_items[$key] );
-                    $end_items[] = $value;
-                }
-            }
+			$widgets = array();
 
-            $items = array_merge( $new_items, $end_items );
+			if ( $mega_menu_widgets = $this->get_mega_menu_sidebar_widgets() ) {
 
-        }
+				foreach ( $mega_menu_widgets as $widget_id ) {
 
-        return $items;
-    }
+					$settings = $this->get_settings_for_widget_id( $widget_id );
 
-    /**
-     * Return a sorted array of grid data representing rows, columns and items within each column.
-     *
-     * @param int $parent_menu_item_id
-     * @param int $menu_id
-     * @since 2.4
-     * @return array
-     */
-    public function get_grid_widgets_and_menu_items_for_menu_id( $parent_menu_item_id, $menu_id, $menu_items = false ) {
+					if ( ! isset( $settings['mega_menu_is_grid_widget'] ) && isset( $settings['mega_menu_parent_menu_id'] ) && $settings['mega_menu_parent_menu_id'] == $parent_menu_item_id ) {
 
-        $meta = get_post_meta($parent_menu_item_id, '_megamenu', true);
+						$name = $this->get_name_for_widget_id( $widget_id );
 
-        $saved_grid = array();
-        
-        if ( isset( $meta['grid'] ) ) {
-            $saved_grid = $this->populate_saved_grid_data( $parent_menu_item_id, $menu_id, $meta['grid'], $menu_items );
-        } else {
-            // return empty row
-            $saved_grid[0]['columns'][0]['meta']['span'] = 3;
-            $saved_grid = $this->populate_saved_grid_data( $parent_menu_item_id, $menu_id, $saved_grid, $menu_items );
+						$widgets[ $widget_id ] = array(
+							'id'      => $widget_id,
+							'type'    => 'widget',
+							'title'   => $name,
+							'columns' => $settings['mega_menu_columns'],
+							'order'   => isset( $settings['mega_menu_order'][ $parent_menu_item_id ] ) ? $settings['mega_menu_order'][ $parent_menu_item_id ] : 0,
+						);
 
-        }
+					}
+				}
+			}
 
-        return $saved_grid;
-    }
+			return $widgets;
 
+		}
 
-    /**
-     * Ensure the widgets that are within the grid data still exist and have not been deleted (through the Widgets screen)
-     * Ensure second level menu items saved within the grid data are still actually second level menu itms within the menu structure
-     *
-     * @param $saved_grid - array representing rows, columns and widgets/menu items within each column
-     * @param $second_level_menu_items - array of second level menu items beneath the current menu item
-     * @since 2.4
-     * @return array
-     */
-    public function populate_saved_grid_data( $parent_menu_item_id, $menu_id, $saved_grid, $menu_items ) {
 
-        $second_level_menu_items = $this->get_second_level_menu_items( $parent_menu_item_id, $menu_id, $menu_items );
+		/**
+		 * Returns an array of widgets and second level menu items for a specified parent menu item.
+		 * Used to display the widgets/menu items in the mega menu builder.
+		 *
+		 * @since 2.0
+		 * @param int $parent_menu_item_id
+		 * @param int $menu_id
+		 * @return array
+		 */
+		public function get_widgets_and_menu_items_for_menu_id( $parent_menu_item_id, $menu_id ) {
 
-        $menu_items_included = array();
+			$menu_items = $this->get_second_level_menu_items( $parent_menu_item_id, $menu_id );
 
-        foreach ($saved_grid as $row => $row_data ) {
-            if ( isset( $row_data['columns'] ) ) {
-                foreach ( $row_data['columns'] as $col => $col_data ) {
-                    if ( isset ( $col_data['items'] ) ) {
-                        foreach ( $col_data['items'] as $key => $item ) {
-                            if ( $item['type'] == 'item' ) {
-                                $menu_items_included[] = $item['id'];
-                                $is_child_of_parent = false;
+			$widgets = $this->get_widgets_for_menu_id( $parent_menu_item_id, $menu_id );
 
-                                foreach ( $second_level_menu_items as $menu_item ) {
-                                    if ( $menu_item['id'] == $item['id'] ) {
-                                        $is_child_of_parent = true;
-                                    }
-                                }
+			$items = array_merge( $menu_items, $widgets );
 
-                                if ( ! $is_child_of_parent ) {
-                                    unset( $saved_grid[$row]['columns'][$col]['items'][$key] ); // menu item has been deleted or moved
-                                }
-                            } else {
-                                if ( ! $this->get_name_for_widget_id( $item['id'] ) ) {
-                                    unset( $saved_grid[$row]['columns'][$col]['items'][$key] ); // widget no longer exists
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+			$parent_settings = get_post_meta( $parent_menu_item_id, '_megamenu', true );
 
-        // Find any second level menu items that have been added to the menu but are not yet within the grid data
-        $orphaned_items = array();
+			$ordering = isset( $parent_settings['submenu_ordering'] ) ? $parent_settings['submenu_ordering'] : 'natural';
 
-        foreach ( $second_level_menu_items as $menu_item ) {
-            if ( ! in_array($menu_item['id'], $menu_items_included ) ) {
-                $orphaned_items[] = $menu_item;
-            }
-        }
+			if ( $ordering == 'forced' ) {
 
-        if ( ! isset( $saved_grid[0]['columns'][0]['items'][0])) {
-            $index = 0; // grid is empty
-        } else {
-            $index = 999; // create new row
-        }
+				uasort( $items, array( $this, 'sort_by_order' ) );
 
-        foreach ($orphaned_items as $key => $menu_item) {
-            $saved_grid[$index]['columns'][0]['meta']['span'] = 3;
-            $saved_grid[$index]['columns'][0]['items'][$key] = array(
-                'id' => $menu_item['id'], 
-                'type'=> 'item', 
-                'title' => $menu_item['title'],
-                'description' => __("Menu Item", "megamenu")
-            );
-        }
+				$new_items = $items;
+				$end_items = array();
 
-        if ( is_admin() ) {
-            $saved_grid = $this->populate_grid_menu_item_titles( $saved_grid, $menu_id );
-        }
+				foreach ( $items as $key => $value ) {
+					if ( $value['order'] == 0 ) {
+						unset( $new_items[ $key ] );
+						$end_items[] = $value;
+					}
+				}
 
-        return $saved_grid;
-    }
+				$items = array_merge( $new_items, $end_items );
 
+			}
 
-    /**
-     * Loop through the grid data and apply titles and labels to each menu item and widget.
-     *
-     * @param array $saved_grid
-     * @param int $menu_id
-     * @since 2.4
-     * @return array
-     */
-    public function populate_grid_menu_item_titles( $saved_grid, $menu_id ) {
+			return $items;
+		}
 
-        $menu_items = wp_get_nav_menu_items( $menu_id );
+		/**
+		 * Return a sorted array of grid data representing rows, columns and items within each column.
+		 *
+		 * @param int $parent_menu_item_id
+		 * @param int $menu_id
+		 * @since 2.4
+		 * @return array
+		 */
+		public function get_grid_widgets_and_menu_items_for_menu_id( $parent_menu_item_id, $menu_id, $menu_items = false ) {
 
-        $menu_item_title_map = array();
+			$meta = get_post_meta( $parent_menu_item_id, '_megamenu', true );
 
-        foreach ( $menu_items as $item ) {
-            $menu_item_title_map[ $item->ID ] = $item->title;
-        }
+			$saved_grid = array();
 
-        foreach ($saved_grid as $row => $row_data ) {
-            if ( isset( $row_data['columns'] ) ) {
-                foreach ( $row_data['columns'] as $col => $col_data ) {
-                    if ( isset ( $col_data['items'] ) ) {
-                        foreach ( $col_data['items'] as $key => $item ) {
-                            if ( $item['type'] == 'item' ) {
-                                
-                                if ( isset( $menu_item_title_map[$item['id']] ) ) {
-                                    $title = $menu_item_title_map[$item['id']];
-                                } else {
-                                    $title = __("(no label)");
-                                }
-                                
-                                $saved_grid[$row]['columns'][$col]['items'][$key]['title'] = $title;
-                                $saved_grid[$row]['columns'][$col]['items'][$key]['description'] = __("Menu Item", "megamenu");
-                            } else {
-                                $saved_grid[$row]['columns'][$col]['items'][$key]['title'] = $this->get_title_for_widget_id($item['id']);
-                                $saved_grid[$row]['columns'][$col]['items'][$key]['description'] = $this->get_name_for_widget_id($item['id']);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+			if ( isset( $meta['grid'] ) ) {
+				$saved_grid = $this->populate_saved_grid_data( $parent_menu_item_id, $menu_id, $meta['grid'], $menu_items );
+			} else {
+				// return empty row
+				$saved_grid[0]['columns'][0]['meta']['span'] = 3;
+				$saved_grid                                  = $this->populate_saved_grid_data( $parent_menu_item_id, $menu_id, $saved_grid, $menu_items );
 
-        return $saved_grid;
-    }
+			}
 
+			return $saved_grid;
+		}
 
-    /**
-     * Returns the widget data as stored in the options table
-     *
-     * @since 1.8.1
-     * @param string $widget_id
-     */
-    public function get_settings_for_widget_id( $widget_id ) {
 
-        $id_base = $this->get_id_base_for_widget_id( $widget_id );
+		/**
+		 * Ensure the widgets that are within the grid data still exist and have not been deleted (through the Widgets screen)
+		 * Ensure second level menu items saved within the grid data are still actually second level menu itms within the menu structure
+		 *
+		 * @param $saved_grid - array representing rows, columns and widgets/menu items within each column
+		 * @param $second_level_menu_items - array of second level menu items beneath the current menu item
+		 * @since 2.4
+		 * @return array
+		 */
+		public function populate_saved_grid_data( $parent_menu_item_id, $menu_id, $saved_grid, $menu_items ) {
 
-        if ( ! $id_base ) {
-            return false;
-        }
+			$second_level_menu_items = $this->get_second_level_menu_items( $parent_menu_item_id, $menu_id, $menu_items );
 
-        $widget_number = $this->get_widget_number_for_widget_id( $widget_id );
+			$menu_items_included = array();
 
-        $current_widgets = get_option( 'widget_' . $id_base );
+			foreach ( $saved_grid as $row => $row_data ) {
+				if ( isset( $row_data['columns'] ) ) {
+					foreach ( $row_data['columns'] as $col => $col_data ) {
+						if ( isset( $col_data['items'] ) ) {
+							foreach ( $col_data['items'] as $key => $item ) {
+								if ( $item['type'] == 'item' ) {
+									$menu_items_included[] = $item['id'];
+									$is_child_of_parent    = false;
 
-        return $current_widgets[ $widget_number ];
+									foreach ( $second_level_menu_items as $menu_item ) {
+										if ( $menu_item['id'] == $item['id'] ) {
+											$is_child_of_parent = true;
+										}
+									}
 
-    }
+									if ( ! $is_child_of_parent ) {
+										unset( $saved_grid[ $row ]['columns'][ $col ]['items'][ $key ] ); // menu item has been deleted or moved
+									}
+								} else {
+									if ( ! $this->get_name_for_widget_id( $item['id'] ) ) {
+										unset( $saved_grid[ $row ]['columns'][ $col ]['items'][ $key ] ); // widget no longer exists
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 
-    /**
-     * Returns the widget ID (number)
-     *
-     * @since 1.0
-     * @param string $widget_id - id_base-ID (eg meta-3)
-     * @return int
-     */
-    public function get_widget_number_for_widget_id( $widget_id ) {
+			// Find any second level menu items that have been added to the menu but are not yet within the grid data
+			$orphaned_items = array();
 
-        $parts = explode( "-", $widget_id );
+			foreach ( $second_level_menu_items as $menu_item ) {
+				if ( ! in_array( $menu_item['id'], $menu_items_included ) ) {
+					$orphaned_items[] = $menu_item;
+				}
+			}
 
-        return absint( end( $parts ) );
+			if ( ! isset( $saved_grid[0]['columns'][0]['items'][0] ) ) {
+				$index = 0; // grid is empty
+			} else {
+				$index = 999; // create new row
+			}
 
-    }
+			foreach ( $orphaned_items as $key => $menu_item ) {
+				$saved_grid[ $index ]['columns'][0]['meta']['span']  = 3;
+				$saved_grid[ $index ]['columns'][0]['items'][ $key ] = array(
+					'id'          => $menu_item['id'],
+					'type'        => 'item',
+					'title'       => $menu_item['title'],
+					'description' => __( 'Menu Item', 'megamenu' ),
+				);
+			}
 
-    /**
-     * Returns the name/title of a Widget
-     *
-     * @since 1.0
-     * @param $widget_id - id_base-ID (eg meta-3)
-     * @return string e.g. "Custom HTML" or "Text"
-     */
-    public function get_name_for_widget_id( $widget_id ) {
-        global $wp_registered_widgets;
+			if ( is_admin() ) {
+				$saved_grid = $this->populate_grid_menu_item_titles( $saved_grid, $menu_id );
+			}
 
-        if ( ! isset( $wp_registered_widgets[$widget_id] ) ) {
-            return false;
-        }
+			return $saved_grid;
+		}
 
-        $registered_widget = $wp_registered_widgets[$widget_id];
 
-        return $registered_widget['name'];
+		/**
+		 * Loop through the grid data and apply titles and labels to each menu item and widget.
+		 *
+		 * @param array $saved_grid
+		 * @param int $menu_id
+		 * @since 2.4
+		 * @return array
+		 */
+		public function populate_grid_menu_item_titles( $saved_grid, $menu_id ) {
 
-    }
+			$menu_items = wp_get_nav_menu_items( $menu_id );
 
+			$menu_item_title_map = array();
 
-    /**
-     * Returns the title of a Widget
-     *
-     * @since 2.4
-     * @param $widget_id - id_base-ID (eg meta-3)
-     */
-    public function get_title_for_widget_id( $widget_id ) {
-        $instance = $this->get_settings_for_widget_id( $widget_id );
+			foreach ( $menu_items as $item ) {
+				$menu_item_title_map[ $item->ID ] = $item->title;
+			}
 
-        if ( isset( $instance['title'] ) && strlen( $instance['title'] ) ) {
-            return $instance['title'];
-        }
+			foreach ( $saved_grid as $row => $row_data ) {
+				if ( isset( $row_data['columns'] ) ) {
+					foreach ( $row_data['columns'] as $col => $col_data ) {
+						if ( isset( $col_data['items'] ) ) {
+							foreach ( $col_data['items'] as $key => $item ) {
+								if ( $item['type'] == 'item' ) {
 
-        return $this->get_name_for_widget_id( $widget_id );
+									if ( isset( $menu_item_title_map[ $item['id'] ] ) ) {
+										$title = $menu_item_title_map[ $item['id'] ];
+									} else {
+										$title = __( '(no label)' );
+									}
 
-    }
+									$saved_grid[ $row ]['columns'][ $col ]['items'][ $key ]['title']       = $title;
+									$saved_grid[ $row ]['columns'][ $col ]['items'][ $key ]['description'] = __( 'Menu Item', 'megamenu' );
+								} else {
+									$saved_grid[ $row ]['columns'][ $col ]['items'][ $key ]['title']       = $this->get_title_for_widget_id( $item['id'] );
+									$saved_grid[ $row ]['columns'][ $col ]['items'][ $key ]['description'] = $this->get_name_for_widget_id( $item['id'] );
+								}
+							}
+						}
+					}
+				}
+			}
 
-    /**
-     * Returns the id_base value for a Widget ID
-     *
-     * @since 1.0
-     */
-    public function get_id_base_for_widget_id( $widget_id ) {
-        global $wp_registered_widget_controls;
+			return $saved_grid;
+		}
 
-        if ( ! isset( $wp_registered_widget_controls[ $widget_id ] ) ) {
-            return false;
-        }
 
-        $control = $wp_registered_widget_controls[ $widget_id ];
+		/**
+		 * Returns the widget data as stored in the options table
+		 *
+		 * @since 1.8.1
+		 * @param string $widget_id
+		 */
+		public function get_settings_for_widget_id( $widget_id ) {
 
-        $id_base = isset( $control['id_base'] ) ? $control['id_base'] : $control['id'];
+			$id_base = $this->get_id_base_for_widget_id( $widget_id );
 
-        return $id_base;
+			if ( ! $id_base ) {
+				return false;
+			}
 
-    }
+			$widget_number = $this->get_widget_number_for_widget_id( $widget_id );
 
-    /**
-     * Returns the HTML for a single widget instance.
-     *
-     * @since 1.0
-     * @param string widget_id Something like meta-3
-     */
-    public function show_widget( $id ) {
-        global $wp_registered_widgets;
+			$current_widgets = get_option( 'widget_' . $id_base );
 
-        $params = array_merge(
-            array( array_merge( array( 'widget_id' => $id, 'widget_name' => $wp_registered_widgets[$id]['name'] ) ) ),
-            (array) $wp_registered_widgets[$id]['params']
-        );
+			return $current_widgets[ $widget_number ];
 
-        $params[0]['id'] = 'mega-menu';
-        $params[0]['before_title'] = apply_filters( "megamenu_before_widget_title", '<h4 class="mega-block-title">', $wp_registered_widgets[$id] );
-        $params[0]['after_title'] = apply_filters( "megamenu_after_widget_title", '</h4>', $wp_registered_widgets[$id] );
-        $params[0]['before_widget'] = apply_filters( "megamenu_before_widget", "", $wp_registered_widgets[$id] );
-        $params[0]['after_widget'] = apply_filters( "megamenu_after_widget", "", $wp_registered_widgets[$id] );
-        
-        if ( defined("MEGAMENU_DYNAMIC_SIDEBAR_PARAMS") && MEGAMENU_DYNAMIC_SIDEBAR_PARAMS ) {
-            $params[0]['before_widget'] = apply_filters( "megamenu_before_widget", '<div id="" class="">', $wp_registered_widgets[$id] );
-            $params[0]['after_widget'] = apply_filters( "megamenu_after_widget", '</div>', $wp_registered_widgets[$id] );
+		}
 
-            $params = apply_filters('dynamic_sidebar_params', $params);
-        }
-        
-        $callback = $wp_registered_widgets[$id]['callback'];
+		/**
+		 * Returns the widget ID (number)
+		 *
+		 * @since 1.0
+		 * @param string $widget_id - id_base-ID (eg meta-3)
+		 * @return int
+		 */
+		public function get_widget_number_for_widget_id( $widget_id ) {
 
-        if ( is_callable( $callback ) ) {
-            ob_start();
-            call_user_func_array( $callback, $params );
-            return ob_get_clean();
-        }
+			$parts = explode( '-', $widget_id );
 
-    }
+			return absint( end( $parts ) );
 
+		}
 
-    /**
-     * Returns the class name for a widget instance.
-     *
-     * @since 1.8.1
-     * @param string widget_id Something like meta-3
-     */
-    public function get_widget_class( $id ) {
-        global $wp_registered_widgets;
+		/**
+		 * Returns the name/title of a Widget
+		 *
+		 * @since 1.0
+		 * @param $widget_id - id_base-ID (eg meta-3)
+		 * @return string e.g. "Custom HTML" or "Text"
+		 */
+		public function get_name_for_widget_id( $widget_id ) {
+			global $wp_registered_widgets;
 
-        if ( isset ( $wp_registered_widgets[$id]['classname'] ) ) {
-            return $wp_registered_widgets[$id]['classname'];
-        }
+			if ( ! isset( $wp_registered_widgets[ $widget_id ] ) ) {
+				return false;
+			}
 
-        return "";
-    }
+			$registered_widget = $wp_registered_widgets[ $widget_id ];
 
+			return $registered_widget['name'];
 
-    /**
-     * Shows the widget edit form for the specified widget.
-     *
-     * @since 1.0
-     * @param $widget_id - id_base-ID (eg meta-3)
-     */
-    public function show_widget_form( $widget_id ) {
-        global $wp_registered_widget_controls;
+		}
 
-        $control = $wp_registered_widget_controls[ $widget_id ];
 
-        $id_base = $this->get_id_base_for_widget_id( $widget_id );
+		/**
+		 * Returns the title of a Widget
+		 *
+		 * @since 2.4
+		 * @param $widget_id - id_base-ID (eg meta-3)
+		 */
+		public function get_title_for_widget_id( $widget_id ) {
+			$instance = $this->get_settings_for_widget_id( $widget_id );
 
-        $widget_number = $this->get_widget_number_for_widget_id( $widget_id );
+			if ( isset( $instance['title'] ) && strlen( $instance['title'] ) ) {
+				return $instance['title'];
+			}
 
-        $nonce = wp_create_nonce('megamenu_save_widget_' . $widget_id);
+			return $this->get_name_for_widget_id( $widget_id );
 
-        ?>
+		}
 
-        <form method='post'>
-            <input type="hidden" name="widget-id" class="widget-id" value="<?php echo esc_attr( $widget_id ); ?>" />
-            <input type='hidden' name='action'    value='mm_save_widget' />
-            <input type='hidden' name='id_base'   class="id_base" value='<?php echo esc_attr( $id_base ); ?>' />
-            <input type='hidden' name='widget_id' value='<?php echo esc_attr( $widget_id ) ?>' />
-            <input type='hidden' name='_wpnonce'  value='<?php echo esc_attr( $nonce ) ?>' />
-            <div class='widget-content'>
-                <?php
-                    if ( is_callable( $control['callback'] ) ) {
-                        call_user_func_array( $control['callback'], $control['params'] );
-                    }
-                ?>
+		/**
+		 * Returns the id_base value for a Widget ID
+		 *
+		 * @since 1.0
+		 */
+		public function get_id_base_for_widget_id( $widget_id ) {
+			global $wp_registered_widget_controls;
 
-                <div class='widget-controls'>
-                    <a class='delete' href='#delete'><?php _e("Delete", "megamenu"); ?></a> |
-                    <a class='close' href='#close'><?php _e("Close", "megamenu"); ?></a>
-                </div>
+			if ( ! isset( $wp_registered_widget_controls[ $widget_id ] ) ) {
+				return false;
+			}
 
-                <?php
-                    submit_button( __( 'Save' ), 'button-primary alignright', 'savewidget', false );
-                ?>
-            </div>
-        </form>
-        
+			$control = $wp_registered_widget_controls[ $widget_id ];
 
-        <?php
-    }
+			$id_base = isset( $control['id_base'] ) ? $control['id_base'] : $control['id'];
 
+			return $id_base;
 
-    /**
-     * Saves a widget. Calls the update callback on the widget.
-     * The callback inspects the post values and updates all widget instances which match the base ID.
-     *
-     * @since 1.0
-     * @param string $id_base - e.g. 'meta'
-     * @return bool
-     */
-    public function save_widget( $id_base ) {
-        global $wp_registered_widget_updates;
+		}
 
-        $control = $wp_registered_widget_updates[$id_base];
+		/**
+		 * Returns the HTML for a single widget instance.
+		 *
+		 * @since 1.0
+		 * @param string widget_id Something like meta-3
+		 */
+		public function show_widget( $id ) {
+			global $wp_registered_widgets;
 
-        if ( is_callable( $control['callback'] ) ) {
+			$params = array_merge(
+				array(
+					array_merge(
+						array(
+							'widget_id'   => $id,
+							'widget_name' => $wp_registered_widgets[ $id ]['name'],
+						)
+					),
+				),
+				(array) $wp_registered_widgets[ $id ]['params']
+			);
 
-            call_user_func_array( $control['callback'], $control['params'] );
+			$params[0]['id']            = 'mega-menu';
+			$params[0]['before_title']  = apply_filters( 'megamenu_before_widget_title', '<h4 class="mega-block-title">', $wp_registered_widgets[ $id ] );
+			$params[0]['after_title']   = apply_filters( 'megamenu_after_widget_title', '</h4>', $wp_registered_widgets[ $id ] );
+			$params[0]['before_widget'] = apply_filters( 'megamenu_before_widget', '', $wp_registered_widgets[ $id ] );
+			$params[0]['after_widget']  = apply_filters( 'megamenu_after_widget', '', $wp_registered_widgets[ $id ] );
 
-            do_action( "megamenu_after_widget_save" );
+			if ( defined( 'MEGAMENU_DYNAMIC_SIDEBAR_PARAMS' ) && MEGAMENU_DYNAMIC_SIDEBAR_PARAMS ) {
+				$params[0]['before_widget'] = apply_filters( 'megamenu_before_widget', '<div id="" class="">', $wp_registered_widgets[ $id ] );
+				$params[0]['after_widget']  = apply_filters( 'megamenu_after_widget', '</div>', $wp_registered_widgets[ $id ] );
 
-            return true;
-        }
+				$params = apply_filters( 'dynamic_sidebar_params', $params );
+			}
 
-        return false;
+			$callback = $wp_registered_widgets[ $id ]['callback'];
 
-    }
+			if ( is_callable( $callback ) ) {
+				ob_start();
+				call_user_func_array( $callback, $params );
+				return ob_get_clean();
+			}
 
+		}
 
-    /**
-     * Adds a widget to WordPress. First creates a new widget instance, then
-     * adds the widget instance to the mega menu widget sidebar area.
-     *
-     * @since 1.0
-     * @param string $id_base
-     * @param int $menu_item_id
-     * @param string $title
-     */
-    public function add_widget( $id_base, $menu_item_id, $title, $is_grid_widget ) {
 
-        require_once( ABSPATH . 'wp-admin/includes/widgets.php' );
+		/**
+		 * Returns the class name for a widget instance.
+		 *
+		 * @since 1.8.1
+		 * @param string widget_id Something like meta-3
+		 */
+		public function get_widget_class( $id ) {
+			global $wp_registered_widgets;
 
-        $next_id = next_widget_id_number( $id_base );
+			if ( isset( $wp_registered_widgets[ $id ]['classname'] ) ) {
+				return $wp_registered_widgets[ $id ]['classname'];
+			}
 
-        $this->add_widget_instance( $id_base, $next_id, $menu_item_id, $is_grid_widget );
+			return '';
+		}
 
-        $widget_id = $this->add_widget_to_sidebar( $id_base, $next_id );
 
-        $return  = '<div class="widget" title="' . esc_attr( $title ) . '" data-columns="2" id="' . $widget_id . '" data-type="widget" data-id="' . $widget_id . '">';
-        $return .= '    <div class="widget-top">';
-        $return .= '        <div class="widget-title-action">';
+		/**
+		 * Shows the widget edit form for the specified widget.
+		 *
+		 * @since 1.0
+		 * @param $widget_id - id_base-ID (eg meta-3)
+		 */
+		public function show_widget_form( $widget_id ) {
+			global $wp_registered_widget_controls;
 
-        if ( ! $is_grid_widget ) {
-            $return .= '            <a class="widget-option widget-contract" title="' . esc_attr( __("Contract", "megamenu") ) . '"></a>';
-            $return .= '            <span class="widget-cols"><span class="widget-num-cols">2</span><span class="widget-of">/</span><span class="widget-total-cols">X</span></span>';
-            $return .= '            <a class="widget-option widget-expand" title="' . esc_attr( __("Expand", "megamenu") ) . '"></a>';
-        }
+			$control = $wp_registered_widget_controls[ $widget_id ];
 
-        $return .= '            <a class="widget-option widget-action" title="' . esc_attr( __("Edit", "megamenu") ) . '"></a>';
-        $return .= '        </div>';
-        $return .= '        <div class="widget-title">';
-        $return .= '            <h4>' . esc_html( $title ) . '</h4>';
-        
-        if ( $is_grid_widget ) {
-            $return .= '            <span class="widget-desc">' .  esc_html( $title ) . '</span>';
-        }
+			$id_base = $this->get_id_base_for_widget_id( $widget_id );
 
-        $return .= '        </div>';
-        $return .= '    </div>';
-        $return .= '    <div class="widget-inner widget-inside"></div>';
-        $return .= '</div>';
+			$widget_number = $this->get_widget_number_for_widget_id( $widget_id );
 
-        return $return;
+			$nonce = wp_create_nonce( 'megamenu_save_widget_' . $widget_id );
 
-    }
+			?>
 
+		<form method='post'>
+			<input type="hidden" name="widget-id" class="widget-id" value="<?php echo esc_attr( $widget_id ); ?>" />
+			<input type='hidden' name='action'    value='mm_save_widget' />
+			<input type='hidden' name='id_base'   class="id_base" value='<?php echo esc_attr( $id_base ); ?>' />
+			<input type='hidden' name='widget_id' value='<?php echo esc_attr( $widget_id ); ?>' />
+			<input type='hidden' name='_wpnonce'  value='<?php echo esc_attr( $nonce ); ?>' />
+			<div class='widget-content'>
+				<?php
+				if ( is_callable( $control['callback'] ) ) {
+					call_user_func_array( $control['callback'], $control['params'] );
+				}
+				?>
 
-    /**
-     * Adds a new widget instance of the specified base ID to the database.
-     *
-     * @since 1.0
-     * @param string $id_base
-     * @param int $next_id
-     * @param int $menu_item_id
-     */
-    private function add_widget_instance( $id_base, $next_id, $menu_item_id, $is_grid_widget ) {
+				<div class='widget-controls'>
+					<a class='delete' href='#delete'><?php _e( 'Delete', 'megamenu' ); ?></a> |
+					<a class='close' href='#close'><?php _e( 'Close', 'megamenu' ); ?></a>
+				</div>
 
-        $current_widgets = get_option( 'widget_' . $id_base );
+				<?php
+					submit_button( __( 'Save' ), 'button-primary alignright', 'savewidget', false );
+				?>
+			</div>
+		</form>
+		
 
-        $current_widgets[ $next_id ] = array(
-            "mega_menu_columns" => 2,
-            "mega_menu_parent_menu_id" => $menu_item_id
-        );
+			<?php
+		}
 
-        if ( $is_grid_widget ) {
-            $current_widgets[ $next_id ] = array(
-                "mega_menu_is_grid_widget" => 'true'
-            );
-        }
 
-        update_option( 'widget_' . $id_base, $current_widgets );
+		/**
+		 * Saves a widget. Calls the update callback on the widget.
+		 * The callback inspects the post values and updates all widget instances which match the base ID.
+		 *
+		 * @since 1.0
+		 * @param string $id_base - e.g. 'meta'
+		 * @return bool
+		 */
+		public function save_widget( $id_base ) {
+			global $wp_registered_widget_updates;
 
-    }
+			$control = $wp_registered_widget_updates[ $id_base ];
 
-    /**
-     * Removes a widget instance from the database
-     *
-     * @since 1.0
-     * @param string $widget_id e.g. meta-3
-     * @return bool. True if widget has been deleted.
-     */
-    private function remove_widget_instance( $widget_id ) {
+			if ( is_callable( $control['callback'] ) ) {
 
-        $id_base = $this->get_id_base_for_widget_id( $widget_id );
-        $widget_number = $this->get_widget_number_for_widget_id( $widget_id );
+				call_user_func_array( $control['callback'], $control['params'] );
 
-        // add blank widget
-        $current_widgets = get_option( 'widget_' . $id_base );
+				do_action( 'megamenu_after_widget_save' );
 
-        if ( isset( $current_widgets[ $widget_number ] ) ) {
+				return true;
+			}
 
-            unset( $current_widgets[ $widget_number ] );
+			return false;
 
-            update_option( 'widget_' . $id_base, $current_widgets );
+		}
 
-            return true;
 
-        }
+		/**
+		 * Adds a widget to WordPress. First creates a new widget instance, then
+		 * adds the widget instance to the mega menu widget sidebar area.
+		 *
+		 * @since 1.0
+		 * @param string $id_base
+		 * @param int $menu_item_id
+		 * @param string $title
+		 */
+		public function add_widget( $id_base, $menu_item_id, $title, $is_grid_widget ) {
 
-        return false;
+			require_once( ABSPATH . 'wp-admin/includes/widgets.php' );
 
-    }
+			$next_id = next_widget_id_number( $id_base );
 
+			$this->add_widget_instance( $id_base, $next_id, $menu_item_id, $is_grid_widget );
 
-    /**
-     * Updates the number of mega columns for a specified widget.
-     *
-     * @since 1.0
-     * @param string $widget_id
-     * @param int $columns
-     */
-    public function update_widget_columns( $widget_id, $columns ) {
+			$widget_id = $this->add_widget_to_sidebar( $id_base, $next_id );
 
-        $id_base = $this->get_id_base_for_widget_id( $widget_id );
+			$return  = '<div class="widget" title="' . esc_attr( $title ) . '" data-columns="2" id="' . $widget_id . '" data-type="widget" data-id="' . $widget_id . '">';
+			$return .= '    <div class="widget-top">';
+			$return .= '        <div class="widget-title-action">';
 
-        $widget_number = $this->get_widget_number_for_widget_id( $widget_id );
+			if ( ! $is_grid_widget ) {
+				$return .= '            <a class="widget-option widget-contract" title="' . esc_attr( __( 'Contract', 'megamenu' ) ) . '"></a>';
+				$return .= '            <span class="widget-cols"><span class="widget-num-cols">2</span><span class="widget-of">/</span><span class="widget-total-cols">X</span></span>';
+				$return .= '            <a class="widget-option widget-expand" title="' . esc_attr( __( 'Expand', 'megamenu' ) ) . '"></a>';
+			}
 
-        $current_widgets = get_option( 'widget_' . $id_base );
+			$return .= '            <a class="widget-option widget-action" title="' . esc_attr( __( 'Edit', 'megamenu' ) ) . '"></a>';
+			$return .= '        </div>';
+			$return .= '        <div class="widget-title">';
+			$return .= '            <h4>' . esc_html( $title ) . '</h4>';
 
-        $current_widgets[ $widget_number ]["mega_menu_columns"] = absint( $columns) ;
+			if ( $is_grid_widget ) {
+				$return .= '            <span class="widget-desc">' . esc_html( $title ) . '</span>';
+			}
 
-        update_option( 'widget_' . $id_base, $current_widgets );
+			$return .= '        </div>';
+			$return .= '    </div>';
+			$return .= '    <div class="widget-inner widget-inside"></div>';
+			$return .= '</div>';
 
-        do_action( "megamenu_after_widget_save" );
+			return $return;
 
-        return true;
+		}
 
-    }
 
+		/**
+		 * Adds a new widget instance of the specified base ID to the database.
+		 *
+		 * @since 1.0
+		 * @param string $id_base
+		 * @param int $next_id
+		 * @param int $menu_item_id
+		 */
+		private function add_widget_instance( $id_base, $next_id, $menu_item_id, $is_grid_widget ) {
 
-    /**
-     * Updates the number of mega columns for a specified widget.
-     *
-     * @since 1.10
-     * @param string $menu_item_id
-     * @param int $columns
-     */
-    public function update_menu_item_columns( $menu_item_id, $columns ) {
+			$current_widgets = get_option( 'widget_' . $id_base );
 
-        $existing_settings = get_post_meta( $menu_item_id, '_megamenu', true);
+			$current_widgets[ $next_id ] = array(
+				'mega_menu_columns'        => 2,
+				'mega_menu_parent_menu_id' => $menu_item_id,
+			);
 
-        $submitted_settings = array(
-            'mega_menu_columns' => absint( $columns )
-        );
+			if ( $is_grid_widget ) {
+				$current_widgets[ $next_id ] = array(
+					'mega_menu_is_grid_widget' => 'true',
+				);
+			}
 
-        if ( is_array( $existing_settings ) ) {
-            $submitted_settings = array_merge( $existing_settings, $submitted_settings );
-        }
+			update_option( 'widget_' . $id_base, $current_widgets );
 
-        update_post_meta( $menu_item_id, '_megamenu', $submitted_settings );
+		}
 
-        return true;
+		/**
+		 * Removes a widget instance from the database
+		 *
+		 * @since 1.0
+		 * @param string $widget_id e.g. meta-3
+		 * @return bool. True if widget has been deleted.
+		 */
+		private function remove_widget_instance( $widget_id ) {
 
-    }
+			$id_base       = $this->get_id_base_for_widget_id( $widget_id );
+			$widget_number = $this->get_widget_number_for_widget_id( $widget_id );
 
+			// add blank widget
+			$current_widgets = get_option( 'widget_' . $id_base );
 
-    /**
-     * Updates the order of a specified widget.
-     *
-     * @since 1.10
-     * @param string $widget_id
-     * @param int $columns
-     */
-    public function update_widget_order( $widget_id, $order, $parent_menu_item_id ) {
+			if ( isset( $current_widgets[ $widget_number ] ) ) {
 
-        $id_base = $this->get_id_base_for_widget_id( $widget_id );
+				unset( $current_widgets[ $widget_number ] );
 
-        $widget_number = $this->get_widget_number_for_widget_id( $widget_id );
+				update_option( 'widget_' . $id_base, $current_widgets );
 
-        $current_widgets = get_option( 'widget_' . $id_base );
+				return true;
 
-        $current_widgets[ $widget_number ]["mega_menu_order"] = array( $parent_menu_item_id => absint( $order ) );
+			}
 
-        update_option( 'widget_' . $id_base, $current_widgets );
+			return false;
 
-        return true;
+		}
 
-    }
 
+		/**
+		 * Updates the number of mega columns for a specified widget.
+		 *
+		 * @since 1.0
+		 * @param string $widget_id
+		 * @param int $columns
+		 */
+		public function update_widget_columns( $widget_id, $columns ) {
 
-    /**
-     * Updates the order of a specified menu item.
-     *
-     * @since 1.10
-     * @param string $menu_item_id
-     * @param int $order
-     */
-    public function update_menu_item_order( $menu_item_id, $order, $parent_menu_item_id ) {
+			$id_base = $this->get_id_base_for_widget_id( $widget_id );
 
-        $submitted_settings['mega_menu_order'] = array( $parent_menu_item_id => absint( $order ) );
+			$widget_number = $this->get_widget_number_for_widget_id( $widget_id );
 
-        $existing_settings = get_post_meta( $menu_item_id, '_megamenu', true);
+			$current_widgets = get_option( 'widget_' . $id_base );
 
-        if ( is_array( $existing_settings ) ) {
+			$current_widgets[ $widget_number ]['mega_menu_columns'] = absint( $columns );
 
-            $submitted_settings = array_merge( $existing_settings, $submitted_settings );
+			update_option( 'widget_' . $id_base, $current_widgets );
 
-        }
+			do_action( 'megamenu_after_widget_save' );
 
-        update_post_meta( $menu_item_id, '_megamenu', $submitted_settings );
+			return true;
 
-        return true;
+		}
 
-    }
 
+		/**
+		 * Updates the number of mega columns for a specified widget.
+		 *
+		 * @since 1.10
+		 * @param string $menu_item_id
+		 * @param int $columns
+		 */
+		public function update_menu_item_columns( $menu_item_id, $columns ) {
 
-    /**
-     * Deletes a widget from WordPress
-     *
-     * @since 1.0
-     * @param string $widget_id e.g. meta-3
-     */
-    public function delete_widget( $widget_id ) {
+			$existing_settings = get_post_meta( $menu_item_id, '_megamenu', true );
 
-        $this->remove_widget_from_sidebar( $widget_id );
-        $this->remove_widget_instance( $widget_id );
+			$submitted_settings = array(
+				'mega_menu_columns' => absint( $columns ),
+			);
 
-        do_action( "megamenu_after_widget_delete" );
+			if ( is_array( $existing_settings ) ) {
+				$submitted_settings = array_merge( $existing_settings, $submitted_settings );
+			}
 
-        return true;
+			update_post_meta( $menu_item_id, '_megamenu', $submitted_settings );
 
-    }
+			return true;
 
+		}
 
-    /**
-     * Moves a widget from one position to another.
-     *
-     * @since 1.10
-     * @param array $items
-     * @return string $widget_id. The widget that has been moved.
-     */
-    public function reorder_items( $items ) {
 
-        foreach ( $items as $item ) {
+		/**
+		 * Updates the order of a specified widget.
+		 *
+		 * @since 1.10
+		 * @param string $widget_id
+		 * @param int $columns
+		 */
+		public function update_widget_order( $widget_id, $order, $parent_menu_item_id ) {
 
-            if ( $item['parent_menu_item'] ) {
+			$id_base = $this->get_id_base_for_widget_id( $widget_id );
 
-                $submitted_settings = array( 'submenu_ordering' => 'forced' );
+			$widget_number = $this->get_widget_number_for_widget_id( $widget_id );
 
-                $existing_settings = get_post_meta( $item['parent_menu_item'], '_megamenu', true );
+			$current_widgets = get_option( 'widget_' . $id_base );
 
-                if ( is_array( $existing_settings ) ) {
+			$current_widgets[ $widget_number ]['mega_menu_order'] = array( $parent_menu_item_id => absint( $order ) );
 
-                    $submitted_settings = array_merge( $existing_settings, $submitted_settings );
+			update_option( 'widget_' . $id_base, $current_widgets );
 
-                }
+			return true;
 
-                update_post_meta( $item['parent_menu_item'], '_megamenu', $submitted_settings );
-            }
+		}
 
-            if ( $item['type'] == 'widget' ) {
 
-                $this->update_widget_order( $item['id'], $item['order'], $item['parent_menu_item'] );
+		/**
+		 * Updates the order of a specified menu item.
+		 *
+		 * @since 1.10
+		 * @param string $menu_item_id
+		 * @param int $order
+		 */
+		public function update_menu_item_order( $menu_item_id, $order, $parent_menu_item_id ) {
 
-            }
+			$submitted_settings['mega_menu_order'] = array( $parent_menu_item_id => absint( $order ) );
 
-            if ( $item['type'] == 'menu_item' ) {
+			$existing_settings = get_post_meta( $menu_item_id, '_megamenu', true );
 
-                $this->update_menu_item_order( $item['id'], $item['order'], $item['parent_menu_item'] );
+			if ( is_array( $existing_settings ) ) {
 
-            }
+				$submitted_settings = array_merge( $existing_settings, $submitted_settings );
 
-        }
+			}
 
-        return true;
+			update_post_meta( $menu_item_id, '_megamenu', $submitted_settings );
 
-    }
+			return true;
 
+		}
 
-    /**
-     * Adds a widget to the Mega Menu widget sidebar
-     *
-     * @since 1.0
-     */
-    private function add_widget_to_sidebar( $id_base, $next_id ) {
 
-        $widget_id = $id_base . '-' . $next_id;
+		/**
+		 * Deletes a widget from WordPress
+		 *
+		 * @since 1.0
+		 * @param string $widget_id e.g. meta-3
+		 */
+		public function delete_widget( $widget_id ) {
 
-        $sidebar_widgets = $this->get_mega_menu_sidebar_widgets();
+			$this->remove_widget_from_sidebar( $widget_id );
+			$this->remove_widget_instance( $widget_id );
 
-        $sidebar_widgets[] = $widget_id;
+			do_action( 'megamenu_after_widget_delete' );
 
-        $this->set_mega_menu_sidebar_widgets($sidebar_widgets);
+			return true;
 
-        do_action( "megamenu_after_widget_add" );
+		}
 
-        return $widget_id;
 
-    }
+		/**
+		 * Moves a widget from one position to another.
+		 *
+		 * @since 1.10
+		 * @param array $items
+		 * @return string $widget_id. The widget that has been moved.
+		 */
+		public function reorder_items( $items ) {
 
+			foreach ( $items as $item ) {
 
-    /**
-     * Removes a widget from the Mega Menu widget sidebar
-     *
-     * @since 1.0
-     * @return string The widget that was removed
-     */
-    private function remove_widget_from_sidebar($widget_id) {
+				if ( $item['parent_menu_item'] ) {
 
-        $widgets = $this->get_mega_menu_sidebar_widgets();
+					$submitted_settings = array( 'submenu_ordering' => 'forced' );
 
-        $new_mega_menu_widgets = array();
+					$existing_settings = get_post_meta( $item['parent_menu_item'], '_megamenu', true );
 
-        foreach ( $widgets as $widget ) {
+					if ( is_array( $existing_settings ) ) {
 
-            if ( $widget != $widget_id )
-                $new_mega_menu_widgets[] = $widget;
+						$submitted_settings = array_merge( $existing_settings, $submitted_settings );
 
-        }
+					}
 
-        $this->set_mega_menu_sidebar_widgets($new_mega_menu_widgets);
+					update_post_meta( $item['parent_menu_item'], '_megamenu', $submitted_settings );
+				}
 
-        return $widget_id;
+				if ( $item['type'] == 'widget' ) {
 
-    }
+					$this->update_widget_order( $item['id'], $item['order'], $item['parent_menu_item'] );
 
+				}
 
-    /**
-     * Returns an unfiltered array of all widgets in our sidebar
-     *
-     * @since 1.0
-     * @return array
-     */
-    public function get_mega_menu_sidebar_widgets() {
+				if ( $item['type'] == 'menu_item' ) {
 
-        $sidebar_widgets = wp_get_sidebars_widgets();
+					$this->update_menu_item_order( $item['id'], $item['order'], $item['parent_menu_item'] );
 
-        if ( ! isset( $sidebar_widgets[ 'mega-menu'] ) ) {
-            return false;
-        }
+				}
+			}
 
-        return $sidebar_widgets[ 'mega-menu' ];
+			return true;
 
-    }
+		}
 
 
-    /**
-     * Sets the sidebar widgets
-     *
-     * @since 1.0
-     */
-    private function set_mega_menu_sidebar_widgets( $widgets ) {
+		/**
+		 * Adds a widget to the Mega Menu widget sidebar
+		 *
+		 * @since 1.0
+		 */
+		private function add_widget_to_sidebar( $id_base, $next_id ) {
 
-        $sidebar_widgets = wp_get_sidebars_widgets();
+			$widget_id = $id_base . '-' . $next_id;
 
-        $sidebar_widgets[ 'mega-menu' ] = $widgets;
+			$sidebar_widgets = $this->get_mega_menu_sidebar_widgets();
 
-        wp_set_sidebars_widgets( $sidebar_widgets );
+			$sidebar_widgets[] = $widget_id;
 
-    }
+			$this->set_mega_menu_sidebar_widgets( $sidebar_widgets );
 
+			do_action( 'megamenu_after_widget_add' );
 
-    /**
-     * Clear the cache when the Mega Menu is updated.
-     *
-     * @since 1.0
-     */
-    public function clear_caches() {
+			return $widget_id;
 
-        // https://wordpress.org/plugins/widget-output-cache/
-        if ( function_exists( 'menu_output_cache_bump' ) ) {
-            menu_output_cache_bump();
-        }
+		}
 
-        // https://wordpress.org/plugins/widget-output-cache/
-        if ( function_exists( 'widget_output_cache_bump' ) ) {
-            widget_output_cache_bump();
-        }
 
-    }
+		/**
+		 * Removes a widget from the Mega Menu widget sidebar
+		 *
+		 * @since 1.0
+		 * @return string The widget that was removed
+		 */
+		private function remove_widget_from_sidebar( $widget_id ) {
 
+			$widgets = $this->get_mega_menu_sidebar_widgets();
 
-    /**
-     * Send JSON response.
-     *
-     * Remove any warnings or output from other plugins which may corrupt the response
-     *
-     * @param string $json
-     * @since 1.8
-     */
-    public function send_json_success( $json ) {
-        if ( ob_get_contents() ) ob_clean();
+			$new_mega_menu_widgets = array();
 
-        wp_send_json_success( $json );
-    }
+			foreach ( $widgets as $widget ) {
 
+				if ( $widget != $widget_id ) {
+					$new_mega_menu_widgets[] = $widget;
+				}
+			}
 
-    /**
-     * Send JSON response.
-     *
-     * Remove any warnings or output from other plugins which may corrupt the response
-     *
-     * @param string $json
-     * @since 1.8
-     */
-    public function send_json_error( $json ) {
-        if ( ob_get_contents() ) ob_clean();
+			$this->set_mega_menu_sidebar_widgets( $new_mega_menu_widgets );
 
-        wp_send_json_error( $json );
-    }
+			return $widget_id;
 
-}
+		}
+
+
+		/**
+		 * Returns an unfiltered array of all widgets in our sidebar
+		 *
+		 * @since 1.0
+		 * @return array
+		 */
+		public function get_mega_menu_sidebar_widgets() {
+
+			$sidebar_widgets = wp_get_sidebars_widgets();
+
+			if ( ! isset( $sidebar_widgets['mega-menu'] ) ) {
+				return false;
+			}
+
+			return $sidebar_widgets['mega-menu'];
+
+		}
+
+
+		/**
+		 * Sets the sidebar widgets
+		 *
+		 * @since 1.0
+		 */
+		private function set_mega_menu_sidebar_widgets( $widgets ) {
+
+			$sidebar_widgets = wp_get_sidebars_widgets();
+
+			$sidebar_widgets['mega-menu'] = $widgets;
+
+			wp_set_sidebars_widgets( $sidebar_widgets );
+
+		}
+
+
+		/**
+		 * Clear the cache when the Mega Menu is updated.
+		 *
+		 * @since 1.0
+		 */
+		public function clear_caches() {
+
+			// https://wordpress.org/plugins/widget-output-cache/
+			if ( function_exists( 'menu_output_cache_bump' ) ) {
+				menu_output_cache_bump();
+			}
+
+			// https://wordpress.org/plugins/widget-output-cache/
+			if ( function_exists( 'widget_output_cache_bump' ) ) {
+				widget_output_cache_bump();
+			}
+
+		}
+
+
+		/**
+		 * Send JSON response.
+		 *
+		 * Remove any warnings or output from other plugins which may corrupt the response
+		 *
+		 * @param string $json
+		 * @since 1.8
+		 */
+		public function send_json_success( $json ) {
+			if ( ob_get_contents() ) {
+				ob_clean();
+			}
+
+			wp_send_json_success( $json );
+		}
+
+
+		/**
+		 * Send JSON response.
+		 *
+		 * Remove any warnings or output from other plugins which may corrupt the response
+		 *
+		 * @param string $json
+		 * @since 1.8
+		 */
+		public function send_json_error( $json ) {
+			if ( ob_get_contents() ) {
+				ob_clean();
+			}
+
+			wp_send_json_error( $json );
+		}
+
+	}
 
 endif;

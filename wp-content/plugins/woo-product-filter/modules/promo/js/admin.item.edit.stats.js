@@ -18,7 +18,7 @@ jQuery(document).ready(function(){
 		};
 		var $manTabsNav = jQuery('#wpfPopupEditTabs .wpfMainTabsNav');
 		var getTabName = function( $tab ) {
-			if($tab && $tab.size()) {
+			if($tab && $tab.length) {
 				var href = $tab.attr('href')
 				,	name = '';
 				if(href) {
@@ -93,10 +93,10 @@ function _wpfBigDataMainOpt( inpName, label ) {
 }
 function __wpfBigDataOptToLabel( $opt ) {
 	var $label = $opt.parents('label:first');
-	if(!$label || !$label.size()) {
+	if(!$label || !$label.length) {
 		$label = $opt.parents('.wpfPopupMainOptLbl:first');
 	}
-	if($label && $label.size()) {
+	if($label && $label.length) {
 		var optName = $label.data('name');
 		if(!optName) {
 			optName = $label.text();

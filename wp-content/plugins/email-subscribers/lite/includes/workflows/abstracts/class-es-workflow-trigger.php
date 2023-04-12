@@ -2,7 +2,6 @@
 /**
  * Abstract class for triggers.
  *
- * @author      Icegram
  * @since       4.4.1
  * @version     1.0
  * @package     Email Subscribers
@@ -158,10 +157,17 @@ abstract class ES_Workflow_Trigger {
 	 * Field loader
 	 *
 	 * @since 4.4.1
+	 * 
+	 * @modified 4.5.3 Added new action trigger_name_load_extra_fields to allow loading of extra fields for given trigger.
 	 */
 	public function maybe_load_fields() {
 		if ( ! $this->has_loaded_fields ) {
+			// Load fields defined in trigger.
 			$this->load_fields();
+
+			// Load extra fields for given trigger.
+			do_action( $this->name . '_load_extra_fields', $this );
+
 			$this->has_loaded_fields = true;
 		}
 	}
@@ -228,6 +234,26 @@ abstract class ES_Workflow_Trigger {
 	public function get_fields() {
 		$this->maybe_load_fields();
 		return $this->fields;
+	}
+
+	/**
+	 * Check if there are active workflow for this trigger
+	 * 
+	 * @return bool
+	 * 
+	 * @since 4.6.10
+	 */
+	public function has_workflows() {
+		
+		$workflow_query = new ES_Workflow_Query();
+		$workflow_query->set_triggers( $this->get_name() );
+
+		$workflows = $workflow_query->get_results();
+		if ( ! empty( $workflows ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -303,7 +329,12 @@ abstract class ES_Workflow_Trigger {
 		}
 
 		if ( $process_immediately ) {
-			ES()->init_action_scheduler_queue_runner();
+
+			$request_args = array(
+				'action' => 'ig_es_trigger_workflow_queue_processing',
+			);
+
+			IG_ES_Background_Process_Helper::send_async_ajax_request( $request_args );
 		}
 	}
 

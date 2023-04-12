@@ -56,9 +56,12 @@ class InstallerWpf {
 			dbDelta(DbWpf::prepareQuery('CREATE TABLE IF NOT EXISTS `@__filters` (
 				`id` INT(11) NOT NULL AUTO_INCREMENT,
 				`title` VARCHAR(128) NULL DEFAULT NULL,
-				`setting_data` TEXT NOT NULL,
+				`setting_data` MEDIUMTEXT NOT NULL,
 				PRIMARY KEY (`id`)
 			) DEFAULT CHARSET=utf8;'));
+		}
+		if (version_compare($current_version, '1.3.6') != 1) {
+			DbWpf::query('ALTER TABLE `@__filters` MODIFY setting_data MEDIUMTEXT;');
 		}
 		/**
 		* Plugin usage statistwpf

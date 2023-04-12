@@ -3,7 +3,6 @@
  * Admin trigger metabox
  *
  * @since       4.4.1
- * @author      Icegram
  * @version     1.0
  * @package     Email Subscribers
  */
@@ -12,13 +11,13 @@
 $trigger_list = array();
 
 foreach ( ES_Workflow_Triggers::get_all() as $trigger ) {
-	$trigger_list[ $trigger->get_group() ][ $trigger->get_name() ] = $trigger;
+	if ( $trigger instanceof ES_Workflow_Trigger ) {
+		$trigger_list[ $trigger->get_group() ][ $trigger->get_name() ] = $trigger;
+	}
 }
 
-if ( ! ES()->is_premium() ) {
-
+if ( ! ES()->is_starter() ) {
 	$starter_trigger_list = array(
-
 		'Comment' => array(
 			'ig_es_comment_added' => __( 'Comment Added', 'email-subscribers' ),
 		),
@@ -36,7 +35,30 @@ if ( ! ES()->is_premium() ) {
 		),
 	);
 
-	$trigger_list = array_merge( $trigger_list, $starter_trigger_list );
+	$trigger_list = array_merge_recursive( $trigger_list, $starter_trigger_list );
+}
+
+if ( ! ES()->is_pro() ) {
+	$pro_trigger_list = array(
+		'Comment' => array(
+			'ig_es_wc_product_review_approved' => __( 'New Product Review Posted', 'email-subscribers' ),
+		),
+		'Order'   => array(
+			'ig_es_wc_order_refunded' => __( 'WooCommerce Order Refunded', 'email-subscribers' ),
+		),
+		'Wishlists'	=> array(
+			'ig_es_yith_wc_wishlist' => __( 'Wishlist Item On Sale (YITH Wishlists)', 'email-subscribers' ),
+		),
+		'Carts'	=> array(
+			'ig_es_wc_cart_abandoned' 					=> __( 'Cart Abandoned', 'email-subscribers' ),
+			'ig_es_wc_cart_abandoned_registered_users'	=> __( 'Cart Abandoned - Registered Users Only', 'email-subscribers' ),
+			'ig_es_wc_cart_abandoned_guests_users' 		=> __( 'Cart Abandoned - Guests Only', 'email-subscribers' ),
+		),
+		'User' => array(
+			'ig_es_user_role_changed' => __( 'User Role Changed', 'email-subscribers' ),
+		),
+	);
+	$trigger_list = array_merge_recursive( $trigger_list, $pro_trigger_list );
 }
 ?>
 <table class="ig-es-table">
@@ -67,7 +89,7 @@ if ( ! ES()->is_premium() ) {
 				<?php endforeach; ?>
 			</select>
 			<?php if ( $current_trigger && $current_trigger->get_description() ) : ?>
-                <div class="js-trigger-description"><?php echo $current_trigger->get_description_html(); // phpcs:ignore ?></div>
+				<div class="js-trigger-description"><?php echo wp_kses_post( $current_trigger->get_description_html() ); ?></div>
 			<?php else : ?>
 				<div class="js-trigger-description"></div>
 			<?php endif; ?>

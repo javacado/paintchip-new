@@ -206,6 +206,11 @@ abstract class ControllerWpf {
 
 	}
 	public function removeGroup() {
+		check_ajax_referer('wpf-save-nonce', 'wpfNonce');
+		if (!current_user_can('manage_options')) {
+			wp_die();
+		}
+	
 		$res = new ResponseWpf();
 		if ($this->getModel()->removeGroup(ReqWpf::getVar('listIds', 'post'))) {
 			$res->addMessage(esc_html__('Done', 'woo-product-filter'));

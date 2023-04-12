@@ -35,6 +35,7 @@ class ES_Cron {
 		}
 
 		$this->handle_cron_request();
+		$this->handle_data_request();
 	}
 
 	/**
@@ -117,6 +118,8 @@ class ES_Cron {
 	 */
 	public function schedule() {
 
+		global $ig_es_tracker;
+
 		// Add worker only once
 		if ( ! wp_next_scheduled( 'ig_es_cron_auto_responder' ) ) {
 			wp_schedule_event( floor( time() / 300 ) * 300 - 120, 'ig_es_cron_interval', 'ig_es_cron_auto_responder' );
@@ -125,6 +128,24 @@ class ES_Cron {
 		if ( ! wp_next_scheduled( 'ig_es_cron_worker' ) ) {
 			wp_schedule_event( floor( time() / 300 ) * 300, 'ig_es_cron_interval', 'ig_es_cron_worker' );
 		}
+
+		$is_woocommerce_active = $ig_es_tracker::is_plugin_activated( 'woocommerce/woocommerce.php' );
+
+		if ( $is_woocommerce_active && ES()->is_pro() ) {
+
+			if ( IG_ES_Abandoned_Cart_Options::is_cart_tracking_enabled() ) {
+				
+				if ( ! wp_next_scheduled( 'ig_es_wc_abandoned_cart_worker' ) ) {
+					wp_schedule_event( floor( time() / 300 ) * 300, 'ig_es_two_minutes', 'ig_es_wc_abandoned_cart_worker' );
+				}
+			}
+	
+			// Cron job to detect WooCommerce products which are on sale.
+			if ( ! wp_next_scheduled( 'ig_es_wc_products_on_sale_worker' ) ) {
+				wp_schedule_event( floor( time() / 300 ) * 300, 'ig_es_fifteen_minutes', 'ig_es_wc_products_on_sale_worker' );
+			}
+		}
+
 
 	}
 
@@ -217,9 +238,9 @@ class ES_Cron {
 	public function is_locked( $key = 0 ) {
 		global $wpdb;
 
-		$sql = "SELECT COUNT(*) FROM {$wpdb->prefix}options WHERE option_name LIKE %s AND option_value != ''";
+		$lock = 'ig_es_cron_lock_' . $key . '%';
 
-		$res = $wpdb->get_var( $wpdb->prepare( $sql, 'ig_es_cron_lock_' . $key . '%' ) );
+		$res = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}options WHERE option_name LIKE %s AND option_value != ''", $lock ) );
 
 		return ! ! $res;
 	}
@@ -236,7 +257,17 @@ class ES_Cron {
 
 		$schedules['ig_es_cron_interval'] = array(
 			'interval' => $this->get_cron_interval(),
-			'display'  => esc_html__( 'Email Subscribers Cronjob Interval' ),
+			'display'  => esc_html__( 'Email Subscribers Cronjob Interval', 'email-subscribers' ),
+		);
+
+		$schedules['ig_es_two_minutes'] = array(
+			'interval' => 120,
+			'display'  => esc_html__( 'Two minutes', 'email-subscribers' ),
+		);
+
+		$schedules['ig_es_fifteen_minutes'] = array(
+			'interval' => 900,
+			'display'  => esc_html__( 'Fifteen minutes', 'email-subscribers' ),
 		);
 
 		return $schedules;
@@ -273,7 +304,7 @@ class ES_Cron {
 			900  => __( '15 minutes', 'email-subscribers' ),
 			1200 => __( '20 minutes', 'email-subscribers' ),
 			1500 => __( '25 minutes', 'email-subscribers' ),
-			1800 => __( '30 minutes', 'email-subscribers' )
+			1800 => __( '30 minutes', 'email-subscribers' ),
 		);
 
 	}
@@ -407,7 +438,7 @@ class ES_Cron {
 		$self = ig_es_get_request_data( 'self', 0 );
 
 		$verified_self = false;
-		if ( $self == 1 && wp_verify_nonce( ig_es_get_request_data( '_wpnonce' ), 'ig_es_self_cron' ) ) {
+		if ( 1 == $self && wp_verify_nonce( ig_es_get_request_data( '_wpnonce' ), 'ig_es_self_cron' ) ) {
 			$verified_self = true;
 		}
 
@@ -415,7 +446,10 @@ class ES_Cron {
 
 			if ( ! empty( $guid ) ) {
 
-				$response = array( 'status' => 'SUCCESS', 'es_remaining_email_count' => 100 );
+				$response = array(
+					'status'                   => 'SUCCESS',
+					'es_remaining_email_count' => 100,
+				);
 
 				$es_process_request = true;
 
@@ -424,9 +458,9 @@ class ES_Cron {
 
 				if ( true === $es_process_request ) {
 					$security1             = strlen( $guid );
-					$es_c_cronguid_noslash = str_replace( "-", "", $guid );
+					$es_c_cronguid_noslash = str_replace( '-', '', $guid );
 					$security2             = strlen( $es_c_cronguid_noslash );
-					if ( $security1 == 34 && $security2 == 30 ) {
+					if ( 34 == $security1 && 30 == $security2 ) {
 						if ( ! preg_match( '/[^a-z]/', $es_c_cronguid_noslash ) ) {
 							$cron_url = ES()->cron->url();
 
@@ -470,7 +504,6 @@ class ES_Cron {
 									$response['status']  = 'ERROR';
 									$response['message'] = 'CRON_LOCK_ENABLED';
 								}
-
 							} else {
 								$self                = false;
 								$response['status']  = 'ERROR';
@@ -496,7 +529,6 @@ class ES_Cron {
 				$response['status']  = 'ERROR';
 				$response['message'] = 'EMPTY_CRON_GUID';
 			}
-
 		} else {
 			$response['es_remaining_email_count'] = 0;
 			$response['message']                  = 'PLEASE_TRY_AGAIN_LATER';
@@ -509,10 +541,8 @@ class ES_Cron {
 			$total_emails_to_be_sent = ! empty( $response['es_remaining_email_count'] ) ? $response['es_remaining_email_count'] : 0;
 			$cron_url                = ES()->cron->url( true );
 
-			$send_now_text = __( sprintf( "<a href='%s'>Send Now</a>", $cron_url ), 'email-subscribers' );
-
 			if ( 'SUCCESS' === $status ) {
-				$message = __( sprintf( 'Email(s) have been sent successfully!' ), 'email-subscribers' );
+				$message = __( sprintf( 'Email(s) sent successfully!' ), 'email-subscribers' );
 			} else {
 				$message = $this->get_status_messages( $response['message'] );
 			}
@@ -523,6 +553,53 @@ class ES_Cron {
 			echo json_encode( $response );
 			die();
 		}
+	}
+
+	/**
+	 * Handle Data Request
+	 *
+	 * @since 4.6.6
+	 *
+	 */
+	public function handle_data_request() {
+		$es_request = ig_es_get_request_data( 'es' );
+
+		// It's not a cron request . Say Goodbye!
+		if ( 'get_info' !== $es_request ) {
+			return;
+		}
+
+		$guid = ig_es_get_request_data( 'guid' );
+
+		$is_valid_request = $this->is_valid_request( $guid );
+
+		$response = array();
+		if ( $is_valid_request ) {
+
+			if ( ES()->is_premium() || ES()->is_trial() ) {
+
+				global $ig_es_tracker;
+				/*
+				 * Trial start date
+				 * Total # Contacts they have
+				 * Total # lists they have
+				 * Some of ES settings like enable track opens, track clicks etc
+				 * Uninstall Date
+				 */
+
+				$response['meta_info']     = ES_Common::get_ig_es_meta_info();
+				$response['system_status'] = array(
+					'active_plugins'   => implode( ', ', $ig_es_tracker::get_active_plugins() ),
+					'inactive_plugins' => implode( ', ', $ig_es_tracker::get_inactive_plugins() ),
+					'current_theme'    => $ig_es_tracker::get_current_theme_info(),
+					'wp_info'          => $ig_es_tracker::get_wp_info(),
+					'server_info'      => $ig_es_tracker::get_server_info()
+				);
+			}
+		}
+
+		echo json_encode( $response );
+		die();
 	}
 
 	/**
@@ -558,5 +635,53 @@ class ES_Cron {
 
 		return $message_text;
 
+	}
+
+	/**
+	 * Is valid request
+	 *
+	 * @param string $guid
+	 *
+	 * @return bool
+	 *
+	 * @since 4.6.6
+	 */
+	public function is_valid_request( $guid = '' ) {
+
+		$security1             = strlen( $guid );
+		$es_c_cronguid_noslash = str_replace( '-', '', $guid );
+		$security2             = strlen( $es_c_cronguid_noslash );
+		if ( 34 == $security1 && 30 == $security2 ) {
+			if ( ! preg_match( '/[^a-z]/', $es_c_cronguid_noslash ) ) {
+				$cron_url = ES()->cron->url();
+
+				parse_str( $cron_url, $output );
+
+				// Now, all check pass.
+				if ( $guid === $output['guid'] ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Method to get list of cron jobs being used in the plugin
+	 *
+	 * @return array $es_cron_jobs List of cron jobs used in the plugin
+	 *
+	 * @since 4.6.4
+	 */
+	public function get_cron_jobs_list() {
+
+		$es_cron_jobs = array(
+			'ig_es_cron',
+			'ig_es_cron_worker',
+			'ig_es_cron_auto_responder',
+		);
+
+		return $es_cron_jobs;
 	}
 }

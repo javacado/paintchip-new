@@ -2,11 +2,11 @@
 	ViewWpf::display('woofiltersEditTabCommonTitle');
 ?>
 <div class="row-settings-block">
-	<div class="settings-block-label col-xs-4 col-sm-3">
+	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Show on frontend as', 'woo-product-filter'); ?>
 	</div>
-	<div class="settings-block-values col-xs-8 col-sm-9">
-		<div class="settings-value">
+	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
+		<div class="settings-value settings-w100">
 			<?php 
 				HtmlWpf::selectbox('f_frontend_type', array(
 					'options' => array('list' => 'Checkbox', 'switch' => 'Toggle Switch' . $labelPro),
@@ -22,11 +22,11 @@ if ($isPro) {
 }
 ?>
 <div class="row-settings-block">
-	<div class="settings-block-label col-xs-4 col-sm-3">
+	<div class="settings-block-label settings-w100 col-xs-4 col-sm-3">
 		<?php esc_html_e('Checkbox label', 'woo-product-filter'); ?>
 	</div>
-	<div class="settings-block-values col-xs-8 col-sm-9">
-		<div class="settings-value">
+	<div class="settings-block-values settings-w100 col-xs-8 col-sm-9">
+		<div class="settings-value settings-w100">
 			<?php 
 				$labels = $this->getModel('woofilters')->getFilterLabels('OnSale');
 				HtmlWpf::text('f_checkbox_label', array(
@@ -37,3 +37,8 @@ if ($isPro) {
 		</div>
 	</div>
 </div>
+<?php
+if ($isPro) {
+	DispatcherWpf::doAction('addEditTabFilters', 'partEditTabFiltersOnSale');
+}
+?>

@@ -4,23 +4,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! class_exists( 'IG_Tracker_V_1_2_3' ) ) {
+if ( ! class_exists( 'IG_Tracker_V_1_2_5' ) ) {
 
 	/**
-	 * Class IG_Tracker_V_1_2_2
+	 * Class IG_Tracker_V_1_2_5
 	 *
 	 * Icegram tracker handler class is responsible for sending anonymous plugin
 	 * data to Icegram servers for users that actively allowed data tracking.
 	 *
-	 * @class       IG_Tracker_V_1_2_3
+	 * @class       IG_Tracker_V_1_2_5
 	 * @since       1.0.0
 	 *
-	 * @copyright   Copyright (c) 2019, Icegram
-	 * @license     https://opensource.org/licenses/gpl-license GNU Public License
-	 * @author      Icegram
 	 * @package     feedback
 	 */
-	class IG_Tracker_V_1_2_3 {
+	class IG_Tracker_V_1_2_5 {
 
 		/**
 		 * Get Active, Inactive or all plugins info
@@ -183,14 +180,6 @@ if ( ! class_exists( 'IG_Tracker_V_1_2_3' ) ) {
 					'author'     => $theme_data->get( 'Author' ),
 					'author_uri' => $theme_data->get( 'AuthorURI' )
 				);
-			} elseif ( function_exists( 'get_theme_data' ) ) {
-				$theme_data    = get_theme_data( get_stylesheet_directory() . '/style.css' );
-				$current_theme = array(
-					'name'       => $theme_data['Name'],
-					'version'    => $theme_data['Version'],
-					'author'     => $theme_data['Author'],
-					'author_uri' => $theme_data['AuthorURI']
-				);
 			}
 
 			return $current_theme;
@@ -209,8 +198,8 @@ if ( ! class_exists( 'IG_Tracker_V_1_2_3' ) ) {
 			$server_info = array(
 				'php_version'                  => PHP_VERSION,
 				'mysql_version'                => $wpdb->db_version(),
-				'web_server_info'              => $_SERVER['SERVER_SOFTWARE'],
-				'user_agent'                   => $_SERVER['HTTP_USER_AGENT'],
+				'web_server_info'              => isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( $_SERVER['SERVER_SOFTWARE'] ) : '' ,
+				'user_agent'                   => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) : '' ,
 				'php_memory_limit'             => ini_get( 'memory_limit' ),
 				'php_post_max_size'            => ini_get( 'post_max_size' ),
 				'php_upload_max_file_size'     => ini_get( 'upload_max_filesize' ),
@@ -250,7 +239,7 @@ if ( ! class_exists( 'IG_Tracker_V_1_2_3' ) ) {
 				'wp_db_charset_Collate' => $wpdb->get_charset_collate(),
 				'wp_memory_limit'       => ( size_format( (int) WP_MEMORY_LIMIT * 1048576 ) ),
 				'wp_upload_size'        => ( size_format( wp_max_upload_size() ) ),
-				'filesystem_method'     => get_filesystem_method(),
+				'filesystem_method'     => function_exists('get_filesystem_method') ? get_filesystem_method() : ''
 			);
 
 			return $wp_info;

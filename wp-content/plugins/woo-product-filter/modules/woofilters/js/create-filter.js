@@ -33,7 +33,8 @@
 									mod: 'woofilters',
 									action: 'save',
 									title: $input.val(),
-									duplicateId: $inputDuplicateId.val()
+									duplicateId: $inputDuplicateId.val(),
+									wpfNonce: window.wpfNonce
 								},
 								onSuccess: function(res) {
 									if(!res.error) {

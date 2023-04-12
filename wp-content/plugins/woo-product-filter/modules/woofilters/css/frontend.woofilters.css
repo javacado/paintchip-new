@@ -4,6 +4,9 @@
 .wpfHidden{
 	display: none!important;
 }
+.wpfClear{
+	clear: both;
+}
 .wpfVisibilityHidden{
 	visibility: hidden;
 }
@@ -25,15 +28,29 @@
 .wpfFilterWrapper .wpfPriceInputs {
 	margin-top: 10px;
 	text-align:center;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-align: center;
+	align-items: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+}
+.wpfFilterDelimeter {
+	margin-left: 10px;
+	margin-right: 10px;
 }
 .wpfFilterWrapper .wpfCurrencySymbol + div + input,
 .wpfFilterWrapper input + .wpfCurrencySymbol{
 	margin-left: 10px;
 }
+.wpfPriceInputs .wpfCurrencySymbol {
+	margin-right: 3px;
+}
 .wpfFilterWrapper .ui-widget-header {
 	background: #3FE331;
 }
-.wpfPriceRangeField#wpfMinPrice, .wpfPriceRangeField#wpfMaxPrice{
+.wpfPriceRangeField#wpfMinPrice,
+.wpfPriceRangeField#wpfMaxPrice {
 	width: 35%;
 	min-width: 16%;
 	display: inline-block;
@@ -192,10 +209,9 @@
 	margin: 20px;
     vertical-align: middle;
 }
-.wpfFilterWrapper i {
+.wpfFilterWrapper i, .wpfFilterWrapper svg {
 	display: inline-block;
 	float: right;
-	padding-top: 3px;
 }
 .wpfMainWrapper .wpfCount{
 	font-size: smaller;
@@ -219,12 +235,12 @@
 	text-align:center !important;
 	outline:0 !important;
 }
-.input-buffer-min, .input-buffer-max{
-    position: absolute;
-    top: -1000px;
-    left: -1000px;
-    visibility: hidden;
-    white-space: nowrap;
+.wpfVisibleBufferMin, .wpfVisibleBufferMax{
+	position: absolute;
+	top: -1000px;
+	left: -1000px;
+	visibility: hidden;
+	white-space: nowrap;
 }
 .wpfTitleToggle {
 	position:relative;
@@ -354,6 +370,27 @@
     -webkit-appearance: none;
     margin: 0;
 }
-.wpfSearchHidden {
+.wpfSearchHidden, .wpfSelectCopies {
 	display: none !important;
+}
+.wpfFilterContent .ms-search {
+	display: inline-block;
+	margin: 0;
+	min-height: 26px;
+	padding: 4px;
+	position: relative;
+	white-space: nowrap;
+	width: 100%;
+}
+.wpfFilterWrapper .wpfFilterContent .ms-options-wrap > .ms-options > .ms-search input {
+	border: 1px groove;
+	width: 100%;
+	outline: none;
+	border-radius: 0;
+	height: auto;
+}
+@media only screen and (min-width : 1140px) {
+	.wpfFilterWrapper .wpfPriceInputs {
+		white-space: nowrap;
+	}
 }

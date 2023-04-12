@@ -2,7 +2,7 @@
 Contributors: wponlinesupport, anoopranawat, pratik-jain
 Tags: wponlinesupport, slick, image slider, slick slider, slick image slider, slider, image slider, header image slider, responsive image slider, responsive content slider, carousel, image carousel, carousel slider, content slider, coin slider, touch slider, text slider, responsive slider, responsive slideshow, Responsive Touch Slider, wp slider, wp image slider, wp header image slider, photo slider, responsive photo slider  
 Requires at least: 4.0
-Tested up to: 5.4
+Tested up to: 5.7
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -13,11 +13,11 @@ A quick, easy way to add and display mulipale WP Slick Slider and carousel using
 
 Display multiple slick image slider and carousel using shortcode with category. Fully responsive, Swipe enabled, Desktop mouse dragging and  Infinite looping. Fully accessible with arrow key navigation  Autoplay, dots, arrows etc.
 
+Check [Features  and Demo](https://www.wponlinesupport.com/wp-plugin/wp-slick-slider-and-image-carousel) for additional information.
+
 It uses A custom post type and taxonomy to create a slider, with almost unlimited options and support for multiple sliders on any page. You can also display image slider on your website header.
 
 We have added 5 designs for slider and 1 design for carousel. You can find all designs on our demo website. Just copy the shortcode of design that you like and use.
-
-Check [Demo and Features](https://demo.wponlinesupport.com/slick-slider-demo/) for additional information.
 
 **Also added Gutenberg block support.**
 
@@ -29,7 +29,6 @@ Check [Demo and Features](https://demo.wponlinesupport.com/slick-slider-demo/) f
 
 <code><?php echo do_shortcode('[slick-slider]'); ?>  and
  <?php echo do_shortcode('[slick-carousel-slider]'); ?> </code>
-
 
 = Use Following parameters with shortcode =
 
@@ -46,7 +45,7 @@ Check [Demo and Features](https://demo.wponlinesupport.com/slick-slider-demo/) f
 * **loop** : [slick-slider loop="true"] (Create a Infinite loop sliding. By default value is "true". Options are "true" OR "false".)
 * **hover_pause** : [slick-slider hover_pause="true"] (Pause slider autoplay on hover. By default value is "true". Options are "true" OR "false".)
 * **image_size** : [slick-slider image_size="full"] (Default is "full", values are thumbnail, medium, medium_large, large, full)
-* **image_fit** : [slick-slider image_fit="true"] (image_fit parameter is used to specify how an image should be resized to fit its container. By default value is "true". Options are "true OR false"). NOTE :  image_fit="true" work better if sliderheight is given. if image_fit="false", no need to use sliderheight parameter.
+* **image_fit** : [slick-slider image_fit="false"] (image_fit parameter is used to specify how an image should be resized to fit its container. By default value is "false". Options are "true OR false"). NOTE :  image_fit="true" work better if sliderheight is given. if image_fit="false", no need to use sliderheight parameter.
 * **sliderheight** : [slick-slider sliderheight="400" ] (Set image wrap height. NOTE : This parameter work better if image_fit="true" ).
 * **rtl** : [slick-slider rtl="true"] (for rtl mode. By default value is "false". Options are "true OR false").
 
@@ -68,9 +67,11 @@ Check [Demo and Features](https://demo.wponlinesupport.com/slick-slider-demo/) f
 * **lazyload** : [slick-carousel-slider lazyload="ondemand" ] (Use lazyload with slick slider. By default there is no lazyload enabled. If you want to set lazyload then use lazyload="ondemand" OR lazyload="progressive" ).
 * **centermode** : [slick-carousel-slider centermode="true" ] ( Display main image on center. By default value is "false" ).
 * **variablewidth** : [slick-carousel-slider variablewidth="true" ] (Variable width of images in slider. By default value us "false")
-* **image_fit** : [slick-carousel-slider image_fit="true" ] (image_fit parameter is used to specify how an image should be resized to fit its container. By default value is "true". Options are "true OR false"). NOTE :  image_fit="true" work better if sliderheight is given. if image_fit="false", no need to use sliderheight parameter.
+* **image_fit** : [slick-carousel-slider image_fit="false" ] (image_fit parameter is used to specify how an image should be resized to fit its container. By default value is "false". Options are "true OR false"). NOTE :  image_fit="true" work better if sliderheight is given. if image_fit="false", no need to use sliderheight parameter.
 * **sliderheight** : [slick-carousel-slider sliderheight="400" ] (Set image wrap height. NOTE : This parameter work better if image_fit="true" ).
 * **rtl** : [slick-carousel-slider rtl="true"] (for rtl mode. By default value is "false". Options are "true OR false").
+
+**Note: Due to lots of feedback from your users side, we have made image_fit="false" by default. Previously it was image_fit="true". We made image resize option now optional. If you want to resize the image, please use image_fit="true" and sliderheight="400" (400 is just an example. Please use this value as per your need) shortcode parameters.**
 
 = PRO Features Added : =
 > <strong>Premium Version</strong><br>
@@ -82,6 +83,9 @@ Check [Demo and Features](https://demo.wponlinesupport.com/slick-slider-demo/) f
 > * Gutenberg Block Supports.
 > * WP Templating Features.
 > * WPBakery Page Builder Support.
+> * Elementor, Beaver and SiteOrigin Page Builder Native Support (New).
+> * Divi Page Builder Native Support (New).
+> * Fusion Page Builder (Avada) Native Support (New).
 > * Drag & Drop frature to display slide in your order.
 > * Custom CSS plugin setting option.
 > * Powerful shortcode with strong parameters.
@@ -89,8 +93,11 @@ Check [Demo and Features](https://demo.wponlinesupport.com/slick-slider-demo/) f
 > * Fully Responsive.
 > * 100% Multi Language.
 >
-> Check [PRO DEMO and Features](http://wponlinesupport.com/wp-plugin/wp-slick-slider-and-image-carousel/) to know more.
+> Check [PRO DEMO and Features](https://wponlinesupport.com/wp-plugin/wp-slick-slider-and-image-carousel/) to know more.
 >
+
+= See how this plugin can support your website : =
+[youtube https://www.youtube.com/watch?v=yTfbOaYJYR0] 
 
 = How to install : =
 [youtube https://www.youtube.com/watch?v=rkbohcgmzVg] 
@@ -134,6 +141,34 @@ Check [Demo and Features](https://demo.wponlinesupport.com/slick-slider-demo/) f
 9. Also added Gutenberg block support.
 
 == Changelog ==
+
+= 2.4 (15, March 2021) =
+* [*] Tested up to: 5.7
+
+= 2.3 (25, jan 2021) =
+* [+] New - Added native shortcode support for Elementor, SiteOrigin and Beaver builder.
+* [+] New - Added Divi page builder native support.
+* [+] New - Added Fusion Page Builder (Avada) native support.
+* [*] Tweak - Code optimization and performance improvements.
+
+= 2.2.1 (27, Oct 2020) =
+* [*] Minor  Update - Fixed conflict from tgmpa (theme pluign recommends - if your theme using tgmpa library) where it was showing message inside "How It Works - Display and shortcode"
+
+= 2.2 (22, Oct 2020) =
+* [+] New - Click to copy the shortcode from the getting started page.
+* [*] Update - Regular plugin maintenance. Updated readme file.
+* [*] Added - Added our other Popular Plugins under Slick Slider --> Install Popular Plugins From WPOS. This will help you to save your time during creating a website.
+
+= 2.1 (14, Aug 2020) =
+* [*] jQuery( document ).ready(function($) is replaced with function( $ ) to solve the issue with 3rd party plugin and theme js error.
+
+= 2.0.2 (14-07-2020) =
+* [*] Follow WordPress Detailed Plugin Guidelines for Offload Media and Analytics Code.
+
+= 2.0.1 (07, July 2020) =
+* [*] Due to lots of feedback from your users side, we have made image_fit="false" by default. Previously it was image_fit="true". We made image resize option now optional. If you want to resize the image, please use image_fit="true" and sliderheight="400" (400 is just an example. Please use this value as per your need) shortcode parameters.
+* [*] Fixed some design related issues.
+* [*] Tested up to: 5.4.2
 
 = 2.0 (17, April 2020) =
 * [+] New - Added Gutenberg block support. Now use plugin easily with Gutenberg!

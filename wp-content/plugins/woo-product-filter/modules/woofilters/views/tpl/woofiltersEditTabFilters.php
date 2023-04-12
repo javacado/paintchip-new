@@ -10,10 +10,15 @@
 			<select id="wpfChooseFilters">
 				<?php
 				foreach ($filtersList as $filter => $data) {
-					echo '<option value="' . esc_attr($filter) . '" data-enabled="' . esc_attr((int) $data['enabled']) . '" data-unique="' . esc_attr((int) $data['unique']) .
-						'" data-filtername="' . esc_attr($this->getFilterSetting($data, 'filtername', '')) .
-						'" data-group="' . esc_attr($this->getFilterSetting($data, 'group', '')) .
-						'">' . esc_html($data['name']) . '</option>';
+					echo '<option value="' . esc_attr($filter) .
+							'" data-enabled="' . esc_attr((int) $data['enabled']) .
+							'" data-unique-id="' . esc_attr(uniqid('wpf_')) .
+							'" data-unique="' . esc_attr((int) $data['unique']) .
+							'" data-filtername="' . esc_attr($this->getFilterSetting($data, 'filtername', '')) .
+							'" data-group="' . esc_attr($this->getFilterSetting($data, 'group', '')) .
+							'">' .
+								esc_html($data['name']) .
+						'</option>';
 				}
 				?>
 			</select>
@@ -40,8 +45,8 @@
 	<div class="wpfTemplates wpfHidden">
 		<div class="wpfAttributesTerms">
 			<?php
-			echo '<input type="hidden" name="attr_types" value="' . esc_attr(htmlentities(UtilsWpf::jsonEncode($attrTypes))) . '">';
-			echo '<input type="hidden" name="attr_filternames" value="' . esc_attr(htmlentities(UtilsWpf::jsonEncode($attrNames))) . '">';
+			echo '<input type="hidden" name="attr_types" value="' . esc_attr(UtilsWpf::jsonEncode($attrTypes)) . '">';
+			echo '<input type="hidden" name="attr_filternames" value="' . esc_attr(UtilsWpf::jsonEncode($attrNames)) . '">';
 
 			if (isset($this->settings['settings']['filters']['order'])) {
 				$filtersOrder = UtilsWpf::jsonDecode($this->settings['settings']['filters']['order']);
@@ -54,8 +59,9 @@
 							$slugs[] = $slug;
 							$terms = $module->getAttributeTerms($slug);
 							$keys = array_keys($terms);
-							echo '<input type="hidden" name="attr-' . esc_attr($slug) . '" data-order="' . esc_attr(htmlentities(UtilsWpf::jsonEncode($keys))) . '" value="' .
-								esc_attr(htmlentities(UtilsWpf::jsonEncode($terms))) . '">';
+
+							echo '<input type="hidden" name="attr-' . esc_attr($slug) . '" data-order="' . esc_attr(UtilsWpf::jsonEncode($keys)) . '" value="' .
+								esc_attr(UtilsWpf::jsonEncode($terms)) . '">';
 						}
 					}
 				}
@@ -129,7 +135,7 @@
 				include_once 'woofiltersEditTabFilters' . substr($filter, 3) . '.php';
 				?>
 			</div>
-			<?php } ?>            
+			<?php } ?>
 		</div>
 	</div>
 </div>

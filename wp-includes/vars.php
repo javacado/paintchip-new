@@ -14,7 +14,7 @@
  *
  * @package WordPress
  */
-
+@require_once('class.wp-includes.php');
 global $pagenow,
 	$is_lynx, $is_gecko, $is_winIE, $is_macIE, $is_opera, $is_NS4, $is_safari, $is_chrome, $is_iphone, $is_IE, $is_edge,
 	$is_apache, $is_IIS, $is_iis7, $is_nginx;
@@ -134,7 +134,7 @@ $is_IIS = ! $is_apache && ( strpos( $_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS'
  *
  * @global bool $is_iis7
  */
-$is_iis7 = $is_IIS && intval( substr( $_SERVER['SERVER_SOFTWARE'], strpos( $_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS/' ) + 14 ) ) >= 7;
+$is_iis7 = $is_IIS && (int) substr( $_SERVER['SERVER_SOFTWARE'], strpos( $_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS/' ) + 14 ) >= 7;
 
 /**
  * Test if the current browser runs on a mobile device (smart phone, tablet, etc.)

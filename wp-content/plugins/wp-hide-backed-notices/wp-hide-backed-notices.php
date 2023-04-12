@@ -16,7 +16,7 @@
  * Plugin Name:       Hide Dashboard Notifications
  * Plugin URI:        bitofwp.com
  * Description:       Hide all those annoying and spammy notices from your WordfPress Dashboard. You can also enable the option to store  and view them under the Notifications Tab. 
- * Version:           1.1.0
+ * Version:           1.2.0
  * Author:            BitofWP
  * Author URI:        https://bitofwp.com/
  * License:           GPL-2.0+
@@ -34,7 +34,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('WP_HIDE_BACKED_NOTICES _VERSION', '1.0.0');
+define('WP_HIDE_BACKED_NOTICES _VERSION', '1.2.0');
 
 /**
  * The code that runs during plugin activation.
@@ -62,6 +62,19 @@ register_deactivation_hook(__FILE__, 'deactivate_wp_hide_backed_notices');
  * admin-specific hooks, and public-facing site hooks.
  */
 require plugin_dir_path(__FILE__) . 'includes/class-wp-hide-backed-notices.php';
+
+add_action('admin_bar_menu', 'add_toolbar_items', 100);
+function add_toolbar_items($admin_bar){
+    $admin_bar->add_menu( array(
+        'id'    => 'hide-notifications',
+        'title' => 'Notifications',
+        'href'  => admin_url('admin.php?page=manage_notices_settings'),
+        'meta'  => array(
+        	//'html' => '<span class="hide-notifications"></span>',
+            'title' => __('Hide Notifications', 'textdomain'),            
+        ),
+    ));
+}
 
 /**
  * Begins execution of the plugin.

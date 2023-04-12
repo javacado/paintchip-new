@@ -1,10 +1,9 @@
 <?php
-
 /**
  * Plugin Name: 10Web Social Feed 
  * Plugin URI: https://10web.io/plugins/wordpress-facebook-feed/?utm_source=facebook_feed&utm_medium=free_plugin
  * Description: 10Web Social Feed is a completely customizable, responsive solution to help you display your Facebook feed on your WordPress website.
- * Version: 1.1.20
+ * Version: 1.1.34
  * Author: 10Web
  * Author URI: https://10web.io/plugins/?utm_source=facebook_feed&utm_medium=free_plugin
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
@@ -15,7 +14,12 @@ define( 'WD_FFWD_URL', plugins_url( plugin_basename( dirname( __FILE__ ) ) ) );
 define( 'WD_FB_PREFIX', 'ffwd' );
 define( 'WD_FB_IS_FREE', TRUE );
 if (! defined( 'FFWD_VERSION' ) ){
-  define ('FFWD_VERSION',"1.1.20");
+  define ('FFWD_VERSION',"1.1.34");
+}
+add_action( 'admin_init', 'ffwd_init' );
+
+function ffwd_init() {
+  ffwd_privacy_policy();
 }
 
 add_action('admin_notices', 'ffwd_login_notice');
@@ -26,7 +30,6 @@ function ffwd_login_notice() {
   }
   require_once 'framework/WDFacebookFeed.php';
   $pages = get_option('ffwd_pages_list');
-  $ffwd_pages_list_success = get_option('ffwd_pages_list_success');
   if(sanitize_text_field($_GET['page'])!="options_ffwd" && empty($pages)){
     echo '<div class="notice notice-error is-dismissible" style="padding: 15px">
             <span><b>Get access tokens to display Facebook feeds.</b></span>
@@ -45,17 +48,9 @@ function ffwd_login_notice() {
                     </div>
                 </div>
 	        ';
-  }elseif ($ffwd_pages_list_success==="1"){
-    echo '<div class="notice notice-success is-dismissible" style="padding: 15px;">
-		        <span><b>Success! We have got tokens for your Facebook pages.</b></span>
-	        </div>';
-    delete_option("ffwd_pages_list_success");
   }
-
-
-
-
 }
+
 function ffwd_use_home_url() {
 	$home_url = str_replace( "http://", "", home_url() );
 	$home_url = str_replace( "https://", "", $home_url );
@@ -90,52 +85,69 @@ function ffwd_silent_update(){
 
 // Plugin menu.
 function ffwd_menu_panel() {
-  $parent_slug = "info_ffwd";
-  add_menu_page('Facebook Feed', 'Facebook Feed', 'manage_options', $parent_slug, 'ffwd_menu', WD_FFWD_URL . '/images/ffwd/ffwd_logo_small.png');
-  $galleries_page = add_submenu_page($parent_slug, 'Feeds', 'Feeds', 'manage_options', 'info_ffwd', 'ffwd_menu');
-  add_action('admin_print_styles-' . $galleries_page, 'ffwd_styles');
-  add_action('admin_print_scripts-' . $galleries_page, 'ffwd_scripts');
-  add_action('load-' . $galleries_page, 'ffwd_add_ffwd_info_per_page_option');
-  $options_page = add_submenu_page($parent_slug, 'Options', 'Options', 'manage_options', 'options_ffwd', 'ffwd_menu');
-  add_action('admin_print_styles-' . $options_page, 'ffwd_styles');
-  add_action('admin_print_scripts-' . $options_page, 'ffwd_admin_scripts');
-  $themes_page = add_submenu_page($parent_slug, 'Themes', 'Themes', 'manage_options', 'themes_ffwd', 'ffwd_menu');
-  add_action('admin_print_styles-' . $themes_page, 'ffwd_styles');
-  add_action('admin_print_scripts-' . $themes_page, 'ffwd_admin_scripts');
-  add_action('load-' . $themes_page, 'ffwd_add_themes_per_page_option');
-  $licensing_page = add_submenu_page($parent_slug, 'Get Premium', 'Get Premium', 'manage_options', 'ffwd_licensing', 'ffwd_licensing_page');
-  add_action('admin_print_styles-' . $licensing_page, 'ffwd_styles');
-  /* Custom link to wordpress.org*/
-  global $submenu;
-  $url = 'https://wordpress.org/support/plugin/wd-facebook-feed/#new-post';
-  $submenu[$parent_slug][] = array(
-    '<div id="ffwd_ask_question">' . __('Ask a question', 'ffwd_menu') . '</div>',
-    'manage_options',
-    $url,
-  );
-  $uninstall_page = add_submenu_page($parent_slug, 'Uninstall', 'Uninstall', 'manage_options', 'uninstall_ffwd', 'ffwd_menu');
-  add_action('admin_print_styles-' . $uninstall_page, 'ffwd_styles');
-  add_action('admin_print_scripts-' . $uninstall_page, 'ffwd_admin_scripts');
+  if(empty(get_option('ffwd_pages_list'))){
+    $parent_slug = "options_ffwd";
+    add_menu_page('Facebook Feed', 'Facebook Feed', 'manage_options', $parent_slug, 'ffwd_menu', WD_FFWD_URL . '/images/ffwd/ffwd_logo_small.png');
+    $galleries_page = add_submenu_page($parent_slug, 'Options', 'Options', 'manage_options', 'options_ffwd', 'ffwd_menu');
+    add_action('admin_print_styles-' . $galleries_page, 'ffwd_styles');
+    add_action('admin_print_scripts-' . $galleries_page, 'ffwd_scripts');
+    add_action('load-' . $galleries_page, 'ffwd_add_themes_per_page_option');
+    $uninstall_page = add_submenu_page($parent_slug, 'Uninstall', 'Uninstall', 'manage_options', 'uninstall_ffwd', 'ffwd_menu');
+    add_action('admin_print_styles-' . $uninstall_page, 'ffwd_styles');
+    add_action('admin_print_scripts-' . $uninstall_page, 'ffwd_admin_scripts');
+  } else {
+    $parent_slug = "info_ffwd";
+    add_menu_page('Facebook Feed', 'Facebook Feed', 'manage_options', $parent_slug, 'ffwd_menu', WD_FFWD_URL . '/images/ffwd/ffwd_logo_small.png');
+    $galleries_page = add_submenu_page($parent_slug, 'Feeds', 'Feeds', 'manage_options', 'info_ffwd', 'ffwd_menu');
+    add_action('admin_print_styles-' . $galleries_page, 'ffwd_styles');
+    add_action('admin_print_scripts-' . $galleries_page, 'ffwd_scripts');
+    add_action('load-' . $galleries_page, 'ffwd_add_ffwd_info_per_page_option');
+    $options_page = add_submenu_page($parent_slug, 'Options', 'Options', 'manage_options', 'options_ffwd', 'ffwd_menu');
+    add_action('admin_print_styles-' . $options_page, 'ffwd_styles');
+    add_action('admin_print_scripts-' . $options_page, 'ffwd_admin_scripts');
+    $themes_page = add_submenu_page($parent_slug, 'Themes', 'Themes', 'manage_options', 'themes_ffwd', 'ffwd_menu');
+    add_action('admin_print_styles-' . $themes_page, 'ffwd_styles');
+    add_action('admin_print_scripts-' . $themes_page, 'ffwd_admin_scripts');
+    add_action('load-' . $themes_page, 'ffwd_add_themes_per_page_option');
+    $licensing_page = add_submenu_page($parent_slug, 'Get Premium', 'Get Premium', 'manage_options', 'ffwd_licensing', 'ffwd_licensing_page');
+    add_action('admin_print_styles-' . $licensing_page, 'ffwd_styles');
+    /* Custom link to wordpress.org*/
+    global $submenu;
+    $url = 'https://wordpress.org/support/plugin/wd-facebook-feed/#new-post';
+    $submenu[$parent_slug][] = array(
+      '<div id="ffwd_ask_question">' . __('Ask a question', 'ffwd_menu') . '</div>',
+      'manage_options',
+      $url,
+    );
+    $uninstall_page = add_submenu_page($parent_slug, 'Uninstall', 'Uninstall', 'manage_options', 'uninstall_ffwd', 'ffwd_menu');
+    add_action('admin_print_styles-' . $uninstall_page, 'ffwd_styles');
+    add_action('admin_print_scripts-' . $uninstall_page, 'ffwd_admin_scripts');
+  }
 }
 add_action( 'admin_menu', 'ffwd_menu_panel', 9);
 
 add_action( 'init', 'ffwd_silently_update' );
 
-add_filter('wp_get_default_privacy_policy_content', 'ffwd_privacy_policy');
-function ffwd_privacy_policy($content){
+function ffwd_privacy_policy() {
+  if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+    return;
+  }
+
   $title = __('Facebook Feed by 10Web', "ffwd");
-
-  $pp_link = '<a target="_blank" href="https://www.facebook.com/policy/">' . __('Privacy Policy', "ffwd") . '</a>';
-  $text = sprintf(__('Inform visitors that your website makes use of  Facebook API to receive public data for facebook feed. Provide message that may request you to delete their Facebook data if it is accidentally cached in your website database with feed data. If you enabled “show page plugin” option for Facebook feed, Facebook will load some JS and embedded content which may track visitors. Facebook embeds are regulated under terms of Facebook %s', "ffwd"), $pp_link);
+  $link = '<a target="_blank" href="https://www.facebook.com/policy/">' . __('Privacy Policy', "ffwd") . '</a>';
+  $text  = sprintf(__('Inform visitors that your website makes use of  Facebook API to receive public data for facebook feed. Provide message that may request you to delete their Facebook data if it is accidentally cached in your website database with feed data. If you enabled “show page plugin” option for Facebook feed, Facebook will load some JS and embedded content which may track visitors. Facebook embeds are regulated under terms of Facebook %s', "ffwd"), $link);
   $text .= "<br/>";
-  $text .= __('TenWeb Disclaimer: The above text is for informational purposes only and is not a legal advice. You must not rely on it as an alternative to legal advice. You should contact your legal counsel to obtain advice with respect to your particular case.', "ffwd");
-  $pp_text = '<h3>' . $title . '</h3>' . '<p class="wp-policy-help">' . $text . '</p>';
+  $text .= __('10Web Disclaimer: The above text is for informational purposes only and is not a legal advice. You must not rely on it as an alternative to legal advice. You should contact your legal counsel to obtain advice with respect to your particular case.', "ffwd");
+  $text .= "<br/>&nbsp;";
 
-  $content .= $pp_text;
-  return $content;
+  wp_add_privacy_policy_content(
+    $title,
+    $text
+  );
 }
 
 add_action("init", "ffwd_overview", 9);
+
 function ffwd_overview() {
   if ( is_admin() && !isset($_REQUEST['ajax']) ) {
     if ( !class_exists("TenWebLib") ) {
@@ -431,6 +443,8 @@ add_shortcode( 'WD_FB', 'ffwd_shortcode' );
 
 $ffwd = 0;
 function ffwd_front_end( $params ) {
+  /* Enqueue css/js in frontend */
+  do_action("wp_enqueue_ffwd_front_end_scripts");
 	global $ffwd;
 	global $wpdb;
 	require_once( WD_FFWD_DIR . '/frontend/controllers/FFWDControllerMain.php' );
@@ -561,13 +575,13 @@ function ffwd_activate() {
   update_option('ffwd_autoupdate_time',$autoupdate_interval*60+$current_time);
 
 
-  delete_option("ffwd_uninstall");
 	global $wpdb;
+  $charset_collate = $wpdb->get_charset_collate();
 	$wd_fb_shortcode = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "wd_fb_shortcode` (
     `id` bigint(20) NOT NULL,
     `tagtext` mediumtext NOT NULL,
     PRIMARY KEY (`id`)
-  ) DEFAULT CHARSET=utf8;";
+  ) " . $charset_collate . ";";
 	$wpdb->query( $wd_fb_shortcode );
 
 	$wd_fb_info = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "wd_fb_info` (
@@ -666,7 +680,7 @@ function ffwd_activate() {
   `upcoming_events` tinyint(4) NOT NULL,
   `fb_page_id` varchar(32) NOT NULL,
     PRIMARY KEY (`id`)
-  ) DEFAULT CHARSET=utf8;";
+  ) " . $charset_collate . ";";
 
 
 	$wpdb->query( $wd_fb_info );
@@ -729,7 +743,7 @@ function ffwd_activate() {
       `attachments` text NOT NULL, 
       `who_post` text NOT NULL,
     PRIMARY KEY (`id`)
-  ) DEFAULT CHARSET=utf8;";
+  ) " . $charset_collate . ";";
 	$wpdb->query( $wd_fb_data );
 
 	$wd_fb_data_collation = "ALTER TABLE `" . $wpdb->prefix . "wd_fb_data` 
@@ -748,7 +762,7 @@ function ffwd_activate() {
    `date_timezone` varchar(64) NOT NULL,
    `post_date_format` varchar(64) NOT NULL,
    `event_date_format` varchar(64) NOT NULL
-   ) DEFAULT CHARSET=utf8;";
+   ) " . $charset_collate . ";";
 	$wpdb->query( $wd_fb_option );
 
 	/*$ffwd_settings = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "ffwd_settings` (
@@ -767,7 +781,7 @@ function ffwd_activate() {
     `params` longtext,
     `default_theme` tinyint(1) NOT NULL,
     PRIMARY KEY (`id`)
-  ) DEFAULT CHARSET=utf8;";
+  ) " . $charset_collate . ";";
 	$wpdb->query( $wd_fb_theme );
 
 	$exists_default = $wpdb->get_var( 'SELECT count(id) FROM ' . $wpdb->prefix . 'wd_fb_option' );
@@ -1021,7 +1035,7 @@ function ffwd_front_end_scripts() {
 
 }
 
-add_action( 'wp_enqueue_scripts', 'ffwd_front_end_scripts' );
+add_action('wp_enqueue_ffwd_front_end_scripts', 'ffwd_front_end_scripts');
 add_action( 'admin_enqueue_scripts', 'ffwd_enqueue__admin_scripts' );
 
 add_action( 'wp_ajax_ffwd_autoupdate', 'wd_fb_update' );
@@ -1058,6 +1072,14 @@ function wd_fb_update($from_plugin=0) {
 	if(($current_time>=$update_time && $from_plugin) || !$from_plugin )
 	{
 		global $wpdb;
+    $ff_wd_options = get_option('ffwd_pages_list');
+    if ( !empty($ff_wd_options) ) {
+      foreach ( $ff_wd_options as $ff_wd_option ) {
+        $token = $ff_wd_option->access_token;
+        $page_id = $ff_wd_option->id;
+        WDFacebookFeed::update_page_access_token($token, $page_id);
+      }
+    }
 		$query = "SELECT * FROM " . $wpdb->prefix . "wd_fb_info WHERE `update_mode` <> 'no_update'";
 		$rows  = $wpdb->get_results( $query );
 
@@ -1069,9 +1091,39 @@ function wd_fb_update($from_plugin=0) {
 
 }
 
+// Check Valid Token and show message
+$ffwd_token_error_flag = get_option("ffwd_token_error_flag");
+$ffwd_option_reauth_success = ((isset($_GET['success'])) ? $_GET["success"] : '');
+if($ffwd_token_error_flag === "1" || $ffwd_option_reauth_success!=""){
+  add_action('admin_notices', 'ffwd_token_error_flag_notice');
+}
+
+function ffwd_token_error_flag_notice(){
+  global $ffwd_token_error_flag, $ffwd_option_reauth_success;
+  $screen_base = get_current_screen()->base;
+  if($ffwd_token_error_flag === "1"){
+		if($screen_base === "dashboard" || $screen_base === "toplevel_page_info_ffwd" || $screen_base === "facebook-feed_page_options_ffwd" || $screen_base === "facebook-feed_page_themes_ffwd" || $screen_base === "facebook-feed_page_uninstall_ffwd" || $screen_base === "facebook-feed_page_ffwd_licensing" ){
+			$link_to_reset = "<a href='".site_url()."/wp-admin/admin.php?page=options_ffwd' >reset token</a>";
+			if($screen_base === "facebook-feed_page_options_ffwd"){
+				$link_to_reset = "reset token";
+			}
+			echo "<div class='notice notice-error'><p>Facebook token is invalid or expired. Please ". $link_to_reset ." and sign-in again to get new one.</p></div>";
+		}
+  }
+  if($screen_base === "facebook-feed_page_options_ffwd" && $ffwd_option_reauth_success !=""){
+    if($ffwd_option_reauth_success==1){
+	 echo "<div class='notice notice-success'><p>The Access Token Successfully saved.</p></div>";
+    }
+    else{
+	 echo "<div class='notice notice-error'><p>Something wrong. Please try again.</p></div>";
+    }
+  }
+}
+
 // Facebook Feed by 10Web Widget.
 if ( class_exists( 'WP_Widget' ) ) {
-	require_once( WD_FFWD_DIR . '/admin/controllers/FFWDControllerWidget.php' );
+  add_action('wp_enqueue_scripts', 'ffwd_front_end_scripts');
+  require_once( WD_FFWD_DIR . '/admin/controllers/FFWDControllerWidget.php' );
 	add_action( 'widgets_init', 'ffwd_register_widget' );
 }
 

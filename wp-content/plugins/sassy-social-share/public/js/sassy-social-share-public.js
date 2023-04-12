@@ -23,6 +23,16 @@ function heateorSssMoreSharingPopup(elem, postUrl, postTitle, twitterTitle){
 		locale: "en-US",
 		redirect_url: "https://www.linkedin.com/shareArticle?mini=true&url=" + postUrl + "&title=" + postTitle,
 	  },
+	  parler: {
+		title: "Parler",
+		locale: "en-US",
+		redirect_url: "https://parler.com/new-post?message=" + postTitle + "&url=" + postUrl
+	  },
+	  gab: {
+		title: "Gab",
+		locale: "en-US",
+		redirect_url: "https://gab.com/compose?text=" + postTitle + "&url=" + postUrl
+	  },
 	  pinterest: {
 		title: "Pinterest",
 		locale: "en-US",
@@ -83,7 +93,7 @@ function heateorSssMoreSharingPopup(elem, postUrl, postTitle, twitterTitle){
 	  SMS: {
 		title: "SMS",
 		locale: "en-US",
-		bookmarklet_url: "sms://?&body="+postTitle+" "+postUrl
+		bookmarklet_url: "sms:?&body="+postTitle+" "+postUrl
 	  },
 	  Trello: {
 		title: "Trello",

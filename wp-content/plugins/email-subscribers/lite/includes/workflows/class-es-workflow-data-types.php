@@ -5,21 +5,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Class to load required data types for workflows
+ * 
  * @class ES_Data_Types
- * @since 2.4.6
+ * @since 4.4.1
  */
 class ES_Workflow_Data_Types extends ES_Workflow_Registry {
 
-	/** @var array */
-	static $includes;
-
-	/** @var array  */
-	static $loaded = array();
+	/**
+	 * Registered include classes
+	 *
+	 * @since 4.4.1
+	 * @var array
+	 */
+	public static $includes;
 
 	/**
+	 * Loaded registered class objects
+	 *
+	 * @var array
+	 */
+	public static $loaded = array();
+
+	/**
+	 *
+	 * Get registered data type
+	 *
+	 * @since 4.4.1
 	 * @return array
 	 */
-	static function load_includes() {
+	public static function load_includes() {
 		return apply_filters(
 			'ig_es_data_types_includes',
 			array(
@@ -29,18 +44,31 @@ class ES_Workflow_Data_Types extends ES_Workflow_Registry {
 	}
 
 	/**
+	 * Get data item from data type
+	 * 
 	 * @param $data_type_id
 	 * @return Data_Type|false
 	 */
-	static function get( $data_type_id ) {
+	public static function get( $data_type_id ) {
 		return parent::get( $data_type_id );
 	}
 
 	/**
+	 * Set data type in data item
+	 * 
 	 * @param string    $data_type_id
 	 * @param Data_Type $data_type
 	 */
-	static function after_loaded( $data_type_id, $data_type ) {
+	public static function after_loaded( $data_type_id, $data_type ) {
 		$data_type->set_id( $data_type_id );
+	}
+
+	/**
+	 * Get non supported data types
+	 * 
+	 * @return array
+	 */
+	public static function get_non_stored_data_types() {
+		return array( 'shop' );
 	}
 }

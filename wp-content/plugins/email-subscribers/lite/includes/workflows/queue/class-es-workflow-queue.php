@@ -1,16 +1,24 @@
 <?php
-// phpcs:ignoreFile
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
+ * Class to handle workflow queue
+ * 
  * @class ES_Workflow_Queue
  *
  * @property array $data_items (legacy)
  */
 class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 
-	/** @var bool|array */
+	/**
+	 * Raw data received from workflow trigger
+	 *
+	 * @since 4.4.1
+	 * @var bool
+	 */
 	private $uncompressed_data_layer;
 
 
@@ -19,17 +27,37 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 	const F_MISSING_DATA = 101;
 	const F_FATAL_ERROR = 102;
 
-	/** @var integer queue id */
+	/**
+	 * Workflow queue id
+	 *
+	 * @since 4.4.1
+	 * @var integer queue id 
+	 */
 	public $id = 0;
 
-	/** @var bool */
+	/**
+	 * Flag to check whether workflow queue is valid
+	 *
+	 * @since 4.4.1
+	 * @var bool
+	 */
 	public $exists = false;
 
-	/** @var array */
-	public $data = [];
+	/**
+	 * Workflow queue data
+	 *
+	 * @since 4.4.1
+	 * @var array
+	 */
+	public $data = array();
 
-	/** @var array */
-	public $changed_fields = [];
+	/**
+	 * Variable to store changed field in workflow queue data
+	 *
+	 * @since 4.4.1
+	 * @var array
+	 */
+	public $changed_fields = array();
 
 	/**
 	 * Added Logger Context
@@ -43,13 +71,15 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 	);
 
 	/**
+	 * Class constructor
+	 * 
 	 * @param bool|int $id
 	 */
-	function __construct( $id = false ) {
+	public function __construct( $id = false ) {
 		parent::__construct();
 		if ( is_numeric( $id ) ) {
 			$queue_data = $this->get_by( 'id', $id );
-			if( ! empty( $queue_data ) && is_array( $queue_data ) ) {
+			if ( ! empty( $queue_data ) && is_array( $queue_data ) ) {
 				$this->id           = $id;
 				$queue_data['meta'] = ! empty( $queue_data['meta'] ) ? maybe_unserialize( $queue_data['meta'] ) : array();
 				$this->data         = $queue_data;
@@ -59,103 +89,129 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 	}
 
 	/**
+	 * Get workflow queue id
+	 * 
 	 * @return int
 	 */
-	function get_id() {
+	public function get_id() {
 		return $this->id ? (int) $this->id : 0;
 	}
 
 
 	/**
+	 * Set workflow queue id
+	 * 
 	 * @param int $id
 	 */
-	function set_id( $id ) {
+	public function set_id( $id ) {
 		$this->id = $id;
 	}
 
 	/**
+	 * Set workflow id
+	 * 
 	 * @param int $id
 	 */
-	function set_workflow_id( $id ) {
+	public function set_workflow_id( $id ) {
 		$this->set_prop( 'workflow_id', ES_Clean::id( $id ) );
 	}
 
 
 	/**
+	 * Get workflow id
+	 * 
 	 * @return int
 	 */
-	function get_workflow_id() {
+	public function get_workflow_id() {
 		return ES_Clean::id( $this->get_prop( 'workflow_id' ) );
 	}
 
 	/**
+	 * Change workflow queue status as failed.
+	 * 
 	 * @param bool $failed
 	 */
-	function set_failed( $failed = true ) {
+	public function set_failed( $failed = true ) {
 		$this->set_prop( 'failed', ig_es_bool_int( $failed ) );
 	}
 
 
 	/**
+	 * Check if workflow queue has failed
+	 * 
 	 * @return bool
 	 */
-	function is_failed() {
+	public function is_failed() {
 		return (bool) $this->get_prop( 'failed' );
 	}
 
 
 	/**
+	 * Set workflow queue failure code
+	 * 
 	 * @param int $failure_code
 	 */
-	function set_failure_code( $failure_code ) {
+	public function set_failure_code( $failure_code ) {
 		$this->set_prop( 'failure_code', absint( $failure_code ) );
 	}
 
 
 	/**
+	 * Get workflow queue failure code
+	 * 
 	 * @return int
 	 */
-	function get_failure_code() {
+	public function get_failure_code() {
 		return absint( $this->get_prop( 'failure_code' ) );
 	}
 
 
 	/**
+	 * Set workflow queue creation date/time
+	 * 
 	 * @param DateTime $date
 	 */
-	function set_created_at( $date ) {
+	public function set_created_at( $date ) {
 		$this->set_date_column( 'created_at', $date );
 	}
 
 
 	/**
+	 * Get workflow queue creation date/time
+	 * 
 	 * @return bool|DateTime
 	 */
-	function get_created_at() {
+	public function get_created_at() {
 		return $this->get_date_column( 'created_at' );
 	}
 
 
 	/**
+	 * Set schedule time to run the workflow queue
+	 * 
 	 * @param DateTime $date
 	 */
-	function set_scheduled_at( $date ) {
+	public function set_scheduled_at( $date ) {
 		$this->set_date_column( 'scheduled_at', $date );
 	}
 
 
 	/**
+	 * Get schedule time to run the workflow queue
+	 * 
 	 * @return bool|DateTime
 	 */
-	function get_scheduled_at() {
+	public function get_scheduled_at() {
 		return $this->get_date_column( 'scheduled_at' );
 	}
 
 
 	/**
-	 * @param Data_Layer $data_layer
+	 * Store workflow data in the queue
+	 * 
+	 * @param ES_Workflow_Data_Layer $data_layer
 	 */
-	function store_data_layer( $data_layer ) {
+	public function store_data_layer( $data_layer ) {
 
 		$this->uncompressed_data_layer = $data_layer->get_raw_data();
 
@@ -166,6 +222,8 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 
 
 	/**
+	 * Store workflow data item in the queue
+	 * 
 	 * @param $data_type_id
 	 * @param $data_item
 	 */
@@ -191,18 +249,21 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 
 
 	/**
-	 * @return Data_Layer
+	 * Get workflow data layer
+	 * 
+	 * @return ES_Workflow_Data_Layer
 	 */
-	function get_data_layer() {
+	public function get_data_layer() {
 
 		if ( ! isset( $this->uncompressed_data_layer ) ) {
 
-			$uncompressed_data_layer = [];
+			$uncompressed_data_layer = array();
 			$compressed_data_layer = $this->get_compressed_data_layer();
 
 			if ( $compressed_data_layer ) {
 				foreach ( $compressed_data_layer as $data_type_id => $compressed_item ) {
-					if ( $data_type = ES_Workflow_Data_Types::get( $data_type_id ) ) {
+					$data_type = ES_Workflow_Data_Types::get( $data_type_id );
+					if ( $data_type ) {
 						$uncompressed_data_layer[$data_type_id] = $data_type->decompress( $compressed_item, $compressed_data_layer );
 					}
 				}
@@ -221,9 +282,10 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 	 *
 	 * @return array|false
 	 */
-	function get_compressed_data_layer() {
+	public function get_compressed_data_layer() {
 
-		if ( ! $workflow = $this->get_workflow() ) {
+		$workflow = $this->get_workflow();
+		if ( ! $workflow ) {
 			return false; // workflow must be set
 		}
 
@@ -231,11 +293,12 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 			return false; // queue must be saved
 		}
 
-		if ( ! $trigger = $workflow->get_trigger() ) {
+		$trigger = $workflow->get_trigger();
+		if ( ! $trigger ) {
 			return false; // need a trigger
 		}
 
-		$data_layer = [];
+		$data_layer = array();
 
 		$supplied_items = $trigger->get_supplied_data_items();
 
@@ -243,7 +306,7 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 
 			$data_item_value = $this->get_compressed_data_item( $data_type_id, $supplied_items );
 
-			if ( $data_item_value !== false ) {
+			if ( false !== $data_item_value ) {
 				$data_layer[ $data_type_id ] = $data_item_value;
 			}
 		}
@@ -253,6 +316,8 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 
 
 	/**
+	 * Get data item id from stored queue data
+	 * 
 	 * @param $data_type_id
 	 * @param array $supplied_data_items
 	 * @return string|false
@@ -270,40 +335,45 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 
 
 	/**
+	 * Get workflow object
+	 * 
 	 * Returns the workflow without a data layer
-	 * @return Workflow|false
+	 *
+	 * @return ES_Workflow|false
 	 */
-	function get_workflow() {
+	public function get_workflow() {
 		return ES_Workflow_Factory::get( $this->get_workflow_id() );
 	}
 
 
 	/**
+	 * Run workflow in the queue
+	 * 
 	 * @return bool
 	 */
-	function run() {
+	public function run() {
 
 		if ( ! $this->exists ) {
 			return false;
 		}
-
+		
 		// mark as failed and then delete if complete, so fatal error will not cause it to run repeatedly
 		$this->mark_as_failed( self::F_FATAL_ERROR );
 		$this->save();
 		$success = false;
-
+		
 		$workflow   = $this->get_workflow();
 		$data_layer = $this->get_data_layer();
 		$workflow->setup( $data_layer );
-
+		
 		$failure = $this->do_failure_check( $workflow );
-
+		
 		if ( $failure ) {
 			// queued event failed
 			$this->mark_as_failed( $failure );
 		} else {
 			$success = true;
-
+			
 			// passed fail check so validate workflow and then delete
 			if ( $this->validate_workflow( $workflow ) ) {
 				$workflow->run();
@@ -319,10 +389,11 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 
 	/**
 	 * Returns false if no failure occurred
+	 *
 	 * @param Workflow $workflow
 	 * @return bool|int
 	 */
-	function do_failure_check( $workflow ) {
+	public function do_failure_check( $workflow ) {
 
 		if ( ! $workflow || ! $workflow->is_active() ) {
 			return self::F_WORKFLOW_INACTIVE;
@@ -343,9 +414,10 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 	 * @param $workflow Workflow
 	 * @return bool
 	 */
-	function validate_workflow( $workflow ) {
+	public function validate_workflow( $workflow ) {
 
-		if ( ! $trigger = $workflow->get_trigger() ) {
+		$trigger = $workflow->get_trigger();
+		if ( ! $trigger ) {
 			return false;
 		}
 
@@ -358,7 +430,7 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 	 *
 	 * @return bool True on success, false on error.
 	 */
-	function save() {
+	public function save() {
 
 		if ( $this->exists ) {
 			// update changed fields
@@ -392,7 +464,7 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 				$this->exists = true;
 				$this->id = $queue_id;
 			} else {
-
+				/* translators: %s: Table name */
 				ES()->logger->error( sprintf( __( 'Could not insert into \'%1$s\' table. \'%1$s\' may not be present in the database.', 'email-subscribers' ), $this->table_name ), $this->logger_context );
 
 				// Return here to prevent cache updates on error
@@ -402,14 +474,16 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 
 		// reset changed data
 		// important to reset after cache hooks
-		$this->changed_fields = [];
+		$this->changed_fields = array();
 		$this->original_data = $this->data;
 
 		return true;
 	}
 
-
-	function delete_queue() {
+	/**
+	 * Delete workflow queue item.
+	 */
+	public function delete_queue() {
 		$queue_id = $this->get_id();
 		parent::delete($queue_id);
 	}
@@ -417,19 +491,23 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 
 
 	/**
+	 * Mark workflow queue item as failed
+	 * 
 	 * @param int $code
 	 */
-	function mark_as_failed( $code ) {
+	public function mark_as_failed( $code ) {
 		$this->set_failed();
 		$this->set_failure_code( $code );
 		$this->save();
 	}
 
 	/**
+	 * Set workflow queue data option
+	 * 
 	 * @param $key
 	 * @param $value
 	 */
-	function set_prop( $key, $value ) {
+	public function set_prop( $key, $value ) {
 
 		if ( is_array( $value ) && ! $value ) {
 			$value = ''; // convert empty arrays to blank
@@ -440,10 +518,12 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 	}
 
 	/**
+	 * Get workflow queue data option
+	 * 
 	 * @param $key
 	 * @return mixed
 	 */
-	function get_prop( $key ) {
+	public function get_prop( $key ) {
 		if ( ! isset( $this->data[$key] ) ) {
 			return false;
 		}
@@ -461,7 +541,7 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 	 * If $value is a string it must be MYSQL formatted.
 	 *
 	 * @param string                                 $column
-	 * @param \WC_DateTime|DateTime|\DateTime|string $value
+	 * @param DateTime|\DateTime|string $value
 	 */
 	protected function set_date_column( $column, $value ) {
 		if ( is_a( $value, 'DateTime' ) ) {
@@ -469,18 +549,20 @@ class ES_Workflow_Queue extends ES_DB_Workflows_Queue {
 			$utc_date = new DateTime();
 			$utc_date->setTimestamp( $value->getTimestamp() );
 			$this->set_prop( $column, $utc_date->format( 'Y-m-d H:i:s' ) );
-		}
-		elseif ( $value ) {
+		} elseif ( $value ) {
 			$this->set_prop( $column, ES_Clean::string( $value ) );
 		}
 	}
 
 	/**
+	 * Get datetime of workflow queue
+	 * 
 	 * @param $column
 	 * @return bool|DateTime
 	 */
 	protected function get_date_column( $column ) {
-		if ( $column && $prop = $this->get_prop( $column ) ) {
+		$prop = $this->get_prop( $column );
+		if ( $column && $prop ) {
 			return new DateTime( $prop );
 		}
 

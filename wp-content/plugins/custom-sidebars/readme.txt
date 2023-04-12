@@ -1,15 +1,18 @@
-=== Custom Sidebars - Dynamic Widget Area Manager ===
-Contributors: WPMUDEV, marquex, WPMUDEV-Support2, WPMUDEV-Support1, WPMUDEV-Support6, WPMUDEV-Support4, iworks
-Tags: sidebar, widget, footer, custom, flexible layout, dynamic widgets, manage sidebars, replace widgets, custom widget area
+=== Custom Sidebars - Dynamic Sidebar Widget Area Manager ===
+Contributors: WebFactory
+Tags: sidebar, widget, custom sidebar, dynamic widgets, manage sidebars, flexible layout, replace widgets, custom widget area, footer
 Requires at least: 4.6
-Tested up to: 5.1.1
-Stable tag: 3.2.3
+Tested up to: 5.7
+Stable tag: 3.31
+Requires PHP: 5.6
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Flexible sidebars for custom widget configurations on every page, post and custom post type on your site.
+Flexible sidebars for custom widget configurations on any page or post. Create custom sidebars with ease!
 
 == Description ==
 
-** Manage and replace sidebars and other widget areas on your site with Custom Sidebars, a flexible widget area manager. **
+**Manage and replace sidebars and other widget areas on your site with Custom Sidebars, a flexible widget area manager.**
 
 Make custom sidebar configurations and be able to choose what widgets display on each page or post of your site.
 
@@ -41,20 +44,6 @@ Every part of Custom Sidebars integrates seamlessly with the Widgets menu for si
 > * Import and export custom sidebars – backup and share sidebars
 >
 > Install Custom Sidebars and see for yourself why it's the most popular widget extension plugin available for WordPress with over 200,000 active installs.
-
-#### Custom Sidebars Is Fully-Loaded
-
-If you manage multiple WordPress sites, run an agency, or offer WordPress managment services, Custom Sidebars is developed and supported by the team at WPMU DEV. Get the same quality and support for all your WordPress needs when you become a member:
-
-* [24/7 support](https://premium.wpmudev.org/get-support/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=custom_sidebars_readme&utm_content=24_7_support) for all things WordPress
-* [Hummingbird Pro](https://premium.wpmudev.org/project/wp-hummingbird/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=custom_sidebars_readme&utm_content=hummingbird_pro) site performance optimization for unlimited sites
-* [Smush Pro](https://premium.wpmudev.org/project/wp-smush-pro/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=custom_sidebars_readme&utm_content=smush_pro) for all your sites! (Not heard of her yet? She's our award winning image optimization plugin)
-* [Defender Pro](https://premium.wpmudev.org/project/wp-defender/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=custom_sidebars_readme&utm_content=defender_pro) security hardening
-* [Snapshot](https://premium.wpmudev.org/project/snapshot/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=custom_sidebars_readme&utm_content=snapshot) backups including 10GB cloud backups
-* [The Hub](https://premium.wpmudev.org/hub-welcome/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=custom_sidebars_readme&utm_content=the_hub) site manager
-* and [3 Hosted WordPress Sites](https://premium.wpmudev.org/hosting/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=custom_sidebars_readme&utm_content=3_hosted_wordpress) with dedicated resources
-
-Get Custom Sidebars for targeted marketing, better widgets for each level of your membership site, or just to clean up bloated content on each page... then try all our other [services completely free](https://premium.wpmudev.org/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=custom_sidebars_readme&utm_content=services_completely_free#trial).
 
 == Screenshots ==
 
@@ -108,6 +97,19 @@ Any user that can switch themes, can create sidebars. Switch_themes is the capab
 Custom Sidebars has the same license as WordPress, so you can use it wherever you want for free. Yay!
 
 == Changelog ==
+
+= 3.31 =
+* 2021-01-30
+* Minor fixes
+* Added action link to plugins table
+
+= 3.3 =
+* 2021-01-13
+* Minor fixes
+* WebFactory took over development
+
+= 3.2.4 =
+* Added deprecation notice
 
 = 3.2.3 =
 * Added "custom_sidebars_allowed_pages_array" filter to allow pages where Custom Sidebars can be loaded.
@@ -479,7 +481,4 @@ This version adds several options for customize the sidebars by categories and r
 
 == Contact and Credits ==
 
-Custom sidebars is maintained and developed by [WPMU DEV](https://premium.wpmudev.org/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=custom_sidebars_readme&utm_content=wpmudev).
-
 Original development completed by [Javier Marquez](http://marquex.es/).
-

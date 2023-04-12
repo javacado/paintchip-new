@@ -2,7 +2,6 @@
 /**
  * Query workflows based on auguements.
  *
- * @author      Icegram
  * @since       4.4.1
  * @version     1.0
  * @package     Email Subscribers
@@ -27,6 +26,13 @@ class ES_Workflow_Query {
 	 * @var string|ES_Workflow_Trigger
 	 */
 	public $trigger;
+	
+	/**
+	 * Trigger names
+	 *
+	 * @var array|ES_Workflow_Trigger
+	 */
+	public $triggers;
 
 	/**
 	 * Query arguements
@@ -69,6 +75,38 @@ class ES_Workflow_Query {
 	}
 
 	/**
+	 * Set trigger name or array of names to query.
+	 *
+	 * @param string|ES_Workflow_Trigger[] $trigger Workflow trigger object|name.
+	 */
+	public function set_triggers( $triggers ) {
+		if ( ! empty( $triggers ) ) {
+			if ( is_array( $triggers ) ) {
+				foreach ( $triggers as $trigger ) {
+					if ( $trigger instanceof ES_Workflow_Trigger ) {
+						$this->triggers[] = $trigger->get_name();
+					} else {
+						$this->triggers[] = $trigger;
+					}
+				}
+			} else if ( is_string( $triggers ) ) {
+				$this->triggers[] = $triggers;
+			}
+		}
+	}
+
+	/**
+	 * Get workflows by status
+	 * 
+	 * @since 4.6.5
+	 * @param int $status
+	 * @return $this
+	 */
+	public function where_status( $status ) {
+		$this->args['status'] = $status;
+	}
+
+	/**
 	 * Set return object
 	 *
 	 * @param objects|ids $return Result format ids or objects.
@@ -87,6 +125,10 @@ class ES_Workflow_Query {
 
 		if ( $this->trigger ) {
 			$this->args['trigger_name'] = $this->trigger;
+		}
+
+		if ( $this->triggers ) {
+			$this->args['trigger_names'] = $this->triggers;
 		}
 
 		$this->args['fields'] = array();

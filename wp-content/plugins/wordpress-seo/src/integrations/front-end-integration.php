@@ -1,9 +1,4 @@
 <?php
-/**
- * Yoast SEO Plugin File.
- *
- * @package Yoast\YoastSEO\Integrations
- */
 
 namespace Yoast\WP\SEO\Integrations;
 
@@ -67,8 +62,6 @@ class Front_End_Integration implements Integration_Interface {
 		'Title',
 		'Meta_Description',
 		'Robots',
-		'Googlebot',
-		'Bingbot',
 	];
 
 	/**
@@ -99,7 +92,6 @@ class Front_End_Integration implements Integration_Interface {
 		'Open_Graph\Article_Published_Time',
 		'Open_Graph\Article_Modified_Time',
 		'Open_Graph\Image',
-		'Open_Graph\FB_App_ID',
 	];
 
 	/**
@@ -128,6 +120,15 @@ class Front_End_Integration implements Integration_Interface {
 	];
 
 	/**
+	 * The Slack specific presenters.
+	 *
+	 * @var string[]
+	 */
+	protected $slack_presenters = [
+		'Slack\Enhanced_Data',
+	];
+
+	/**
 	 * The Webmaster verification specific presenters.
 	 *
 	 * @var string[]
@@ -151,6 +152,7 @@ class Front_End_Integration implements Integration_Interface {
 		'Open_Graph\Article_Published_Time',
 		'Open_Graph\Article_Modified_Time',
 		'Twitter\Creator',
+		'Slack\Enhanced_Data',
 	];
 
 	/**
@@ -163,7 +165,9 @@ class Front_End_Integration implements Integration_Interface {
 	];
 
 	/**
-	 * @inheritDoc
+	 * Returns the conditionals based on which this loadable should be active.
+	 *
+	 * @return array The conditionals.
 	 */
 	public static function get_conditionals() {
 		return [ Front_End_Conditional::class ];
@@ -195,15 +199,18 @@ class Front_End_Integration implements Integration_Interface {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Registers the appropriate hooks to show the SEO metadata on the frontend.
+	 *
+	 * Removes some actions to remove metadata that WordPress shows on the frontend,
+	 * to avoid duplicate and/or mismatched metadata.
 	 */
 	public function register_hooks() {
 		\add_action( 'wp_head', [ $this, 'call_wpseo_head' ], 1 );
 		// Filter the title for compatibility with other plugins and themes.
 		\add_filter( 'wp_title', [ $this, 'filter_title' ], 15 );
 
-		// @todo Walk through AMP post template and unhook all the stuff they don't need to because we do it.
-		\add_action( 'amp_post_template_head', [ $this, 'call_wpseo_head' ], 9 );
+		// Removes our robots presenter from the list when wp_robots is handling this.
+		\add_filter( 'wpseo_frontend_presenter_classes', [ $this, 'filter_robots_presenter' ] );
 
 		\add_action( 'wpseo_head', [ $this, 'present_head' ], -9999 );
 
@@ -222,13 +229,33 @@ class Front_End_Integration implements Integration_Interface {
 	public function filter_title() {
 		$context = $this->context_memoizer->for_current_page();
 
-		$title_presenter               = new Title_Presenter();
+		$title_presenter = new Title_Presenter();
+
 		/** This filter is documented in src/integrations/front-end-integration.php */
 		$title_presenter->presentation = \apply_filters( 'wpseo_frontend_presentation', $context->presentation, $context );
 		$title_presenter->replace_vars = $this->replace_vars;
 		$title_presenter->helpers      = $this->helpers;
 
 		return \esc_html( $title_presenter->get() );
+	}
+
+	/**
+	 * Filters our robots presenter, but only when wp_robots is attached to the wp_head action.
+	 *
+	 * @param array $presenters The presenters for current page.
+	 *
+	 * @return array The filtered presenters.
+	 */
+	public function filter_robots_presenter( $presenters ) {
+		if ( ! function_exists( 'wp_robots' ) ) {
+			return $presenters;
+		}
+
+		if ( ! \has_action( 'wp_head', 'wp_robots' ) ) {
+			return $presenters;
+		}
+
+		return \array_diff( $presenters, [ 'Yoast\\WP\\SEO\\Presenters\\Robots_Presenter' ] );
 	}
 
 	/**
@@ -240,10 +267,12 @@ class Front_End_Integration implements Integration_Interface {
 		global $wp_query;
 
 		$old_wp_query = $wp_query;
+		// phpcs:ignore WordPress.WP.DiscouragedFunctions.wp_reset_query_wp_reset_query -- Reason: The recommended function, wp_reset_postdata, doesn't reset wp_query.
 		\wp_reset_query();
 
 		\do_action( 'wpseo_head' );
 
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Reason: we have to restore the query.
 		$GLOBALS['wp_query'] = $old_wp_query;
 	}
 
@@ -261,7 +290,7 @@ class Front_End_Integration implements Integration_Interface {
 		 */
 		$presentation = \apply_filters( 'wpseo_frontend_presentation', $context->presentation, $context );
 
-		echo PHP_EOL;
+		echo \PHP_EOL;
 		foreach ( $presenters as $presenter ) {
 			$presenter->presentation = $presentation;
 			$presenter->helpers      = $this->helpers;
@@ -269,10 +298,10 @@ class Front_End_Integration implements Integration_Interface {
 
 			$output = $presenter->present();
 			if ( ! empty( $output ) ) {
-				echo "\t" . $output . PHP_EOL;
+				echo "\t" . $output . \PHP_EOL;
 			}
 		}
-		echo PHP_EOL . PHP_EOL;
+		echo \PHP_EOL . \PHP_EOL;
 	}
 
 	/**
@@ -285,14 +314,13 @@ class Front_End_Integration implements Integration_Interface {
 	public function get_presenters( $page_type ) {
 		$needed_presenters = $this->get_needed_presenters( $page_type );
 
-		$presenters = array_filter(
-			\array_map( function( $presenter ) {
-				if ( ! \class_exists( $presenter ) ) {
-					return null;
-				}
-				return new $presenter();
-			}, $needed_presenters )
-		);
+		$callback   = function( $presenter ) {
+			if ( ! \class_exists( $presenter ) ) {
+				return null;
+			}
+			return new $presenter();
+		};
+		$presenters = \array_filter( \array_map( $callback, $needed_presenters ) );
 
 		/**
 		 * Filter 'wpseo_frontend_presenters' - Allow filtering the presenter instances in or out of the request.
@@ -305,12 +333,15 @@ class Front_End_Integration implements Integration_Interface {
 			$presenter_instances = $presenters;
 		}
 
-		$presenter_instances = \array_filter( $presenter_instances, function ( $presenter_instance ) {
+		$is_presenter_callback = function ( $presenter_instance ) {
 			return $presenter_instance instanceof Abstract_Indexable_Presenter;
-		} );
+		};
+		$presenter_instances   = \array_filter( $presenter_instances, $is_presenter_callback );
 
 		return \array_merge(
-			[ new Marker_Open_Presenter() ], $presenter_instances, [ new Marker_Close_Presenter() ]
+			[ new Marker_Open_Presenter() ],
+			$presenter_instances,
+			[ new Marker_Close_Presenter() ]
 		);
 	}
 
@@ -326,12 +357,13 @@ class Front_End_Integration implements Integration_Interface {
 
 		if ( ! \get_theme_support( 'title-tag' ) && ! $this->options->get( 'forcerewritetitle', false ) ) {
 			// Remove the title presenter if the theme is hardcoded to output a title tag so we don't have two title tags.
-			$presenters = array_diff( $presenters, [ 'Title' ] );
+			$presenters = \array_diff( $presenters, [ 'Title' ] );
 		}
 
-		$presenters = \array_map( function ( $presenter ) {
+		$callback   = function ( $presenter ) {
 			return "Yoast\WP\SEO\Presenters\\{$presenter}_Presenter";
-		}, $presenters );
+		};
+		$presenters = \array_map( $callback, $presenters );
 
 		/**
 		 * Filter 'wpseo_frontend_presenter_classes' - Allow filtering presenters in or out of the request.
@@ -360,7 +392,7 @@ class Front_End_Integration implements Integration_Interface {
 		}
 
 		$presenters = $this->get_all_presenters();
-		if ( in_array( $page_type, [ 'Static_Home_Page', 'Home_Page' ] ) ) {
+		if ( \in_array( $page_type, [ 'Static_Home_Page', 'Home_Page' ], true ) ) {
 			$presenters = \array_merge( $presenters, $this->webmaster_verification_presenters );
 		}
 
@@ -382,8 +414,11 @@ class Front_End_Integration implements Integration_Interface {
 		if ( $this->options->get( 'opengraph' ) === true ) {
 			$presenters = \array_merge( $presenters, $this->open_graph_presenters );
 		}
-		if ( $this->options->get( 'twitter' ) === true && apply_filters( 'wpseo_output_twitter_card', true ) !== false ) {
+		if ( $this->options->get( 'twitter' ) === true && \apply_filters( 'wpseo_output_twitter_card', true ) !== false ) {
 			$presenters = \array_merge( $presenters, $this->twitter_card_presenters );
+		}
+		if ( $this->options->get( 'enable_enhanced_slack_sharing' ) === true && \apply_filters( 'wpseo_output_enhanced_slack_data', true ) !== false ) {
+			$presenters = \array_merge( $presenters, $this->slack_presenters );
 		}
 
 		return \array_merge( $presenters, $this->closing_presenters );

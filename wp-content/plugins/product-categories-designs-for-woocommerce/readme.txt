@@ -1,9 +1,9 @@
 === Product Categories Designs for WooCommerce ===
-Contributors: wponlinesupport, anoopranawat, pratik-jain
+Contributors: wponlinesupport, anoopranawat, pratik-jain, piyushpatel123, ridhimashukla, patelketan
 Tags: categories designs, categories slider, categories grid, WooCommerce categories designs, WooCommerce categories slider, WooCommerce categories grid
 Requires at least: 4.0
-Tested up to: 5.3.2
-Stable tag: trunk
+Tested up to: 5.9
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,9 +14,14 @@ Display WooCommerce product categories with good designs and grid and silder vie
 
 Plugin add a sub tab under "Products --> Category Designs – How It Works" for more details.
 
-Check [Demo and Features](https://demo.wponlinesupport.com/prodemo/product-categories-designs-for-woo-pro/) for additional information.
+> [Join 0$ 14 Days Pro Trial With Product Category](https://www.essentialplugin.com/pricing/?utm_source=WP&utm_medium=Product-Category&utm_campaign=Read-Me)
+>
+> OR
+> 
+> Download & Explore "Product Categories Designs for WooCommerce" plugin and 50+ recommended plugin inside.
+>
 
-Try our new plugin [Woo Product Slider and Carousel with category](https://wordpress.org/plugins/woo-product-slider-and-carousel-with-category/)
+Try [Woo Product Slider and Carousel with category](https://wordpress.org/plugins/woo-product-slider-and-carousel-with-category/)
 
 Also work with Gutenberg shortcode block.
 
@@ -37,53 +42,60 @@ Also work with Gutenberg shortcode block.
 <code>[wpos_product_categories]</code>
 
 * **columns:**
-columns="4" (Display Number of Category Per Row. By Default value is 3. )
+[wpos_product_categories columns="4"] (Display Number of Category Per Row. By Default value is 3. )
 * **Design:**
-design="design-2" (Design Number to Display your Product Category. Values are design-1 or design-2. By Default value is design-1.)
+[wpos_product_categories design="design-2"] (Design Number to Display your Product Category. Values are design-1 or design-2. By Default value is design-1.)
 * **number:**
-number="5" ( ie Display 5 product categories at time. By defoult value is all )
+[wpos_product_categories number="5"] ( ie Display 5 product categories at time. By defoult value is all )
 * **Order by product categories:**
-orderby="name" ( Accepts term fields ('name', 'slug', 'term_group', 'term_id', 'id', 'description') )
+[wpos_product_categories orderby="name"] ( Accepts term fields ('name', 'slug', 'term_group', 'term_id', 'id', 'description') )
 * **Order:**
-order="ASC" (Accepts 'ASC' (ascending) or 'DESC' (descending). Default 'ASC' )
+[wpos_product_categories order="ASC"] (Accepts 'ASC' (ascending) or 'DESC' (descending). Default 'ASC' )
 * **hide_empty:**
-hide_empty="1" (Accepts 1|true or 0|false. Default 1|true. )
+[wpos_product_categories hide_empty="1"] (Accepts 1|true or 0|false. Default 1|true. )
 * **ids:**
-ids="1" (Display Specific Category. values are Comma separated Category Id. By Default is all.)
+[wpos_product_categories ids=""] (Display Specific Category. values are Comma separated Category Id. By Default is all.)
 * **height:**
-height="300" (Set the height for Category.)
+[wpos_product_categories height="300"] (Set the height for Category.)
+* **parent:**
+[wpos_product_categories parent=""] (Enter parent category ID to retrieve direct-child terms of.)
+* **extra_class:**
+[wpos_product_categories extra_class=""] (Enter extra CSS class for design customization. Note: Extra class added as parent so using extra class you customize your design.)
 
 **Product Categories in Slider**
 
 <code>[wpos_product_categories_slider]</code>
 
 * **Design:**
-design="design-2" (Design Number to Display your Product Category. Values are design-1 or design-2. By Default value is design-1.)
+[wpos_product_categories_slider design="design-2"] (Design Number to Display your Product Category. Values are design-1 or design-2. By Default value is design-1.)
 * **number:**
-number="5" ( ie Display 5 product categories at time. By defoult value is all )
+[wpos_product_categories_slider number="5"] ( ie Display 5 product categories at time. By defoult value is all )
 * **Order by product categories:**
-orderby="name" ( Accepts term fields ('name', 'slug', 'term_group', 'term_id', 'id', 'description') )
+[wpos_product_categories_slider orderby="name"] ( Accepts term fields ('name', 'slug', 'term_group', 'term_id', 'id', 'description') )
 * **Order:**
-order="ASC" (Accepts 'ASC' (ascending) or 'DESC' (descending). Default 'ASC' )
+[wpos_product_categories_slider order="ASC"] (Accepts 'ASC' (ascending) or 'DESC' (descending). Default 'ASC' )
 * **hide_empty:**
-hide_empty="1" (Accepts 1|true or 0|false. Default 1|true. )
+[wpos_product_categories_slider hide_empty="1"] (Accepts 1|true or 0|false. Default 1|true. )
 * **ids:**
-ids="1" (Display Specific Category. values are Comma separated Category Id. By Default is all.)
+[wpos_product_categories_slider ids=""] (Display Specific Category. values are Comma separated Category Id. By Default is all.)
 * **height:**
-height="300" (Set the height for Category.)
+[wpos_product_categories_slider height="300"] (Set the height for Category.)
 * **Display number of product categories at time:**
-slidestoshow="3" (Display no of product categories in a slider )
+[wpos_product_categories_slider slidestoshow="3"] (Display no of product categories in a slider )
 * **Number of products categories slides at a time:**
-slidestoscroll="1" (Controls number of product categories rotate at a time)
+[wpos_product_categories_slider slidestoscroll="1"] (Controls number of product categories rotate at a time)
 * **Pagination and arrows:**
-dots="false" arrows="false" (Hide/Show pagination and arrows. By defoult value is "true". Values are true OR false)
+[wpos_product_categories_slider dots="false" arrows="false"] (Hide/Show pagination and arrows. By defoult value is "true". Values are true OR false)
 * **Autoplay and Autoplay Speed:**
-autoplay="true" autoplay_interval="1000"
+[wpos_product_categories_slider autoplay="true" autoplay_interval="3000"]
 * **Slide Speed:**
-speed="3000" (Control the speed of the slider)
+[wpos_product_categories_slider speed="300"] (Control the speed of the slider)
 * **loop:**
-loop="3000" ( By defoult value is "true". Values are true OR false)
-
+[wpos_product_categories_slider loop="true"] ( By defoult value is "true". Values are true OR false)
+* **parent:**
+[wpos_product_categories_slider parent=""] (Enter parent category ID to retrieve direct-child terms of.)
+* **extra_class:**
+[wpos_product_categories_slider extra_class=""] (Enter extra CSS class for design customization. Note: Extra class added as parent so using extra class you customize your design.)
 
 = Stunning Features: =
 
@@ -109,7 +121,11 @@ loop="3000" ( By defoult value is "true". Values are true OR false)
 > * Awesome Touch-Swipe Enabled
 > * Work in any WordPress Theme
 > * Wp Templating Feature
+> * Gutenberg Block Supports.
 > * Visual Composer / WPBackery Support
+> * Elementor, Beaver and SiteOrigin Page Builder Support (New).
+> * Divi Page Builder Native Support (New).
+> * Fusion (Avada) Page Builder Native Support (New).
 > * Display category title and description.
 > * Display product count.
 > * Display specific categories.
@@ -122,7 +138,7 @@ loop="3000" ( By defoult value is "true". Values are true OR false)
 > * Pagination show/hide options
 > * 100% Mobile & Tablet Responsive
 >
-> Check [Demo and Features](https://demo.wponlinesupport.com/prodemo/product-categories-designs-for-woo-pro/) for additional information.
+> [Join 0$ 14 Days Pro Trial With Product Category](https://www.essentialplugin.com/pricing/?utm_source=WP&utm_medium=Product-Category&utm_campaign=Read-Me)
 >
 
 
@@ -145,6 +161,37 @@ loop="3000" ( By defoult value is "true". Values are true OR false)
 
 
 == Changelog ==
+
+= 1.3.3 (04, Feb 2022) =
+* [*] Tested up to: 5.9 
+* [*] Solved Gutenberg wp-editor widget issue.
+
+= 1.3.2 (17, Nov 2021) =
+* [*] Fix - Resolve Gutenberg WP-Editor script related issue. 
+* [*] Update - Add some text and links in Readme file.
+
+= 1.3.1 (22, Sep 2021) =
+* [*] Tested up to: 5.8.1
+* [*] Updated demo link
+
+= 1.3 (20, Aug 2021) =
+* [*] WC tested up to: 5.6.0
+* [*] Updated all external links.
+* [*] Fixed Blocks Initializer Issue.
+* [*] Updated language file and json.
+
+= 1.2.3 (30, March 2021) =
+* [+] New - Added Gutenberg block support. Now use plugin easily with Gutenberg!
+* [+] New - Added native shortcode support for Elementor, SiteOrigin and Beaver builder.
+* [+] New - Added Divi page builder native support.
+* [+] New - Added Fusion page builder native support.
+* [+] New - Added "extra class" parameter for all shortcodes.
+* [*] Tweak - Code optimization and performance improvements.
+
+= 1.2.2 (14, July 2020) =
+* [+] Added language template file.
+* [*] Checked compatibility with WooCommerce 4.3.0
+* [*] Fixed some typo mistake.
 
 = 1.2.1 (01-02-2020) =
 * [*] Updated features list.

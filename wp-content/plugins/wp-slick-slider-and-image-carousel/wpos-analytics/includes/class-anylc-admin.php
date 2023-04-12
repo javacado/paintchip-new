@@ -81,7 +81,7 @@ class Wpos_Anylc_Admin {
 
 	    	// WP Menu data
 	    	$wpos_menu_data = wp_list_pluck( $menu, 2 );
-	    	$anylc_page 	= isset( $_GET['page'] ) ? $_GET['page'] : null;
+	    	$anylc_page 	= isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : null;
 
 	    	foreach ($wpos_analytics_module as $module_key => $module) {
 
@@ -150,7 +150,7 @@ class Wpos_Anylc_Admin {
 
 		global $current_user, $wpos_analytics_product;
 
-		$anylc_product_name = !empty( $_GET['page'] ) ? $_GET['page'] : '';
+		$anylc_product_name = !empty( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
 		// if no data is set then return
 		if( ! isset( $wpos_analytics_product[ $anylc_product_name ] ) ) {
@@ -183,7 +183,8 @@ class Wpos_Anylc_Admin {
 
 		global $wpos_analytics_product;
 
-		$anylc_product_name = isset( $_GET['page'] ) ? str_replace('-offers', '', $_GET['page']) : null;
+		$anylc_product_name = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
+		$anylc_product_name = str_replace( '-offers', '', $anylc_product_name );
 
 		// if no data is set then return
 		if( ! isset( $wpos_analytics_product[ $anylc_product_name ] ) ) {
@@ -244,7 +245,8 @@ class Wpos_Anylc_Admin {
 
 		// If license notice is dismissed
 	    if( isset($_GET['message']) && $_GET['message'] == 'wpos-anylc-dismiss-notice' && !empty( $_GET['anylc_id'] ) ) {
-	    	set_transient( 'wpos_anylc_optin_notice_'.$_GET['anylc_id'], true, 172800 );
+	    	$anylc_id = sanitize_text_field( $_GET['anylc_id'] );
+	    	set_transient( 'wpos_anylc_optin_notice_'.$anylc_id, true, 172800 );
 	    }
 
 		$redirect = get_option('wpos_anylc_redirect');
@@ -312,10 +314,11 @@ class Wpos_Anylc_Admin {
 		// Process Promotion Data
     	if( !empty($_GET['message']) && $_GET['message'] == 'wpos_anylc_promotion' && !empty($_GET['wpos_anylc_pdt']) && !empty($_GET['wpos_anylc_promo_pdt']) ) {
 
-    		$promotion 		= 1;
-    		$promotion_pdt 	= explode( ',', $_GET['wpos_anylc_promo_pdt'] );
+    		$promotion 				= 1;
+    		$wpos_anylc_promo_pdt	= sanitize_text_field( $_GET['wpos_anylc_promo_pdt'] );
+    		$promotion_pdt			= explode( ',', $wpos_anylc_promo_pdt );
 
-    		$anylc_pdt 		= $_GET['wpos_anylc_pdt'];
+    		$anylc_pdt 		= sanitize_text_field( $_GET['wpos_anylc_pdt'] );
 			$anylc_pdt_data = isset( $wpos_analytics_product[ $anylc_pdt ] ) ? $wpos_analytics_product[ $anylc_pdt ] : false;
 
 			if( !empty($promotion_pdt) ) {
@@ -353,7 +356,16 @@ class Wpos_Anylc_Admin {
 				// If user has opt in
 				if( $opt_in == 1 ) {
 
-					$opt_out_link = wpos_anylc_optout_url( $module, $opt_in );
+					// Creating redirect URL
+					$plugin_status 	= isset( $_GET['plugin_status'] ) 	? sanitize_text_field( $_GET['plugin_status'] ) 	: false;
+					$paged 			= isset( $_GET['paged'] ) 			? sanitize_text_field( $_GET['paged'] ) 			: false;
+					$s 				= isset( $_GET['s'] ) 				? sanitize_text_field( $_GET['s'] ) 				: false;
+
+					$redirect_url 	= add_query_arg( array( 'plugin_status' => $plugin_status, 'paged' => $paged, 's' => $s, 'wpos_anylc_pdt' => $module['slug'] ), admin_url( 'plugins.php' ) );
+					$redirect_url	= wp_nonce_url( $redirect_url, 'wpos_anylc_act'.'|'.$module['slug'] );
+
+					// Form Data
+					$optin_form_data = wpos_anylc_optin_data( $module['slug'], $redirect_url );
 
 					include( WPOS_ANYLC_DIR .'/templates/optout-popup.php' );
 				}
@@ -378,9 +390,9 @@ class Wpos_Anylc_Admin {
 
 			global $wpos_analytics_product;
 
-			$anylc_pdt 		= !empty( $_GET['wpos_anylc_pdt'] ) 				? $_GET['wpos_anylc_pdt'] 				: '';
-			$anylc_pdt 		= ( ! $anylc_pdt && !empty( $_GET['page'] ) ) 		? $_GET['page'] 						: $anylc_pdt;
-			$anylc_pdt_data = isset( $wpos_analytics_product[ $anylc_pdt ] )	? $wpos_analytics_product[ $anylc_pdt ] : false;
+			$anylc_pdt 		= !empty( $_GET['wpos_anylc_pdt'] ) 				? sanitize_text_field( $_GET['wpos_anylc_pdt'] ) 	: '';
+			$anylc_pdt 		= ( ! $anylc_pdt && !empty( $_GET['page'] ) ) 		? sanitize_text_field( $_GET['page'] ) 				: $anylc_pdt;
+			$anylc_pdt_data = isset( $wpos_analytics_product[ $anylc_pdt ] )	? $wpos_analytics_product[ $anylc_pdt ]				: false;
 
 			// If valid product data found
 			if( $anylc_pdt_data ) {
@@ -412,21 +424,7 @@ class Wpos_Anylc_Admin {
 						wp_die( __('Sorry, Something happened wrong.', 'wpos_analytic'), 'wpos_anylc_err', array('back_link' => true) );
 					}
 
-					$optin_form_data = wpos_anylc_optin_data();
-					$optin_form_data['wpos_anylc_action'] = 'skip';
-
-					$anylc_args = array(
-								'timeout' 	=> 60,
-								'sslverify'	=> false,
-								'body' 		=> $optin_form_data,
-							);
-
-					// Post back to get a response.
-					$response = wp_safe_remote_post( 'http://analytics.wponlinesupport.com', $anylc_args );
-
-					if( wp_remote_retrieve_response_code( $response ) == 200 ) {
-						$opt_in_data = wpos_anylc_update_option( $anylc_pdt_data['anylc_optin'], array('status' => 2) );
-					}
+					$opt_in_data = wpos_anylc_update_option( $anylc_pdt_data['anylc_optin'], array('status' => 2) );
 
 					// Redirect to original menu
 					$redirect_url = wpos_anylc_pdt_url( $anylc_pdt_data, 'offer' );
@@ -445,25 +443,10 @@ class Wpos_Anylc_Admin {
 						wp_die( __('Sorry, Something happened wrong.', 'wpos_analytic'), 'wpos_anylc_err', array('back_link' => true) );
 					}
 
-					$optin_form_data = wpos_anylc_optin_data();
-					$optin_form_data['wpos_anylc_action'] = 'optout';
+					$opt_in_data = wpos_anylc_update_option( $anylc_pdt_data['anylc_optin'], array('status' => 0) );
 
-					$anylc_args = array(
-								'timeout' 	=> 60,
-								'sslverify'	=> false,
-								'body' 		=> $optin_form_data,
-							);
-
-					// Post back to get a response.
-					$response = wp_safe_remote_post( 'http://analytics.wponlinesupport.com', $anylc_args );
-
-					if( wp_remote_retrieve_response_code( $response ) == 200 ) {
-						$opt_in_data = wpos_anylc_update_option( $anylc_pdt_data['anylc_optin'], array('status' => 0) );
-					}
-
-					// Redirect to original menu
-					$redirect_url = isset( $_GET['redirect'] ) ? $_GET['redirect'] : wpos_anylc_pdt_url( $anylc_pdt_data );
-					$redirect_url = add_query_arg( array( 'message' => 'optout_success' ), $redirect_url );
+					// Redirect with success message
+					$redirect_url = add_query_arg( array( 'message' => 'optout_success', 'wpos_anylc_action' => false, 'wpos_anylc_pdt' => false, '_wpnonce' => false ) );
 					if( $redirect_url ) {
 						wp_redirect( $redirect_url );
 						exit;

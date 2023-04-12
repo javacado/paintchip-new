@@ -9,7 +9,7 @@ jQuery(document).ready(function(){
 	if(typeof(wpfActiveTab) != 'undefined' && wpfActiveTab != 'main_page' && jQuery('#toplevel_page_wpf-comparison-slider').hasClass('wp-has-current-submenu')) {
 		var subMenus = jQuery('#toplevel_page_wpf-comparison-slider').find('.wp-submenu li');
 		subMenus.removeClass('current').each(function(){
-			if(jQuery(this).find('a[href$="&tab='+ wpfActiveTab+ '"]').size()) {
+			if(jQuery(this).find('a[href$="&tab='+ wpfActiveTab+ '"]').length) {
 				jQuery(this).addClass('current');
 			}
 		});
@@ -34,11 +34,11 @@ jQuery(document).ready(function(){
 		}
 	}, 1000);
 
-	if(jQuery('.wpfInputsWithDescrForm').size()) {
+	if(jQuery('.wpfInputsWithDescrForm').length) {
 		jQuery('.wpfInputsWithDescrForm').find('input[type=checkbox][data-optkey]').change(function(){
 			var optKey = jQuery(this).data('optkey')
 			,	descShell = jQuery('#wpfFormOptDetails_'+ optKey);
-			if(descShell.size()) {
+			if(descShell.length) {
 				if(jQuery(this).attr('checked')) {
 					descShell.slideDown( 300 );
 				} else {
@@ -68,8 +68,20 @@ jQuery(document).ready(function(){
 			return false;
 		});
 	});
+
+	// for checkboxHiddenVal type, see class HtmlWpf
+	jQuery('input[data-hiden-input=1]').change(function() {
+		var hidenInput = jQuery(this).next();
+
+		if (jQuery(this).prop("checked")) {
+			jQuery(hidenInput).val("1");
+		} else {
+			jQuery(hidenInput).val("0");
+		}
+	});
+
 	// Go to Top button init
-	if(jQuery('#wpfPopupGoToTopBtn').size()) {
+	if(jQuery('#wpfPopupGoToTopBtn').length) {
 		jQuery('#wpfPopupGoToTopBtn').click(function(){
 			jQuery('html, body').animate({
 				scrollTop: 0
@@ -83,7 +95,7 @@ jQuery(document).ready(function(){
 		wpfInitTooltips(e.target);
 		jQuery(e.target).find('.tooltipstered').removeAttr('title');
 	});
-	if(jQuery('.wpfCopyTextCode').size()) {
+	if(jQuery('.wpfCopyTextCode').length) {
 		setTimeout(function(){	// Give it some time - wait until all other elements will be initialized
 			var cloneWidthElement =  jQuery('<span class="sup-shortcode" />').appendTo('.woobewoo-plugin');
 			jQuery('.wpfCopyTextCode').attr('readonly', 'readonly').click(function(){
@@ -107,8 +119,8 @@ jQuery(document).ready(function(){
 		}, 500);
 	}
 	// Check for showing review notice after a week usage
-    wpfInitPlugNotices();
-    jQuery('.woobewoo-plugin-loader').css('display', 'none');
+	wpfInitPlugNotices();
+	jQuery('.woobewoo-plugin-loader').css('display', 'none');
 	jQuery('.woobewoo-main').css('display', 'block');
 	jQuery(".woobewoo-plugin .tooltipstered").removeAttr("title");
 });
@@ -130,7 +142,7 @@ function wpfInitTooltips( selector ) {
 	for(var k in findPos) {
 		if(typeof(k) === 'string') {
 			var $tips = $findIn ? $findIn.find( k ) : jQuery( k ).not('.no-tooltip');
-			if($tips && $tips.size()) {
+			if($tips && $tips.length) {
 				tooltipsterSettings.position = findPos[ k ];
 				// Fallback for case if library was not loaded
 				if(!$tips.tooltipster) continue;
@@ -179,17 +191,17 @@ function wpfInitStickyItem() {
 		,	wpTollbarHeight = 32
 		,	wndScrollTop = jQuery(window).scrollTop() + wpTollbarHeight
 		,	footer = jQuery('.wpfAdminFooterShell')
-		,	footerHeight = footer && footer.size() ? footer.height() : 0
+		,	footerHeight = footer && footer.length ? footer.height() : 0
 		,	docHeight = jQuery(document).height()
 		,	wasSticking = false
 		,	wasUnSticking = false;
-		/*if(jQuery('#wpbody-content .update-nag').size()) {	// Not used for now
+		/*if(jQuery('#wpbody-content .update-nag').length) {	// Not used for now
 			wpTollbarHeight += parseInt(jQuery('#wpbody-content .update-nag').outerHeight());
 		}*/
 		for(var i = 0; i < stickiItemsSelectors.length; i++) {
 			jQuery(stickiItemsSelectors[ i ]).each(function(){
 				var element = jQuery(this);
-				if(element && element.size() && !element.hasClass('sticky-ignore')) {
+				if(element && element.length && !element.hasClass('sticky-ignore')) {
 					var scrollMinPos = element.offset().top
 					,	prevScrollMinPos = parseInt(element.data('scrollMinPos'))
 					,	useNextElementPadding = toeInArray(stickiItemsSelectors[ i ], elementsUsePaddingNext) !== -1 || element.hasClass('sticky-padd-next')
@@ -210,7 +222,7 @@ function wpfInitStickyItem() {
 						});
 						if(useNextElementPadding) {
 							var nextElement = element.next();
-							if(nextElement && nextElement.size()) {
+							if(nextElement && nextElement.length) {
 								nextElement.data('prevPaddingTop', nextElement.css('padding-top'));
 								var addToNextPadding = parseInt(element.data('next-padding-add'));
 								addToNextPadding = addToNextPadding ? addToNextPadding : 0;
@@ -232,7 +244,7 @@ function wpfInitStickyItem() {
 						}
 						if(useNextElementPadding) {
 							var nextElement = element.next();
-							if(nextElement && nextElement.size()) {
+							if(nextElement && nextElement.length) {
 								var nextPrevPaddingTop = parseInt(nextElement.data('prevPaddingTop'));
 								if(isNaN(nextPrevPaddingTop))
 									nextPrevPaddingTop = 0;
@@ -267,10 +279,10 @@ function wpfInitStickyItem() {
 			});
 		}
 		if(wasSticking) {
-			if(jQuery('#wpfPopupGoToTop').size())
+			if(jQuery('#wpfPopupGoToTop').length)
 				jQuery('#wpfPopupGoToTop').show();
 		} else if(wasUnSticking) {
-			if(jQuery('#wpfPopupGoToTop').size())
+			if(jQuery('#wpfPopupGoToTop').length)
 				jQuery('#wpfPopupGoToTop').hide();
 		}
 	});
@@ -287,13 +299,13 @@ function wpfInitCustomCheckRadio(selector) {
 		jQuery(this).trigger('change');
 		if(jQuery(this).hasClass('cbox')) {
 			var parentRow = jQuery(this).parents('.jqgrow:first');
-			if(parentRow && parentRow.size()) {
+			if(parentRow && parentRow.length) {
 				jQuery(this).parents('td:first').trigger('click');
 			} else {
 				var checkId = jQuery(this).attr('id');
 				if(checkId && checkId != '' && strpos(checkId, 'cb_') === 0) {
 					var parentTblId = str_replace(checkId, 'cb_', '');
-					if(parentTblId && parentTblId != '' && jQuery('#'+ parentTblId).size()) {
+					if(parentTblId && parentTblId != '' && jQuery('#'+ parentTblId).length) {
 						jQuery('#'+ parentTblId).find('input[type=checkbox]').iCheck('update');
 					}
 				}
@@ -417,7 +429,7 @@ function prepareToPlotDate(data) {
 }
 function wpfInitPlugNotices() {
 	var $notices = jQuery('.woobewoo-admin-notice');
-	if($notices && $notices.size()) {
+	if($notices && $notices.length) {
 		$notices.each(function(){
 			jQuery(this).find('.notice-dismiss').click(function(){
 				var $notice = jQuery(this).parents('.woobewoo-admin-notice');
@@ -439,7 +451,7 @@ function wpfInitPlugNotices() {
 					return false;
 			});
 			var $enbStatsBtn = jQuery(this).find('.wpfEnbStatsAdBtn');
-			if($enbStatsBtn && $enbStatsBtn.size()) {
+			if($enbStatsBtn && $enbStatsBtn.length) {
 				$enbStatsBtn.click(function(){
 					jQuery.sendFormWpf({
 						data: {mod: 'promo', action: 'enbStatsOpt'}
@@ -484,7 +496,7 @@ function wpfInitMainPromoPopup() {
 			}
 			if(isRadio) {
 				jQuery('input[name="'+ jQuery(this).attr('name')+ '"]:first').parents('label:first').click();
-				if(jQuery(this).parents('.iradio_minimal:first').size()) {
+				if(jQuery(this).parents('.iradio_minimal:first').length) {
 					var self = this;
 					setTimeout(function(){
 						jQuery(self).parents('.iradio_minimal:first').removeClass('checked');
@@ -492,14 +504,14 @@ function wpfInitMainPromoPopup() {
 				}
 			}
 			var parent = null;
-			if(jQuery(this).parents('#wpfPopupMainOpts').size()) {
+			if(jQuery(this).parents('#wpfPopupMainOpts').length) {
 				parent = jQuery(this).parents('label:first');
-			} else if(jQuery(this).parents('.wpfPopupOptRow:first').size()) {
+			} else if(jQuery(this).parents('.wpfPopupOptRow:first').length) {
 				parent = jQuery(this).parents('.wpfPopupOptRow:first');
 			} else {
 				parent = jQuery(this).parents('tr:first');
 			}
-			if(!parent.size()) return;
+			if(!parent.length) return;
 			var promoLink = parent.find('.wpfProOptMiniLabel a').attr('href');
 			if(promoLink && promoLink != '') {
 				jQuery('#wpfOptInProWnd a').attr('href', promoLink);

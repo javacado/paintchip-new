@@ -25,3 +25,5 @@ div#Notifications{padding-bottom:20px!important}
 .save_btn_wrapper{margin-bottom:15px}
 body.wp-admin #Notifications .update-nag, body.wp-admin #Notifications .updated, body.wp-admin #Notifications .error, body.wp-admin #Notifications .is-dismissible, body.wp-admin #Notifications .notice{display:block!important}
 body.wp-admin .notice-success{display: block !important}
+
+#wp-admin-bar-hide-notifications .ab-item:before {content: " ";background-image: url(../images/hide-dash-menu.png) !important;background-size: 20px 20px;background-repeat: no-repeat;height: 20px;width: 20px;position: relative;top: 5px;}

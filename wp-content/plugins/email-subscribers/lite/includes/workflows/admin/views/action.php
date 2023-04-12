@@ -2,7 +2,6 @@
 /**
  * Workflow single action
  *
- * @author      Icegram
  * @since       4.4.1
  * @version     1.0
  * @package     Email Subscribers
@@ -70,10 +69,10 @@ defined( 'ABSPATH' ) || exit;
 				ES_Workflow_Admin::get_view(
 					'action-fields',
 					array(
-						'action'        => $action,
-						'action_number' => $action_number,
-						'workflow'      => $workflow,
-						'fill_fields'   => true,
+						'workflow_action' => $action,
+						'action_number'   => $action_number,
+						'workflow'        => $workflow,
+						'fill_fields'     => true,
 					)
 				);
 			}

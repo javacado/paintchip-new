@@ -190,32 +190,6 @@ class WDW_FFWD_Library {
     <?php
   }
 
-  public static function search_select($search_by, $search_select_id = 'search_select_value', $search_select_value, $playlists, $form_id) {
-    ?>
-    <div class="alignleft actions" style="clear:both;">
-      <script>
-        function spider_search_select() {
-          document.getElementById("page_number").value = "1";
-          document.getElementById("search_or_not").value = "search";
-          document.getElementById("<?php echo $form_id; ?>").submit();
-        }
-      </script>
-      <div class="alignleft actions" >
-        <label for="<?php echo $search_select_id; ?>" style="font-size:14px; width:50px; display:inline-block;"><?php echo $search_by; ?>:</label>
-        <select id="<?php echo $search_select_id; ?>" name="<?php echo $search_select_id; ?>" onchange="spider_search_select();" style="float: none; width: 150px;">
-        <?php
-          foreach ($playlists as $id => $playlist) {
-            ?>
-            <option value="<?php echo $id; ?>" <?php echo (($search_select_value == $id) ? 'selected="selected"' : ''); ?>><?php echo $playlist; ?></option>
-            <?php
-          }
-        ?>
-        </select>
-      </div>
-    </div>
-    <?php
-  }
-
   public static function html_page_nav($count_items, $pager, $page_number, $form_id, $items_per_page = 20) {
     $limit = $items_per_page;
     if ($count_items) {

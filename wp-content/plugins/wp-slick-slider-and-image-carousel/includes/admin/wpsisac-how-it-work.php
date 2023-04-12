@@ -8,134 +8,10 @@
 
 if ( !defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
-}
+} ?>
 
-// Action to add menu
-add_action('admin_menu', 'wpsisacm_register_design_page');
-
-/**
- * Register plugin design page in admin menu
- * 
- * @package WP Slick Slider and Image Carousel
- * @since 1.0.0
- */
-function wpsisacm_register_design_page() {
-	add_submenu_page( 'edit.php?post_type='.WPSISAC_POST_TYPE, __('How it works, our plugins and offers', 'wp-slick-slider-and-image-carousel'), __('How It Works', 'wp-slick-slider-and-image-carousel'), 'manage_options', 'wpsisacm-designs', 'wpsisacm_designs_page' );
-}
-
-/**
- * Function to display plugin design HTML
- * 
- * @package WP Slick Slider and Image Carousel
- * @since 1.0.0
- */
-function wpsisacm_designs_page() {
-
-	$wpos_feed_tabs = wpsisacm_help_tabs();
-	$active_tab 	= isset($_GET['tab']) ? $_GET['tab'] : 'how-it-work';
-?>
-
-	<div class="wrap wpsisacm-wrap">
-
-		<h2 class="nav-tab-wrapper">
-			<?php
-			foreach ($wpos_feed_tabs as $tab_key => $tab_val) {
-				$tab_name	= $tab_val['name'];
-				$active_cls = ($tab_key == $active_tab) ? 'nav-tab-active' : '';
-				$tab_link 	= add_query_arg( array( 'post_type' => WPSISAC_POST_TYPE, 'page' => 'wpsisacm-designs', 'tab' => $tab_key), admin_url('edit.php') );
-			?>
-
-			<a class="nav-tab <?php echo $active_cls; ?>" href="<?php echo $tab_link; ?>"><?php echo $tab_name; ?></a>
-
-			<?php } ?>
-		</h2>
-
-		<div class="wpsisacm-tab-cnt-wrp">
-		<?php
-			if( isset($active_tab) && $active_tab == 'how-it-work' ) {
-				wpsisacm_howitwork_page();
-			}
-			else if( isset($active_tab) && $active_tab == 'plugins-feed' ) {
-				echo wpsisacm_get_plugin_design( 'plugins-feed' );
-			} else {
-				echo wpsisacm_get_plugin_design( 'offers-feed' );
-			}
-		?>
-		</div><!-- end .wpsisacm-tab-cnt-wrp -->
-
-	</div><!-- end .wpsisacm-wrap -->
-
-<?php
-}
-
-/**
- * Gets the plugin design part feed
- *
- * @package WP Slick Slider and Image Carousel
- * @since 1.0.0
- */
-function wpsisacm_get_plugin_design( $feed_type = '' ) {
-
-	$active_tab = isset($_GET['tab']) ? $_GET['tab'] : '';
-
-	// If tab is not set then return
-	if( empty($active_tab) ) {
-		return false;
-	}
-
-	// Taking some variables
-	$wpos_feed_tabs = wpsisacm_help_tabs();
-	$transient_key 	= isset($wpos_feed_tabs[$active_tab]['transient_key']) 	? $wpos_feed_tabs[$active_tab]['transient_key'] 	: 'wpsisacm_' . $active_tab;
-	$url 			= isset($wpos_feed_tabs[$active_tab]['url']) 			? $wpos_feed_tabs[$active_tab]['url'] 				: '';
-	$transient_time = isset($wpos_feed_tabs[$active_tab]['transient_time']) ? $wpos_feed_tabs[$active_tab]['transient_time'] 	: 172800;
-	$cache 			= get_transient( $transient_key );
-
-	if ( false === $cache ) {
-
-		$feed 			= wp_remote_get( esc_url_raw( $url ), array( 'timeout' => 120, 'sslverify' => false ) );
-		$response_code 	= wp_remote_retrieve_response_code( $feed );
-
-		if ( ! is_wp_error( $feed ) && $response_code == 200 ) {
-			if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
-				$cache = wp_remote_retrieve_body( $feed );
-				set_transient( $transient_key, $cache, $transient_time );
-			}
-		} else {
-			$cache = '<div class="error"><p>' . __( 'There was an error retrieving the data from the server. Please try again later.', 'wp-slick-slider-and-image-carousel' ) . '</div>';
-		}
-	}
-	return $cache;
-}
-
-/**
- * Function to get plugin feed tabs
- *
- * @package WP Slick Slider and Image Carousel
- * @since 1.0.0
- */
-function wpsisacm_help_tabs() {
-	$wpos_feed_tabs = array(
-						'how-it-work' 	=> array(
-													'name' => __('How It Works', 'wp-slick-slider-and-image-carousel'),
-												),
-						'plugins-feed' 	=> array(
-													'name' 				=> __('Our Plugins', 'wp-slick-slider-and-image-carousel'),
-													'url'				=> 'http://wponlinesupport.com/plugin-data-api/plugins-data.php',
-													'transient_key'		=> 'wpos_plugins_feed',
-													'transient_time'	=> 172800
-												)
-					);
-	return $wpos_feed_tabs;
-}
-
-/**
- * Function to get 'How It Works' HTML
- *
- * @package WP Slick Slider and Image Carousel
- * @since 1.0.0
- */
-function wpsisacm_howitwork_page() { ?>
-
+<div class="wrap wpsisacm-wrap">
+<h2><?php _e( 'How It Works - Display and Shortcode', 'wp-slick-slider-and-image-carousel' ); ?></h2>
 	<style type="text/css">
 		.wpos-pro-box .hndle{background-color:#0073AA; color:#fff;}
 		.wpos-pro-box.postbox{background:#dbf0fa none repeat scroll 0 0; border:1px solid #0073aa; color:#191e23;}
@@ -143,24 +19,27 @@ function wpsisacm_howitwork_page() { ?>
 		.wpsisacm-wrap .wpos-button-full{display:block; text-align:center; box-shadow:none; border-radius:0;}
 		.wpsisacm-shortcode-preview{background-color: #e7e7e7; font-weight: bold; padding: 2px 5px; display: inline-block; margin:0 0 2px 0;}
 		.upgrade-to-pro{font-size:18px; text-align:center; margin-bottom:15px;}
+		.wpos-copy-clipboard{-webkit-touch-callout: all; -webkit-user-select: all; -khtml-user-select: all; -moz-user-select: all; -ms-user-select: all; user-select: all;}
+		.wpos-new-feature{ font-size: 10px; color: #fff; font-weight: bold; background-color: #03aa29; padding:1px 4px; font-style: normal; }
 	</style>
 
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-2">
+
 			<div id="post-body-content">
 				<div class="meta-box-sortables">
 					<div class="postbox">
-
-						<h3 class="hndle">
-							<span><?php _e( 'How It Works - Display and shortcode', 'wp-slick-slider-and-image-carousel' ); ?></span>
-						</h3>
-
+						<div class="postbox-header">
+							<h2 class="hndle">
+								<span><?php _e( 'How It Works - Display and Shortcode', 'wp-slick-slider-and-image-carousel' ); ?></span>
+							</h2>
+						</div>
 						<div class="inside">
 							<table class="form-table">
 								<tbody>
 									<tr>
 										<th>
-											<label><?php _e('Geeting Started with Slick Slider', 'wp-slick-slider-and-image-carousel'); ?>:</label>
+											<label><?php _e('Getting Started with Slick Slider', 'wp-slick-slider-and-image-carousel'); ?>:</label>
 										</th>
 										<td>
 											<ul>
@@ -189,17 +68,57 @@ function wpsisacm_howitwork_page() { ?>
 											<label><?php _e('All Shortcodes', 'wp-slick-slider-and-image-carousel'); ?>:</label>
 										</th>
 										<td>
-											<span class="wpsisacm-shortcode-preview">[slick-slider]</span> – <?php _e('Slick slider Shortcode (design-1 to design-5)', 'wp-slick-slider-and-image-carousel'); ?> <br />
-											<span class="wpsisacm-shortcode-preview">[slick-carousel-slider]</span> – <?php _e('Slick slider carousel Shortcode (design-6)', 'wp-slick-slider-and-image-carousel'); ?> <br />
-											<span class="wpsisacm-shortcode-preview">[slick-carousel-slider centermode="true"]</span> – <?php _e('Slick slider carousel with center mode Shortcode (design-6)', 'wp-slick-slider-and-image-carousel'); ?> <br />
-											<span class="wpsisacm-shortcode-preview">[slick-carousel-slider variablewidth="true" centermode="true"]</span> – <?php _e('Slick slider carousel with variablewidth Shortcode (design-6)', 'wp-slick-slider-and-image-carousel'); ?>
+											<span class="wpsisacm-shortcode-preview wpos-copy-clipboard">[slick-slider]</span> – <?php _e('Slick slider Shortcode (design-1 to design-5)', 'wp-slick-slider-and-image-carousel'); ?> <br />
+											<span class="wpsisacm-shortcode-preview wpos-copy-clipboard">[slick-carousel-slider]</span> – <?php _e('Slick slider carousel Shortcode (design-6)', 'wp-slick-slider-and-image-carousel'); ?> <br />
+											<span class="wpsisacm-shortcode-preview wpos-copy-clipboard">[slick-carousel-slider centermode="true"]</span> – <?php _e('Slick slider carousel with center mode Shortcode (design-6)', 'wp-slick-slider-and-image-carousel'); ?> <br />
+											<span class="wpsisacm-shortcode-preview wpos-copy-clipboard">[slick-carousel-slider variablewidth="true" centermode="true"]</span> – <?php _e('Slick slider carousel with variable width Shortcode (design-6)', 'wp-slick-slider-and-image-carousel'); ?>
 										</td>
 									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
 
+				<div class="meta-box-sortables">
+					<div class="postbox">
+						<div class="postbox-header">
+							<h2 class="hndle">
+								<span><?php _e( 'Gutenberg Support', 'wp-slick-slider-and-image-carousel' ); ?></span>
+							</h2>
+						</div>
+						<div class="inside">
+							<table class="form-table">
+								<tbody>
 									<tr>
 										<th>
-											<label><?php _e('Need Support?', 'wp-slick-slider-and-image-carousel'); ?></label>
+											<label><?php _e('How it Work', 'wp-slick-slider-and-image-carousel'); ?>:</label>
 										</th>
+										<td>
+											<ul>
+												<li><?php _e('Step-1. Go to the Gutenberg editor of your page.', 'wp-slick-slider-and-image-carousel'); ?></li>
+												<li><?php _e('Step-2. Search "Slick Slider" keyword in the Gutenberg block list.', 'wp-slick-slider-and-image-carousel'); ?></li>
+												<li><?php _e('Step-3. Add any block of slick slider and you will find its relative options on the right end side.', 'wp-slick-slider-and-image-carousel'); ?></li>
+											</ul>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div><!-- .inside -->
+					</div><!-- #general -->
+				</div><!-- .meta-box-sortables -->
+
+				<div class="meta-box-sortables">
+					<div class="postbox">
+						<div class="postbox-header">
+							<h2 class="hndle">
+								<span><?php _e( 'Need Support?', 'wp-slick-slider-and-image-carousel' ); ?></span>
+							</h2>
+						</div>
+						<div class="inside">
+							<table class="form-table">
+								<tbody>
+									<tr>
 										<td>
 											<p><?php _e('Check plugin document for shortcode parameters and demo for designs.', 'wp-slick-slider-and-image-carousel'); ?></p> <br/>
 											<a class="button button-primary" href="https://docs.wponlinesupport.com/wp-slick-slider-and-image-carousel/" target="_blank"><?php _e('Documentation', 'wp-slick-slider-and-image-carousel'); ?></a>
@@ -208,10 +127,24 @@ function wpsisacm_howitwork_page() { ?>
 									</tr>
 								</tbody>
 							</table>
+						</div><!-- .inside -->
+					</div><!-- #general -->
+				</div><!-- .meta-box-sortables -->
+
+				<!-- Help to improve this plugin! -->
+				<div class="meta-box-sortables">
+					<div class="postbox">
+						<div class="postbox-header">
+							<h2 class="hndle">
+								<span><?php _e( 'Help to improve this plugin!', 'wp-slick-slider-and-image-carousel' ); ?></span>
+							</h2>
+						</div>
+						<div class="inside">
+							<p><?php _e( 'Enjoyed this plugin? You can help by rate this plugin', 'wp-slick-slider-and-image-carousel'); ?> <a href="https://wordpress.org/support/plugin/wp-slick-slider-and-image-carousel/reviews/" target="_blank"><?php _e( '5 stars!', 'wp-slick-slider-and-image-carousel'); ?></a></p>
 						</div>
 					</div>
-				</div>
-			</div>
+				</div><!-- .meta-box-sortables -->
+			</div><!-- .post-body-content -->
 
 			<div id="postbox-container-1" class="postbox-container">
 				<div class="meta-box-sortables">
@@ -222,35 +155,29 @@ function wpsisacm_howitwork_page() { ?>
 						<div class="inside">
 							<ul class="wpos-list">
 								<li><?php _e( '90+ Predefined stunning designs', 'wp-slick-slider-and-image-carousel'); ?></li>
-								<li><?php _e( 'Visual composer support', 'wp-slick-slider-and-image-carousel'); ?></li>
-								<li><?php _e( 'Drag & Drop order change', 'wp-slick-slider-and-image-carousel'); ?></li>
 								<li><?php _e( '30 Image Slider Designs', 'wp-slick-slider-and-image-carousel'); ?></li>
 								<li><?php _e( '30 Image Carousel and Center Slider Designs', 'wp-slick-slider-and-image-carousel'); ?></li>
 								<li><?php _e( '33 Slider Variable width Designs', 'wp-slick-slider-and-image-carousel'); ?></li>
+								<li><?php _e( 'Drag & Drop order change', 'wp-slick-slider-and-image-carousel'); ?></li>
 								<li><?php _e( 'Gutenberg Block Supports', 'wp-slick-slider-and-image-carousel'); ?></li>
 								<li><?php _e( 'WPBakery Page Builder Supports', 'wp-slick-slider-and-image-carousel'); ?></li>
+								<li><?php _e( 'Elementor, Bevear and SiteOrigin Page Builder Support. <span class="wpos-new-feature">New</span>', 'wp-slick-slider-and-image-carousel'); ?></li>
+								<li><?php _e( 'Divi Page Builder Native Support.<span class="wpos-new-feature">New</span>', 'wp-slick-slider-and-image-carousel'); ?></li>
+								<li><?php _e( 'Fusion Page Builder (Avada) native support.<span class="wpos-new-feature">New</span>', 'wp-slick-slider-and-image-carousel'); ?></li>
 								<li><?php _e( 'WP Templating Features', 'wp-slick-slider-and-image-carousel'); ?></li>
-								<li><?php _e( 'Custom css', 'wp-slick-slider-and-image-carousel'); ?></li>
+								<li><?php _e( 'Custom CSS', 'wp-slick-slider-and-image-carousel'); ?></li>
 								<li><?php _e( 'Slider Center Mode Effect', 'wp-slick-slider-and-image-carousel'); ?></li>
 								<li><?php _e( 'Slider RTL support', 'wp-slick-slider-and-image-carousel'); ?></li>
 								<li><?php _e( 'Fully responsive', 'wp-slick-slider-and-image-carousel'); ?></li>
 								<li><?php _e( '100% Multi language', 'wp-slick-slider-and-image-carousel'); ?></li>
 							</ul>
 							<div class="upgrade-to-pro"><?php _e( 'Gain access to', 'wp-slick-slider-and-image-carousel'); ?> <strong><?php _e( 'WP Slick Slider and Image Carousel', 'wp-slick-slider-and-image-carousel'); ?></strong> <?php _e( 'included in', 'wp-slick-slider-and-image-carousel'); ?> <br /><strong><?php _e( 'Essential Plugin Bundle', 'wp-slick-slider-and-image-carousel'); ?></div>
-							<a class="button button-primary wpos-button-full" href="https://www.wponlinesupport.com/wp-plugin/wp-slick-slider-and-image-carousel/?ref=WposPratik&utm_source=WP&utm_medium=WP-Plugins&utm_campaign=Upgrade-PRO" target="_blank"><?php _e('Go Premium ', 'wp-slick-slider-and-image-carousel'); ?></a>
+							<a class="button button-primary wpos-button-full" href="https://www.wponlinesupport.com/wp-plugin/wp-slick-slider-and-image-carousel/?ref=WposPratik&utm_source=WP&utm_medium=Slickslider&utm_campaign=Upgrade-PRO" target="_blank"><?php _e('Go Premium ', 'wp-slick-slider-and-image-carousel'); ?></a>
 							<p><a class="button button-primary wpos-button-full" href="https://demo.wponlinesupport.com/prodemo/pro-wp-slick-slider-and-carousel-demo/" target="_blank"><?php _e('View PRO Demo ', 'wp-slick-slider-and-image-carousel'); ?></a></p>
-						</div>
-					</div>
-					<div class="postbox">
-						<h3 class="hndle">
-							<span><?php _e( 'Help to improve this plugin!', 'wp-slick-slider-and-image-carousel' ); ?></span>
-						</h3>
-						<div class="inside">
-							<p><?php _e( 'Enjoyed this plugin? You can help by rate this plugin', 'wp-slick-slider-and-image-carousel'); ?> <a href="https://wordpress.org/support/plugin/wp-slick-slider-and-image-carousel/reviews/" target="_blank"><?php _e( '5 stars!', 'wp-slick-slider-and-image-carousel'); ?></a></p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-<?php }
+</div><!-- end .wpsisacm-wrap -->

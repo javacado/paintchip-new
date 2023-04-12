@@ -3,15 +3,15 @@
  * Plugin Name: Custom Sidebars
  * Plugin URI:  https://wordpress.org/plugins/custom-sidebars/
  * Description: Allows you to create widgetized areas and custom sidebars. Replace whole sidebars or single widgets for specific posts and pages.
- * Version:     3.2.3
- * Author:      WPMU DEV
- * Author URI:  http://premium.wpmudev.org/
+ * Version:     3.31
+ * Author:      WebFactory Ltd
+ * Author URI:  https://www.webfactoryltd.com/
  * Textdomain:  custom-sidebars
- * WDP ID:      910520
  */
 
 /*
-Copyright Incsub (http://incsub.com)
+Copyright Incsub 2017 - 2020 (http://incsub.com)
+Copyright WebFactory Ltd 2020 - 2021 (https://www.webfactoryltd.com/)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License (Version 2 - GPLv2) as published by
@@ -25,11 +25,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
 
-/*
-This plugin was originally developed by Javier Marquez.
-http://arqex.com/
+This plugin was originally developed by Javier Marquez. http://arqex.com/
 */
 
 function inc_sidebars_init() {
@@ -52,7 +49,8 @@ function inc_sidebars_init() {
 		$allowed = array(
 			'edit.php',
 			'admin-ajax.php',
-			'post.php',
+      'post.php',
+      'plugins.php',
 			'post-new.php',
 			'widgets.php',
 		);
@@ -86,17 +84,17 @@ function inc_sidebars_init() {
 	// Include function library.
 	$modules[] = CSB_INC_DIR . 'external/wpmu-lib/core.php';
 	$modules[] = CSB_INC_DIR . 'class-custom-sidebars.php';
-	
-	$modules[] = CSB_INC_DIR . 'external/wdev-frash/module.php';
-	
 
-	
+	$modules[] = CSB_INC_DIR . 'external/wdev-frash/module.php';
+
+
+
 	// Free-version configuration - no drip campaign yet...
 	$cta_label = false;
 	$drip_param = false;
-	
 
-	
+
+
 
 	foreach ( $modules as $path ) {
 		if ( file_exists( $path ) ) { require_once $path; }

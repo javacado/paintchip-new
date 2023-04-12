@@ -6,61 +6,25 @@ if (!$isPro) {
 	$labelPro = ' Pro';
 }
 
-$catArgs = array(
-	'orderby' => 'name',
-	'order' => 'asc',
-	'hide_empty' => false,
-);
+list($categoryDisplay, $parentCategories) = $this->getModule()->getCategoriesDisplay();
 
-$productCategories = get_terms( 'product_cat', $catArgs );
-$categoryDisplay = array();
-$parentCategories = array();
-foreach ($productCategories as $c) {
-	if (0 == $c->parent) {
-		array_push($parentCategories, $c->term_id);
-	}
-	$categoryDisplay[$c->term_id] = $c->name;
-}
+list($tagsDisplay) = $this->getModule()->getTagsDisplay();
 
-$tagArgs = array(
-	'orderby' => 'name',
-	'order' => 'asc',
-	'hide_empty' => false,
-	'parent' => 0
-);
-
-$productTags = get_terms('product_tag', $tagArgs);
-$tagsDisplay = array();
-foreach ($productTags as $t) {
-	$tagsDisplay[$t->term_id] = $t->name;
-}
 $settings = $this->getFilterSetting($this->settings, 'settings', array());
 
-$productAttr = DispatcherWpf::applyFilters('addCustomAttributes', wc_get_attribute_taxonomies());
+list($attrDisplay, $attrTypes, $attrNames) = $this->getModule()->getAttributesDisplay();
 
-$attrDisplay = array(0 => esc_html__('Select...', 'woo-product-filter'));
-$attrDisplayTerms = array();
-$attrTypes = array();
-$attrNames = array();
-foreach ($productAttr as $attr) {
-	$attrId = (int) $attr->attribute_id;
-	$slug = empty($attrId) ? $attr->attribute_slug : $attrId;
-	$attrDisplay[$slug] = $attr->attribute_label;
-	$attrTypes[$slug] = isset($attr->custom_type) ? $attr->custom_type : '';
-	$attrNames[$slug] = isset($attr->filter_name) ? $attr->filter_name : 'filter_' . $attr->attribute_name;
-}
-
-$rolesMain = get_editable_roles();
-$roles = array();
-
-foreach ($rolesMain as $key => $r) {
-	$roles[$key] = $r['name'];
-}
+list($roles) = $this->getModule()->getRolesDisplay();
 
 $wpfBrand = array(
 	'exist' => taxonomy_exists('product_brand')
 );
 
+$catArgs = array(
+	'orderby' => 'name',
+	'order' => 'asc',
+	'hide_empty' => false,
+);
 $brandDisplay = array();
 $parentBrands = array();
 if (taxonomy_exists('pwb-brand')) {
@@ -84,7 +48,7 @@ if (taxonomy_exists('pwb-brand')) {
 					<div class="row">
 						<div class="wpfCopyTextCodeSelectionShell col-lg-8 col-md-8 col-sm-8 col-xs-12">
 							<div class="row">
-								<div class="col-md-4 col-sm-5 col-xs-12 wpfNamePadding">
+								<div class="col-lg-3 col-md-4 col-sm-5 col-xs-6 wpfNamePadding">
 									<span id="wpfFilterTitleWrapLabel"><?php echo esc_html__('Filter name:', 'woo-product-filter'); ?></span>
 									<span id="wpfFilterTitleShell" title="<?php echo esc_attr__('Click to edit', 'woo-product-filter'); ?>">
 										<?php $filterTitle = isset($this->filter['title']) ? $this->filter['title'] : 'empty'; ?>
@@ -99,18 +63,18 @@ if (taxonomy_exists('pwb-brand')) {
 										<i class="fa fa-fw fa-pencil"></i>
 									</span>
 								</div>
-								<div class="col-md-3 col-sm-6 col-xs-6 wpfShortcodeAdm">
+								<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 wpfShortcodeAdm">
 									<select name="shortcode_example" id="wpfCopyTextCodeExamples" class="woobewoo-flat-input">
 										<option value="shortcode"><?php echo esc_html__('Filter Shortcode', 'woo-product-filter'); ?></option>
 										<option value="phpcode"><?php echo esc_html__('Filter PHP code', 'woo-product-filter'); ?></option>
 										<option value="shortcode_product"><?php echo esc_html__('Product Shortcode', 'woo-product-filter'); ?></option>
 										<option value="phpcode_product"><?php echo esc_html__('Product PHP code', 'woo-product-filter'); ?></option>
 									</select>
-									<i class="fa fa-question woobewoo-tooltip" title="<?php echo esc_attr__('Using short code you can display the filter and products in the desired place of the template.', 'woo-product-filter'); ?>"></i>
+									<i class="fa fa-question woobewoo-tooltip" title="<?php echo esc_attr(__('Using short code display the filter and products in the desired place of the template.', 'woo-product-filter') . ' <a href="https://woobewoo.com/documentation/how-to-add-woocommerce-product-filter-to-shop/" target="_blank">' . __('Learn More', 'woo-product-filter') . '</a>.'); ?>"></i>
 								</div>
 								<?php $fid = isset($this->filter['id']) ? $this->filter['id'] : ''; ?>
 								<?php if ($fid) { ?>
-								<div class="col-md-5 col-sm-6 col-xs-6 wpfCopyTextCodeShowBlock wpfShortcode shortcode">
+								<div class="col-lg-3 col-md-5 col-sm-6 col-xs-6 wpfCopyTextCodeShowBlock wpfShortcode shortcode">
 									<?php
 										HtmlWpf::text('', array(
 											'value' => '[' . WPF_SHORTCODE . " id=$fid]",
@@ -119,7 +83,7 @@ if (taxonomy_exists('pwb-brand')) {
 										));
 									?>
 								</div>
-								<div class="col-md-5 col-sm-6 col-xs-6 wpfCopyTextCodeShowBlock wpfShortcode phpcode wpfHidden">
+								<div class="col-lg-4 col-md-5 col-sm-6 col-xs-6 wpfCopyTextCodeShowBlock wpfShortcode phpcode wpfHidden">
 									<?php
 										HtmlWpf::text('', array(
 											'value' => "<?php echo do_shortcode('[" . WPF_SHORTCODE . " id=$fid]') ?>",
@@ -128,7 +92,7 @@ if (taxonomy_exists('pwb-brand')) {
 										));
 									?>
 								</div>
-								<div class="col-md-5 col-sm-6 col-xs-6 wpfCopyTextCodeShowBlock wpfShortcode shortcode_product wpfHidden">
+								<div class="col-lg-3 col-md-5 col-sm-6 col-xs-6 wpfCopyTextCodeShowBlock wpfShortcode shortcode_product wpfHidden">
 									<?php
 										HtmlWpf::text('', array(
 											'value' => '[' . WPF_SHORTCODE_PRODUCTS . ']',
@@ -137,7 +101,7 @@ if (taxonomy_exists('pwb-brand')) {
 										));
 									?>
 								</div>
-								<div class="col-md-5 col-sm-6 col-xs-6 wpfCopyTextCodeShowBlock wpfShortcode phpcode_product wpfHidden">
+								<div class="col-lg-4 col-md-5 col-sm-6 col-xs-6 wpfCopyTextCodeShowBlock wpfShortcode phpcode_product wpfHidden">
 									<?php
 										HtmlWpf::text('', array(
 											'value' => "<?php echo do_shortcode('[" . WPF_SHORTCODE_PRODUCTS . "]') ?>",
@@ -167,7 +131,7 @@ if (taxonomy_exists('pwb-brand')) {
 					</div>
 
 					<div class="row">
-						<div class="col-md-12">
+						<div class="col-md-9 no-md-r-padding">
 							<ul class="wpfSub tabs-wrapper wpfMainTabs">
 								<li>
 									<a href="#row-tab-filters" class="current button wpfFilters"><i class="fa fa-fw fa-eye"></i><?php echo esc_html__('Filters', 'woo-product-filter'); ?></a>
@@ -181,6 +145,9 @@ if (taxonomy_exists('pwb-brand')) {
 							</ul>
 							<span id="wpfFilterTitleEditMsg"></span>
 						</div>
+						<div class="col-md-3 no-l-padding hidden-sm hidden-xs">
+							<div class="wpfPreviewTitle"><?php echo esc_html__('Preview', 'woo-product-filter'); ?></div>
+						</div>
 					</div>
 					<div class="col-lg-12 col-md-12 wpfMainTabsContainer">
 						<div class="row">
@@ -190,8 +157,11 @@ if (taxonomy_exists('pwb-brand')) {
 								<?php include_once 'woofiltersEditTabOptions.php'; ?>
 								<?php include_once 'woofiltersEditTabDesign.php'; ?>
 							</div>
-							<div class="col-md-3 wpfFiltersBlockPreview">
-
+							<div class="col-md-3">
+								<div class="hidden-lg hidden-md">
+									<div class="wpfPreviewTitle"><?php echo esc_html__('Preview', 'woo-product-filter'); ?></div>
+								</div>
+								<div class="wpfFiltersBlockPreview"></div>
 							</div>
 						</div>
 					</div>

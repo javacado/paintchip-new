@@ -8,7 +8,7 @@ jQuery(document).on("ready", function () {
     var url = jQuery(this).attr("href");
     if ( url ) {
       jQuery(".allow_and_continue, .skip").css("opacity", "0.5");
-      jQuery(".allow_and_continue, .skip").attr("disabled", "disabled");
+      jQuery(".allow_and_continue, .skip").prop("disabled", true);
       jQuery(".allow_and_continue, .skip").removeAttr("href");
       jQuery(".wd_loader").css("display", "inline-block");
       window.location = url;

@@ -2,13 +2,15 @@
 Contributors: deliciousbrains, bradt, SylvainDeaure
 Tags: amazon ses,smtp,email delivery,gmail smtp,newsletter
 Requires at least: 5.0
-Tested up to: 5.4
+Tested up to: 5.9
 Requires PHP: 5.5+
-Stable tag: 1.4.1
+Stable tag: 1.4.6
 
 Fix your email delivery problems by sending your WordPress emails through Amazon SES's powerful email sending infrastructure.
 
 == Description ==
+
+https://www.youtube.com/watch?v=m2fSx-DAgfY&feature=youtu.be&t=212
 
 Are your WordPress site emails not being delivered? That's pretty common. Over 20,000 sites trust WP Offload SES Lite to send their site email.
 
@@ -33,7 +35,7 @@ With WP Offload SES Lite, you can:
 * Configure multisite subsites to use different email settings, or enforce the same settings for your whole network
 * Integrate with your favorite form and newsletter plugins, including Ninja Forms, Contact Form 7, Gravity Forms, Email Subscribers & Newsletters, and more
 
-### Upgrade to WP Offload SES <del>Lite</del>
+### Upgrade to WP Offload SES
 
 Get email open and click reporting and more with an upgrade to WP Offload SES:
 
@@ -177,6 +179,32 @@ Please double check the credentials match up with the credentials you received w
 4. Activity tab
 
 == Changelog ==
+
+= 1.4.6 - 2021-05-26 =
+* New: Added Milan and Cape Town as available regions
+* New: Added `wposes_ses_regions` filter for adding regions manually
+* Bug fix: Undefined constant `DeliciousBrains\WP_Offload_SES\Aws3\GuzzleHttp\IDNA_DEFAULT`
+
+= 1.4.5 - 2021-04-01 =
+* Bug fix: Some fields of the Activity tab are not properly escaped which is an XSS risk
+* Bug fix: Emails occasionally failing due to "WorkerAttemptsExceededException"
+* Bug fix: Passing CC/BCC in CSV format not working correctly
+* Bug fix: Upgrade routines can be run more than once during an upgrade
+
+= 1.4.4 - 2020-12-14 =
+* New: WordPress 5.6 and PHP 8 compatible
+* New: Added North California, Paris, Stockholm, and Bahrain as available regions
+
+= 1.4.3 - 2020-08-05 =
+* New: Added Ohio, Seoul, Singapore, and Tokyo as available regions
+* New: Compatibility with WordPress 5.5
+* Bug fix: Queue not running when PHP memory limit is over 1G
+* Bug fix: Fatal error when deleting a job that no longer exists
+
+= 1.4.2 - 2020-06-19 =
+* Improvement: Health Report no longer includes the Health Report in email summaries
+* Bug fix: Email queue getting stuck if there is a fatal error while processing an email
+* Bug fix: Missing mbstring module causes fatal error
 
 = 1.4.1 - 2020-04-27 =
 * New: Added London, central Canada, and São Paulo as available regions

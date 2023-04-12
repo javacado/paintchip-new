@@ -206,12 +206,12 @@ class Sassy_Social_Share_Admin {
 		?>
 		<p>
 			<label for="heateor_sss_sharing">
-				<input type="checkbox" name="_heateor_sss_meta[sharing]" id="heateor_sss_sharing" value="1" <?php checked( '1', @$sharing_meta['sharing'] ); ?> />
+				<input type="checkbox" name="_heateor_sss_meta[sharing]" id="heateor_sss_sharing" value="1" <?php echo is_array( $sharing_meta ) && isset( $sharing_meta['sharing'] ) && $sharing_meta['sharing'] == '1' ? 'checked' : ''; ?> />
 				<?php _e( 'Disable Standard Sharing interface on this ' . $postType, 'sassy-social-share' ) ?>
 			</label>
 			<br/>
 			<label for="heateor_sss_vertical_sharing">
-				<input type="checkbox" name="_heateor_sss_meta[vertical_sharing]" id="heateor_sss_vertical_sharing" value="1" <?php checked( '1', @$sharing_meta['vertical_sharing'] ); ?> />
+				<input type="checkbox" name="_heateor_sss_meta[vertical_sharing]" id="heateor_sss_vertical_sharing" value="1" <?php echo is_array( $sharing_meta ) && isset( $sharing_meta['vertical_sharing'] ) && $sharing_meta['vertical_sharing'] == '1' ? 'checked' : ''; ?> />
 				<?php _e( 'Disable Floating Sharing interface on this ' . $postType, 'sassy-social-share' ) ?>
 			</label>
 			<?php
@@ -226,7 +226,7 @@ class Sassy_Social_Share_Admin {
 					<br/>
 					<label for="heateor_sss_<?php echo $network ?>_horizontal_sharing_count">
 						<span style="width: 242px; float:left"><?php _e( 'Starting share count for ' . ucfirst( str_replace ( '_', ' ', $network ) ), 'sassy-social-share' ) ?></span>
-						<input type="text" name="_heateor_sss_meta[<?php echo $network ?>_horizontal_count]" id="heateor_sss_<?php echo $network ?>_horizontal_sharing_count" value="<?php echo isset( $sharing_meta[$network . '_horizontal_count'] ) ? $sharing_meta[$network . '_horizontal_count'] : '' ?>" />
+						<input type="text" name="_heateor_sss_meta[<?php echo $network ?>_horizontal_count]" id="heateor_sss_<?php echo $network ?>_horizontal_sharing_count" value="<?php echo is_array( $sharing_meta ) && isset( $sharing_meta[$network . '_horizontal_count'] ) ? $sharing_meta[$network . '_horizontal_count'] : '' ?>" />
 					</label>
 					<?php
 				}
@@ -245,7 +245,7 @@ class Sassy_Social_Share_Admin {
 					<br/>
 					<label for="heateor_sss_<?php echo $network ?>_vertical_sharing_count">
 						<span style="width: 242px; float:left"><?php _e( 'Starting share count for ' . ucfirst( str_replace ( '_', ' ', $network ) ), 'sassy-social-share' ) ?></span>
-						<input type="text" name="_heateor_sss_meta[<?php echo $network ?>_vertical_count]" id="heateor_sss_<?php echo $network ?>_vertical_sharing_count" value="<?php echo isset( $sharing_meta[$network . '_vertical_count'] ) ? $sharing_meta[$network . '_vertical_count'] : '' ?>" />
+						<input type="text" name="_heateor_sss_meta[<?php echo $network ?>_vertical_count]" id="heateor_sss_<?php echo $network ?>_vertical_sharing_count" value="<?php echo is_array( $sharing_meta ) && isset( $sharing_meta[$network . '_vertical_count'] ) ? $sharing_meta[$network . '_vertical_count'] : '' ?>" />
 					</label>
 					<?php
 				}
@@ -343,7 +343,7 @@ class Sassy_Social_Share_Admin {
 	}
 
 	/**
-	 * Include CSS files at plugin options page in admin area.
+	 * Include CSS files at plugin options page in admin area
 	 *
 	 * @since    1.0.0
 	 */	
@@ -406,7 +406,7 @@ class Sassy_Social_Share_Admin {
 	public function admin_scripts() {
 		
 		?>
-		<script type="text/javascript">var heateorSssWebsiteUrl = '<?php echo home_url() ?>', heateorSssHelpBubbleTitle = "<?php echo __( 'Click to show help', 'sassy-social-share' ) ?>", heateorSssHelpBubbleCollapseTitle = "<?php echo __( 'Click to hide help', 'sassy-social-share' ) ?>", heateorSssSharingAjaxUrl = '<?php echo get_admin_url() ?>admin-ajax.php';</script>
+		<script type="text/javascript">var heateorSssWebsiteUrl = '<?php echo home_url() ?>', heateorSssHelpBubbleTitle = "<?php echo __( 'Click to toggle help', 'sassy-social-share' ) ?>", heateorSssSharingAjaxUrl = '<?php echo get_admin_url() ?>admin-ajax.php';</script>
 		<?php
 		wp_enqueue_script( 'heateor_sss_admin_script', plugins_url( 'js/sassy-social-share-admin.js', __FILE__ ), array( 'jquery', 'jquery-ui-tabs' ), $this->version );
 	
@@ -583,7 +583,7 @@ class Sassy_Social_Share_Admin {
 						});
 					}
 					</script>
-					<div id="heateor_sss_fb_count_notification" class="update-nag">
+					<div id="heateor_sss_fb_count_notification" class="notice notice-warning">
 						<h3>Sassy Social Share</h3>
 						<p>
 							<?php _e( 'Save Facebook App ID and Secret keys in "Standard Interface" and/or "Floating Interface" section(s) to fix the issue with Facebook share count. After that, clear share counts cache from "Miscellaneous" section.', 'sassy-social-share' ); ?>
@@ -611,7 +611,7 @@ class Sassy_Social_Share_Admin {
 						});
 					}
 					</script>
-					<div id="heateor_sss_gdpr_notification" class="update-nag">
+					<div id="heateor_sss_gdpr_notification" class="notice notice-warning">
 						<h3>Sassy Social Share</h3>
 						<p><?php echo sprintf( __( 'This plugin is GDPR compliant. You need to update the privacy policy of your website regarding the personal data this plugin saves, as mentioned <a href="%s" target="_blank">here</a>', 'sassy-social-share' ), 'http://support.heateor.com/gdpr-and-our-plugins' ); ?><input type="button" onclick="heateorSssGDPRNotificationRead()" style="margin-left: 5px;" class="button button-primary" value="<?php _e( 'Okay', 'sassy-social-share' ) ?>" /></p>
 					</div>
@@ -637,7 +637,7 @@ class Sassy_Social_Share_Admin {
 							});
 						}
 						</script>
-						<div id="heateor_sss_twitter_share_notification" class="update-nag">
+						<div id="heateor_sss_twitter_share_notification" class="notice notice-warning">
 							<h3>Sassy Social Share</h3>
 							<p><?php echo sprintf( __( 'Twitter share counts are no longer working as newsharecounts.com is down. To continue showing the Twitter shares, just sign up <a href="%s" target="_blank">here</a> with this domain. No other steps needed.', 'sassy-social-share' ), 'https://opensharecount.com' ); ?><input type="button" onclick="heateorSssTwitterShareNotificationRead()" style="margin-left: 5px;" class="button button-primary" value="<?php _e( 'Okay', 'sassy-social-share' ) ?>" /></p>
 						</div>
@@ -660,35 +660,12 @@ class Sassy_Social_Share_Admin {
 							});
 						}
 						</script>
-						<div id="heateor_sss_twitcount_notification" class="update-nag">
+						<div id="heateor_sss_twitcount_notification" class="notice notice-warning">
 							<h3>Sassy Social Share</h3>
 							<p><?php echo sprintf( __( 'Now plugin supports a new service Twitcount.com to show Twitter shares. To continue showing the Twitter shares, click "Give me my Twitter counts back" button at <a href="%s" target="_blank">their website</a> and register your website %s with them. No need to copy-paste any code from their website.', 'sassy-social-share' ), 'http://twitcount.com', home_url() ); ?><input type="button" onclick="heateorSssTwitcountNotificationRead()" style="margin-left: 5px;" class="button button-primary" value="<?php _e( 'Okay', 'sassy-social-share' ) ?>" /></p>
 						</div>
 						<?php
 					}
-				}
-
-				if ( ! get_option( 'heateor_sss_gdpr_notification_read' ) ) {
-					?>
-					<script type="text/javascript">
-					function heateorSssGDPRNotificationRead(){
-						jQuery.ajax({
-							type: 'GET',
-							url: '<?php echo get_admin_url() ?>admin-ajax.php',
-							data: {
-								action: 'heateor_sss_gdpr_notification_read'
-							},
-							success: function(data, textStatus, XMLHttpRequest){
-								jQuery('#heateor_sss_gdpr_notification').fadeOut();
-							}
-						});
-					}
-					</script>
-					<div id="heateor_sss_gdpr_notification" class="update-nag">
-						<h3>Sassy Social Share</h3>
-						<p><?php echo sprintf( __( 'This plugin is GDPR compliant. You need to update the privacy policy of your website regarding the personal data this plugin saves, as mentioned <a href="%s" target="_blank">here</a>', 'sassy-social-share' ), 'http://support.heateor.com/gdpr-and-our-plugins' ); ?><input type="button" onclick="heateorSssGDPRNotificationRead()" style="margin-left: 5px;" class="button button-primary" value="<?php _e( 'Okay', 'sassy-social-share' ) ?>" /></p>
-					</div>
-					<?php
 				}
 			}
 		}
@@ -727,16 +704,16 @@ class Sassy_Social_Share_Admin {
 
 		$current_version = get_option( 'heateor_sss_version' );
 		if ( $current_version != $this->version ) {
-			if ( $this->options['horizontal_sharing_replace_color'] != '#fff' ) {
-				heateor_sss_update_svg_css( $this->options['horizontal_sharing_replace_color'], 'sassy-social-share-default-svg-horizontal' );
+			if ( $this->options['horizontal_font_color_default'] ) {
+				heateor_sss_update_svg_css( $this->options['horizontal_font_color_default'], 'sassy-social-share-default-svg-horizontal' );
 			}
-			if ( $this->options['horizontal_font_color_hover'] != '#fff' ) {
+			if ( $this->options['horizontal_font_color_hover'] ) {
 				heateor_sss_update_svg_css( $this->options['horizontal_font_color_hover'], 'sassy-social-share-hover-svg-horizontal' );
 			}
-			if ( $this->options['vertical_font_color_default'] != '#fff' ) {
+			if ( $this->options['vertical_font_color_default'] ) {
 				heateor_sss_update_svg_css( $this->options['vertical_font_color_default'], 'sassy-social-share-default-svg-vertical' );
 			}
-			if ( $this->options['vertical_font_color_hover'] != '#fff' ) {
+			if ( $this->options['vertical_font_color_hover'] ) {
 				heateor_sss_update_svg_css( $this->options['vertical_font_color_hover'], 'sassy-social-share-hover-svg-vertical' );
 			}
 

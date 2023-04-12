@@ -14,7 +14,7 @@ if ( !defined( 'ABSPATH' ) ) {
 
 class Wpsisac_Admin {
 
-	function __construct() {		
+	function __construct() {
 
 		// Action to add admin menu
 		add_action( 'admin_menu', array($this, 'wpsisac_register_menu'), 12 );
@@ -44,11 +44,10 @@ class Wpsisac_Admin {
 	 */
 	function wpsisac_register_menu() {
 
+		add_submenu_page( 'edit.php?post_type='.WPSISAC_POST_TYPE, __('How it works, our plugins and offers', 'wp-slick-slider-and-image-carousel'), __('How It Works', 'wp-slick-slider-and-image-carousel'), 'manage_options', 'wpsisacm-designs', array($this, 'wpsisacm_designs_page') );
+
 		// Register plugin premium page
 		add_submenu_page( 'edit.php?post_type='.WPSISAC_POST_TYPE, __('Upgrade to PRO - WP Slick Slider and Image Carousel', 'wp-slick-slider-and-image-carousel'), '<span style="color:#2ECC71">'.__('Upgrade to PRO', 'wp-slick-slider-and-image-carousel').'</span>', 'manage_options', 'wpsisac-premium', array($this, 'wpsisac_premium_page') );
-
-		// Register plugin hire us page
-		add_submenu_page( 'edit.php?post_type='.WPSISAC_POST_TYPE, __('Hire Us', 'wp-slick-slider-and-image-carousel'), '<span style="color:#2ECC71">'.__('Hire Us', 'wp-slick-slider-and-image-carousel').'</span>', 'manage_options', 'wpnw-hireus', array($this, 'wpsisac_hireus_page') );
 	}
 
 	/**
@@ -62,13 +61,12 @@ class Wpsisac_Admin {
 	}
 
 	/**
-	 * Hire Us Page Html
+	 * How It Work Page Html
 	 * 
-	 * @package WP Slick Slider and Image Carousel
-	 * @since 1.0.0
+	 * @since 1.0
 	 */
-	function wpsisac_hireus_page() {		
-		include_once( WPSISAC_DIR . '/includes/admin/settings/hire-us.php' );
+	function wpsisacm_designs_page() {
+		include_once( WPSISAC_DIR . '/includes/admin/wpsisac-how-it-work.php' );
 	}
 
 	/**

@@ -26,6 +26,21 @@ function wpos_anylc_text( $text, $echo = false ) {
 }
 
 /**
+ * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
+ * Non-scalar values are ignored.
+ * 
+ * @since 1.0
+ */
+function wpos_anylc_clean( $var ) {
+	if ( is_array( $var ) ) {
+		return array_map( 'wpos_anylc_clean', $var );
+	} else {
+		$data = is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
+		return wp_unslash($data);
+	}
+}
+
+/**
  * Check Multidimention Array
  *
  * @package Wpos Analytic
@@ -63,7 +78,7 @@ function wpos_anylc_site_uid() {
  * @package Wpos Analytic
  * @since 1.0.0
  */
-function wpos_anylc_optin_data( $anylc_pdt = false ) {
+function wpos_anylc_optin_data( $anylc_pdt = false, $return_url = '' ) {
 
 	// Skip if not admin area
 	if ( !is_admin() ) {
@@ -74,20 +89,23 @@ function wpos_anylc_optin_data( $anylc_pdt = false ) {
 
 	// Takind some data
 	$theme_data 	= wp_get_theme();
-	$page 			= isset( $_GET['page'] ) ? $_GET['page'] : false;
+	$page 			= isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : false;
 
 	// If product is not passed
 	if( ! $anylc_pdt ) {
-		$anylc_pdt 		= !empty( $_GET['wpos_anylc_pdt'] ) 			? $_GET['wpos_anylc_pdt'] 	: '';
-		$anylc_pdt 		= ( ! $anylc_pdt && !empty( $_GET['page'] ) ) 	? $_GET['page'] 			: $anylc_pdt;
+		$anylc_pdt 		= !empty( $_GET['wpos_anylc_pdt'] ) 			? sanitize_text_field( $_GET['wpos_anylc_pdt'] ) 	: '';
+		$anylc_pdt 		= ( ! $anylc_pdt && !empty( $_GET['page'] ) ) 	? sanitize_text_field( $_GET['page'] ) 				: $anylc_pdt;
 	}
 
 	// If a valid product is there
 	if( $anylc_pdt && !empty( $wpos_analytics_product[ $anylc_pdt ] ) ) {
 
 		$analy_product 	= $wpos_analytics_product[ $anylc_pdt ];
-		$return_url 	= add_query_arg( array( 'page' => $page ), admin_url('admin.php') );
-		$return_url		= wp_nonce_url( $return_url, 'wpos_anylc_act' );
+
+		if( empty( $return_url ) ) {
+			$return_url 	= add_query_arg( array( 'page' => $page ), admin_url('admin.php') );
+			$return_url		= wp_nonce_url( $return_url, 'wpos_anylc_act' );
+		}
 
 		// Getting data according to type
 		if( $analy_product['type'] == 'theme' ) {
@@ -130,7 +148,7 @@ function wpos_anylc_optin_data( $anylc_pdt = false ) {
 						'user_email'		=> get_bloginfo( 'admin_email' ),
 						'ip_address'		=> wpos_anylc_get_ip_address(),
 						'site_uid'			=> wpos_anylc_site_uid(),
-						'return_url'		=> !empty( $return_url ) ? $return_url : '',
+						'return_url'		=> $return_url,
 					);
 	return $optin_data;
 }
@@ -247,9 +265,9 @@ function wpos_anylc_optout_url( $module_data = '', $optin_status = null, $redire
 	if( $optin_status == 1 ) {
 
 		if( ! $redirect_url ) {
-			$plugin_status 	= isset( $_GET['plugin_status'] ) 	? $_GET['plugin_status'] 	: false;
-			$paged 			= isset( $_GET['paged'] ) 			? $_GET['paged'] 			: false;
-			$s 				= isset( $_GET['s'] ) 				? $_GET['s'] 				: false;
+			$plugin_status 	= isset( $_GET['plugin_status'] ) 	? sanitize_text_field( $_GET['plugin_status'] ) 	: false;
+			$paged 			= isset( $_GET['paged'] ) 			? sanitize_text_field( $_GET['paged'] ) 			: false;
+			$s 				= isset( $_GET['s'] ) 				? sanitize_text_field( $_GET['s'] ) 				: false;
 
 			$redirect_url 	= add_query_arg( array( 'plugin_status' => $plugin_status, 'paged' => $paged, 's' => $s ), admin_url( 'plugins.php' ) );
 		}
@@ -278,7 +296,7 @@ function wpos_anylc_pdt_url( $module_data = '', $type = false ) {
 		switch ( $type ) {
 			case 'promotion':
 
-				$promotion = !empty( $_GET['promotion'] ) ? $_GET['promotion'] : '';
+				$promotion = !empty( $_GET['promotion'] ) ? wpos_anylc_clean( $_GET['promotion'] ) : '';
 
 				if( !empty( $promotion ) ) {
 					$promotion 		= is_array( $promotion ) ? implode( ',', $promotion ) : $promotion;
@@ -295,7 +313,7 @@ function wpos_anylc_pdt_url( $module_data = '', $type = false ) {
 
 			case 'offer-promotion':
 
-				$promotion = !empty( $_GET['promotion'] ) ? $_GET['promotion'] : '';
+				$promotion = !empty( $_GET['promotion'] ) ? wpos_anylc_clean( $_GET['promotion'] ) : '';
 
 				if( !empty( $module_data['offers'] ) ) {
 					$redirect_url = add_query_arg( array( 'page' => $module_data['slug'].'-offers' ), $redirect_url );

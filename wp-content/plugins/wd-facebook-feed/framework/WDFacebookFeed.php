@@ -734,36 +734,47 @@ $ffwd_info_options[$ffwd_option_db]	=((isset($_POST[$ffwd_option_db])) ? sanitiz
 		self::$complite_timeline_data = array();
 		$data = array();
     self::set_access_token();
-      $fields = 'fields=comments.limit(25).summary(true){parent.fields(id),created_time,from,like_count,message,comment_count},attachments,shares,id,name,story,link,created_time,updated_time,from{picture,name,link},message,type,source,place,message_tags,with_tags,story_tags,description,status_type&';		$edge = (self::$fb_type == 'group') ? 'feed' : (self::$timeline_type == 'feed' || self::$timeline_type == 'others') ? 'feed' : 'posts';
+    $fields = 'fields=comments.limit(25).summary(true){parent.fields(id),created_time,from,like_count,message,comment_count},attachments,shares,id,name,story,link,created_time,updated_time,from{picture,name,link},message,type,source,place,message_tags,story_tags,description,status_type&';
+    $edge = (self::$fb_type == 'group') ? 'feed' : ((self::$timeline_type == 'feed' || self::$timeline_type == 'others') ? 'feed' : 'posts');
 		$fb_graph_url = str_replace (
       array('{FB_ID}', '{EDGE}','{ACCESS_TOKEN}', '{FIELDS}', '{LIMIT}', '{OTHER}'),
             array(self::$id, $edge, 'access_token=' . self::$access_token . '&', $fields, 'locale='.get_locale().'&', ''),      self::$graph_url
     );
 
 
-      /*print_r($fb_graph_url);
-        wp_die();*/
+    if (self::$auto_update_feed == 1) {
+        global $wpdb;
 
-      if (self::$auto_update_feed == 1) {
-          global $wpdb;
-
-          $id = self::$fb_id;
-          $update_ids = array();
-          $rows = $wpdb->get_results($wpdb->prepare('SELECT object_id,id FROM ' . $wpdb->prefix . 'wd_fb_data WHERE fb_id="%d" ORDER BY `created_time_number` ASC ', $id));
-          foreach ($rows as $row) {
-              $update_ids[$row->object_id] = $row->id;
-          }
-          $fb_graph_url_update = str_replace(
-              array('{FB_ID}', '{EDGE}', '{ACCESS_TOKEN}', '{FIELDS}', '{LIMIT}', '{OTHER}'),
-              array('', '', 'ids=' . implode(array_keys($update_ids), ',') . '&access_token=' . self::$access_token . '&', $fields, 'locale=' . get_locale() . '&', ''),
-              self::$graph_url
-          );
-
-          $update_data = self::decap_do_curl($fb_graph_url_update);
-          self::update_wd_fb_data($update_data, $update_ids);
-
+        $id = self::$fb_id;
+        $update_ids = array();
+        $rows = $wpdb->get_results($wpdb->prepare('SELECT object_id,id FROM ' . $wpdb->prefix . 'wd_fb_data WHERE fb_id="%d" ORDER BY `created_time_number` ASC ', $id));
+        foreach ($rows as $row) {
+            $update_ids[$row->object_id] = $row->id;
+        }
+      /* max ids count for endpoint is 50 */
+      $update_ids_parts = array_chunk($update_ids, 50, true);
+      foreach ( $update_ids_parts as $update_ids_part ) {
+        $update_ids = implode(',', array_keys($update_ids_part));
+        $fb_graph_url_update = str_replace(array(
+                                             '{FB_ID}',
+                                             '{EDGE}',
+                                             '{ACCESS_TOKEN}',
+                                             '{FIELDS}',
+                                             '{LIMIT}',
+                                             '{OTHER}'
+                                           ), array(
+                                             '',
+                                             '',
+                                             'ids=' . $update_ids . '&access_token=' . self::$access_token . '&',
+                                             $fields,
+                                             'locale=' . get_locale() . '&',
+                                             ''
+                                           ), self::$graph_url);
+        $update_data = self::decap_do_curl($fb_graph_url_update);
+        self::update_wd_fb_data($update_data, $update_ids_part);
       }
 
+    }
 
 		$data['data'] = self::complite_timeline($fb_graph_url);
 		self::$data = $data;
@@ -1024,15 +1035,28 @@ $ffwd_info_options[$ffwd_option_db]	=((isset($_POST[$ffwd_option_db])) ? sanitiz
           foreach ($rows as $row) {
               $update_ids[$row->object_id] = $row->id;
           }
-          $fb_graph_url_update = str_replace(
-              array('{FB_ID}', '{EDGE}', '{ACCESS_TOKEN}', '{FIELDS}', '{LIMIT}', '{OTHER}'),
-              array('', '', 'ids=' . implode(array_keys($update_ids), ',') . '&access_token=' . self::$access_token . '&', $fields, 'locale=' . get_locale() . '&', ''),
-              self::$graph_url
-          );
-
+        /* max ids count for endpoint is 50 */
+        $update_ids_parts = array_chunk($update_ids, 50, true);
+        foreach ( $update_ids_parts as $update_ids_part ) {
+          $update_ids = implode(',', array_keys($update_ids_part));
+          $fb_graph_url_update = str_replace(array(
+                                               '{FB_ID}',
+                                               '{EDGE}',
+                                               '{ACCESS_TOKEN}',
+                                               '{FIELDS}',
+                                               '{LIMIT}',
+                                               '{OTHER}'
+                                             ), array(
+                                               '',
+                                               '',
+                                               'ids=' . $update_ids . '&access_token=' . self::$access_token . '&',
+                                               $fields,
+                                               'locale=' . get_locale() . '&',
+                                               ''
+                                             ), self::$graph_url);
           $update_data = self::decap_do_curl($fb_graph_url_update);
-          self::update_wd_fb_data($update_data, $update_ids);
-
+          self::update_wd_fb_data($update_data, $update_ids_part);
+        }
       }
     $data = self::decap_do_curl($fb_graph_url);
 
@@ -1269,6 +1293,7 @@ $ffwd_info_options[$ffwd_option_db]	=((isset($_POST[$ffwd_option_db])) ? sanitiz
 			'fb_page_id'	 =>$ffwd_info_options['fb_page_id'],
     ), array(
       '%s',//name
+      '%s',//page_access_token
       '%s',//type
       '%s',//content_type
       '%s',//content
@@ -1661,9 +1686,13 @@ $ffwd_info_options[$ffwd_option_db]	=((isset($_POST[$ffwd_option_db])) ? sanitiz
     }
     $facebook_graph_results = json_decode($facebook_graph_results, true);
     if (array_key_exists("error", $facebook_graph_results)) {
+	 update_option('ffwd_token_error_flag', "1");
       if ($facebook_graph_results['error']['code'] == 2) {
         return self::decap_do_curl($facebook_graph_url);
       }
+    }
+    else {
+	 update_option('ffwd_token_error_flag', "0");
     }
     /*        if(isset($facebook_graph_results["error"]) && isset($facebook_graph_results["error"]['code']) && $facebook_graph_results["error"]['code']===190){
               if(self::$exist_access){
@@ -1703,29 +1732,41 @@ $ffwd_info_options[$ffwd_option_db]	=((isset($_POST[$ffwd_option_db])) ? sanitiz
     }
     return $facebook_graph_results;
   }
-  private static function update_page_access_token($old_access_token){
-    global $wpdb;
-    $fb_option_data = self::get_fb_option_data();
-
-    $return_data = array(
-      'success'=>false,
-      'new_token'=>null,
+  public static function update_page_access_token($old_access_token, $page_id = ''){
+    $redirect_uri = 'https://api.web-dorado.com/fb/';
+    $admin_url = urlencode(admin_url('admin.php?page=options_ffwd'));
+    $state = array(
+      'wp_site_url' => $admin_url
     );
-    if(isset($fb_option_data->app_id) && isset($fb_option_data->app_secret)) {
-      $app_id = $fb_option_data->app_id;
-      $app_secret = $fb_option_data->app_secret;
-      $url = "https://graph.facebook.com/oauth/access_token?client_id=" . $app_id . "&client_secret=" . $app_secret . "&grant_type=fb_exchange_token&fb_exchange_token=" . $old_access_token;
-      $response = wp_remote_get($url);
-      if (isset($response['body'])) {
-        $data = json_decode($response['body'], true);
-        if (isset($data["access_token"]) && !empty($data["access_token"])) {
-          $wpdb->query($wpdb->prepare("UPDATE " . $wpdb->prefix . "wd_fb_info SET page_access_token  = %s WHERE page_access_token = %s", $data["access_token"], $old_access_token));
-          $return_data["success"]   = true;
-          $return_data["new_token"] = $data["access_token"];
+    $base_url = add_query_arg(array(
+                                'action' => 'ff_wd_exchange_token',
+                                'ff_wd_user_token' => $old_access_token,
+                                'scope' => 'manage_pages',
+                                'code' => '200',
+                              ), $redirect_uri);
+
+    $base_url .= '&state=' . base64_encode(json_encode($state));
+    $response = wp_remote_post($base_url);
+
+    if(!is_wp_error( $response ) && isset($response["body"])) {
+      $ffwd_user_access_token = json_decode($response["body"], TRUE);
+
+      if ( isset($ffwd_user_access_token["access_token"]) ) {
+        $ffwd_user_access_token = sanitize_text_field($ffwd_user_access_token["access_token"]);
+        $datas = get_option('ffwd_pages_list');
+        foreach ( $datas as $data ) {
+          if( $data->id == $page_id ) {
+            $data->access_token = $ffwd_user_access_token;
+          }
         }
+
+
+        update_option('ffwd_pages_list', $datas);
+	   update_option('ffwd_token_error_flag', "0");
+        self::update_access_tokens();
+
       }
     }
-    return $return_data;
   }
   public static function get_autoupdate_interval(){
     global $wpdb;
@@ -1744,7 +1785,7 @@ $ffwd_info_options[$ffwd_option_db]	=((isset($_POST[$ffwd_option_db])) ? sanitiz
     $app_id = '457830911380339';
     $redirect_uri = 'https://api.web-dorado.com/fb/';
 
-    $admin_url = admin_url('admin.php?page=options_ffwd');
+    $admin_url = urlencode(admin_url('admin.php?page=options_ffwd'));
 
     $state = array(
       'wp_site_url' => $admin_url
@@ -1769,7 +1810,7 @@ $ffwd_info_options[$ffwd_option_db]	=((isset($_POST[$ffwd_option_db])) ? sanitiz
 
       $pages = json_decode($response['body']);
       update_option('ffwd_pages_list', $pages->data);
-      update_option("ffwd_pages_list_success", "1");
+	 update_option('ffwd_token_error_flag', "0");
       self::update_access_tokens();
       return true;
     }

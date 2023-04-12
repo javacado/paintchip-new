@@ -5,8 +5,8 @@ import { Component } from '@wordpress/element';
 import { debounce } from 'lodash';
 import { createHigherOrderComponent } from '@wordpress/compose';
 import PropTypes from 'prop-types';
-import { IS_LARGE_CATALOG } from '@woocommerce/block-settings';
-import { getProducts } from '@woocommerce/block-components/utils';
+import { blocksConfig } from '@woocommerce/block-settings';
+import { getProducts } from '@woocommerce/editor-components/utils';
 
 /**
  * Internal dependencies
@@ -16,6 +16,8 @@ import { formatError } from '../base/utils/errors.js';
 /**
  * A higher order component that enhances the provided component with products
  * from a search query.
+ *
+ * @param {Function} OriginalComponent Component being wrapped.
  */
 const withSearchedProducts = createHigherOrderComponent(
 	( OriginalComponent ) => {
@@ -23,7 +25,7 @@ const withSearchedProducts = createHigherOrderComponent(
 		 * A Component wrapping the passed in component.
 		 *
 		 * @class WrappedComponent
-		 * @extends {Component}
+		 * @augments {Component}
 		 */
 		class WrappedComponent extends Component {
 			constructor() {
@@ -78,7 +80,7 @@ const withSearchedProducts = createHigherOrderComponent(
 						products={ list }
 						isLoading={ loading }
 						onSearch={
-							IS_LARGE_CATALOG
+							blocksConfig.productCount > 100
 								? ( search ) => {
 										this.setState( { loading: true } );
 										this.debouncedOnSearch( search );

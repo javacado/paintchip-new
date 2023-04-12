@@ -1,0 +1,2 @@
+[2020-07-13 19:47:27] wpdesk.DEBUG: Sender payload: {"click_action":"plugin_deactivation","plugin":"flexible-shipping-ups\/flexible-shipping-ups.php","plugin_name":"Flexible Shipping UPS","reason":"no_longer_need"} {"source":"wpdesk-sender"} []
+[2020-07-13 19:47:29] wpdesk.DEBUG: Sender response: {"headers":[],"body":"","response":{"code":false,"message":false},"cookies":[],"http_response":null} {"source":"wpdesk-sender"} []

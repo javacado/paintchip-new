@@ -23,7 +23,9 @@ define('WPF_FILES_DIR', WPF_DIR . 'files' . DS);
 define('WPF_ADMIN_DIR', ABSPATH . 'wp-admin' . DS);
 
 define('WPF_PLUGINS_URL', plugins_url());
-define('WPF_SITE_URL', get_bloginfo('wpurl') . '/');
+if (!defined('WPF_SITE_URL')) {
+	define('WPF_SITE_URL', get_bloginfo('wpurl') . '/');
+}
 define('WPF_JS_PATH', WPF_PLUGINS_URL . '/' . WPF_PLUG_NAME . '/js/');
 define('WPF_CSS_PATH', WPF_PLUGINS_URL . '/' . WPF_PLUG_NAME . '/css/');
 define('WPF_IMG_PATH', WPF_PLUGINS_URL . '/' . WPF_PLUG_NAME . '/img/');
@@ -42,7 +44,7 @@ define('WPF_DATE_FORMAT_JS', 'mm/dd/yy');
 define('WPF_DATE_FORMAT_CONVERT', '%m/%d/%Y');
 define('WPF_WPDB_PREF', $wpdb->prefix);
 define('WPF_DB_PREF', 'wpf_');
-define('WPF_MAIN_FILE', 'wpf.php');
+define('WPF_MAIN_FILE', 'woo-product-filter.php');
 
 define('WPF_DEFAULT', 'default');
 define('WPF_CURRENT', 'current');
@@ -50,7 +52,7 @@ define('WPF_CURRENT', 'current');
 define('WPF_EOL', "\n");
 
 define('WPF_PLUGIN_INSTALLED', true);
-define('WPF_VERSION', '1.3.3');
+define('WPF_VERSION', '1.5.2');
 define('WPF_USER', 'user');
 
 define('WPF_CLASS_PREFIX', 'wpfc');
@@ -83,3 +85,4 @@ define('WPF_WP_PLUGIN_NAME', 'Woo Product Filter');
  */
 define('WPF_SHORTCODE', 'wpf-filters');
 define('WPF_SHORTCODE_PRODUCTS', 'wpf-products');
+define('WPF_SHORTCODE_SELECTED_FILTERS', 'wpf-selected-filters');

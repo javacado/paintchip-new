@@ -3,6 +3,7 @@ class TemplatesWpf extends ModuleWpf {
 	protected $_styles = array();
 	private $_cdnUrl = '';
 
+
 	public function __construct( $d ) {
 		parent::__construct($d);
 		$this->getCdnUrl();	// Init CDN URL
@@ -59,38 +60,34 @@ class TemplatesWpf extends ModuleWpf {
 	public function loadAdminCoreJs() {
 		FrameWpf::_()->addScript('jquery-ui-dialog');
 		FrameWpf::_()->addScript('jquery-ui-slider');
+		FrameWpf::_()->addScript('icheck', WPF_JS_PATH . 'icheck.min.js', array('wp-i18n', 'jquery-ui-widget', 'iris'));
 		FrameWpf::_()->addScript('wp-color-picker');
-		FrameWpf::_()->addScript('icheck', WPF_JS_PATH . 'icheck.min.js');
 	}
 	public function loadCoreJs() {
-		static $loaded = false;
-		if (!$loaded) {
-			FrameWpf::_()->addScript('jquery');
+		FrameWpf::_()->addScript('jquery');
 
-			FrameWpf::_()->addScript('commonWpf', WPF_JS_PATH . 'common.js');
-			FrameWpf::_()->addScript('coreWpf', WPF_JS_PATH . 'core.js');
+		FrameWpf::_()->addScript('commonWpf', WPF_JS_PATH . 'common.js', array('jquery'));
+		FrameWpf::_()->addScript('coreWpf', WPF_JS_PATH . 'core.js', array('jquery'));
 
-			$ajaxurl = admin_url('admin-ajax.php');
-			$jsData = array(
-				'siteUrl'					=> WPF_SITE_URL,
-				'imgPath'					=> WPF_IMG_PATH,
-				'cssPath'					=> WPF_CSS_PATH,
-				'loader'					=> WPF_LOADER_IMG,
-				'close'						=> WPF_IMG_PATH . 'cross.gif',
-				'ajaxurl'					=> $ajaxurl,
-				'options'					=> FrameWpf::_()->getModule('options')->getAllowedPublicOptions(),
-				'WPF_CODE'					=> WPF_CODE,
-				'jsPath'					=> WPF_JS_PATH,
-			);
-			if (is_admin()) {
-				$jsData['isPro'] = FrameWpf::_()->getModule('promo')->isPro();
-				$jsData['mainLink'] = FrameWpf::_()->getModule('promo')->getMainLink();
-			}
-			$jsData = DispatcherWpf::applyFilters('jsInitVariables', $jsData);
-			FrameWpf::_()->addJSVar('coreWpf', 'WPF_DATA', $jsData);
-			$this->loadTooltipster();
-			$loaded = true;
+		$ajaxurl = admin_url('admin-ajax.php');
+		$jsData = array(
+			'siteUrl'					=> WPF_SITE_URL,
+			'imgPath'					=> WPF_IMG_PATH,
+			'cssPath'					=> WPF_CSS_PATH,
+			'loader'					=> WPF_LOADER_IMG,
+			'close'						=> WPF_IMG_PATH . 'cross.gif',
+			'ajaxurl'					=> $ajaxurl,
+			'options'					=> FrameWpf::_()->getModule('options')->getAllowedPublicOptions(),
+			'WPF_CODE'					=> WPF_CODE,
+			'jsPath'					=> WPF_JS_PATH,
+		);
+		if (is_admin()) {
+			$jsData['isPro'] = FrameWpf::_()->getModule('promo')->isPro();
+			$jsData['mainLink'] = FrameWpf::_()->getModule('promo')->getMainLink();
 		}
+		$jsData = DispatcherWpf::applyFilters('jsInitVariables', $jsData);
+		FrameWpf::_()->addJSVar('coreWpf', 'WPF_DATA', $jsData);
+		$this->loadTooltipster();
 	}
 	public function loadTooltipster() {
 		FrameWpf::_()->addScript('tooltipster', FrameWpf::_()->getModule('templates')->getModPath() . 'lib/tooltipster/jquery.tooltipster.min.js');
@@ -112,7 +109,7 @@ class TemplatesWpf extends ModuleWpf {
 		FrameWpf::_()->addScript('codemirror-mode-css', $modPath . 'lib/codemirror/mode/css/css.js');
 		FrameWpf::_()->addScript('codemirror-mode-htmlmixed', $modPath . 'lib/codemirror/mode/htmlmixed/htmlmixed.js');
 	}
-	public function loadCoreCss() {
+	public function loadCoreCss( $isElementorEditor = false ) {
 		$this->_styles = array(
 			'styleWpf'			=> array('path' => WPF_CSS_PATH . 'style.css', 'for' => 'admin'),
 			'woobewoo-uiWpf'	=> array('path' => WPF_CSS_PATH . 'woobewoo-ui.css', 'for' => 'admin'),
@@ -122,6 +119,9 @@ class TemplatesWpf extends ModuleWpf {
 			'wp-color-picker'	=> array('for' => 'admin'),
 		);
 		foreach ($this->_styles as $s => $sInfo) {
+			if ($isElementorEditor) {
+				$sInfo['for'] = '';
+			}
 			if (!empty($sInfo['path'])) {
 				FrameWpf::_()->addStyle($s, $sInfo['path']);
 			} else {
@@ -131,14 +131,10 @@ class TemplatesWpf extends ModuleWpf {
 		$this->loadFontAwesome();
 	}
 	public function loadJqueryUi() {
-		static $loaded = false;
-		if (!$loaded) {
 			FrameWpf::_()->addStyle('jquery-ui', WPF_CSS_PATH . 'jquery-ui.min.css');
 			FrameWpf::_()->addStyle('jquery-ui.structure', WPF_CSS_PATH . 'jquery-ui.structure.min.css');
 			FrameWpf::_()->addStyle('jquery-ui.theme', WPF_CSS_PATH . 'jquery-ui.theme.min.css');
 			FrameWpf::_()->addStyle('jquery-slider', WPF_CSS_PATH . 'jquery-slider.css');
-			$loaded = true;
-		}
 	}
 	public function loadJqGrid() {
 		static $loaded = false;

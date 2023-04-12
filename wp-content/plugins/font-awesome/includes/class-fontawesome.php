@@ -71,12 +71,12 @@ require_once ABSPATH . 'wp-admin/includes/screen.php';
  *
  * Generally, public API members are accessed only from this `FontAwesome` class.
  *
- * For example, the {@see FontAwesome::refresh_releases()} method provides a way
- * to re-query available releases metadata from `api.fontawesome.com`. It delegates
- * to another class internally. But that other class and its methods are not part
- * of this plugin's public API. They may change significantly from one patch
- * release to another, but no breaking changes would be made to
- * {@see FontAwesome::refresh_releases()} without a major version change.
+ * For example, the {@see FontAwesome::releases_refreshed_at()} method provides a way
+ * to find out when releases metadata were last fetched from `api.fontawesome.com`.
+ * It delegates to another class internally. But that other class and its methods
+ * are not part of this plugin's public API. They may change significantly from
+ * one patch release to another, but no breaking changes would be made to
+ * {@see FontAwesome::releases_refreshed_at()} without a major version change.
  *
  * References to "API" in this section refer to this plugin's PHP code or REST
  * routes, not to the Font Awesome GraphQL API at `api.fontawesome.com`.
@@ -126,7 +126,7 @@ class FontAwesome {
 	 *
 	 * @since 4.0.0
 	 */
-	const PLUGIN_VERSION = '4.0.0-rc20';
+	const PLUGIN_VERSION = '4.0.0-rc22';
 	/**
 	 * The namespace for this plugin's REST API.
 	 *
@@ -178,7 +178,7 @@ class FontAwesome {
 	 * @ignore
 	 * @internal
 	 */
-	const CONFLICT_DETECTOR_SOURCE = 'https://use.fontawesome.com/releases/v5.12.1/js/conflict-detection.js';
+	const CONFLICT_DETECTOR_SOURCE = 'https://use.fontawesome.com/releases/v5.15.3/js/conflict-detection.js';
 
 	/**
 	 * The custom data attribute added to script, link, and style elements enqueued
@@ -247,6 +247,7 @@ class FontAwesome {
 		'kitToken'       => null,
 		// whether the token is present, not the token's value.
 		'apiToken'       => false,
+		'dataVersion'    => 3,
 	);
 
 	/**
@@ -296,7 +297,7 @@ class FontAwesome {
 	 * @internal
 	 * @ignore
 	 */
-	protected $_old_remove_unregistered_clients = false;
+	protected $old_remove_unregistered_clients = false;
 
 	/**
 	 * Returns the singleton instance of the FontAwesome plugin.
@@ -367,7 +368,7 @@ class FontAwesome {
 
 			add_shortcode(
 				self::SHORTCODE_TAG,
-				[ $this, 'process_shortcode' ]
+				array( $this, 'process_shortcode' )
 			);
 
 			add_filter( 'widget_text', 'do_shortcode' );
@@ -386,7 +387,7 @@ class FontAwesome {
 				 */
 			}
 
-			$this->maybe_enqueue_admin_js_bundle();
+			$this->maybe_enqueue_admin_assets();
 
 			// Setup JavaScript internationalization if we're on WordPress 5.0+.
 			if ( function_exists( 'wp_set_script_translations' ) ) {
@@ -396,16 +397,14 @@ class FontAwesome {
 			if ( $this->using_kit() ) {
 				$this->enqueue_kit( $this->options()['kitToken'] );
 			} else {
-				$resource_collection = $this
-					->release_provider()
-					->get_resource_collection(
-						$this->options()['version'],
-						array(
-							'use_pro'  => $this->pro(),
-							'use_svg'  => 'svg' === $this->technology(),
-							'use_shim' => $this->v4_compatibility(),
-						)
-					);
+				$resource_collection = FontAwesome_Release_Provider::get_resource_collection(
+					$this->options()['version'],
+					array(
+						'use_pro'  => $this->pro(),
+						'use_svg'  => 'svg' === $this->technology(),
+						'use_shim' => $this->v4_compatibility(),
+					)
+				);
 
 				$this->enqueue_cdn( $this->options(), $resource_collection );
 			}
@@ -435,15 +434,12 @@ class FontAwesome {
 		// Upgrade from v1 schema: 4.0.0-rc13 or earlier.
 		if ( isset( $options['lockedLoadSpec'] ) || isset( $options['adminClientLoadSpec'] ) ) {
 			if ( isset( $options['removeUnregisteredClients'] ) && $options['removeUnregisteredClients'] ) {
-				$this->_old_remove_unregistered_clients = true;
+				$this->old_remove_unregistered_clients = true;
 			}
 
 			$upgraded_options = $this->convert_options_from_v1( $options );
 
-			// Delete the old release metadata transient to ensure we refresh it here.
-			delete_transient( FontAwesome_Release_Provider::RELEASES_TRANSIENT );
-
-			$this->refresh_releases();
+			$this->upgrade_for_4_0_0_rc22();
 
 			/**
 			 * Delete the main option to make sure it's removed entirely, including
@@ -470,7 +466,37 @@ class FontAwesome {
 			$this->validate_options( $upgraded_options );
 
 			update_option( self::OPTIONS_KEY, $upgraded_options );
+
+			$options = $upgraded_options;
 		}
+
+		if ( ! isset( $options['dataVersion'] ) || $options['dataVersion'] < 3 ) {
+			$this->upgrade_for_4_0_0_rc22();
+
+			$options['dataVersion'] = 3;
+
+			update_option( self::OPTIONS_KEY, $options );
+		}
+	}
+
+	/**
+	 * Internal use only.
+	 *
+	 * @ignore
+	 * @internal
+	 */
+	private function upgrade_for_4_0_0_rc22() {
+		// Delete the old release metadata transient.
+		delete_transient( 'font-awesome-releases' );
+
+		delete_site_transient( 'font-awesome-releases' );
+
+		/**
+		 * This is one exception to the rule about not loading release metadata
+		 * on front end page loads. But this would only happen on the first page
+		 * load after upgrading from a particular range of earlier versions.
+		 */
+		FontAwesome_Release_Provider::load_releases();
 	}
 
 	/**
@@ -595,15 +621,23 @@ class FontAwesome {
 	}
 
 	/**
-	 * Queries the Font Awesome API to load releases metadata. Results are
-	 * cached in a site transient.
+	 * Queries the Font Awesome API to load releases metadata. Results are stored
+	 * in the wp database.
 	 *
 	 * This is the metadata that supports API
 	 * methods like {@see FontAwesome::latest_version()}
 	 * and all other metadata required to enqueue Font Awesome when configured
 	 * to use the standard CDN (non-kits).
 	 *
+	 * This has been deprecated to discourage themes or plugins from invoking
+	 * it as a blocking network request during front-end page loads. If we find
+	 * that functionality like this is still needed for some use cases, let's
+	 * design an alternative API that encourages best-practice use while
+	 * discouraging anti-patterns.
+	 *
 	 * @since 4.0.0
+	 * @deprecated
+	 * @ignore
 	 * @throws ApiRequestException
 	 * @throws ApiResponseException
 	 * @throws ReleaseProviderStorageException
@@ -616,7 +650,6 @@ class FontAwesome {
 	 * Returns the time when releases metadata was last
 	 * refreshed.
 	 *
-	 * @see FontAwesome::refresh_releases
 	 * @since 4.0.0
 	 * @return integer|null the time in unix epoch seconds or null if never
 	 */
@@ -637,7 +670,7 @@ class FontAwesome {
 		$refreshed_at = $this->releases_refreshed_at();
 
 		if ( is_null( $refreshed_at ) || ( time() - $refreshed_at ) > self::RELEASES_REFRESH_INTERVAL ) {
-			return $this->refresh_releases();
+			return FontAwesome_Release_Provider::load_releases();
 		} else {
 			return 1;
 		}
@@ -668,12 +701,12 @@ class FontAwesome {
 	 * @return string|null
 	 */
 	private function active_admin_tab() {
-		// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! isset( $_REQUEST[ self::ADMIN_TAB_QUERY_VAR ] ) || empty( $_REQUEST[ self::ADMIN_TAB_QUERY_VAR ] ) ) {
 			return null;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$value = $_REQUEST[ self::ADMIN_TAB_QUERY_VAR ];
 
 		// These values are defined in the Redux reducer module of the admin JS React app.
@@ -731,7 +764,7 @@ class FontAwesome {
 
 	/**
 	 * Initalizes everything about the admin environment except the React app
-	 * bundle, which is handled in maybe_enqueue_js_bundle().
+	 * bundle, which is handled in maybe_enqueue_admin_assets().
 	 *
 	 * Internal use only, not part of this plugin's public API.
 	 *
@@ -754,35 +787,27 @@ class FontAwesome {
 
 			add_action(
 				'admin_notices',
-				[ $v3_deprecation_command, 'run' ]
+				array( $v3_deprecation_command, 'run' )
 			);
 		}
 
-		$icon_data = 'data:image/svg+xml;base64,'
-			. base64_encode(
-				'<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 448 512"><path fill="'
-				. $this->get_admin_icon_color()
-				. '" d="M397.8 32H50.2C22.7 32 0 54.7 0 82.2v347.6C0 457.3 22.7 480 50.2 480h347.6c27.5 0 50.2-22.7 50.2-50.2V82.2c0-27.5-22.7-50.2-50.2-50.2zm-45.4 284.3c0 4.2-3.6 6-7.8 7.8-16.7 7.2-34.6 13.7-53.8 13.7-26.9 0-39.4-16.7-71.7-16.7-23.3 0-47.8 8.4-67.5 17.3-1.2.6-2.4.6-3.6 1.2V385c0 1.8 0 3.6-.6 4.8v1.2c-2.4 8.4-10.2 14.3-19.1 14.3-11.3 0-20.3-9-20.3-20.3V166.4c-7.8-6-13.1-15.5-13.1-26.3 0-18.5 14.9-33.5 33.5-33.5 18.5 0 33.5 14.9 33.5 33.5 0 10.8-4.8 20.3-13.1 26.3v18.5c1.8-.6 3.6-1.2 5.4-2.4 18.5-7.8 40.6-14.3 61.5-14.3 22.7 0 40.6 6 60.9 13.7 4.2 1.8 8.4 2.4 13.1 2.4 22.7 0 47.8-16.1 53.8-16.1 4.8 0 9 3.6 9 7.8v140.3z"/></svg>'
-			);
-
 		$admin_menu_command = new FontAwesome_Command(
-			function() use ( $icon_data ) {
-				fa()->screen_id = add_menu_page(
-					/* translators: add_menu_page page_title */
+			function() {
+				fa()->screen_id = add_options_page(
+					/* translators: add_options_page page_title */
 					esc_html__( 'Font Awesome Settings', 'font-awesome' ),
-					/* translators: add_menu_page menu_title */
+					/* translators: add_options_page menu_title */
 					esc_html__( 'Font Awesome', 'font-awesome' ),
 					'manage_options',
 					self::OPTIONS_PAGE,
-					array( fa(), 'create_admin_page' ),
-					$icon_data
+					array( fa(), 'create_admin_page' )
 				);
 			}
 		);
 
 		add_action(
 			'admin_menu',
-			[ $admin_menu_command, 'run' ]
+			array( $admin_menu_command, 'run' )
 		);
 
 		$plugin_action_links_command = new FontAwesome_Command(
@@ -797,7 +822,7 @@ class FontAwesome {
 
 		add_filter(
 			'plugin_action_links_' . FONTAWESOME_PLUGIN_FILE,
-			[ $plugin_action_links_command, 'run' ]
+			array( $plugin_action_links_command, 'run' )
 		);
 
 		$multi_version_warning_command = new FontAwesome_Command(
@@ -836,7 +861,7 @@ class FontAwesome {
 
 		add_action(
 			'after_plugin_row_' . FONTAWESOME_PLUGIN_FILE,
-			[ $multi_version_warning_command, 'run' ],
+			array( $multi_version_warning_command, 'run' ),
 			10,
 			3
 		);
@@ -890,20 +915,15 @@ class FontAwesome {
 				throw new ConfigCorruptionException();
 			}
 		} else {
-			// A null version is permitted, until the release metadata has been queried.
-			if ( ! is_null( $this->releases_refreshed_at() ) ) {
-				/**
-				 * Intentionally not constraining the ending of the version number to
-				 * open the possibility of a pre-release version, which means it would have
-				 * something like -rc42 on the end.
-				 * For example, 5.12.0-rc42.
-				 */
-				$version_is_concrete = is_string( $version )
-					&& 1 === preg_match( '/^[0-9]+\.[0-9]+\.[0-9]+/', $version );
+			/**
+			 * If we're not using a kit, then the version cannot be "latest" at this
+			 * point. It must have already been resolved into a concrete version.
+			 */
+			$version_is_concrete = is_string( $version )
+				&& 1 === preg_match( '/^[0-9]+\.[0-9]+\.[0-9]+/', $version );
 
-				if ( ! $version_is_concrete ) {
-					throw new ConfigCorruptionException();
-				}
+			if ( ! $version_is_concrete ) {
+				throw new ConfigCorruptionException();
 			}
 		}
 
@@ -922,7 +942,7 @@ class FontAwesome {
 		if (
 			! isset( $options['technology'] ) ||
 			! is_string( $options['technology'] ) ||
-			false === array_search( $options['technology'], [ 'svg', 'webfont' ], true )
+			false === array_search( $options['technology'], array( 'svg', 'webfont' ), true )
 		) {
 			throw new ConfigCorruptionException();
 		}
@@ -1281,17 +1301,15 @@ class FontAwesome {
 	 * - `fa()->releases_refreshed_at()` will return the time when releases
 	 *     metadata was last refreshed.
 	 *
-	 * - `fa->refresh_releases()` will refresh the releases metadata. This will
-	 *     run a synchronous (blocking) network query to the Font Awesome API
-	 *     server.
+	 * Releases are refreshed when the admin user loads the Font Awesome settings
+	 * page if it's been longer than the {@see FortAwesome\FontAwesome::RELEASES_REFRESH_INTERVAL}.
 	 *
-	 * Therefore, if releases have been refreshed recently enough for your
-	 * purposes, you can rely on the version returned by `fa()->latest_version()`.
-	 * Or, you could refresh the releases metadata and then call
-	 * `fa()->latest_version()`.
+	 * If you think the releases metadata should be refreshed, the best approach
+	 * would be to alert the user in the admin dashboard, requesting that they
+	 * refresh releases by simply re-loading the Font Awesome settings page.
 	 *
 	 * It is still possible that by the time the page loads in the browser,
-	 * a new release of Font Awesome will have become available since your
+	 * a new release of Font Awesome will have become available since the last
 	 * refresh of releases metadata, and will have been loaded as the "latest"
 	 * version for the kit. There's no way to guarantee that the latest version
 	 * you resolve by this method will be the one loaded at runtime. The race
@@ -1299,10 +1317,13 @@ class FontAwesome {
 	 * are sub-second windows of time, and new versions of Font Awesome tend to
 	 * be released only approximately once per month.
 	 *
+	 * (We want to avoid making a synchronous network request to the API server
+	 * on normal front end page loads, so there's currently no supported way in
+	 * this API to programatically force the reload of metadata.)
+	 *
 	 * @since 4.0.0
 	 * @see FontAwesome::latest_version()
 	 * @see FontAwesome::releases_refreshed_at()
-	 * @see FontAwesome::refresh_releases()
 	 * @throws ConfigCorruptionException
 	 * @return string|null null if no version has yet been saved in the options
 	 * in the db. Otherwise, a valid version string, which may be either a
@@ -1377,20 +1398,13 @@ class FontAwesome {
 	 * @internal
 	 * @ignore
 	 */
-	public function maybe_enqueue_admin_js_bundle() {
+	public function maybe_enqueue_admin_assets() {
 		add_action(
 			'admin_enqueue_scripts',
 			function( $hook ) {
 				try {
 					if ( $this->detecting_conflicts() || $hook === $this->screen_id ) {
-						// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
-						wp_enqueue_script(
-							self::ADMIN_RESOURCE_HANDLE,
-							$this->get_webpack_asset_url( 'main.js' ),
-							[],
-							null,
-							true
-						);
+						$this->enqueue_admin_js_assets();
 					}
 
 					if ( $hook === $this->screen_id ) {
@@ -1401,7 +1415,7 @@ class FontAwesome {
 							wp_enqueue_style(
 								self::ADMIN_RESOURCE_HANDLE . '-css',
 								$this->get_webpack_asset_url( 'main.css' ),
-								[],
+								array(),
 								null,
 								'all'
 							);
@@ -1442,19 +1456,12 @@ class FontAwesome {
 		);
 
 		if ( $this->detecting_conflicts() && current_user_can( 'manage_options' ) ) {
-			foreach ( [ 'wp_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+			foreach ( array( 'wp_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 				add_action(
 					$action,
 					function () {
 						try {
-							// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-							wp_enqueue_script(
-								self::ADMIN_RESOURCE_HANDLE,
-								$this->get_webpack_asset_url( 'main.js' ),
-								null,
-								null,
-								false
-							);
+							$this->enqueue_admin_js_assets();
 
 							wp_localize_script(
 								self::ADMIN_RESOURCE_HANDLE,
@@ -1476,6 +1483,63 @@ class FontAwesome {
 					}
 				);
 			}
+		}
+	}
+
+	/**
+	 * Enqueues all js assets in the webpack asset manifest, according to their
+	 * dependency relationships: those appearing later in the asset manifest
+	 * depend on those appearing earlier.
+	 *
+	 * Expects that one of the resources corresponds to main.js and assigns
+	 * the handle ADMIN_RESOURCE_HANDLE to that one. This is the handle to which
+	 * any subsequent localization should be applied via wp_set_script_translations
+	 * or wp_localize_script.
+	 *
+	 * @ignore
+	 * @internal
+	 * @return string $main_js_handle
+	 */
+	private function enqueue_admin_js_assets() {
+		$asset_manifest = $this->get_webpack_asset_manifest();
+		$asset_url_base = $this->get_webpack_asset_url_base();
+		$entrypoints    = $asset_manifest['entrypoints'];
+
+		$js_entrypoints =
+					array_filter(
+						$entrypoints,
+						function( $e ) {
+							return '.js' === substr( $e, -3 );
+						}
+					);
+
+		$js_entrypoint_urls = array_map(
+			function ( $e ) use ( $asset_url_base ) {
+				return trailingslashit( $asset_url_base ) . $e;
+			},
+			$js_entrypoints
+		);
+
+		// Which one represents main.js?
+		$js_main_url = $asset_manifest['files']['main.js'];
+
+		$js_url_id = 0;
+		$deps      = array();
+		foreach ( $js_entrypoint_urls as $js_url ) {
+			$cur_resource_handle = ( substr( $js_url, -1 * strlen( $js_main_url ) ) === $js_main_url )
+				? self::ADMIN_RESOURCE_HANDLE
+				: self::ADMIN_RESOURCE_HANDLE . "-dep-$js_url_id";
+
+			wp_enqueue_script(
+				$cur_resource_handle,
+				$js_url,
+				$deps,
+				self::PLUGIN_VERSION,
+				true
+			);
+
+			++$js_url_id;
+			array_push( $deps, $cur_resource_handle );
 		}
 	}
 
@@ -1518,7 +1582,7 @@ class FontAwesome {
 			throw new ConfigCorruptionException();
 		}
 
-		foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+		foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 			$enqueue_command = new FontAwesome_Command(
 				function () use ( $kit_token ) {
 					try {
@@ -1526,7 +1590,7 @@ class FontAwesome {
 						wp_enqueue_script(
 							FontAwesome::RESOURCE_HANDLE,
 							trailingslashit( FONTAWESOME_KIT_LOADER_BASE_URL ) . $kit_token . '.js',
-							[],
+							array(),
 							null,
 							false
 						);
@@ -1574,7 +1638,7 @@ EOT;
 			);
 			add_action(
 				$action,
-				[ $enqueue_command, 'run' ]
+				array( $enqueue_command, 'run' )
 			);
 		}
 
@@ -1601,7 +1665,7 @@ EOT;
 
 		add_filter(
 			'script_loader_tag',
-			[ $script_loader_tag_command, 'run' ],
+			array( $script_loader_tag_command, 'run' ),
 			11,
 			2
 		);
@@ -1649,7 +1713,7 @@ EOT;
 				wp_enqueue_script(
 					FontAwesome::RESOURCE_HANDLE_CONFLICT_DETECTOR,
 					FontAwesome::CONFLICT_DETECTOR_SOURCE,
-					[ FontAwesome::ADMIN_RESOURCE_HANDLE ],
+					array( FontAwesome::ADMIN_RESOURCE_HANDLE ),
 					null,
 					true
 				);
@@ -1658,10 +1722,10 @@ EOT;
 
 		if ( $this->detecting_conflicts() && current_user_can( 'manage_options' ) ) {
 			// Enqueue the conflict detector.
-			foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+			foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 				add_action(
 					$action,
-					[ $conflict_detection_enqueue_command, 'run' ],
+					array( $conflict_detection_enqueue_command, 'run' ),
 					PHP_INT_MAX
 				);
 			}
@@ -1670,7 +1734,7 @@ EOT;
 		}
 
 		if ( 'webfont' === $options['technology'] ) {
-			foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+			foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 				add_action(
 					$action,
 					function () use ( $resources ) {
@@ -1684,7 +1748,7 @@ EOT;
 			add_filter(
 				'style_loader_tag',
 				function( $html, $handle ) use ( $resources ) {
-					if ( in_array( $handle, [ self::RESOURCE_HANDLE ], true ) ) {
+					if ( in_array( $handle, array( self::RESOURCE_HANDLE ), true ) ) {
 								return preg_replace(
 									'/\/>$/',
 									'integrity="' . $resources[0]->integrity_key() .
@@ -1712,7 +1776,7 @@ EOT;
 				 * We need the @font-face override, especially to appear after any unregistered loads of Font Awesome
 				 * that may try to declare a @font-face with a font-family of "FontAwesome".
 				 */
-				foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+				foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 					add_action(
 						$action,
 						function () use ( $resources, $options, $version ) {
@@ -1724,6 +1788,7 @@ EOT;
 							$font_face = <<< EOT
 @font-face {
 font-family: "FontAwesome";
+font-display: block;
 src: url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.eot"),
 		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.eot?#iefix") format("embedded-opentype"),
 		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.woff2") format("woff2"),
@@ -1734,6 +1799,7 @@ src: url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webf
 
 @font-face {
 font-family: "FontAwesome";
+font-display: block;
 src: url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.eot"),
 		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.eot?#iefix") format("embedded-opentype"),
 		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.woff2") format("woff2"),
@@ -1744,6 +1810,7 @@ src: url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webf
 
 @font-face {
 font-family: "FontAwesome";
+font-display: block;
 src: url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.eot"),
 		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.eot?#iefix") format("embedded-opentype"),
 		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.woff2") format("woff2"),
@@ -1771,7 +1838,7 @@ EOT;
 					add_filter(
 						'style_loader_tag',
 						function ( $html, $handle ) use ( $resources ) {
-							if ( in_array( $handle, [ self::RESOURCE_HANDLE_V4SHIM ], true ) ) {
+							if ( in_array( $handle, array( self::RESOURCE_HANDLE_V4SHIM ), true ) ) {
 								return preg_replace(
 									'/\/>$/',
 									'integrity="' . $resources[1]->integrity_key() .
@@ -1789,7 +1856,7 @@ EOT;
 				}
 			}
 		} else {
-			foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+			foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 				add_action(
 					$action,
 					function () use ( $resources, $options ) {
@@ -1807,7 +1874,7 @@ EOT;
 			add_filter(
 				'script_loader_tag',
 				function ( $tag, $handle ) use ( $resources ) {
-					if ( in_array( $handle, [ self::RESOURCE_HANDLE ], true ) ) {
+					if ( in_array( $handle, array( self::RESOURCE_HANDLE ), true ) ) {
 						$extra_tag_attributes = 'defer crossorigin="anonymous"';
 
 						if ( ! is_null( $resources[0]->integrity_key() ) ) {
@@ -1830,7 +1897,7 @@ EOT;
 			);
 
 			if ( $options['v4Compat'] ) {
-				foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+				foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 					add_action(
 						$action,
 						function () use ( $resources ) {
@@ -1843,7 +1910,7 @@ EOT;
 				add_filter(
 					'script_loader_tag',
 					function ( $tag, $handle ) use ( $resources ) {
-						if ( in_array( $handle, [ self::RESOURCE_HANDLE_V4SHIM ], true ) ) {
+						if ( in_array( $handle, array( self::RESOURCE_HANDLE_V4SHIM ), true ) ) {
 							$extra_tag_attributes = 'defer crossorigin="anonymous"';
 							if ( ! is_null( $resources[1]->integrity_key() ) ) {
 								$extra_tag_attributes .= ' integrity="' . $resources[1]->integrity_key() . '"';
@@ -1885,7 +1952,7 @@ EOT;
 					in_array(
 						$handle,
 						array_merge(
-							[ self::RESOURCE_HANDLE, self::RESOURCE_HANDLE_V4SHIM ],
+							array( self::RESOURCE_HANDLE, self::RESOURCE_HANDLE_V4SHIM ),
 							handles_ignored_for_conflict_detection()
 						),
 						true
@@ -1912,12 +1979,12 @@ EOT;
 					in_array(
 						$handle,
 						array_merge(
-							[
+							array(
 								self::RESOURCE_HANDLE,
 								self::RESOURCE_HANDLE_V4SHIM,
 								self::RESOURCE_HANDLE_CONFLICT_DETECTOR,
 								self::ADMIN_RESOURCE_HANDLE,
-							],
+							),
 							handles_ignored_for_conflict_detection()
 						),
 						true
@@ -1952,8 +2019,8 @@ EOT;
 		 * run some server-side detection like that old feature worked and
 		 * add what we find to the new-style blocklist.
 		 */
-		if ( $this->_old_remove_unregistered_clients ) {
-			foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+		if ( $this->old_remove_unregistered_clients ) {
+			foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 				add_action(
 					$action,
 					function() {
@@ -1978,7 +2045,7 @@ EOT;
 		 * hopefully allowing any unregistered client to have already enqueued
 		 * itself so that our attempt to dequeue it will be successful.
 		 */
-		foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+		foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 			add_action(
 				$action,
 				function() {
@@ -2021,7 +2088,7 @@ EOT;
 			'script' => $wp_scripts,
 		);
 
-		$inferred_unregistered_clients = [];
+		$inferred_unregistered_clients = array();
 
 		foreach ( $collections as $key => $collection ) {
 			foreach ( $collection->registered as $handle => $details ) {
@@ -2150,7 +2217,7 @@ EOT;
 
 		foreach ( $collections as $type => $collection ) {
 			foreach ( $collection->registered as $handle => $details ) {
-				foreach ( [ 'before', 'after' ] as $position ) {
+				foreach ( array( 'before', 'after' ) as $position ) {
 					$data = $collection->get_data( $handle, $position );
 					if ( $this->is_inline_data_blocked( $data ) ) {
 						unset( $collection->registered[ $handle ]->extra[ $position ] );
@@ -2515,7 +2582,7 @@ EOT;
 			$prefix_and_name_classes = $atts['prefix'] . ' fa-' . $atts['name'];
 		}
 
-		$classes = rtrim( implode( ' ', [ $prefix_and_name_classes, $atts['class'] ] ) );
+		$classes = rtrim( implode( ' ', array( $prefix_and_name_classes, $atts['class'] ) ) );
 		return '<i class="' . $classes . '"></i>';
 	}
 
@@ -2653,7 +2720,7 @@ EOT;
 			$asset_url_base = FONTAWESOME_DIR_URL . 'admin/build';
 		}
 
-		return $asset_url_base . $asset_manifest[ $asset ];
+		return $asset_url_base . $asset_manifest['files'][ $asset ];
 	}
 
 	/**
@@ -2662,30 +2729,12 @@ EOT;
 	 * @internal
 	 * @ignore
 	 */
-	private function get_admin_icon_color() {
-		// Adapted from wp_color_scheme_settings in WP Core.
-		global $_wp_admin_css_colors;
-
-		$color_scheme = get_user_option( 'admin_color' );
-
-		if ( empty( $_wp_admin_css_colors[ $color_scheme ] ) ) {
-			$color_scheme = 'fresh';
-		}
-
-		if ( ! empty( $_wp_admin_css_colors[ $color_scheme ]->icon_colors ) ) {
-			$icon_colors = $_wp_admin_css_colors[ $color_scheme ]->icon_colors;
-		} elseif ( ! empty( $_wp_admin_css_colors['fresh']->icon_colors ) ) {
-			$icon_colors = $_wp_admin_css_colors['fresh']->icon_colors;
+	private function get_webpack_asset_url_base() {
+		if ( FONTAWESOME_ENV === 'development' ) {
+			return 'http://localhost:3030';
 		} else {
-			// Fall back to the default set of icon colors if the default scheme is missing.
-			$icon_colors = array(
-				'base'    => '#a0a5aa',
-				'focus'   => '#00a0d2',
-				'current' => '#fff',
-			);
+			return FONTAWESOME_DIR_URL . 'admin/build';
 		}
-
-		return $icon_colors['base'];
 	}
 }
 

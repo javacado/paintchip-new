@@ -37,11 +37,6 @@ if ( !defined( 'ABSPATH' ) ) {
 				<p>Contribute in helping us making <b><?php echo $product_name; ?></b> compatible with most themes and plugins by allowing to share non-sensitive data to <a target="_blank" href="https://www.wponlinesupport.com">wponlinesupport.com</a> about your website.</p>
 				<p>If you skip this, that's okay! <b><?php echo $product_name; ?></b> will still work just fine.</p>
 
-				<div class="wpos-anylc-subs-wrap">
-					<input type="hidden" name="subscribe" value="" />
-					<label><input type="checkbox" value="1" name="subscribe" checked="checked" /> Subscribe for Updates and Promotions</label>
-				</div>
-
 				<?php if( !empty( $analy_product['promotion'] ) ) { ?>
 				<div class="wpos-anylc-promotion-wrap">
 					<?php foreach( $analy_product['promotion'] as $promotion_key => $promotion_data ) { ?>
@@ -54,10 +49,10 @@ if ( !defined( 'ABSPATH' ) ) {
 				<button type="submit" name="wpos_anylc_optin" class="button button-primary button-large right wpos-anylc-allow-btn" value="wpos_anylc_optin">Allow and Continue</button>
 
 				<?php if( is_null( $opt_in ) ) { ?>
-				<a href="<?php echo esc_url( $skip_url ); ?>" class="button button-secondary button-large wpos-anylc-skip-btn">Skip</a>
+				<button type="submit" name="wpos_anylc_action" class="button button-secondary button-large wpos-anylc-skip-btn" value="skip">Skip</button>
 				<?php }
 
-				if( !empty( $optin_form_data ) ) {
+				if( ! empty( $optin_form_data ) ) {
 					foreach ($optin_form_data as $data_key => $data_value) {
 						echo '<input type="hidden" name="'.esc_attr( $data_key ).'" value="'.esc_attr( $data_value ).'" />';
 					}
@@ -92,7 +87,7 @@ if ( !defined( 'ABSPATH' ) ) {
 				</div>
 			</div>
 			<div class="wpos-anylc-terms">
-				<a href="https://www.wponlinesupport.com/privacy-policy/" target="_blank">Privacy Policy</a> - <a href="https://www.wponlinesupport.com/term-and-condition/" target="_blank">Terms of Service</a>
+				<a href="https://www.wponlinesupport.com/privacy-policy/#free-pluign-info" target="_blank">Privacy Policy</a> - <a href="https://www.wponlinesupport.com/term-and-condition/" target="_blank">Terms of Service</a>
 			</div>
 		</div>
 	</form>

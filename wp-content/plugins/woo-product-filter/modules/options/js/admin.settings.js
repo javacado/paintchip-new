@@ -6,13 +6,24 @@ jQuery(document).ready(function(){
 	});
 	jQuery('#wpfSettingsForm').submit(function(){
 		jQuery(this).sendFormWpf({
-			btn: jQuery('#wpfSettingsSaveBtn')
+			btn: jQuery('#wpfSettingsSaveBtn'),
+			appendData: {wpfNonce: window.wpfNonce},
+
+			onSuccess: function(res) {
+				if(res['messages'][0]) {
+					jQuery.sNotify({
+						'icon': 'fa fa-check',
+						'content': ' <span> '+res['messages'][0]+'</span>',
+						'delay' : 2500
+					});
+				}
+			}
 		});
 		return false;
 	});
 	/*Connected options: some options need to be visible  only if in other options selected special value (e.g. if send engine SMTP - show SMTP options)*/
 	var $connectOpts = jQuery('#wpfSettingsForm').find('[data-connect]');
-	if($connectOpts && $connectOpts.size()) {
+	if($connectOpts && $connectOpts.length) {
 		var $connectedTo = {};
 		$connectOpts.each(function(){
 			var connectToData = jQuery(this).data('connect').split(':')

@@ -82,49 +82,6 @@ class CustomSidebarsCheckupNotification extends CustomSidebars {
 	 * @since 3.0.0
 	 */
 	public function init_admin_head() {
-		add_action( 'admin_notices', array( $this, 'admin_notice_scan' ) );
-	}
-
-	/**
-	 * Admin notice scan!
-	 *
-	 * @since 3.0.1
-	 */
-	public function admin_notice_scan() {
-		$user_id = get_current_user_id();
-		$state = get_user_meta( $user_id, $this->dismiss_name, true );
-		if ( $state ) {
-			return;
-		}
-		lib3()->ui->add( CSB_CSS_URL . 'cs-scan.css' );
-?>
-<script type="text/javascript">
-    jQuery(document).on( 'click', '.custom-sidebars-wp-checkup .notice-dismiss', function() {
-        jQuery.ajax({
-            url: ajaxurl,
-            data: {
-            action: '<?php echo esc_attr( $this->dismiss_name ); ?>',
-                _wpnonce: '<?php echo wp_create_nonce( $this->nonce_name . $user_id ) ?>',
-                user_id: <?php echo $user_id ?>
-            }
-        })
-    });
-</script>
-<div class="notice is-dismissible custom-sidebars-wp-checkup">
-<p><?php _e( '<b>Warning:</b> Some of your plugins may be slowing down your site. Run a free security and performance scan with WP Checkup.', 'custom-sidebars' ); ?></p>
-<form method="get" action="https://premium.wpmudev.org/wp-checkup/">
-<input type="hidden" name="external-url" value="1" />
-<input type="text" name="the-url" value="<?php echo esc_url( get_option( 'home' ) ); ?>" />
-<input type="submit" value="<?php esc_attr_e( 'Scan', 'custom-sidebars' ); ?>" />
-<input type="hidden" name="utm_source" value="custom_sidebar_ad" />
-<input type="hidden" name="utm_campaign" value="custom_sidebar_plugin" />
-<input type="hidden" name="utm_medium" value="Custom Sidebars Plugin" />
-</form>
-	<button type="button" class="notice-dismiss">
-		<span class="screen-reader-text">Dismiss this notice.</span>
-	</button>
-</div>
-<?php
 	}
 
 	/**
@@ -143,7 +100,7 @@ class CustomSidebarsCheckupNotification extends CustomSidebars {
 	 */
 	public function admin_notices() {
 		wp_enqueue_script( 'wp-util' );
-		$this->show_box( 'checkup' );
+		$this->show_box( 'wf_ads' );
 	}
 
 	/**
@@ -176,23 +133,17 @@ class CustomSidebarsCheckupNotification extends CustomSidebars {
 	}
 
 	/**
-	 * Show *Run site health check* box.
+	 * Show ads for other plugins box.
 	 *
 	 * @since 3.0.4
 	 */
-	private function show_box_checkup() {
+	private function show_box_wf_ads() {
 ?>
 <div class="custom-sidebars-box custom-sidebars-checkup">
 	<div class="cs-inner">
-		<h4><?php esc_html_e( 'Run site health check', 'custom-sidebars' ); ?></h4>
-		<p><?php esc_html_e( 'Free performance, security and SEO report', 'custom-sidebars' ); ?></p>
-		<form method="get" action="https://premium.wpmudev.org/wp-checkup/">
-			<input type="hidden" name="external-url" value="1" />
-			<input type="text" name="the-url" value="<?php echo esc_url( get_option( 'home' ) ); ?>" /><input type="submit" value="<?php esc_attr_e( 'Go', 'custom-sidebars' ); ?>" />
-			<input type="hidden" name="utm_source" value="custom_sidebar_ad" />
-			<input type="hidden" name="utm_campaign" value="custom_sidebar_plugin" />
-			<input type="hidden" name="utm_medium" value="Custom Sidebars Plugin" />
-		</form>
+		<h4 class="textcenter">Need to make any element on your site sticky?<br>Header menu, a widget, or an image?</h4>
+		<div class="sticky-logo"><a target="_blank" href="<?php echo admin_url('plugin-install.php?s=webfactory%20sticky&tab=search&type=term'); ?>"><img src="<?php echo CSB_IMG_URL; ?>/wp-sticky.png" alt="WP Sticky Anything" title="WP Sticky Anything"></a></div>
+		<div class="textcenter"><a target="_blank" href="<?php echo admin_url('plugin-install.php?s=webfactory%20sticky&tab=search&type=term'); ?>" class="button-primary">Install the free WP Sticky plugin</a></div>
 	</div>
 </div>
 <?php

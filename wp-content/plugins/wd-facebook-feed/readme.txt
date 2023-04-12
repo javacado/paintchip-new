@@ -3,8 +3,8 @@ Contributors: webdorado,10web,wdsupport
 Tags: customizable facebook feed, facebook, facebook feed, facebook group, facebook like box, facebook likes, facebook page, facebook photos, facebook plugin, facebook posts, facebook likebox
 Requires at least: 3.4
 Requires PHP: 5.2
-Tested up to: 5.4
-Stable tag: 1.1.20
+Tested up to: 5.7
+Stable tag: 1.1.34
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,53 @@ If you think you found a bug in 10Web Facebook Feed or have any problem/question
 The plugin uses Facebook API to get public data from Facebook. All the received data is cached in WordPress database for some short customizable period to provide optimization. You can delete or update cached data. You can optionally enable like button for Facebook page. If you do so, Facebook will load some JS and embedded content which may track visitors. Facebook embeds are regulated under terms of Facebook privacy policy https://www.facebook.com/policy.php.
 
 == Changelog ==
+= 1.1.34 =
+* Added: PO file for Polish.
+* Fixed: Title with quote in it.
+
+= 1.1.33 =
+* Fixed: Compatibility with PHP8.
+
+= 1.1.32 =
+* Fixed: Messages in backend.
+
+= 1.1.31 =
+* Fixed: Open settings page after activation.
+* Fixed: Border radius in Blog style view.
+* Fixed: Expired token issue.
+
+= 1.1.30 =
+* Fixed: Token autoupdate.
+
+= 1.1.29 =
+* Fixed: JS deprications.
+
+= 1.1.28 =
+* Fixed: Widget.
+
+= 1.1.27 =
+* Fixed: Conflict with WP 5.5 version.
+* Fixed: Security issue.
+
+= 1.1.26 =
+* Fixed: Conflict with PHP version.
+
+= 1.1.25 =
+* Fixed: Include plugin css/js if feed exists.
+* Fixed: implode function arguments for php 7.4.
+
+= 1.1.24 =
+* Fixed: Compatibility with IE.
+
+= 1.1.23 =
+* Fixed: Issue with feed image.
+
+= 1.1.22 =
+* Fixed: Structure of 'Privacy policy' text.
+* Fixed: Conflict with Photo gallery.
+
+= 1.1.21 =
+* Fixed: Facebook api changes
 
 = 1.1.20 =
 * Improved: Do not limit images count.

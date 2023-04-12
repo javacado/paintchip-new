@@ -2,7 +2,6 @@
 /**
  * Abstract class for actions.
  *
- * @author      Icegram
  * @since       4.4.1
  * @version     1.0
  * @package     Email Subscribers
@@ -124,13 +123,10 @@ abstract class ES_Workflow_Action {
 	 * Method to load the action's fields.
 	 *
 	 * @since 4.4.1
+	 * 
+	 * @modified 4.5.3 Removed dependency to modify child action file to load extra fields.
 	 */
-	public function load_fields() {
-		$action_data = array(
-			'action' => $this,
-		);
-		do_action( $this->name . '_load_fields', $action_data );
-	}
+	public function load_fields() {}
 
 	/**
 	 * Method to set the action's admin props.
@@ -268,11 +264,16 @@ abstract class ES_Workflow_Action {
 	 * @since 4.4.1
 	 * 
 	 * @modified 4.4.3 Removed isset condition to allow latest list of fields every time when called.
+	 * 
+	 * @modified 4.5.3 Added new action action_name_load_extra_fileds to allow loading of extra fields for action.
 	 */
 	public function get_fields() {
 
 		$this->fields = array();
 		$this->load_fields();
+
+		// Load extra fields for workflow action.
+		do_action( $this->name . '_load_extra_fields', $this );
 
 		return $this->fields;
 	}
@@ -297,9 +298,17 @@ abstract class ES_Workflow_Action {
 	 *
 	 * @return mixed Will vary depending on the field type specified in the action's fields.
 	 */
-	public function get_option( $field_name ) {
+	public function get_option( $field_name, $process_variables = false, $allow_html = false  ) {
 
 		$value = $this->get_option_raw( $field_name );
+
+		// Process the option value only if it's a string
+		// The value will almost always be a string but it could be a bool if the field is checkbox
+		if ( $value && is_string( $value ) ) {
+			if ( $process_variables ) {
+				$value = $this->workflow->variable_processor()->process_field( $value, $allow_html );
+			}
+		}
 
 		return apply_filters( 'ig_es_action_option', $value, $field_name, $this );
 	}

@@ -1,10 +1,10 @@
 === Reusable Blocks Extended ===
-Contributors: audrasjb, whodunitagency, emlebrun, larrach
+Contributors: audrasjb, whodunitagency, larrach
 Donate link: https://www.paypal.me/audrasjb
-Tags: Reusable, Blocks, Gutenberg, Widget, PHP Function, Preview, Shortcode, Réutilisable, bloc
+Tags: Reusable, Blocks, Gutenberg, Widget, PHP Function, Preview, Shortcode, Réutilisable, bloc, pattern, generator
 Requires at least: 5.2
-Tested up to: 5.3
-Stable tag: 0.5.1
+Tested up to: 5.7
+Stable tag: 0.6.2
 Requires PHP: 7.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -24,6 +24,8 @@ This plugin extends the Reusable Blocks admin interface and provides few fancy f
 * Provide a Reusable Blocks Widget to use your block anywhere you want in your theme’s widgets areas
 * Provide a Reusable Blocks Shortcode to use your block anywhere you want in your Post types (even if they use the Classic Editor rather than Gutenberg!)
 * Provide some Reusable Blocks PHP functions to use your block anywhere you want in your theme even
+
+* NEW: An easy tool to convert reusable blocks to block patterns in one click!
 
 For a full presentation of Reusable Blocks Extended, see this [WordCamp Talk synthesis available on my blog](https://jeanbaptisteaudras.com/en/2019/12/gutenberg-reusable-blocks-wordcamp-marseille-talk-synthesis/).
 
@@ -65,6 +67,15 @@ Note for developers: you may also need to **get** the shortcode data **before** 
 `reblex_get_block( NUMERIC_ID_OF_THE_REUSABLE_BLOCK );`
 
 == Changelog ==
+
+= 0.6.2 =
+* Removes a PHP notice.
+
+= 0.6.1 =
+* Fix an issue with polylang plugin (props @eddystile).
+
+= 0.6 =
+* Introduces the Block Pattern conversion tool for WP 5.5+.
 
 = 0.5.1 =
 * Fixes a bug with ACF Pro Blocks. Props [@mbcreation](https://profiles.wordpress.org/mbcreation/) for raising the issue.

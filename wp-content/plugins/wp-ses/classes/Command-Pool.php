@@ -15,6 +15,7 @@ use DeliciousBrains\WP_Offload_SES\Aws3\Aws\ResultInterface;
 use DeliciousBrains\WP_Offload_SES\Aws3\Aws\Ses\Exception\SesException;
 use DeliciousBrains\WP_Offload_SES\Aws3\GuzzleHttp\Promise\PromiseInterface;
 use DeliciousBrains\WP_Offload_SES\Queue\Connection;
+use DeliciousBrains\WP_Offload_SES\Error;
 
 /**
  * Class Command_Pool
@@ -35,10 +36,10 @@ class Command_Pool {
 	 *
 	 * @var array
 	 */
-	private $commands = array();
+	public $commands = array();
 
 	/**
-	 * The maximum concurreny for the AWS CommandPool.
+	 * The maximum concurrency for the AWS CommandPool.
 	 *
 	 * @var int
 	 */
@@ -71,7 +72,8 @@ class Command_Pool {
 		$this->commands[] = $command;
 		$num_commands     = count( $this->commands );
 
-		if ( $this->get_concurrency() === $num_commands || $this->connection->jobs() === $num_commands ) {
+		// Execute if we've reached our max concurrency, or if there are no more unreserved jobs.
+		if ( $this->get_concurrency() <= $num_commands || 0 === $this->connection->jobs( true ) ) {
 			$this->execute();
 			$this->commands = array();
 		}
@@ -105,7 +107,7 @@ class Command_Pool {
 	/**
 	 * Create the command pool and execute the commands.
 	 */
-	private function execute() {
+	public function execute() {
 		/** @var WP_Offload_SES $wp_offload_ses */
 		global $wp_offload_ses;
 
@@ -121,9 +123,19 @@ class Command_Pool {
 				/** @var WP_Offload_SES $wp_offload_ses */
 				global $wp_offload_ses;
 
-				$id = $this->commands[ $iterKey ]['x-message-id'];
+				$id = (int) $this->commands[ $iterKey ]['x-message-id'];
 				/** @var Email_Job $job */
 				$job   = $this->connection->get_job( $id );
+
+				if ( ! $job ) {
+					new Error(
+						Error::$job_retrieval_failure,
+						__( 'Failed to retrieve the job while executing the command pool.', 'wp-offload-ses' ),
+						(string) $id
+					);
+					return false;
+				}
+
 				$email = $wp_offload_ses->get_email_log()->get_email( $job->email_id );
 
 				if ( $email ) {
@@ -144,9 +156,18 @@ class Command_Pool {
 				/** @var WP_Offload_SES $wp_offload_ses */
 				global $wp_offload_ses;
 
-				$id = $this->commands[ $iterKey ]['x-message-id'];
+				$id = (int) $this->commands[ $iterKey ]['x-message-id'];
 				/** @var Email_Job $job */
 				$job = $this->connection->get_job( $id );
+
+				if ( ! $job ) {
+					new Error(
+						Error::$job_retrieval_failure,
+						__( 'Failed to retrieve the job while executing the command pool.', 'wp-offload-ses' ),
+						(string) $id
+					);
+					return false;
+				}
 
 				$job->release();
 				$wp_offload_ses->get_email_events()->delete_links_by_email( $job->email_id );

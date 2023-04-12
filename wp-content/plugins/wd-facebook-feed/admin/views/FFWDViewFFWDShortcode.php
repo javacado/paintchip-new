@@ -166,10 +166,10 @@ class FFWDViewFFWDShortcode
 
       function wd_fb_insert_btn_disable(){
           if(jQuery('#wd_fb_feed').val() == 0){
-              jQuery('#insert').attr('disabled', true);
+              jQuery('#insert').prop('disabled', true);
               jQuery('#insert').css('opacity', 0.5);
           }else{
-              jQuery('#insert').attr('disabled', false);
+              jQuery('#insert').prop('disabled', false);
               jQuery('#insert').css('opacity', 1);
           }
       }

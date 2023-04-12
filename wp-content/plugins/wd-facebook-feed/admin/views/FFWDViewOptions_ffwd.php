@@ -60,11 +60,23 @@ class FFWDViewOptions_ffwd
               <?php
               $pages = get_option('ffwd_pages_list');
               ?>
+              <div class="ffwd-access-token-missing">
                 <a id="ffwd_login_button" class="ffwd_login_button" href="#">
                   <?php
                   echo (empty($pages)) ? "Log in and get my Access Token" : "Reauthenticate"
                   ?>
                 </a>
+							 <?php if (empty($pages)) { ?>
+									<p><?php _e("To use Facebook API, you need an Access Token.","ffwd");?></p>
+									<p><?php _e("Click on the Log in and get my Access Token button, to generate your token.","ffwd");?></p>
+							 <?php
+							 }
+							else { ?>
+									<p><?php _e("If there is an issue with the Access Token, please click on Reauthenticate button.","ffwd");?></p>
+									<?php
+							}
+							?>
+              </div>
                 <div id="ffwd_login_popup" style="display: none;">
                     <div class="ffwd_login_popup_content">
                         <p>Log into your Facebook account using the button below and approve the plugin to connect your

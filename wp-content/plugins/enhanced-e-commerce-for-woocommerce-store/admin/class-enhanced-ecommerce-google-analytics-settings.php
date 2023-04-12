@@ -26,10 +26,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Enhanced_Ecommerce_Google_Settings {
 
     public static function add_update_settings($settings) {
+
         if ( !get_option($settings)) {
             $ee_options = array();
             if(is_array($_POST)) {
                 foreach ($_POST as $key => $value) {
+                    if($key == "ee_submit_plugin"){
+                        unset($_POST["ee_submit_plugin"]);
+                        continue;
+                    }
                     if(!isset($_POST[$key])){
                         $_POST[$key] = '';
                     }
@@ -38,13 +43,19 @@ class Enhanced_Ecommerce_Google_Settings {
                     }
                 }
             }
-            add_option( $settings, serialize( $ee_options ) );
+            if(!add_option( $settings, serialize( $ee_options ) )){
+                update_option($settings, serialize( $ee_options ));
+            }
         }
         else {
             $get_ee_settings = unserialize(get_option($settings));
             if(is_array($get_ee_settings)) {
                 foreach ($get_ee_settings as $key => $value) {
-                    if(!isset($_POST[$key])){
+                    if($key == "ee_submit_plugin"){
+                        unset($_POST["ee_submit_plugin"]);
+                        continue;
+                    }
+                    if(!isset($_POST[$key]) ){
                         $_POST[$key] = '';
                     }
                     if( $_POST[$key] != $value ) {
@@ -54,6 +65,62 @@ class Enhanced_Ecommerce_Google_Settings {
             }
             if(is_array($_POST)) {
                 foreach($_POST as $key=>$value){
+                    if($key == "ee_submit_plugin"){
+                        unset($_POST["ee_submit_plugin"]);
+                        continue;
+                    }
+                    if(!array_key_exists($key,$get_ee_settings)){
+                        $get_ee_settings[$key] =  $value;
+                    }
+                }
+            }
+            
+            update_option($settings, serialize( $get_ee_settings ));
+        }
+        self::admin_notice__success();
+    }
+
+    public static function update_analytics_options($settings) {
+        if ( !get_option($settings)) {
+            $ee_options = array();
+            if(is_array($_POST)) {
+                foreach ($_POST as $key => $value) {
+                    if($key == "ee_submit_plugin"){
+                        unset($_POST["ee_submit_plugin"]);
+                        continue;
+                    }
+                    if(!isset($_POST[$key])){
+                        $_POST[$key] = $value;
+                    }
+                    if(isset($_POST[$key])) {
+                        $ee_options[$key] = $_POST[$key];
+                    }
+                }
+            }
+            add_option( $settings, serialize( $ee_options ) );
+        } else {
+            $get_ee_settings = unserialize(get_option($settings));
+            if(is_array($get_ee_settings)) {
+                foreach ($get_ee_settings as $key => $value) {
+                    if($key == "ee_submit_plugin"){
+                        unset($_POST["ee_submit_plugin"]);
+                        continue;
+                    }
+                    if(!isset($_POST[$key])){
+                        $_POST[$key] = $value;
+                    }
+                    if( $_POST[$key] != $value && $_POST[$key] != '') {
+                        $get_ee_settings[$key] =  $_POST[$key];
+                    }
+                }
+            }
+
+            if(is_array($_POST)) {
+                foreach($_POST as $key=>$value){
+                    if($key == "ee_submit_plugin"){
+                        unset($_POST["ee_submit_plugin"]);
+                        continue;
+                    }
                     if(!array_key_exists($key,$get_ee_settings)){
                         $get_ee_settings[$key] =  $value;
                     }
@@ -61,8 +128,8 @@ class Enhanced_Ecommerce_Google_Settings {
             }
             update_option($settings, serialize( $get_ee_settings ));
         }
-        self::admin_notice__success();
     }
+
 
     private static function admin_notice__success() {
         $class = 'notice notice-success';

@@ -102,7 +102,7 @@ final class WPOS_Analytics {
 	 */
 	private function setup_constants() {
 
-		$this->define( 'WPOS_ANYLC_VERSION', '1.0' );
+		$this->define( 'WPOS_ANYLC_VERSION', '1.1' );
 		$this->define( 'WPOS_ANYLC_DIR', plugin_dir_path( __FILE__ ) );
 		$this->define( 'WPOS_ANYLC_URL', plugin_dir_url( __FILE__ ) );
 	}

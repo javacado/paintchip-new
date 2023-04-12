@@ -1,10 +1,10 @@
 	=== Print Invoice & Delivery Notes for WooCommerce ===
 
-Contributors: ashokrane, tychesoftwares, rashmim
+Contributors: ashokrane, tychesoftwares, rashmim, shasvat
 Donate link: https://www.paypal.me/TycheSoftwares
 Tags: packing slips, invoice, pdf invoice, delivery notes, woocommerce print invoice, print, pdf, invoices
 Requires at least: 4.0
-Tested up to: 5.4
+Tested up to: 5.7
 Author URI: https://www.tychesoftwares.com/
 Stable tag: trunk
 License: GPLv3 or later
@@ -273,7 +273,7 @@ An example that adds a 40px large product image. Paste the code in the `function
 `
 function example_product_image( $product ) {	
 	if( isset( $product->id ) && has_post_thumbnail( $product->id ) ) {
-		echo get_the_post_thumbnail( $product->id, array( 40, 40 ) );
+		 echo get_the_post_thumbnail( $product->id, array( 40, 40 ), array( 'loading' => false ) );
 	}
 }
 add_action( 'wcdn_order_item_before', 'example_product_image' );
@@ -337,6 +337,28 @@ Please [contribute your translation](https://github.com/TycheSoftwares/woocommer
 6. Customers can also print the order.
 
 == Changelog ==
+
+= 4.6.2 (12.12.2020) =
+
+Enhancement :- Added an option to insert the print link in the admin emails.
+Fix :- Strings of Bulk Printing options were not getting translated. This is fixed now. Props to @pomegranate
+Fix :- Finnish language locale name was incorrect. This is fixed now.
+Fix :- Custom fields on WooCommerce product page from Product Input Fields for WooCommerce plugin were not coming in the invoice. This is fixed now.
+Fix :- The BULK printing options of WooCommerce DYMO Print (PRO version) stopped working after installing our Print invoices plugin. This has been fixed. Props to @pepbc
+Tweak :- In FAQ page changed the code snippet to add the products image in the invoice.
+
+= 4.6.1 (23.10.2020) =
+
+* Fix :- Tracker cron event was not running properly which is fixed now.
+* Dev :- With the help of filters now able to change the name of the print invoice and delivery notes in the dropdown menu on Orders page.
+
+= 4.6.0 (22.09.2020) =
+
+* Fix :- Notice was coming since WooCommerce V4.4.0 which is fixed now.
+* Fix :- Bulk printing function was using old hooks & filters.Have changed them with the new ones.
+* Dev :- Now the Total number of quantity of the products in the row of quantity in invoice will be shown.
+* Dev :- With the help of filter now one can hide the child products in Composite Products.
+* Dev :- Translated the plugin in Greek language. Props to @edeuter for the PR.
 
 = Minimum Requirements: WooCommerce 3.0 =
 

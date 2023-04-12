@@ -149,6 +149,23 @@ class Wp_Hide_Backed_Notices_Admin {
                                 <span class="slider round"></span>
                             </label>
 
+                            <?php
+                            $checked_update = '';
+                            if (!empty($posts_from_db) && $posts_from_db != '') {
+                                if (in_array('Hide PHP Updates', $posts_from_db)) {
+                                    $checked_update = 'checked';
+                                } else {
+                                    $checked_update = '';
+                                }
+                            }
+                            ?>
+
+                            <h4> Hide PHP Update Required Notice</h4>
+                            <label class="switch">
+                                <input  class="styled-checkbox" <?php echo $checked_update; ?> id="hide-php-updates" name="hide_notice[Hide_PHP_Updates]" type="checkbox" value="Hide PHP Updates">
+                                <span class="slider round"></span>
+                            </label>
+
                         </div>
                         <div class="save_btn_wrapper">
                             <input type="submit" name="save_notice_box" id="save_post_gallery_box_id" class="save_post_gallery_box_cls" value="Save"> 
@@ -186,23 +203,61 @@ class Wp_Hide_Backed_Notices_Admin {
                     if (in_array('administrator', $CurentUserRoles)) {
 //                      // Hide Update notifications
                         if (in_array('Hide Updates', $posts_from_db)) {
-                            echo '<style>body.wp-admin .update-plugins, body.wp-admin #wp-admin-bar-updates {display: none !important;} </style>';
+                            echo '<style>
+                                body.wp-admin .update-plugins, 
+                                body.wp-admin #wp-admin-bar-updates {display: none !important;} 
+                            </style>';
                         }
 
                         // Hide notices from the wordpress backend
                         if (in_array('Hide Notices', $posts_from_db)) {
-                            echo '<style> body.wp-admin .update-nag, body.wp-admin .updated, body.wp-admin .error, body.wp-admin .is-dismissible, body.wp-admin .notice{display: none !important;} </style>';
+                            echo '<style> 
+                                body.wp-admin .update-nag,
+                                body.wp-admin .updated,
+                                body.wp-admin .error,
+                                body.wp-admin .is-dismissible,
+                                body.wp-admin .notice,
+                                #yoast-indexation-warning{display: none !important;}
+
+                                body.wp-admin #loco-content .notice,
+                                body.wp-admin #loco-notices .notice{display:block !important;}
+                            </style>';
+                        }
+
+                        // Hide PHP Updates from the wordpress backend
+                        if (in_array('Hide PHP Updates', $posts_from_db)) {
+                            echo '<style>
+                                #dashboard_php_nag {display:none;}
+                            </style>';
                         }
                     }
                 } else {
                     // Hide Update notifications
                     if (in_array('Hide Updates', $posts_from_db)) {
-                        echo '<style>body.wp-admin .update-plugins, body.wp-admin #wp-admin-bar-updates {display: none !important;} </style>';
+                        echo '<style>
+                            body.wp-admin .update-plugins,
+                            body.wp-admin #wp-admin-bar-updates {display: none !important;}
+                        </style>';
                     }
 
                     // Hide notices from the wordpress backend
                     if (in_array('Hide Notices', $posts_from_db)) {
-                        echo '<style> body.wp-admin .update-nag, body.wp-admin .updated, body.wp-admin .error, body.wp-admin .is-dismissible, body.wp-admin .notice{display: none !important;} </style>';
+                        echo '<style>
+                            body.wp-admin .update-nag,
+                            body.wp-admin .updated,
+                            body.wp-admin .error,
+                            body.wp-admin .is-dismissible,
+                            body.wp-admin .notice,
+                            #yoast-indexation-warning{display: none !important;}
+
+                            body.wp-admin #loco-content .notice,
+                            body.wp-admin #loco-notices .notice{display:block !important;}
+                        </style>';
+                    }
+
+                    // Hide PHP Updates from the wordpress backend
+                    if (in_array('Hide PHP Updates', $posts_from_db)) {
+                        echo '<style>#dashboard_php_nag {display:none;}</style>';
                     }
                 }
             }

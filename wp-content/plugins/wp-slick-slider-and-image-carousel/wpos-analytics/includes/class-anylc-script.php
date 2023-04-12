@@ -32,10 +32,11 @@ class Wpos_Anylc_Script {
 		if( !empty($_GET['message']) && $_GET['message'] == 'wpos_anylc_promotion' && !empty($_GET['wpos_anylc_pdt']) && !empty($_GET['wpos_anylc_promo_pdt']) ) {
 			global $wpos_analytics_product;
 
-			$promotion 		= 1;
-			$promotion_pdt 	= explode( ',', $_GET['wpos_anylc_promo_pdt'] );
+			$promotion 				= 1;
+			$wpos_anylc_promo_pdt	= sanitize_text_field( $_GET['wpos_anylc_promo_pdt'] );
+			$promotion_pdt 			= explode( ',', $wpos_anylc_promo_pdt );
 
-			$anylc_pdt 		= $_GET['wpos_anylc_pdt'];
+			$anylc_pdt 		= sanitize_text_field( $_GET['wpos_anylc_pdt'] );
 			$anylc_pdt_data = isset( $wpos_analytics_product[ $anylc_pdt ] ) ? $wpos_analytics_product[ $anylc_pdt ] : false;
 
 			if( !empty($promotion_pdt) ) {

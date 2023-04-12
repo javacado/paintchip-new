@@ -1,3 +1,6 @@
+ "use strict";
+var wpfMultySelectedTraslate = typeof wpfMultySelectedTraslate !== 'undefined' ? wpfMultySelectedTraslate : ' selected';
+
 /**
  * Display a nice easy to use multiselect list
  * @Version: 2.0.2
@@ -507,7 +510,7 @@
 
             // if copy is larger than button width use "# selected"
             if( copyWidth > placeWidth ) {
-                placeholder.text( selOpts.length +' selected' );
+                placeholder.text( selOpts.length + wpfMultySelectedTraslate );
             }
             // if options selected then use those
             else if( selOpts.length ) {

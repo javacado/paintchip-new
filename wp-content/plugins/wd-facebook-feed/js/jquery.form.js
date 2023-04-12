@@ -364,7 +364,7 @@
                         el.prop('disabled', false);
                     }
                     else {
-                        el.removeAttr('disabled');
+                        el.removeProp('disabled');
                     }
                 }
             }

@@ -19,6 +19,7 @@ class FrameWpf {
 	private $_scriptsVars = array();
 	private $_mod = '';
 	private $_action = '';
+	private $_proVersion = null;
 	/**
 	 * Object with result of executing non-ajax module request
 	 */
@@ -132,7 +133,9 @@ class FrameWpf {
 		register_deactivation_hook(WPF_DIR . DS . WPF_MAIN_FILE, array( 'UtilsWpf', 'deactivatePlugin' ) );
 
 		add_action('init', array($this, 'connectLang'));
+		add_filter('the_content', array('WoofiltersWpf', 'getProductsShortcode'), -99999);
 	}
+
 	public function connectLang() {
 		global $langOK;
 		$langOK = load_plugin_textdomain('woo-product-filter', false, WPF_PLUG_NAME . '/languages/');
@@ -378,7 +381,24 @@ class FrameWpf {
 	public function addScripts() {
 		if (!empty($this->_scripts)) {
 			foreach ($this->_scripts as $s) {
-				wp_enqueue_script($s['handle'], $s['src'], $s['deps'], $s['ver'], $s['in_footer']);
+
+				if ( ! function_exists( 'is_plugin_active' ) ) {
+					require_once ABSPATH . 'wp-admin/includes/plugin.php';
+				}
+
+				$enqueue = true;
+
+				// if the oxygen plugin is activated then check if the script is already registered
+				if ( is_plugin_active( 'oxygen/functions.php' ) && 'jquery-ui-autocomplete' === $s['handle'] ) {
+					$wp_scripts = wp_scripts();
+					if ( isset( $wp_scripts->registered[ $s['handle'] ] ) ) {
+						$enqueue = false;
+					}
+				}
+
+				if ( $enqueue ) {
+					wp_enqueue_script( $s['handle'], $s['src'], $s['deps'], $s['ver'], $s['in_footer'] );
+				}
 
 				if ($s['vars'] || isset($this->_scriptsVars[$s['handle']])) {
 					$vars = array();
@@ -400,7 +420,12 @@ class FrameWpf {
 	}
 	public function addJSVar( $script, $name, $val ) {
 		if ($this->_scriptsInitialized) {
-			wp_localize_script($script, $name, $val);
+			if ( is_array( $val ) ) {
+				wp_localize_script( $script, $name, $val );
+			} else {
+				$code = "var {$name} = '{$val}';";
+				wp_add_inline_script( $script, $code, 'before' );
+			}
 		} else {
 			$this->_scriptsVars[$script][$name] = $val;
 		}
@@ -481,5 +506,21 @@ class FrameWpf {
 	}
 	public function isPro() {
 		return $this->moduleExists('license') && $this->getModule('license') && $this->getModule('access');
+	}
+
+	public function proVersionCompare( $requires, $compare = '>', $notPro = true ) {
+		if ( is_null( $this->_proVersion ) ) {
+			if ( $this->isPro() && function_exists( 'getProPlugFullPathWpf' ) ) {
+				if ( ! function_exists( 'get_plugin_data' ) ) {
+					require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+				}
+				$plugin_data       = get_file_data( getProPlugFullPathWpf(), array( 'Version' => 'Version' ) );
+				$this->_proVersion = $plugin_data['Version'];
+			} else {
+				$this->_proVersion = false;
+			}
+		}
+
+		return ( ( $notPro && false === $this->_proVersion ) || version_compare( $this->_proVersion, $requires, $compare ) );
 	}
 }

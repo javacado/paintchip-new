@@ -524,10 +524,12 @@ $main_url='#';
               }
               ?>
 							<script>
+                jQuery(document).ready(function() {
 							  var id_object_id_<?php echo $ffwd; ?> = '<?php echo json_encode($this->model->id_object_id_json); ?>';
 									  graph_url_<?php echo $ffwd; ?> = '<?php echo $this->model->graph_url; ?>';
 										ffwd_fill_likes_thumnail(JSON.parse(id_object_id_<?php echo $ffwd; ?>), '<?php echo $ffwd; ?>', graph_url_<?php echo $ffwd; ?>);
-						  </script>
+                });
+              </script>
             </div>
             <?php
             if ($ffwd_info['pagination_type']  && $ffwd_info['objects_per_page'] && ($theme_row->page_nav_position == 'bottom')) {

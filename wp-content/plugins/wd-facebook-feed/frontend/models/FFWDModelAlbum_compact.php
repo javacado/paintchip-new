@@ -18,7 +18,7 @@ class FFWDModelAlbum_compact extends FFWDModelMain {
   ////////////////////////////////////////////////////////////////////////////////////////
   // Public Methods                                                                     //
   ////////////////////////////////////////////////////////////////////////////////////////
-  public function get_ffwd_data($id, $objects_per_page, $sort_by, $ffwd, $sort_direction = ' ASC ', $pagination_type) {
+  public function get_ffwd_data($id, $objects_per_page, $sort_by, $ffwd, $pagination_type, $sort_direction = ' ASC ') {
     global $wpdb;
     $album_id = (isset($_REQUEST['album_id_' . $ffwd]) ? sanitize_text_field($_REQUEST['album_id_' . $ffwd]) : 0);
     if (isset($_REQUEST['page_number_' . $ffwd]) && $_REQUEST['page_number_' . $ffwd]) {

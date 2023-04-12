@@ -270,3 +270,21 @@ if (!function_exists('ctype_alpha')) {
 		return (bool) preg_match('/[^\pL]+/', $text);
 	}
 }
+
+if ( ! function_exists( 'trueRequestWpf' ) ) {
+	function trueRequestWpf() {
+		$request = true;
+		$uri     = ( isset( $_SERVER['REQUEST_URI'] ) && '' !== $_SERVER['REQUEST_URI'] ) ? esc_url_raw( $_SERVER['REQUEST_URI'] ) : '';
+
+		if ( '' === $uri ) {
+			$request = false;
+		} else {
+			preg_match( '/^\/wp-json\/|\.png$|\.jpg$|\.ico$/', $uri, $matches );
+			if ( ! empty( $matches ) ) {
+				$request = false;
+			}
+		}
+
+		return $request;
+	}
+}

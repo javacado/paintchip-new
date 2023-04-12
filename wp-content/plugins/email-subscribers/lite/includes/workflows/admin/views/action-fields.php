@@ -2,7 +2,6 @@
 /**
  * Workflow single action fields
  *
- * @author      Icegram
  * @since       4.4.1
  * @version     1.0
  * @package     Email Subscribers
@@ -11,7 +10,7 @@
 /**
  * View args:
  *
- * @var ES_action $action
+ * @var ES_action $workflow_action
  * @var ES_Workflow $workflow
  * @var $fill_fields (optional)
  */
@@ -21,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-if ( ! $action || ! $action_number ) {
+if ( ! $workflow_action || ! $action_number ) {
 	return;
 }
 
@@ -31,10 +30,10 @@ if ( ! isset( $fill_fields ) ) {
 }
 
 if ( $fill_fields ) {
-	$action = $workflow->get_action( $action_number ); // phpcs:ignore
+	$workflow_action = $workflow->get_action( $action_number );
 }
 
-$fields = $action->get_fields();
+$fields = $workflow_action->get_fields();
 ?>
 
 <?php
@@ -44,7 +43,7 @@ foreach ( $fields as $field ) :
 	$field->set_name_base( "ig_es_workflow_data[actions][$action_number]" );
 
 	if ( $fill_fields ) {
-		$value = $action->get_option_raw( $field->get_name() );
+		$value = $workflow_action->get_option_raw( $field->get_name() );
 	} else {
 		$value = '';
 	}
@@ -57,20 +56,25 @@ foreach ( $fields as $field ) :
 
 		<td class="ig-es-table__col ig-es-table__col--label">
 			<?php
-			if( 'checkbox' !== $field->get_type() ) :
-			?>
+			if ( 'checkbox' !== $field->get_type() ) :
+				?>
 			<label><?php echo esc_html( $field->get_title() ); ?>
 				<?php if ( $field->get_required() ) : ?>
 					<span class="required">*</span>
 				<?php endif; ?>
 			</label>
-			<?php
+				<?php
 			endif;
 			?>
 		</td>
 
 		<td class="ig-es-table__col ig-es-table__col--field ig-es-field-wrap">
 			<?php $field->render( $value ); ?>
+			<?php if ( $field->get_description() ) : ?>
+				<p class="ig-es-field-description">
+				<?php echo wp_kses_post( $field->get_description() ); ?>
+				</p>
+			<?php endif; ?>
 		</td>
 	</tr>
 

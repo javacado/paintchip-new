@@ -324,7 +324,7 @@ function choose_fb_content_type(wd_fb_prefix, value) {
   jQuery('#'+wd_fb_prefix+'_content_type_timeline').hide();
   jQuery('#'+wd_fb_prefix+'_content_type_timeline_type').hide();
 
-  jQuery('#'+wd_fb_prefix+'_content_'+value).attr('checked', 'checked');
+  jQuery('#'+wd_fb_prefix+'_content_'+value).prop('checked', true);
   jQuery('#'+wd_fb_prefix+'_content_type_'+value).show();
 
     if (jQuery('#ffwd_type').val() == 'group') {
@@ -344,7 +344,7 @@ function choose_fb_content_type(wd_fb_prefix, value) {
     if (jQuery('#ffwd_type').val() != 'group') {
         jQuery('#' + wd_fb_prefix + '_content_type_' + value + '_type').show();
     }
-if(  jQuery('#'+wd_fb_prefix+'_content_timeline').prop('checked'))
+if(  jQuery('#'+wd_fb_prefix+'_content_timeline').prop('checked') )
 {
 
 jQuery('.ffwd_blog_style').css('display','');
@@ -370,7 +370,7 @@ switch (jQuery('input[name="ffwd_specific"]:checked').val()) {
   if(!jQuery('.ffwd_album_compact ').hasClass('ffwd_view_s'))
   {
     ffwd_view_type(wd_fb_prefix, 'album_compact', jQuery('.'+wd_fb_prefix+'album_compact'))
-    jQuery('.ffwd_album_compact').find('input[type="radio"]').attr('checked','checked');
+    jQuery('.ffwd_album_compact').find('input[type="radio"]').prop( 'checked', true );
 
     jQuery('.ffwd_album_compact ').addClass('ffwd_view_s')
 
@@ -388,7 +388,7 @@ switch (jQuery('input[name="ffwd_specific"]:checked').val()) {
   if(!jQuery('.ffwd_blog_style ').hasClass('ffwd_view_s') && !jQuery('.ffwd_thumbnails ').hasClass('ffwd_view_s'))
   {
     ffwd_view_type(wd_fb_prefix, 'thumbnails', jQuery('.'+wd_fb_prefix+'thumbnails'))
-    jQuery('.ffwd_thumbnails').find('input[type="radio"]').attr('checked','checked');
+    jQuery('.ffwd_thumbnails').find('input[type="radio"]').prop( 'checked', true );
 
     jQuery('.ffwd_thumbnails ').addClass('ffwd_view_s')
 
@@ -410,7 +410,7 @@ switch (jQuery('input[name="ffwd_specific"]:checked').val()) {
   {
     ffwd_view_type(wd_fb_prefix, 'thumbnails', jQuery('.'+wd_fb_prefix+'thumbnails'))
     jQuery('.ffwd_thumbnails ').addClass('ffwd_view_s')
-    jQuery('.ffwd_thumbnails').find('input[type="radio"]').attr('checked','checked');
+    jQuery('.ffwd_thumbnails').find('input[type="radio"]').prop('checked', true );
 
 
   }
@@ -600,20 +600,20 @@ function spider_show_hide_weights() {
 // Check all items.
 function spider_check_all_items() {
   spider_check_all_items_checkbox();
-  // if (!jQuery('#check_all').attr('checked')) {
+  // if (!jQuery('#check_all').prop('checked')) {
     jQuery('#check_all').trigger('click');
   // }
 }
 function spider_check_all_items_checkbox() {
-  if (jQuery('#check_all_items').attr('checked')) {
-    jQuery('#check_all_items').attr('checked', false);
+  if (jQuery('#check_all_items').prop('checked')) {
+    jQuery('#check_all_items').prop('checked', false);
     jQuery('#draganddrop').hide();
   }
   else {
     var saved_items = (parseInt(jQuery(".displaying-num").html()) ? parseInt(jQuery(".displaying-num").html()) : 0);
     var added_items = (jQuery('input[id^="check_pr_"]').length ? parseInt(jQuery('input[id^="check_pr_"]').length) : 0);
     var items_count = added_items + saved_items;
-    jQuery('#check_all_items').attr('checked', true);
+    jQuery('#check_all_items').prop('checked', true);
     if (items_count) {
       jQuery('#draganddrop').html("<strong><p>Selected " + items_count + " item" + (items_count > 1 ? "s" : "") + ".</p></strong>");
       jQuery('#draganddrop').show();
@@ -622,8 +622,8 @@ function spider_check_all_items_checkbox() {
 }
 
 function spider_check_all(current) {
-  if (!jQuery(current).attr('checked')) {
-    jQuery('#check_all_items').attr('checked', false);
+  if (!jQuery(current).prop('checked')) {
+    jQuery('#check_all_items').prop('checked', false);
     jQuery('#draganddrop').hide();
   }
 }
@@ -771,7 +771,7 @@ function bwg_check_checkboxes() {
   ids_array = ids_string.split(",");
   for (var i in ids_array) {
     if (ids_array.hasOwnProperty(i) && ids_array[i]) {
-      if (jQuery("#check_" + ids_array[i]).attr('checked') == 'checked') {
+      if (jQuery("#check_" + ids_array[i]).prop('checked') == true) {
         flag = true;
       }
 	}
@@ -805,7 +805,7 @@ function bwg_inputs() {
 }
 
 function bwg_enable_disable(display, id, current) {
-  jQuery("#" + current).attr('checked', 'checked');
+  jQuery("#" + current).prop('checked', true );
   jQuery("#" + id).css('display', display);
   if(id == 'tr_slideshow_title_position') {
     jQuery("#tr_slideshow_full_width_title").css('display', display);

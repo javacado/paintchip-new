@@ -1,10 +1,11 @@
 <?php
 
 use Automattic\Jetpack\Assets;
+use Automattic\Jetpack\Blocks;
 use Automattic\Jetpack\Sync\Settings;
 
 class Jetpack_RelatedPosts {
-	const VERSION   = '20191011';
+	const VERSION   = '20210219';
 	const SHORTCODE = 'jetpack-related-posts';
 
 	private static $instance     = null;
@@ -72,7 +73,7 @@ class Jetpack_RelatedPosts {
 		// Add Related Posts to the REST API Post response.
 		add_action( 'rest_api_init', array( $this, 'rest_register_related_posts' ) );
 
-		jetpack_register_block(
+		Blocks::jetpack_register_block(
 			'jetpack/related-posts',
 			array(
 				'render_callback' => array( $this, 'render_block' ),
@@ -405,22 +406,6 @@ EOT;
 		if ( $display_lower_row ) {
 			$rows_markup .= $this->render_block_row( $lower_row_posts, $block_attributes );
 		}
-
-		/*
-		 * Below is a hack to get the block content to render correctly.
-		 *
-		 * This functionality should be covered in /inc/blocks.php but due to an error,
-		 * this has not been fixed as of this writing.
-		 *
-		 * Alda has submitted a patch to Core in order to have this issue fixed at
-		 * https://core.trac.wordpress.org/ticket/45495 and
-		 * made it into WordPress 5.2.
-		 *
-		 * @todo update when WP 5.2 is the minimum support version.
-		 */
-		$priority = has_filter( 'the_content', 'wpautop' );
-		remove_filter( 'the_content', 'wpautop', $priority );
-		add_filter( 'the_content', '_restore_wpautop_hook', $priority + 1 );
 
 		return sprintf(
 			'<nav class="jp-relatedposts-i2" data-layout="%1$s">%2$s%3$s</nav>',
@@ -1633,6 +1618,7 @@ EOT;
 		$enabled = is_single()
 			&& ! is_attachment()
 			&& ! is_admin()
+			&& ! is_embed()
 			&& ( ! $this->_allow_feature_toggle() || $this->get_option( 'enabled' ) );
 
 		/**
@@ -1669,7 +1655,7 @@ EOT;
 	 * @return null
 	 */
 	protected function _enqueue_assets( $script, $style ) {
-		$dependencies = is_customize_preview() ? array( 'customize-base' ) : array( 'jquery' );
+		$dependencies = is_customize_preview() ? array( 'customize-base' ) : array();
 		if ( $script ) {
 			wp_enqueue_script(
 				'jetpack_related-posts',

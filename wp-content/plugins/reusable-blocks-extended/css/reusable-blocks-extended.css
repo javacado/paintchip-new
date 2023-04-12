@@ -9,11 +9,8 @@
 #dashboard_right_now span.wp_block-count:before {
 	content: "\f180";
 }
-.post-type-wp_block #title.column-title {
-	width: 200px;
-}
-.column-reblex-reusable-instances {
-	width: 300px;
+.reblex-delete-pattern a {
+	color: #a00;
 }
 .reblex-reusable-instances p.reblex_instance_label,
 .reblex-reusable-instances p.reblex_instance_paragraph {
@@ -28,6 +25,9 @@
 }
 .column-reblex-reusable-preview {
 	width: 300px;
+}
+.column-reblex-reusable-conversion {
+	width: 230px;
 }
 .column-reblex-date-modified {
 	width: 100px;

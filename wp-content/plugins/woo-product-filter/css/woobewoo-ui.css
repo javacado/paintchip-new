@@ -394,6 +394,8 @@ ul.woobewoo-bar-controls > li.separator {
 }
 .wp-core-ui .ui-dialog .ui-button.ui-widget.ui-dialog-titlebar-close {
     right: 20px;
+    color: transparent;
+    outline: none;
 }
 
 /* Fix for WP 4.4 */
@@ -1141,4 +1143,9 @@ a.search-choice-close {
 }
 .woobewoo-tooltips-wrapper img{
     max-width: 400px;
+}
+@media screen and (min-width: 768px) {
+	.pl-sm-0 {
+		padding-left: 0!important;
+	}
 }

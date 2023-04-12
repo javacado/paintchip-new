@@ -107,8 +107,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php foreach ( $order->get_items() as $item ) : ?>
 
 						<?php
-							$product = apply_filters( 'wcdn_order_item_product', $order->get_product_from_item( $item ), $item );
 
+						$product = apply_filters( 'wcdn_order_item_product', $item->get_product(), $item );
+						if ( ! $product ) {
+							continue;
+						}
 						if ( version_compare( get_option( 'woocommerce_version' ), '3.0.0', '>=' ) ) {
 							$item_meta = new WC_Order_Item_Product( $item['item_meta'], $product );
 						} else {
@@ -189,8 +192,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 										<?php endif; ?>
 
 										<?php
-
-											$fields = apply_filters( 'wcdn_order_item_fields', array(), $product, $order, $item );
+										wcdn_print_extra_fields( $item );
+										$fields = apply_filters( 'wcdn_order_item_fields', array(), $product, $order, $item );
 
 										foreach ( $fields as $field ) :
 											?>
@@ -227,7 +230,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<tr>
 							<td class="total-name"><span><?php echo wp_kses_post( $total['label'] ); ?></span></td>
 							<td class="total-item-price"></td>
+							<?php if ( 'Total' === $total['label'] ) { ?>
+							<td class="total-quantity"><?php echo wp_kses_post( $order->get_item_count() ); ?></td>
+							<?php } else {  ?>
 							<td class="total-quantity"></td>
+							<?php } ?>
 							<td class="total-price"><span><?php echo wp_kses_post( $total['value'] ); ?></span></td>
 						</tr>
 					<?php endforeach; ?>

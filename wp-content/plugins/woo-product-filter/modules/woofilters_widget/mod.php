@@ -3,9 +3,19 @@ class Woofilters_WidgetWpf extends ModuleWpf {
 	public function init() {
 		parent::init();
 		add_action('widgets_init', array($this, 'registerWidget'));
+		if (did_action('elementor/loaded')) {
+			add_action('elementor/widgets/widgets_registered', array($this, 'registerElementorWidget'));
+		}
 	}
 	public function registerWidget() {
 		return register_widget('WpfWoofiltersWidget');
+	}
+	private function includeElementorWidgetsFiles() {
+		require_once __DIR__ . '/elementor/woofilters.php';
+	}
+	public function registerElementorWidget() {
+		$this->includeElementorWidgetsFiles();
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Woofilters_ElementorWidgetWpf() );
 	}
 }
 /**

@@ -30,7 +30,7 @@ class FFWDModelThemes_ffwd {
   ////////////////////////////////////////////////////////////////////////////////////////
   public function get_rows_data() {
     global $wpdb;
-    $where = ((isset($_POST['search_value']) && (sanitize_text_field($_POST['search_value']) != '')) ? 'WHERE name LIKE "%' . sanitize_text_field($_POST['search_value']) . '%"' : '');
+    $where = ((isset($_POST['search_value']) && (sanitize_text_field($_POST['search_value']) != '')) ? $wpdb->prepare('WHERE name LIKE %s', '%' . sanitize_text_field($_POST['search_value']) . '%') : '');
     $asc_or_desc = ((isset($_POST['asc_or_desc'])) ? sanitize_text_field($_POST['asc_or_desc']) : 'asc');
     $asc_or_desc = ($asc_or_desc != 'asc') ? 'desc' : 'asc';
     $order_by = ' ORDER BY ' . ((isset($_POST['order_by']) && sanitize_text_field($_POST['order_by']) != '') ? sanitize_text_field($_POST['order_by']) : 'id') . ' ' . $asc_or_desc;
@@ -362,7 +362,7 @@ class FFWDModelThemes_ffwd {
 
   public function page_nav() {
     global $wpdb;
-    $where = ((isset($_POST['search_value']) && (sanitize_text_field($_POST['search_value']) != '')) ? 'WHERE name LIKE "%' . sanitize_text_field($_POST['search_value']) . '%"'  : '');
+    $where = ((isset($_POST['search_value']) && (sanitize_text_field($_POST['search_value']) != '')) ? $wpdb->prepare('WHERE name LIKE %s', '%' . sanitize_text_field($_POST['search_value']) . '%')  : '');
     $query = "SELECT COUNT(*) FROM " . $wpdb->prefix . "wd_fb_theme " . $where;
     $total = $wpdb->get_var($query);
     $page_nav['total'] = $total;

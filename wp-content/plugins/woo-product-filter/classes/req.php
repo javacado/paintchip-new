@@ -5,7 +5,7 @@ class ReqWpf {
 	public static $_requestWithNonce = false;
 
 	public static function init() {
-		// Empty for now
+		add_filter('sanitize_text_field', array('ReqWpf', 'sanitizeData'), 999, 2);
 	}
 	public static function startSession() {
 		if (!UtilsWpf::isSessionStarted()) {
@@ -78,6 +78,44 @@ class ReqWpf {
 				break;
 		}
 		return $default;
+	}
+
+
+	/**
+	 * Getting similar parameters when redirecting to set filter values
+	 *
+	 * @param string $part part of parameter
+	 * @return string
+	 */
+	public static function getFilterRedirect( $part ) {
+		$params = [];
+		if (self::$_requestWithNonce) {
+			$nonce = empty($_REQUEST['_wpnonce']) ? '' : sanitize_text_field($_REQUEST['_wpnonce']);
+			if (!wp_verify_nonce($nonce, 'my-nonce')) {
+				echo esc_html__('Security check', 'woo-product-filter');
+				exit();
+			}
+		}
+		if ( isset($_GET['redirect']) ) {
+			foreach ( $_GET as $key => $value ) {
+				if ( strpos ($key, $part) === 0 ) {
+					$params[] = sanitize_text_field( $value );
+				}
+			}
+		}
+
+		return implode('|', $params);
+	}
+
+	public static function sanitizeData( $filtered, $value ) {
+		return is_array($value) ? self::sanitizeArray($value) : $filtered;
+	}
+	public static function sanitizeArray( $arr ) {
+		$newArr = array();
+		foreach ($arr as $k => $v) {
+			$newArr[$k] = is_array($v) ? self::sanitizeArray($v) : _sanitize_text_fields($v, false);
+		}
+		return $newArr;
 	}
 	public static function isEmpty( $name, $from = 'all' ) {
 		$val = self::getVar($name, $from);

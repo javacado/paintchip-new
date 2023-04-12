@@ -120,9 +120,29 @@ class OptionsWpf extends ModuleWpf {
 				'general' => array(
 					'label' => esc_html__('General', 'woo-product-filter'),
 					'opts' => array(
-						'send_stats' => array('label' => esc_html__('Send usage statistics', 'woo-product-filter'), 'desc' => esc_html__('Send information about what plugin options you prefer to use, this will help us make our solution better for You.', 'woo-product-filter'), 'def' => '0', 'html' => 'checkboxHiddenVal'),
-						'count_product_shop' => array('label' => esc_html__('Set number of displayed products', 'woo-product-filter'), 'desc' => esc_html__('Set number of displayed products. Leave blank for the default value.', 'woo-product-filter'), 'def' => '', 'html' => 'input'),
-						'move_sidebar' => array('label' => esc_html__('Move Sidebar To Top For Mobile', 'woo-product-filter'), 'desc' => esc_html__('Turn on if you want the sidebar to appear above content on mobile devices.', 'woo-product-filter'), 'def' => '0', 'html' => 'checkboxHiddenVal'),
+						'send_stats' => array(
+							'label' => esc_html__(
+							'Send usage statistics',
+							'woo-product-filter'),
+							'desc' => esc_html__('Send information about what plugin options you prefer to use, this will help us make our solution better for You.', 'woo-product-filter'),
+							'def' => '0',
+							'html' => 'checkboxHiddenVal'
+						),
+						'count_product_shop' => array(
+							'label' => esc_html__(
+							'Set number of displayed products', 'woo-product-filter'),
+							'desc' => esc_html__('Set number of displayed products. Leave blank for the default value.', 'woo-product-filter'),
+							'def' => '',
+							'html' => 'input'
+						),
+						'move_sidebar' => array(
+							'label' => esc_html__(
+							'Move Sidebar To Top For Mobile',
+							'woo-product-filter'),
+							'desc' => esc_html__('Turn on if you want the sidebar to appear above content on mobile devices. Some themes do not have blocks required for this option', 'woo-product-filter'),
+							'def' => '0',
+							'html' => 'checkboxHiddenVal'
+						),
 					),
 				),
 			));

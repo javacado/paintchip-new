@@ -4,21 +4,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! class_exists( 'IG_Feedback_V_1_2_3' ) ) {
+if ( ! class_exists( 'IG_Feedback_V_1_2_5' ) ) {
 	/**
 	 * IG Feedback
 	 *
 	 * The IG Feedback class adds functionality to get quick interactive feedback from users.
 	 * There are different types of feedabck widget like Stars, Emoji, Thubms Up/ Down, Number etc.
 	 *
-	 * @class       IG_Feedback_V_1_2_3
+	 * @class       IG_Feedback_V_1_2_5
 	 * @since       1.0.0
 	 * @copyright   Copyright (c) 2019, Icegram
 	 * @license     https://opensource.org/licenses/gpl-license GNU Public License
-	 * @author      Icegram
 	 * @package     feedback
 	 */
-	class IG_Feedback_V_1_2_3 {
+	class IG_Feedback_V_1_2_5 {
 
 		/**
 		 * Version of Feedback Library
@@ -27,7 +26,7 @@ if ( ! class_exists( 'IG_Feedback_V_1_2_3' ) ) {
 		 * @var string
 		 *
 		 */
-		public $version = '1.2.3';
+		public $version = '1.2.5';
 		/**
 		 * The API URL where we will send feedback data.
 		 *
@@ -453,7 +452,8 @@ if ( ! class_exists( 'IG_Feedback_V_1_2_3' ) ) {
 							is_dev_mode: '<?php echo $this->is_dev_mode; ?>',
 							set_transient: '<?php echo $params['set_transient']; ?>'
 							//system_info: enable_system_info
-						}
+						},
+						security: '<?php echo esc_js( wp_create_nonce( $this->plugin_abbr . '-admin-ajax-nonce' ) ); ?>'
 					};
 
 					return jQuery.post(ajaxurl, data);
@@ -684,7 +684,8 @@ if ( ! class_exists( 'IG_Feedback_V_1_2_3' ) ) {
 								set_transient: '<?php echo $params['set_transient']; ?>',
 								meta_info: meta,
 								system_info: system_info
-							}
+							},
+							security: '<?php echo esc_js( wp_create_nonce( $this->plugin_abbr . '-admin-ajax-nonce' ) ); ?>'
 						};
 
 						return jQuery.post(ajaxurl, data);
@@ -949,7 +950,8 @@ if ( ! class_exists( 'IG_Feedback_V_1_2_3' ) ) {
 								set_transient: '<?php echo $params['set_transient']; ?>',
 								meta_info: meta,
 								system_info: system_info
-							}
+							},
+							security: '<?php echo esc_js( wp_create_nonce( $this->plugin_abbr . '-admin-ajax-nonce' ) ); ?>'
 						};
 
 						return jQuery.post(ajaxurl, data);
@@ -1186,7 +1188,8 @@ if ( ! class_exists( 'IG_Feedback_V_1_2_3' ) ) {
 								set_cookie: '',
 								meta_info: meta,
 								system_info: system_info
-							}
+							},
+							security: '<?php echo esc_js( wp_create_nonce( $this->plugin_abbr . '-admin-ajax-nonce' ) ); ?>'
 						};
 
 						var submitSurvey = $.post(ajaxurl, data);
@@ -1640,6 +1643,8 @@ if ( ! class_exists( 'IG_Feedback_V_1_2_3' ) ) {
 		 * Send feedback to server
 		 */
 		function submit_feedback() {
+
+			check_ajax_referer( $this->plugin_abbr . '-admin-ajax-nonce', 'security' );
 
 			$data = ! empty( $_POST ) ? $_POST : array();
 

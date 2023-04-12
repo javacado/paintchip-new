@@ -1,55 +1,132 @@
 <?php
 
 /**
+ * Class to handle single workflow options
+ * 
  * @class Workflow
  *
  * @credit: Inspired by AutomateWoo
  */
 class ES_Workflow {
 
-	/** @var int */
+	/**
+	 * Workflow id
+	 *
+	 * @since 4.4.1
+	 * @var int
+	 */
 	public $id;
 
-	/** @var string */
+	/**
+	 * Workflow title
+	 *
+	 * @since 4.4.1
+	 * @var string
+	 */
 	public $title;
 
-	/** @var string */
+	/**
+	 * Workflow name(slug)
+	 *
+	 * @since 4.4.1
+	 * @var string
+	 */
 	public $name;
 
-	/** @var Trigger */
+	/**
+	 * Workflow trigger object
+	 *
+	 * @since 4.4.1
+	 * @var ES_Workflow_Trigger
+	 */
 	private $trigger;
 
-	/** @var Actions[] */
+	/**
+	 * Workflow actions
+	 *
+	 * @since 4.4.1
+	 * @var ES_Workflow_Actions[]
+	 */
 	private $actions;
 
-	/** @var ES_Workflow_Data_Layer */
+	/**
+	 * Workflow data absctraction class object
+	 *
+	 * @since 4.4.1
+	 * @var ES_Workflow_Data_Layer
+	 */
 	private $data_layer;
 
-	/** @var integer */
+	/**
+	 * Workflow status
+	 *
+	 * @since 4.4.1
+	 * @var integer
+	 */
 	public $status = 0;
 
-	/** @var string */
+	/**
+	 * Workflow trigger name
+	 *
+	 * @since 4.4.1
+	 * @var string
+	 */
 	public $trigger_name;
 
-	/** @var array */
+	/**
+	 * Workflow trigger options
+	 *
+	 * @since 4.4.1
+	 * @var array
+	 */
 	public $trigger_options;
 
-	/** @var array */
+	/**
+	 * Workflow rules
+	 *
+	 * @since 4.4.1
+	 * @var array
+	 */
 	public $rules;
 
-	/** @var array */
+	/**
+	 * Workflow meta data
+	 *
+	 * @since 4.4.1
+	 * @var array
+	 */
 	public $meta;
 
-	/** @var integer */
+	/**
+	 * Workflow priority
+	 *
+	 * @since 4.4.1
+	 * @var integer
+	 */
 	public $priority = 0;
 
-	/** @var string */
+	/**
+	 * Workflow creation date/time
+	 *
+	 * @since 4.4.1
+	 * @var string
+	 */
 	public $created_at;
 
-	/** @var string */
+	/**
+	 * Workflow last update date/time
+	 *
+	 * @since 4.4.1
+	 * @var string
+	 */
 	public $updated_at;
 
-	/** @var bool */
+	/**
+	 * Flag to check whether valid workflow object or not
+	 *
+	 * @since 4.4.1
+	 * @var bool
+	 */
 	public $exists = false;
 
 	/**
@@ -63,9 +140,11 @@ class ES_Workflow {
 	);
 
 	/**
+	 * Class constructor
+	 * 
 	 * @param $post mixed (object or post ID)
 	 */
-	function __construct( $workflow = null ) {
+	public function __construct( $workflow = null ) {
 
 		if ( is_numeric( $workflow ) ) {
 			// Get from id
@@ -91,8 +170,6 @@ class ES_Workflow {
 
 	/**
 	 * Retrieve ES_Workflow instance.
-	 *
-	 * @since 3.5.0
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -123,32 +200,54 @@ class ES_Workflow {
 
 
 	/**
+	 * Get workflow id
+	 * 
 	 * @return int
 	 */
-	function get_id() {
+	public function get_id() {
 		return $this->id ? ES_Clean::id( $this->id ) : 0;
 	}
 
 
 	/**
+	 * Get workflow title
+	 * 
 	 * @return string
 	 */
-	function get_title() {
+	public function get_title() {
 		return $this->title;
 	}
 
 
 	/**
+	 * Get creation date/time of workflow.
+	 * 
 	 * @return string
 	 */
-	function get_date_created() {
+	public function get_date_created() {
 		return $this->created_at;
 	}
 
 	/**
+	 * Get variable processor object
+	 * 
+	 * @return IG_ES_Variables_Processor
+	 */
+	public function variable_processor() {
+
+		if ( ! isset( $this->variable_processor ) ) {
+			$this->variable_processor = new IG_ES_Variables_Processor( $this );
+		}
+
+		return $this->variable_processor;
+	}
+
+	/**
+	 * Get workflow data layer object.
+	 * 
 	 * @return ES_Workflow_Data_Layer
 	 */
-	function data_layer() {
+	public function data_layer() {
 		if ( ! isset( $this->data_layer ) ) {
 			$this->data_layer = new ES_Workflow_Data_Layer();
 		}
@@ -158,9 +257,11 @@ class ES_Workflow {
 
 
 	/**
-	 * @return Trigger|false
+	 * Get workflow trigger object
+	 * 
+	 * @return ES_Workflow_Trigger|false
 	 */
-	function get_trigger() {
+	public function get_trigger() {
 		if ( ! isset( $this->trigger ) ) {
 
 			$this->trigger = false;
@@ -177,9 +278,11 @@ class ES_Workflow {
 
 
 	/**
+	 * Get all actions in current workflow.
+	 * 
 	 * @return ES_Workflow_Action[]
 	 */
-	function get_actions() {
+	public function get_actions() {
 
 		$workflow_actions = array();
 
@@ -193,7 +296,7 @@ class ES_Workflow {
 					try {
 						$action_obj = clone $this->get_action_from_action_fields( $action );
 						$action_obj->set_options( $action );
-						$action_obj->trigger = $this->get_trigger();
+						$action_obj->trigger    = $this->get_trigger();
 						$workflow_actions[ $n ] = $action_obj;
 						$n++;
 					} catch ( Exception $e ) {
@@ -213,7 +316,7 @@ class ES_Workflow {
 	 * @param $number
 	 * @return Action|false
 	 */
-	function get_action( $number ) {
+	public function get_action( $number ) {
 
 		$actions = $this->get_actions();
 
@@ -230,7 +333,7 @@ class ES_Workflow {
 	 * @param ES_Workflow_Data_Layer|array $data_layer
 	 * @param bool                         $skip_validation
 	 */
-	function schedule( $data_layer = array(), $skip_validation = false ) {
+	public function schedule( $data_layer = array(), $skip_validation = false ) {
 
 		// setup language and data before validation occurs
 		$this->setup( $data_layer );
@@ -250,7 +353,7 @@ class ES_Workflow {
 							'queue_id' => $queue_id,
 						);
 						if ( function_exists( 'as_schedule_single_action' ) ) {
-							as_schedule_single_action( $queue_scheduled_at, 'ig_es_process_workflow_queue', array( $action_args ) );
+							as_schedule_single_action( $queue_scheduled_at, 'ig_es_process_workflow_queue', array( $action_args ), 'email-subscribers' );
 						}
 					}
 				}
@@ -286,23 +389,32 @@ class ES_Workflow {
 	}
 
 	/**
+	 * Validate workflow based on received data from the workflow trigger object.
+	 * 
 	 * @return bool
 	 */
-	function validate_workflow() {
+	public function validate_workflow() {
 
 		if ( ! $this->is_active() ) {
 			return false;
 		}
 
-		if ( ! $trigger = $this->get_trigger() ) {
+		$trigger = $this->get_trigger();
+		if ( ! $trigger ) {
 			return false;
 		}
 
 		if ( ! $trigger->validate_workflow( $this ) ) {
 			return false;
 		}
-
+		
+		// Allow third party developers to hook their validation logic.
 		if ( ! apply_filters( 'ig_es_custom_validate_workflow', true, $this ) ) {
+			return false;
+		}
+		
+		// Validate a workflow based on the trigger being used in it.
+		if ( ! apply_filters( 'ig_es_validate_workflow_' . $trigger->name, true, $this ) ) {
 			return false;
 		}
 
@@ -310,10 +422,12 @@ class ES_Workflow {
 	}
 
 	/**
+	 * Execute workflow actions.
+	 * 
 	 * @param  int <parameter_name> { parameter_description }
 	 * @return bool
 	 */
-	function run() {
+	public function run() {
 
 		do_action( 'ig_es_before_workflow_run', $this );
 
@@ -343,7 +457,7 @@ class ES_Workflow {
 	 * Clears any data that is related to the last run
 	 * The trigger and actions don't need to be reset because their data flows from the workflow options not the workflow data layer
 	 */
-	function reset_data() {
+	public function reset_data() {
 		$this->data_layer()->clear();
 	}
 
@@ -353,7 +467,7 @@ class ES_Workflow {
 	 *
 	 * @return ES_Workflow_Queue|false
 	 */
-	function queue() {
+	public function queue() {
 
 		$date  = false;
 		$queue = new ES_Workflow_Queue();
@@ -405,7 +519,7 @@ class ES_Workflow {
 	 *
 	 * @param array|Data_Layer|bool $data
 	 */
-	function setup( $data = false ) {
+	public function setup( $data = false ) {
 
 		// the only time data is false is in preview mode
 		if ( $data ) {
@@ -418,17 +532,19 @@ class ES_Workflow {
 	/**
 	 * Clean up after workflow run
 	 */
-	function cleanup() {
+	public function cleanup() {
 
 		$this->is_setup = false;
 	}
 
 
 	/**
+	 * Get workflow option data.
+	 * 
 	 * @param string $name
 	 * @return mixed
 	 */
-	function get_option( $name ) {
+	public function get_option( $name ) {
 
 		$options = $this->meta;
 
@@ -446,7 +562,7 @@ class ES_Workflow {
 	 * @since 4.4.0
 	 * @return string
 	 */
-	function get_timing_type() {
+	public function get_timing_type() {
 		$when        = ES_Clean::string( $this->get_option( 'when_to_run' ) );
 		$workflow_id = $this->get_id();
 		if ( ! $when ) {
@@ -462,7 +578,7 @@ class ES_Workflow {
 	 * @since 4.4.0
 	 * @return integer
 	 */
-	function get_timing_delay() {
+	public function get_timing_delay() {
 
 		$timing_type = $this->get_timing_type();
 
@@ -489,17 +605,21 @@ class ES_Workflow {
 
 
 	/**
+	 * Get set delay in workflow execution from scheduled date/time.
+	 * 
 	 * @return int
 	 */
-	function get_timing_delay_number() {
+	public function get_timing_delay_number() {
 		return (float) $this->get_option( 'run_delay_value' );
 	}
 
 
 	/**
+	 * Get unit of the delay settings.
+	 * 
 	 * @return string
 	 */
-	function get_timing_delay_unit() {
+	public function get_timing_delay_unit() {
 		return ES_Clean::string( $this->get_option( 'run_delay_unit' ) );
 	}
 
@@ -510,7 +630,7 @@ class ES_Workflow {
 	 * @param bool|integer $current_timestamp - optional, not GMT
 	 * @return bool|DateTime
 	 */
-	function calculate_scheduled_datetime( $current_timestamp = false ) {
+	public function calculate_scheduled_datetime( $current_timestamp = false ) {
 
 		if ( $this->get_timing_type() !== 'scheduled' ) {
 			return false;
@@ -560,9 +680,11 @@ class ES_Workflow {
 
 
 	/**
+	 * Get scheduled time to run workflow.
+	 * 
 	 * @return string
 	 */
-	function get_scheduled_time() {
+	public function get_scheduled_time() {
 		return ES_Clean::string( $this->get_option( 'scheduled_time' ) );
 	}
 
@@ -572,15 +694,17 @@ class ES_Workflow {
 	 *
 	 * @return array
 	 */
-	function get_scheduled_days() {
+	public function get_scheduled_days() {
 		return ES_Clean::ids( $this->get_option( 'scheduled_day' ) );
 	}
 
 
 	/**
+	 * Get the fixed time to run the workflow
+	 * 
 	 * @return DateTime|bool
 	 */
-	function get_fixed_time() {
+	public function get_fixed_time() {
 
 		$date = ES_Clean::string( $this->get_option( 'fixed_date' ) );
 		$time = array_map( 'absint', (array) $this->get_option( 'fixed_time' ) );
@@ -602,7 +726,7 @@ class ES_Workflow {
 	 *
 	 * @return DateTime|bool
 	 */
-	function get_variable_time() {
+	public function get_variable_time() {
 		$datetime = $this->get_option( 'queue_datetime', true );
 
 		if ( ! $datetime ) {
@@ -625,20 +749,8 @@ class ES_Workflow {
 	 *
 	 * @return string
 	 */
-	function get_trigger_name() {
+	public function get_trigger_name() {
 		return ES_Clean::string( $this->trigger_name );
-	}
-
-	/**
-	 * Set the trigger for the workflow.
-	 *
-	 * @since 4.4.0
-	 *
-	 * @param $trigger_name
-	 */
-	function set_trigger_name( $trigger_name ) {
-		$this->update_meta( 'trigger_name', ES_Clean::string( $trigger_name ) );
-		unset( $this->trigger );
 	}
 
 	/**
@@ -647,7 +759,7 @@ class ES_Workflow {
 	 *
 	 * @return array
 	 */
-	function get_trigger_options() {
+	public function get_trigger_options() {
 		$options = $this->trigger_options;
 		return is_array( $options ) ? $options : array();
 	}
@@ -662,7 +774,7 @@ class ES_Workflow {
 	 * 
 	 * @since 4.4.6
 	 */
-	function get_trigger_option( $name, $default = false ) {
+	public function get_trigger_option( $name, $default = false ) {
 		$options = $this->get_trigger_options();
 
 		if ( isset( $options[$name] ) ) {
@@ -684,7 +796,7 @@ class ES_Workflow {
 	 *
 	 * @return array
 	 */
-	function get_actions_data() {
+	public function get_actions_data() {
 		$actions_data = $this->actions;
 		return is_array( $actions_data ) ? array_map( array( $this, 'format_action_fields' ), $actions_data ) : array();
 	}
@@ -699,7 +811,7 @@ class ES_Workflow {
 	 *
 	 * @param array $raw_actions_data
 	 */
-	function set_actions_data( $raw_actions_data ) {
+	public function set_actions_data( $raw_actions_data ) {
 		$actions_data = array_map( array( $this, 'sanitize_action_fields' ), $raw_actions_data );
 		// remove empty values from actions array
 		$actions_data = array_filter( $actions_data );
@@ -716,7 +828,7 @@ class ES_Workflow {
 	 *
 	 * @return array
 	 */
-	function sanitize_action_fields( $action_fields ) {
+	public function sanitize_action_fields( $action_fields ) {
 		try {
 			$action = $this->get_action_from_action_fields( $action_fields );
 		} catch ( Exception $e ) {
@@ -773,19 +885,23 @@ class ES_Workflow {
 	}
 
 	/**
+	 * Set data item in workflow data layer.
+	 * 
 	 * @param $name
 	 * @param $item
 	 */
-	function set_data_item( $name, $item ) {
+	public function set_data_item( $name, $item ) {
 		$this->data_layer()->set_item( $name, $item );
 	}
 
 
 	/**
+	 * Set workflow data layer.
+	 * 
 	 * @param array|data_layer $data_layer
 	 * @param bool             $reset_workflow_data
 	 */
-	function set_data_layer( $data_layer, $reset_workflow_data ) {
+	public function set_data_layer( $data_layer, $reset_workflow_data ) {
 
 		if ( ! is_a( $data_layer, 'ES_Workflow_Data_Layer' ) ) {
 			$data_layer = new ES_Workflow_Data_Layer( $data_layer );
@@ -805,7 +921,7 @@ class ES_Workflow {
 	 * @param $name string
 	 * @return mixed
 	 */
-	function get_data_item( $name ) {
+	public function get_data_item( $name ) {
 		return $this->data_layer()->get_item( $name );
 	}
 
@@ -834,9 +950,9 @@ class ES_Workflow {
 	 */
 	public function get_status() {
 		$status = $this->status;
-		if ( $status == 1 ) {
+		if ( 1 == $status ) {
 			$status = 'active';
-		} elseif ( $status == 0 ) {
+		} elseif ( 0 == $status ) {
 			$status = 'inactive';
 		}
 
@@ -845,13 +961,15 @@ class ES_Workflow {
 
 
 	/**
+	 * Update worflow status.
+	 * 
 	 * @param string $status active|inactive i.e 1|0
 	 */
-	function update_status( $status ) {
+	public function update_status( $status ) {
 
-		if ( $status === 'active' ) {
+		if ( 'active' === $status ) {
 			$workflow_status = 1;
-		} elseif ( $status === 'inactive' ) {
+		} elseif ( 'inactive' === $status ) {
 			$workflow_status = 0;
 		} else {
 			$workflow_status = $status;
@@ -865,11 +983,12 @@ class ES_Workflow {
 	}
 
 	/**
+	 * Get workflow meta data from meta key.
+	 * 
 	 * @param $key
-	 * @param bool $single
 	 * @return mixed
 	 */
-	function get_meta( $key, $single = true ) {
+	public function get_meta( $key ) {
 		return isset( $this->meta[ $key ] ) ? $this->meta[ $key ] : '';
 	}
 

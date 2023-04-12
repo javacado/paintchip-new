@@ -2,7 +2,6 @@
 /**
  * Helper class for Workflow date time options
  *
- * @author      Icegram
  * @since       4.4.1
  * @version     1.0
  * @package     Email Subscribers
@@ -63,6 +62,8 @@ class ES_Workflow_DateTime extends DateTime {
 
 
 	/**
+	 * Convert to mysql date time string
+	 * 
 	 * @since 4.4.0
 	 *
 	 * @return string

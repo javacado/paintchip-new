@@ -1,6 +1,5 @@
 /*! Custom Sidebars - v3.2.3
- * https://premium.wpmudev.org/project/custom-sidebars-pro/
- * Copyright (c) 2019; * Licensed GPLv2+ */
+ * Copyright (c) 2020; * Licensed GPLv2+ */
 /*global window:false */
 /*global console:false */
 /*global document:false */

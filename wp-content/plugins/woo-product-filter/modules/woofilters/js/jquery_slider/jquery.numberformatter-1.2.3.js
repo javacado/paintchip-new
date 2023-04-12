@@ -128,7 +128,7 @@
 	};
 
 	function formatCodes(locale, isFullLocale) {
-		if (nfLocales.size() == 0)
+		if (nfLocales.length == 0)
 			init();
 
          // default values

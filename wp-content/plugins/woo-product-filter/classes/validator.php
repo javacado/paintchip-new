@@ -5,7 +5,7 @@ class ValidatorWpf {
 		self::$errors = array();
 		if (is_object($field) && get_class($field) != 'FieldWpf') {
 			$value = $field;
-			$field = new FieldWpfWpf('noMatter');
+			$field = new FieldWpf('noMatter');
 			$field->label = $label;
 			$field->setValue($value);
 			$field->setValidation($validate);

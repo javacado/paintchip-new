@@ -1,9 +1,9 @@
 === WP Change Default From Email ===
 Contributors: subodhghulaxe
 Tags: change from email, change default from email, email, wp email, wp default email, from email
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=9SDYCPQW2HH4Q&lc=IN&item_name=Subodh%20Ghulaxe&item_number=WP%20Change%20Default%20From%20Email¤cy_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
+Donate link: https://www.patreon.com/subodhghulaxe
 Requires at least: 2.7
-Tested up to: 5.2.3
+Tested up to: 5.7
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -55,10 +55,11 @@ To avoid your email being marked as spam, it is highly recommended that your dom
 
 = Do you offer support? =
 
-You can contact me at my email address <a href="http://www.google.com/recaptcha/mailhide/d?k=0136qbakbr7_ceyXoPHsmVVQ==&amp;c=60v3eLAIgOrXwFfGeOGB0QlS6nvCSU4NYwHHs2w0JuQ=" onclick="window.open('http://www.google.com/recaptcha/mailhide/d?k\0750136qbakbr7_ceyXoPHsmVVQ\75\75\46c\07560v3eLAIgOrXwFfGeOGB0QlS6nvCSU4NYwHHs2w0JuQ\075', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300'); return false;" title="Reveal this e-mail address">su...@gmail.com</a>
+You can contact me using <a href="https://forms.gle/TTdwYUsJpvu8No186" onclick="window.open('https://forms.gle/TTdwYUsJpvu8No186', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0'); return false;" title="Contact me">Contact Form</a>
 
 == Screenshots ==
 1. **Settings Page** - Here you can set 'From Email' and 'From Name'.
+2. **Help Page** - List of FAQ and support contact information.
 
 == Changelog ==
 = 1.0.0 =
@@ -73,6 +74,11 @@ Updated tested up to 4.7.4
 = 1.1.2 =
 Updated tested up to 5.2.3
 
+= 1.1.3 =
+Updated tested up to 5.7
+Updated screenshots
+Updated contact information
+
 == Upgrade Notice ==
 = 1.0.0 =
 Initial release
@@ -85,3 +91,8 @@ Updated tested up to 4.7.4
 
 = 1.1.2 =
 Updated tested up to 5.2.3
+
+= 1.1.3 =
+Updated tested up to 5.7
+Updated screenshots
+Updated contact information

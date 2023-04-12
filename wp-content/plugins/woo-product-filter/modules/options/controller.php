@@ -1,6 +1,11 @@
 <?php
 class OptionsControllerWpf extends ControllerWpf {
 	public function saveGroup() {
+		check_ajax_referer('wpf-save-nonce', 'wpfNonce');
+		if (!current_user_can('manage_options')) {
+			wp_die();
+		}
+		
 		$res = new ResponseWpf();
 		if ($this->getModel()->saveGroup(ReqWpf::get('post'))) {
 			$res->addMessage(esc_html__('Done', 'woo-product-filter'));

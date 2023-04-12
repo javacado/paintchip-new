@@ -6,7 +6,7 @@
  */
 if ( ! function_exists( 'ig_es_get_additional_info' ) ) {
 
-	function ig_es_get_additional_info( $additional_info, $system_info = false ) {
+	function ig_es_get_additional_info( $additional_info = array(), $system_info = false ) {
 		global $ig_es_tracker;
 
 		$additional_info['version'] = ES_PLUGIN_VERSION;
@@ -49,7 +49,7 @@ function ig_es_render_general_feedback_widget() {
 		$params = array(
 			'type'              => 'feedback',
 			'event'             => $event,
-			'title'             => "Have feedback or question for us?",
+			'title'             => 'Have feedback or question for us?',
 			'position'          => 'center',
 			'width'             => 700,
 			'force'             => true,
@@ -301,7 +301,7 @@ function ig_es_render_broadcast_ui_review() {
 			'showCancelButton'  => true,
 			'cancelButtonText'  => __( 'Contact Us', 'email-subscribers' ),
 			'cancelButtonLink'  => 'https://icegram.com',
-			'show_once'         => true
+			'show_once'         => true,
 		);
 
 		ES_Common::render_feedback_widget( $params );
