@@ -1,5 +1,62 @@
-wp-config.php
-.htaccess
-.phpintel/*
-/wp-content/uploads/wc-logs/*
-/wp-content/debug.log
+# === WordPress Core ===
+# Ignore everything in root except wp-content
+/*
+!.gitignore
+!wp-config.php
+!wp-content/
+!helper/
+# Ignore sensitive config backups
+wp-config.php.*
+wp-config-sample.php
+
+# === WordPress Content ===
+# Ignore everything in wp-content except themes, plugins, mu-plugins
+wp-content/*
+!wp-content/themes/
+!wp-content/plugins/
+!wp-content/mu-plugins/
+
+# Ignore uploads and other runtime files
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/cache/
+wp-content/backups/
+wp-content/advanced-cache.php
+wp-content/object-cache.php
+wp-content/wp-cache-config.php
+wp-content/debug.log
+
+# === Themes ===
+# Track your custom theme(s), but ignore packaged/commercial ones if needed
+# Example: allow only your theme "paintchip"
+wp-content/themes/*
+!wp-content/themes/paintchip/
+
+# === Plugins ===
+# Track only custom plugins
+wp-content/plugins/*
+!wp-content/plugins/my-custom-plugin/
+
+# Ignore must-use plugin caches
+wp-content/mu-plugins/*
+
+# === System/IDE Files ===
+*.log
+*.sql
+*.tar.gz
+*.zip
+*.tmp
+.DS_Store
+Thumbs.db
+.svn/
+.hg/
+.idea/
+*.swp
+.vscode/
+
+# === Composer / Node / Build Artifacts ===
+vendor/
+node_modules/
+npm-debug.log
+yarn-error.log
+
