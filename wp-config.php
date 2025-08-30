@@ -98,9 +98,6 @@ define('WP_DEBUG_DISPLAY', true);
 
 }
 
-/* SES STMP plugin */
-define('WPOSES_AWS_ACCESS_KEY_ID', 'AKIATKK5FWDTQEUFSJWL');
-define('WPOSES_AWS_SECRET_ACCESS_KEY', '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');
 
 
 
