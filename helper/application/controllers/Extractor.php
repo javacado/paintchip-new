@@ -67,6 +67,17 @@ class Extractor extends CI_Controller {
 			echo "<P>$up ;";
 		}
 	}
+
+	function getsku()
+	{
+		$q = 'SELECT meta_value FROM `wp_postmeta` where meta_key="_sku"';
+		$r = $this->db->query($q)->result();
+		$s = [];
+		foreach ($r as $row) {
+			$s[] = $row->meta_value;
+		}
+		echo implode(",", $s);
+	}
 	function emails() {
 		$q = "select * from wp_oses_emails order by email_created desc";
 		$r = $this->db->query($q);
