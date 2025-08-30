@@ -17,6 +17,7 @@ wp-content/*
 !wp-content/mu-plugins/
 
 # Ignore uploads and other runtime files
+wp-content/wflogs/
 wp-content/uploads/
 wp-content/upgrade/
 wp-content/cache/
